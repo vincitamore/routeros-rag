@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : Grounding</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Hardware_13500445.html">Hardware</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : Grounding
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Oskars K.</span>, last updated by <span class='editor'> Serhii T.</span> on Jan 08, 2025
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742044441 {padding: 0px;}
+div.rbtoc1747742044441 ul {margin-left: 0px;}
+div.rbtoc1747742044441 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742044441'>
+<ul class='toc-indentation'>
+<li><a href='#Grounding-Introduction'>Introduction</a></li>
+<li><a href='#Grounding-ShieldedRJ45PortvsUnshieldedRJ45Port'>Shielded RJ45 Port vs Unshielded RJ45 Port</a>
+<ul class='toc-indentation'>
+<li><a href='#Grounding-PoEinjectorwithshieldedconnectors:'>PoE injector with shielded connectors:</a></li>
+</ul>
+</li>
+<li><a href='#Grounding-RouterBOARDgroundingwireattachmentpoints:'>RouterBOARD grounding wire attachment points:</a></li>
+<li><a href='#Grounding-'></a></li>
+</ul>
+</div></p><h1 id="Grounding-Introduction"><span class="mw-headline">Introduction</span></h1><p>Shielded cable installation infrastructure (towers and masts), as well as antennas and the router itself, must be properly grounded. Lightning arresters must be installed on all external antenna cables (near the antennas or on the antennas themselves) to prevent equipment damage and human injury. Note that lightning arresters will not be effective if they are not properly grounded.</p><p>Use 1 AWG (7 mm in diameter) wire with corrosion-resistant connectors for grounding. Ensure that the grounding infrastructure you use is fully functional (not merely decorative, as seen in some installations).</p><ol><li>For shielded connectors, please use shielded cables as they provide better immunity.</li><li data-uuid="7052d25f-9174-402d-843f-b9eac78baa6e">The grounding wire should be connected to the RouterBOARD grounding wire attachment point if such is provided. This wire should then be connected to the base of the tower, ensuring the connection meets grounding standards. The antenna's grounding wire should be connected near the RouterBOARD outdoor case and can be joined with the same grounding wire used for the RouterBOARD.</li></ol><h1 id="Grounding-ShieldedRJ45PortvsUnshieldedRJ45Port">Shielded RJ45 Port vs Unshielded RJ45 Port</h1><p>Device with Shielded Ports:</p><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image confluence-thumbnail" draggable="false" height="105" src="attachments/53444613/292618263.png" data-image-src="attachments/53444613/292618263.png" data-unresolved-comment-count="0" data-linked-resource-id="292618263" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2025-1-7_17-36-26.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="53444613" data-linked-resource-container-version="16" tabindex="0" alt=""></span></p><p>Device with Unshielded Ports:</p><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image confluence-thumbnail" draggable="false" height="108" src="attachments/53444613/292618262.png" data-image-src="attachments/53444613/292618262.png" data-unresolved-comment-count="0" data-linked-resource-id="292618262" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2025-1-7_17-35-30.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="53444613" data-linked-resource-container-version="16" tabindex="0" alt=""></span></p><h2 id="Grounding-PoEinjectorwithshieldedconnectors:"><span class="productMainDescr">PoE injector</span> with shielded connectors:</h2><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image confluence-thumbnail" draggable="false" width="250" src="attachments/53444613/292618260.png" data-image-src="attachments/53444613/292618260.png" data-unresolved-comment-count="0" data-linked-resource-id="292618260" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2025-1-7_17-29-7.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="53444613" data-linked-resource-container-version="16" tabindex="0" alt=""></span></p><h1 id="Grounding-RouterBOARDgroundingwireattachmentpoints:">RouterBOARD grounding wire attachment points:</h1><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" draggable="false" width="350" src="attachments/53444613/292618264.png" data-image-src="attachments/53444613/292618264.png" data-unresolved-comment-count="0" data-linked-resource-id="292618264" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2025-1-7_17-40-55.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="53444613" data-linked-resource-container-version="16" tabindex="0" alt=""></span></p><p><br/></p><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image confluence-thumbnail" draggable="false" width="300" src="attachments/53444613/292618265.png" data-image-src="attachments/53444613/292618265.png" data-unresolved-comment-count="0" data-linked-resource-id="292618265" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2025-1-7_17-43-36.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="53444613" data-linked-resource-container-version="16" tabindex="0" alt=""></span></p><h1 id="Grounding-"><span class="confluence-embedded-file-wrapper image-left-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image confluence-thumbnail image-left" draggable="false" width="250" src="attachments/53444613/53444615.png" data-image-src="attachments/53444613/53444615.png" data-unresolved-comment-count="0" data-linked-resource-id="53444615" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image2021-1-26_11-31-35.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="53444613" data-linked-resource-container-version="16" tabindex="0" alt=""></span></h1><p><br/></p><p><br/></p><p><br/></p><p><br/></p><p><br/></p><p><br/></p><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p><span style="color:var(--ds-text,#333333);">You should not use Power Sourcing Equipment (PSE) with the positive terminal connected to Protective Earth (PE) if it powers a MikroTik device. It may cause a short circuit, harm you and your device.</span></p></div></div><p><br/></p>
+                    </div>
+
+                                                            <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/53444613/53444614.png">image2021-1-26_11-29-10.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/53444613/53444615.png">image2021-1-26_11-31-35.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/53444613/53444616.png">image2021-1-26_11-35-26.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/53444613/53444617.png">image2021-1-26_11-45-18.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/53444613/53444618.png">image2021-1-26_11-46-55.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/53444613/53444619.png">image2021-1-26_11-47-34.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/53444613/53444629.jpg">Option-1.jpg</a> (image/jpeg)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/53444613/53444630.jpg">Option-2.jpg</a> (image/jpeg)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/53444613/292618259.png">image-2025-1-7_17-26-25.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/53444613/292618260.png">image-2025-1-7_17-29-7.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/53444613/292618261.png">image-2025-1-7_17-33-56.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/53444613/292618262.png">image-2025-1-7_17-35-30.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/53444613/292618263.png">image-2025-1-7_17-36-26.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/53444613/292618264.png">image-2025-1-7_17-40-55.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/53444613/292618265.png">image-2025-1-7_17-43-36.png</a> (image/png)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:54</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

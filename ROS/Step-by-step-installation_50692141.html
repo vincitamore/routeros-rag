@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : Step by step installation</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Internet-of-Things_46759975.html">Internet of Things</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Lora_16351615.html">Lora</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Setup_16351624.html">Setup</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : Step by step installation
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Unknown User (rudolfs)</span>, last updated by <span class='editor'> Deniss M.</span> on Jan 30, 2024
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <h2 id="Stepbystepinstallation-LoRacardinstallation">LoRa card installation</h2><p>LtAP LTE kit will be used as example in this section.</p><p>Open your routers case. Once you have removed all the screws carefully move the upper case to the left side, as the LTE antennas are attached to the inner side of it.</p><p><br/></p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/50692141/50692144.png" data-image-src="attachments/50692141/50692144.png" data-unresolved-comment-count="0" data-linked-resource-id="50692144" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="1.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="50692141" data-linked-resource-container-version="54" tabindex="0" alt=""></span></p><p><br/></p><p>Insert R11e-LoRa card into the mini-PCIe slot and apply two screws to the threaded inserts.</p><p><br/></p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/50692141/50692166.jpeg" data-image-src="attachments/50692141/50692166.jpeg" data-unresolved-comment-count="0" data-linked-resource-id="50692166" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="OpenCaseNoCard.jpeg" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/jpeg" data-linked-resource-container-id="50692141" data-linked-resource-container-version="54" tabindex="0" alt=""></span></p><p><br/></p><p>Attach antenna to the card (UFL connector) </p><p>In this case UFL → SMA cable is also used, as the LtAP's case has a specific slot for it.</p><p><br/></p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/50692141/50692167.jpeg" data-image-src="attachments/50692141/50692167.jpeg" data-unresolved-comment-count="0" data-linked-resource-id="50692167" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="OpenCase.jpeg" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/jpeg" data-linked-resource-container-id="50692141" data-linked-resource-container-version="54" tabindex="0" alt=""></span></p><p><br/></p><p>Once the previous steps are done, you can close the routers case and move on to configuration.</p><h2 id="Stepbystepinstallation-Configuration">Configuration</h2><h3 id="Stepbystepinstallation-GUIsetup">GUI setup</h3><p>Connect to your router via Winbox or WebFig.</p><p>Winbox can be downloaded in the link given below:</p><p><a class="external-link" href="https://mikrotik.com/download" rel="nofollow">https://mikrotik.com/download</a></p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/50692141/218759188.png" data-image-src="attachments/50692141/218759188.png" data-unresolved-comment-count="0" data-linked-resource-id="218759188" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2023-10-16_14-31-26.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="50692141" data-linked-resource-container-version="54" tabindex="0" alt=""></span></p><p>It is Highly recommended to upgrade your RouterOS version to the latest available. Installing the version will perform a reboot:</p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/50692141/218759191.png" data-image-src="attachments/50692141/218759191.png" data-unresolved-comment-count="0" data-linked-resource-id="218759191" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2023-10-16_14-33-24.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="50692141" data-linked-resource-container-version="54" tabindex="0" alt=""></span></p><p>If your device does not have<strong> IoT&gt;LoRa</strong> menu, download &quot;<strong>Extra packages</strong>&quot; specifically for your routers architecture and rOS version. You can see the type of your routers architecture at the top of Winbox window or in System →  Resources → Architecture Name.</p><p><a class="external-link" href="https://mikrotik.com/download" rel="nofollow">https://mikrotik.com/download</a></p><p><br/></p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/50692141/218759185.png" data-image-src="attachments/50692141/218759185.png" data-unresolved-comment-count="0" data-linked-resource-id="218759185" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2023-10-16_14-23-1.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="50692141" data-linked-resource-container-version="54" tabindex="0" alt=""></span></p><p><br/></p><p>Once the package is downloaded and extracted, upload the <strong>IoT</strong> package to your router. It can be done via drag &amp; drop as well. It should appear in the files folder after the upload is complete, reboot your router (System → Reboot) to install the package:</p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/50692141/218759196.png" data-image-src="attachments/50692141/218759196.png" data-unresolved-comment-count="0" data-linked-resource-id="218759196" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2023-10-16_14-40-59.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="50692141" data-linked-resource-container-version="54" tabindex="0" alt=""></span></p><p>After the reboot, the package should be visible in the Package list:</p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/50692141/218759195.png" data-image-src="attachments/50692141/218759195.png" data-unresolved-comment-count="0" data-linked-resource-id="218759195" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2023-10-16_14-38-39.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="50692141" data-linked-resource-container-version="54" tabindex="0" alt=""></span></p><p><br/></p><p>Check if the LoRa gateway has initialized under <strong>IoT&gt;LoRa&gt;Devices</strong>. If it is LtAP model, make sure to set USB Type to Mini-PCIe:</p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/50692141/218759198.png" data-image-src="attachments/50692141/218759198.png" data-unresolved-comment-count="0" data-linked-resource-id="218759198" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2023-10-16_15-1-28.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="50692141" data-linked-resource-container-version="54" tabindex="0" alt=""></span></p><p>Once the gateway has shown up (under<strong> IoT&gt;LoRa&gt;Devices</strong>) select it, choose Network Servers from the default ones or add your own (under <strong>IoT&gt;LoRa&gt;Servers</strong>) and enable it:</p><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" draggable="false" width="950" src="attachments/50692141/232816856.png" data-image-src="attachments/50692141/232816856.png" data-unresolved-comment-count="0" data-linked-resource-id="232816856" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2024-1-30_13-42-55.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="50692141" data-linked-resource-container-version="54" tabindex="0" alt=""></span></p><p>Navigate to Traffic tab to monitor the surrounding nodes sending requests:</p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/50692141/218759202.png" data-image-src="attachments/50692141/218759202.png" data-unresolved-comment-count="0" data-linked-resource-id="218759202" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2023-10-16_15-10-3.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="50692141" data-linked-resource-container-version="54" tabindex="0" alt=""></span></p><p><br/></p><p>This concludes basic installation and configuration of LoRa mini-PCIe cards. For additional settings check: <a href="General-Properties_16351619.html">General Properties</a></p>
+                    </div>
+
+                                                            <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/50692141/50692144.png">1.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/50692141/50692150.jpeg">3.jpeg</a> (image/jpeg)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/50692141/50692149.jpeg">2.jpeg</a> (image/jpeg)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/50692141/50692147.jpeg">2.jpeg</a> (image/jpeg)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/50692141/50692151.jpeg">3.jpeg</a> (image/jpeg)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/50692141/50692146.jpeg">3.jpeg</a> (image/jpeg)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/50692141/50692157.png">ltap.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/50692141/50692159.png">winb1.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/50692141/50692162.png">2ltap.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/50692141/50692164.png">rosUpgrade.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/50692141/50692166.jpeg">OpenCaseNoCard.jpeg</a> (image/jpeg)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/50692141/50692167.jpeg">OpenCase.jpeg</a> (image/jpeg)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/50692141/50692170.png">WinboxLogin.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/50692141/50692168.png">WinboxLogin.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/50692141/50692172.png">ExtraPackages.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/50692141/50692182.png">LoraUpload.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/50692141/50692183.png">LoraUpload.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/50692141/50692175.png">LoraUpload.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/50692141/50692184.png">LoRaInstalled.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/50692141/50692191.png">LoraPackageVisible.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/50692141/50692185.png">LoraPackageVisible.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/50692141/50692194.png">LoraEnabling.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/50692141/50692219.png">LoraEnabling.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/50692141/50692196.png">Traffic.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/50692141/50692195.png">Traffic.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/50692141/50692205.png">CheckForUpdates.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/50692141/50692218.png">Server.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/50692141/50692217.png">Server.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/50692141/50692192.png">LoraEnabling.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/50692141/218759178.png">image-2023-10-16_13-55-34.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/50692141/218759179.png">image-2023-10-16_14-8-20.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/50692141/218759181.png">image-2023-10-16_14-15-39.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/50692141/218759183.png">image-2023-10-16_14-21-16.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/50692141/218759185.png">image-2023-10-16_14-23-1.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/50692141/218759186.png">image-2023-10-16_14-29-3.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/50692141/218759188.png">image-2023-10-16_14-31-26.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/50692141/218759190.png">image-2023-10-16_14-33-17.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/50692141/218759191.png">image-2023-10-16_14-33-24.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/50692141/218759193.png">image-2023-10-16_14-37-51.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/50692141/218759195.png">image-2023-10-16_14-38-39.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/50692141/218759196.png">image-2023-10-16_14-40-59.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/50692141/218759198.png">image-2023-10-16_15-1-28.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/50692141/218759199.png">image-2023-10-16_15-7-41.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/50692141/218759200.png">image-2023-10-16_15-8-55.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/50692141/218759202.png">image-2023-10-16_15-10-3.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/50692141/232816856.png">image-2024-1-30_13-42-55.png</a> (image/png)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:54</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

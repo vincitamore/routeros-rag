@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : Services</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="System-Information-and-Utilities_119144657.html">System Information and Utilities</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : Services
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Edgars P.</span>, last updated by <span class='editor'> Matīss O.</span> on Feb 24, 2025
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742032891 {padding: 0px;}
+div.rbtoc1747742032891 ul {margin-left: 0px;}
+div.rbtoc1747742032891 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742032891'>
+<ul class='toc-indentation'>
+<li><a href='#Services-Summary'>Summary</a></li>
+<li><a href='#Services-Properties'>Properties</a>
+<ul class='toc-indentation'>
+<li><a href='#Services-Example'>Example</a></li>
+</ul>
+</li>
+<li><a href='#Services-Protocolsandports'>Protocols and ports</a></li>
+</ul>
+</div></p><h1 id="Services-Summary"><span class="mw-headline">Summary</span></h1><hr/><p>This page lists protocols and ports used by various MikroTik RouterOS services. It helps you to determine why your MikroTik router listens to certain ports, and what you need to block/allow in case you want to prevent or grant access to certain services. Please see the relevant sections of the Manual for more explanations.</p><p>The default services are:</p><div class="table-wrap"><table class="wrapped confluenceTable" style="margin-left: 10.2344px;"><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>telnet</strong></td><td class="confluenceTd">Telnet service</td></tr><tr><td class="confluenceTd"><strong>ftp</strong></td><td class="confluenceTd">FTP service</td></tr><tr><td class="confluenceTd"><strong>www</strong></td><td class="confluenceTd">WebFig HTTP service</td></tr><tr><td class="confluenceTd"><strong>ssh</strong></td><td class="confluenceTd">SSH service</td></tr><tr><td class="confluenceTd"><strong>www-ssl</strong></td><td class="confluenceTd">WebFig HTTPS service</td></tr><tr><td class="confluenceTd"><strong>api</strong></td><td class="confluenceTd">API service</td></tr><tr><td class="confluenceTd"><strong>winbox</strong></td><td class="confluenceTd">Responsible for Winbox tool access, as well as Tik-App smartphone app and Dude probe</td></tr><tr><td class="confluenceTd"><strong>api-ssl</strong></td><td class="confluenceTd">API over SSL service</td></tr></tbody></table></div><h1 id="Services-Properties"><span class="mw-headline">Properties</span></h1><hr/><p>Note that it is not possible to add new services, only existing service modifications are allowed.</p><p><strong>Sub-menu:</strong> <code>/ip service</code></p><div class="table-wrap"><table class="wrapped confluenceTable" style="margin-left: 10.2344px;"><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>address</strong><span> </span>(<em>IP address/netmask | IPv6/0..128</em>; Default:<span> </span>)</td><td class="confluenceTd">List of IP/IPv6 prefixes from which the service is accessible</td></tr><tr><td class="confluenceTd"><strong>certificate</strong><span> </span>(<em>name</em>; Default:<span> </span><strong>none</strong>)</td><td class="confluenceTd">The name of the certificate used by a particular service. Applicable only for services that depend on certificates (<em>www-ssl, api-ssl</em>)</td></tr><tr><td class="confluenceTd"><strong>name</strong><span> </span>(<em>name</em>; Default:<span> </span><strong>none</strong>)</td><td class="confluenceTd">Service name</td></tr><tr><td class="confluenceTd"><strong>max-sessions <span> </span></strong>(<em>integer: 1..1000</em>; Default:<span> 20</span>)</td><td class="confluenceTd">Max simultaneous session count for service</td></tr><tr><td class="confluenceTd"><strong>port</strong><span> </span>(<em>integer: 1..65535</em>; Default:<span> </span>)</td><td class="confluenceTd">The port particular service listens on</td></tr><tr><td class="confluenceTd"><strong><em>tls-version </em></strong>(<em>any</em> | <em>only-1.2</em>; Default:<span> <strong>any</strong></span>)</td><td class="confluenceTd">Specifies which TLS versions to allow by a particular service</td></tr><tr><td class="confluenceTd"><strong>vrf </strong>(<em>name</em>; Default: <strong>main</strong>)</td><td class="confluenceTd">Specify which VRF instance to use by a particular service</td></tr></tbody></table></div><h2 id="Services-Example"><span class="mw-headline">Example</span></h2><p>For example, allow API only from a specific IP/IPv6 address range</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@dzeltenais_burkaans] /ip service&gt; set api address=10.5.101.0/24,2001:db8:fade::/64
+[admin@dzeltenais_burkaans] /ip service&gt; print 
+Flags: X - disabled, I - invalid 
+ #   NAME     PORT  ADDRESS                                       CERTIFICATE  
+ 0   telnet   23   
+ 1   ftp      21   
+ 2   www      80   
+ 3   ssh      22   
+ 4 X www-ssl  443                                                 none         
+ 5   api      8728  10.5.101.0/24                                
+                    2001:db8:fade::/64                           
+ 6   winbox   8291 </pre>
+</div></div><h1 id="Services-Protocolsandports"><span class="mw-headline">Protocols and ports</span></h1><hr/><p>The table below shows the list of protocols and ports used by RouterOS.</p><div class="table-wrap"><table class="wrapped confluenceTable" style="margin-left: 10.2344px;"><tbody><tr><th class="confluenceTh">Proto/Port</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>20/tcp</strong></td><td class="confluenceTd">FTP data connection</td></tr><tr><td class="confluenceTd"><strong>21/tcp</strong></td><td class="confluenceTd">FTP control connection</td></tr><tr><td class="confluenceTd"><strong>22/tcp</strong></td><td class="confluenceTd">Secure Shell (SSH) remote login protocol</td></tr><tr><td class="confluenceTd"><strong>23/tcp</strong></td><td class="confluenceTd">Telnet protocol</td></tr><tr><td class="confluenceTd"><strong>53/tcp<br/>53/udp</strong></td><td class="confluenceTd">DNS</td></tr><tr><td class="confluenceTd"><strong>67/udp</strong></td><td class="confluenceTd">Bootstrap protocol or<span> </span><a href="https://help.mikrotik.com/docs/display/ROS/DHCP#DHCP-DHCPServer" rel="nofollow">DHCP Server</a></td></tr><tr><td class="confluenceTd"><strong>68/udp</strong></td><td class="confluenceTd">Bootstrap protocol or<span> </span><a href="https://help.mikrotik.com/docs/display/ROS/DHCP#DHCP-DHCPClient" rel="nofollow">DHCP Client</a></td></tr><tr><td class="confluenceTd"><strong>80/tcp</strong></td><td class="confluenceTd">World Wide Web HTTP</td></tr><tr><td class="confluenceTd"><strong>123/udp</strong></td><td class="confluenceTd">Network Time Protocol (<a href="https://help.mikrotik.com/docs/pages/viewpage.action?pageId=40992869" rel="nofollow">NTP</a>)</td></tr><tr><td class="confluenceTd"><strong>161/udp</strong></td><td class="confluenceTd">Simple Network Management Protocol (<a href="https://help.mikrotik.com/docs/display/ROS/SNMP" rel="nofollow">SNMP</a>)</td></tr><tr><td class="confluenceTd"><strong>179/tcp</strong></td><td class="confluenceTd">Border Gateway Protocol (<a href="https://help.mikrotik.com/docs/pages/viewpage.action?pageId=328220" rel="nofollow">BGP</a>)</td></tr><tr><td class="confluenceTd"><strong>443/tcp</strong></td><td class="confluenceTd">Secure Socket Layer (SSL) encrypted HTTP</td></tr><tr><td class="confluenceTd"><strong>500/udp</strong></td><td class="confluenceTd">Internet Key Exchange (IKE) protocol</td></tr><tr><td class="confluenceTd"><strong>520/udp<br/>521/udp</strong></td><td class="confluenceTd"><a href="https://help.mikrotik.com/docs/pages/viewpage.action?pageId=328211" rel="nofollow">RIP</a><span> </span>routing protocol</td></tr><tr><td class="confluenceTd"><strong>546/udp</strong></td><td class="confluenceTd"><a href="https://help.mikrotik.com/docs/display/ROS/DHCP-client" rel="nofollow">DHCPv6 Client</a><span> </span>message</td></tr><tr><td class="confluenceTd"><strong>547/udp</strong></td><td class="confluenceTd"><a href="https://help.mikrotik.com/docs/display/ROS/DHCP+Server" rel="nofollow">DHCPv6 Server</a><span> </span>message</td></tr><tr><td class="confluenceTd"><strong>646/tcp</strong></td><td class="confluenceTd"><a class="external-link" href="https://wiki.mikrotik.com/wiki/Manual:MPLS/LDP" rel="nofollow" style="text-decoration: none;" title="Manual:MPLS/LDP">LDP</a><span> </span>transport session</td></tr><tr><td class="confluenceTd"><strong>646/udp</strong></td><td class="confluenceTd"><a class="external-link" href="https://wiki.mikrotik.com/wiki/Manual:MPLS/LDP" rel="nofollow" style="text-decoration: none;" title="Manual:MPLS/LDP">LDP</a><span> </span>hello protocol</td></tr><tr><td class="confluenceTd"><strong>1080/tcp</strong></td><td class="confluenceTd"><a href="https://help.mikrotik.com/docs/display/ROS/SOCKS" rel="nofollow">SOCKS</a><span> </span>proxy protocol</td></tr><tr><td class="confluenceTd"><strong>1698/udp 1699/udp</strong></td><td class="confluenceTd">RSVP TE Tunnels</td></tr><tr><td class="confluenceTd"><strong>1701/udp</strong></td><td class="confluenceTd">Layer 2 Tunnel Protocol (<a href="https://help.mikrotik.com/docs/display/ROS/L2TP" rel="nofollow">L2TP</a>)</td></tr><tr><td class="confluenceTd"><strong>1723/tcp</strong></td><td class="confluenceTd">Point-To-Point Tunneling Protocol (<a href="https://help.mikrotik.com/docs/display/ROS/PPTP" rel="nofollow">PPTP</a>)</td></tr><tr><td class="confluenceTd"><strong>1900/udp<br/>2828/tcp</strong></td><td class="confluenceTd">Universal Plug and Play (<a href="https://help.mikrotik.com/docs/display/ROS/UPnP" rel="nofollow">uPnP</a>)</td></tr><tr><td class="confluenceTd"><strong>1966/udp</strong></td><td class="confluenceTd">MME originator message traffic</td></tr><tr><td class="confluenceTd"><strong>1966/tcp</strong></td><td class="confluenceTd">MME gateway protocol</td></tr><tr><td class="confluenceTd"><strong>2000/tcp</strong></td><td class="confluenceTd">Bandwidth test server</td></tr><tr><td class="confluenceTd"><strong>5246,5247/udp</strong></td><td class="confluenceTd"><a href="https://help.mikrotik.com/docs/pages/viewpage.action?pageId=1409149" rel="nofollow">CAPsMAN</a></td></tr><tr><td class="confluenceTd"><strong>5350/udp</strong></td><td class="confluenceTd">NAT-PMP client</td></tr><tr><td class="confluenceTd"><strong>5351/udp</strong></td><td class="confluenceTd">NAT-PMP server</td></tr><tr><td class="confluenceTd"><strong>5678/udp</strong></td><td class="confluenceTd">Mikrotik Neighbor Discovery Protocol</td></tr><tr><td class="confluenceTd"><strong>6343/tcp</strong></td><td class="confluenceTd">Default OpenFlow port</td></tr><tr><td class="confluenceTd"><strong>8080/tcp</strong></td><td class="confluenceTd">HTTP Web Proxy</td></tr><tr><td class="confluenceTd"><strong>8291/tcp</strong></td><td class="confluenceTd"><a href="https://help.mikrotik.com/docs/display/ROS/Winbox" rel="nofollow">Winbox</a></td></tr><tr><td class="confluenceTd"><strong>8728/tcp</strong></td><td class="confluenceTd"><a href="https://help.mikrotik.com/docs/display/ROS/API" rel="nofollow">API</a></td></tr><tr><td class="confluenceTd"><strong>8729/tcp</strong></td><td class="confluenceTd">API-SSL</td></tr><tr><td class="confluenceTd"><strong>20561/udp</strong></td><td class="confluenceTd">MAC winbox</td></tr><tr><td class="confluenceTd"><strong>/1</strong></td><td class="confluenceTd">ICMP</td></tr><tr><td class="confluenceTd"><strong>/2</strong></td><td class="confluenceTd"><a class="external-link" href="https://wiki.mikrotik.com/wiki/Manual:Routing" rel="nofollow" style="text-decoration: none;" title="Manual:Routing">Multicast | IGMP</a></td></tr><tr><td class="confluenceTd"><strong>/4</strong></td><td class="confluenceTd"><a href="https://help.mikrotik.com/docs/display/ROS/IPIP" rel="nofollow">IPIP</a><span> </span>encapsulation</td></tr><tr><td class="confluenceTd"><strong>/41</strong></td><td class="confluenceTd">IPv6 (encapsulation)</td></tr><tr><td class="confluenceTd"><strong>/46</strong></td><td class="confluenceTd">RSVP TE tunnels</td></tr><tr><td class="confluenceTd"><strong>/47</strong></td><td class="confluenceTd">General Routing Encapsulation (GRE) - used for<span> </span>PPTP<span> </span>and<span> </span><a href="https://help.mikrotik.com/docs/display/ROS/EoIP" rel="nofollow">EoIP</a><span> </span>tunnels</td></tr><tr><td class="confluenceTd"><strong>/50</strong></td><td class="confluenceTd">Encapsulating Security Payload for IPv4 (ESP)</td></tr><tr><td class="confluenceTd"><strong>/51</strong></td><td class="confluenceTd">Authentication Header for IPv4 (AH)</td></tr><tr><td class="confluenceTd"><strong>/89</strong></td><td class="confluenceTd"><a href="https://help.mikrotik.com/docs/pages/viewpage.action?pageId=328218" rel="nofollow">OSPF</a><span> </span>routing protocol</td></tr><tr><td class="confluenceTd"><strong>/103</strong></td><td class="confluenceTd"><a class="external-link" href="https://wiki.mikrotik.com/wiki/Manual:Routing" rel="nofollow" style="text-decoration: none;" title="Manual:Routing">Multicast | PIM</a></td></tr><tr><td class="confluenceTd"><strong>/112</strong></td><td class="confluenceTd"><a href="https://help.mikrotik.com/docs/display/ROS/VRRP" rel="nofollow">VRRP</a></td></tr></tbody></table></div>
+                    </div>
+
+                                        
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

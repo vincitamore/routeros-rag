@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : GPS-tracking using HTTP POST</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Mobile-Networking_119144655.html">Mobile Networking</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="GPS_84901890.html">GPS</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : GPS-tracking using HTTP POST
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Deniss M.</span>, last updated by <span class='editor'> Guntis G.</span> on Apr 26, 2024
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p>The following article explains how to create a simple vehicle tracking system using the RouterOS GPS function and scripting.</p><h1 id="GPStrackingusingHTTPPOST-Method"><span class="mw-headline">Method</span></h1><p>This approach uses HTTP POST capability of RouterOS Fetch tool. It allows you to POST any kind of data to a webserver, right from the RouterOS command line. Of course, you can use scripting, to fill the POST data with variables. The posted data will be written to an SQLITE3 database (file is created, if it doesn't exist) and then, read from the database and fed into a Leaflet.js PolyLine array. This is a proof of concept example, there is no authentication, security, or error handling.</p><h1 id="GPStrackingusingHTTPPOST-Requirements"><span class="mw-headline">Requirements</span></h1><ul><li>Web server of your choice</li><li>PHP</li><li>SQLite3 module for PHP</li><li>RouterOS device with a working GPS module</li><li>RouterOS</li><li>Set GPS format in RouterOS to <strong>dd</strong></li></ul><h1 id="GPStrackingusingHTTPPOST-RouterOSscript"><span class="mw-headline">RouterOS script</span></h1><p>You can run this script in the Scheduler tool, with an interval of 1s, to have your coordinates sent every 1 second.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">{
+:global lat
+:global lon
+/system gps monitor once do={
+:set $lat $(&quot;latitude&quot;)
+:set $lon $(&quot;longitude&quot;)
+}
+tool fetch mode=http url=&quot;http://YOURSERVER.com/index.php&quot; port=80 http-method=post http-data=(&quot;{\&quot;lat\&quot;:\&quot;&quot; . $lat . &quot;\&quot;,\&quot;lon\&quot;:\&quot;&quot; . $lon . &quot;\&quot;}&quot;) http-header-field=&quot;Content-Type: application/json&quot; 
+:put (&quot;{\&quot;lat\&quot;:\&quot;&quot; . $lat . &quot;\&quot;,\&quot;lon\&quot;:\&quot;&quot; . $lon . &quot;\&quot;}&quot;)
+}</pre>
+</div></div><h1 id="GPStrackingusingHTTPPOST-index.phpfile"><span class="mw-headline">index.php file</span></h1><p>Create an empty directory called <strong>sqlite_db</strong> next to the index.php file. Make sure that directory and files are writable by the group with <strong>chmod -R a+w sqlite_db/</strong></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">&lt;?php
+$loc = dirname(__FILE__).&#39;/sqlite_db/coord.db&#39;;
+$db = new SQLite3($loc,SQLITE3_OPEN_READWRITE | SQLITE3_OPEN_CREATE);
+$raw = file_get_contents(&#39;php://input&#39;);
+$raw = preg_replace(&#39;/\\x00/&#39;,&#39;&#39;,$raw);
+$data = json_decode($raw);
+
+if (!empty($data) &amp;&amp; is_object($data) &amp;&amp; property_exists($data,&#39;lat&#39;) &amp;&amp; property_exists($data,&#39;lon&#39;)){
+    if(file_exists($loc)) echo &#39;exists!&#39;.chr(0xa);
+    $src = &#39;SELECT name FROM sqlite_master WHERE type=\&#39;table\&#39; AND name=\&#39;coordinates\&#39;&#39;;
+    $res = $db-&gt;querySingle($src);
+    if (count($res)==0){
+            $db-&gt;exec(&#39;CREATE TABLE coordinates (latitude TEXT, longitude TEXT, time TIMESTAMP DEFAULT CURRENT_TIMESTAMP, added TIMESTAMP DEFAULT CURRENT_TIMESTAMP ) &#39;);
+    }
+    
+$regex = &#39;/^(|\-)([0-9]{2,3}\.[0-9]{0,8})$/&#39;;
+
+if (preg_match($regex,$data-&gt;lat) &amp;&amp; preg_match($regex,$data-&gt;lon) )
+	{
+		$lat = $data-&gt;lat;
+		$lon = $data-&gt;lon;
+	}
+	$ins = &#39;INSERT INTO coordinates (latitude,longitude) VALUES (\&#39;&#39;.SQLite3::escapeString($lat).&#39;\&#39;,\&#39;&#39;.SQLite3::escapeString($lon).&#39;\&#39;)&#39;;
+	$db-&gt;exec($ins);
+	die();
+}
+?&gt;
+
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;link rel=&quot;stylesheet&quot; href=&quot;https://unpkg.com/leaflet@1.3.1/dist/leaflet.css&quot; integrity=&quot;sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ==&quot; crossorigin=&quot;&quot;/&gt;
+  &lt;script src=&quot;https://unpkg.com/leaflet@1.3.1/dist/leaflet.js&quot; integrity=&quot;sha512-/Nsx9X4HebavoBvEBuyp3I7od5tA0UzAxs+j83KgC8PU0kgB4XiK4Lfe4y4cgBtaRJQEIFCW+oC506aPT2L1zw==&quot; crossorigin=&quot;&quot;&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div id=&quot;map&quot; style=&quot;width: 800px; height: 600px;&quot;&gt;&lt;/div&gt;
+&lt;script&gt;
+var map = L.map(&#39;map&#39;).setView([0,0], 4);
+L.tileLayer(&#39;http://{s}.tile.osm.org/{z}/{x}/{y}.png&#39;, {attribution: &#39;&lt;a href=&quot;http://osm.org/copyright&quot;&gt;OSM&lt;/a&gt;&#39;}).addTo(map);
+
+&lt;?php
+    if($result = $db-&gt;query(&#39;SELECT latitude,longitude FROM coordinates&#39;)){
+    echo &#39; var latlngs = [ &#39;;
+    while($obj = $result-&gt;fetchArray()){
+    	if (!is_array($obj) || !isset($obj[&#39;latitude&#39;]) || !isset($obj[&#39;longitude&#39;]) || empty($obj[&#39;latitude&#39;]) || empty($obj[&#39;longitude&#39;])) continue;
+    	echo &#39;[&quot;&#39;. $obj[&#39;latitude&#39;].&#39;&quot;,&quot;&#39;.$obj[&#39;longitude&#39;].&#39;&quot;],&#39;;
+    }
+    echo &#39;]; &#39;;
+    } else
+     echo(&#39;//&#39;.$db-&gt;lastErrorMsg().chr(0xa));  
+	 echo($data);
+?&gt;
+var polyline = L.polyline(latlngs, {color: &#39;red&#39;}).addTo(map);
+map.fitBounds(polyline.getBounds());
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+</div></div><h1 id="GPStrackingusingHTTPPOST-Result"><span class="mw-headline">Result</span></h1><p><span class="mw-headline"><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/84901903/84901908.png" data-image-src="attachments/84901903/84901908.png" data-unresolved-comment-count="0" data-linked-resource-id="84901908" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image2021-9-7_12-41-40.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="84901903" data-linked-resource-container-version="5" tabindex="0" alt=""></span></span></p><p><br/></p><p><br/></p>
+                    </div>
+
+                                                            <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/84901903/84901908.png">image2021-9-7_12-41-40.png</a> (image/png)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

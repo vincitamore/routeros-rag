@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : Bandwidth Test</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="119144606.html">Diagnostics, monitoring and troubleshooting</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : Bandwidth Test
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Guntis G.</span>, last updated by <span class='editor'> Druvis Timma</span> on Jul 10, 2024
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <div class="contentLayout2">
+<div class="columnLayout single" data-layout="single">
+<div class="cell normal" data-type="normal">
+<div class="innerCell">
+<p><br/></p></div>
+</div>
+</div>
+<div class="columnLayout single" data-layout="single">
+<div class="cell normal" data-type="normal">
+<div class="innerCell">
+<h1 id="BandwidthTest-Summary">Summary</h1><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">Sub-menu: /tool 
+Packages required: system</pre>
+</div></div><p>The Bandwidth Tester can be used to measure the throughput to another MikroTik router (either wired or wireless) and thereby help to discover network &quot;bottlenecks&quot;.</p><p>The TCP test uses the standard TCP protocol with acknowledgments and follows the TCP algorithm on how many packets to send according to latency, dropped packets, and other features in the TCP algorithm. Please review the TCP protocol for details on its internal speed settings and how to analyze its behavior. Statistics for throughput are calculated using the entire size of the TCP data stream. As acknowledgments are an internal working of TCP, their size and usage of the link are not included in the throughput statistics. Therefore this statistic is not as reliable as the UDP statistic when estimating throughput.</p><p>The UDP tester sends 110% or more packets than currently reported as received on the other side of the link. To see the maximum throughput of a link, the packet size should be set for the maximum MTU allowed by the links which is usually 1500 bytes. There is no acknowledgment required by UDP; this implementation means that the closest approximation of the throughput can be seen.</p></div>
+</div>
+</div>
+<div class="columnLayout single" data-layout="single">
+<div class="cell normal" data-type="normal">
+<div class="innerCell">
+<div role="region" aria-label="Warning" class="confluence-information-macro  confluence-information-macro-warning" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-error confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><ul><li>Up to RouterOS version 6.44beta39 Bandwidth Test used only single CPU core and reached its limits when core was 100% loaded.</li><li>Bandwidth Test uses all available bandwidth (by default) and may impact network usability.</li></ul></div></div><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><ul><li>Bandwidth Test uses a lot of resources. If you want to test real throughput of a router, you should run bandwidth test through the tested router not from or to it. To do this you need at least 3 routers connected in chain: the Bandwidth Server, the router being tested and the Bandwidth Client.</li></ul><ul><li>If you use UDP protocol then Bandwidth Test counts IP header+UDP header+UDP data. In case if you use TCP then Bandwidth Test counts only TCP data (TCP header and IP header are not included).</li></ul></div></div><h1 class="auto-cursor-target" id="BandwidthTest-"><iframe class="youtube-player" type="text/html" style="width: 400px; height: 300px"
+	src="//www.youtube.com/embed/mf2erbPRklE?wmode=opaque" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen>
+</iframe>
+    
+</h1><h1 class="auto-cursor-target" id="BandwidthTest-BandwidthTestServer">Bandwidth Test Server</h1></div>
+</div>
+</div>
+<div class="columnLayout two-equal" data-layout="two-equal">
+<div class="cell normal" data-type="normal">
+<div class="innerCell">
+<div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">Sub-menu: /tool bandwidth-server</pre>
+</div></div></div>
+</div>
+<div class="cell normal" data-type="normal">
+<div class="innerCell">
+<p><br/></p></div>
+</div>
+</div>
+<div class="columnLayout single" data-layout="single">
+<div class="cell normal" data-type="normal">
+<div class="innerCell">
+<div class="table-wrap"><table class="wrapped confluenceTable" style="margin-left: 8.86364px;"><colgroup><col/><col/></colgroup><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>allocate-udp-ports-from</strong><span> </span>(<em>integer 1000..64000</em>; Default:<span> </span><strong>2000</strong>)</td><td class="confluenceTd">Beginning of UDP port range</td></tr><tr><td class="confluenceTd"><strong>authenticate</strong><span> </span>(<em>yes | no</em>; Default:<span> </span><strong>yes</strong>)</td><td class="confluenceTd">Communicate only with authenticated clients</td></tr><tr><td class="confluenceTd"><strong>enabled</strong><span> </span>(<em>yes | no</em>; Default:<span> </span><strong>yes</strong>)</td><td class="confluenceTd">Defines whether bandwidth server is enabled or not</td></tr><tr><td class="confluenceTd"><strong>max-sessions</strong><span> </span>(<em>integer 1..1000</em>; Default:<span> </span><strong>100</strong>)</td><td class="confluenceTd">Maximal simultaneous test count</td></tr></tbody></table></div><p class="auto-cursor-target"><strong>Example</strong></p><p>Bandwidth Server:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] /tool bandwidth-server&gt; print                                  
+                  enabled: yes                                                  
+             authenticate: yes                                                  
+  allocate-udp-ports-from: 2000                                                 
+             max-sessions: 100                                                  
+[admin@MikroTik] /tool bandwidth-server&gt;</pre>
+</div></div><p class="auto-cursor-target"><span style="color:var(--ds-text-accent-lime-bolder,#37471f);">Active sessions:</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] /tool bandwidth-server session&gt; print
+  # CLIENT          PROTOCOL DIRECTION USER
+  0 35.35.35.1      udp      send      admin
+  1 25.25.25.1      udp      send      admin
+  2 36.36.36.1      udp      send      admin
+[admin@MikroTik] /tool bandwidth-server session&gt;</pre>
+</div></div><p class="auto-cursor-target"><span style="color:var(--ds-text-accent-lime-bolder,#37471f);">To enable<span> </span></span><strong>bandwidth-test</strong><span style="color:var(--ds-text-accent-lime-bolder,#37471f);"><span> </span>server without client authentication:</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] /tool bandwidth-server&gt; set enabled=yes authenticate=no        
+[admin@MikroTik] /tool bandwidth-server&gt; print                                  
+                  enabled: yes                                                  
+             authenticate: no                                                   
+  allocate-udp-ports-from: 2000                                                 
+             max-sessions: 100                                                  
+[admin@MikroTik] /tool bandwidth-server&gt;</pre>
+</div></div><h1 id="BandwidthTest-BandwidthTestClient"><span class="mw-headline">Bandwidth Test Client</span></h1><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">Sub-menu: /tool bandwidth-test</pre>
+</div></div><div class="table-wrap"><table class="wrapped confluenceTable" style="margin-left: 8.86364px;"><colgroup><col/><col/></colgroup><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>address</strong><span> </span>(<em>IP address | IPv6 prefix[%interface]</em>; Default:)</td><td class="confluenceTd">IP address of host</td></tr><tr><td class="confluenceTd"><div class="content-wrapper"><p><strong style="text-align: left;">direction</strong><span style="color:var(--ds-text,#172b4d);"> </span>(<em style="text-align: left;">both | receive | transmit</em>; Default:<strong><span> </span>receive</strong>)</p></div></td><td class="confluenceTd">Direction of data flow</td></tr><tr><td class="confluenceTd"><strong>duration</strong><span> </span>(<em>time</em>; Default:<strong><span> </span></strong>)</td><td class="confluenceTd">Duration of the test</td></tr><tr><td class="confluenceTd"><strong>interval</strong><span> </span>(<em>time: 20ms..5s</em>; Default:<strong><span> </span>1s</strong>)</td><td class="confluenceTd">Delay between reports (in seconds)</td></tr><tr><td class="confluenceTd"><strong>local-tx-speed</strong><span> </span>(<em>integer 0..18446744073709551615</em>; Default: )</td><td class="confluenceTd">Transfer test maximum speed (bits per second)</td></tr><tr><td class="confluenceTd"><strong>local-udp-tx-size</strong><span> </span>(<em>integer: 28..64000</em>)</td><td class="confluenceTd">Local transmit packet size in bytes</td></tr><tr><td class="confluenceTd"><strong>password</strong><span> </span>(<em>string</em>; Default:<span> </span><strong>&quot;&quot;</strong>)</td><td class="confluenceTd">Password for the remote user</td></tr><tr><td class="confluenceTd"><strong>protocol</strong><span> </span>(<em>udp | tcp</em>; Default:<span> </span><strong>udp</strong>)</td><td class="confluenceTd">Protocol to use</td></tr><tr><td class="confluenceTd"><strong>random-data</strong><span> </span>(<em>yes | no</em>; Default:<span> </span><strong>no</strong>)</td><td class="confluenceTd">If random-data is set to yes, the payload of the bandwidth test packets will have incompressible random data stream so that links that use data compression will not distort the results (this is CPU intensive and random-data should be set to no for low speed CPUs)</td></tr><tr><td class="confluenceTd"><strong>remote-tx-speed</strong><span> </span>(<em>integer 0..18446744073709551615</em>; Default: )</td><td class="confluenceTd">Receive test maximum speed (bits per second)</td></tr><tr><td class="confluenceTd"><strong>remote-udp-tx-size</strong><span> </span>(<em>integer: 28..64000</em>)</td><td class="confluenceTd">Remote transmit packet size in bytes</td></tr><tr><td class="confluenceTd"><strong>connection-count</strong><span> </span>(<em>integer 1..255</em>; Default:)</td><td class="confluenceTd">Number of TCP connections to use</td></tr><tr><td class="confluenceTd"><strong>user</strong><span> </span>(<em>string</em>; Default:<span> </span><strong>&quot;&quot;</strong>)</td><td class="confluenceTd">Remote user</td></tr></tbody></table></div><p class="auto-cursor-target"><strong>Example</strong></p><p><span style="color:var(--ds-text-accent-lime-bolder,#37471f);">To run 15-second long bandwidth-test to the<span> </span></span><strong>10.0.0.32</strong><span style="color:var(--ds-text-accent-lime-bolder,#37471f);"><span> </span>host sending and receiving<span> </span></span><strong>1000</strong><span style="color:var(--ds-text-accent-lime-bolder,#37471f);">-byte UDP packets and using username<span> </span></span><strong>admin</strong><span style="color:var(--ds-text-accent-lime-bolder,#37471f);"><span> </span>to connect:</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] /tool&gt; bandwidth-test 10.0.0.32 duration=15s \
+\... direction=both local-udp-tx-size=1000 protocol=udp \
+\... remote-udp-tx-size=1000 user=admin
+                status: done testing
+              duration: 15s
+            tx-current: 272.8Mbps
+  tx-10-second-average: 200.3Mbps
+      tx-total-average: 139.5Mbps
+            rx-current: 169.6Mbps
+  rx-10-second-average: 164.8Mbps
+      rx-total-average: 117.0Mbps
+          lost-packets: 373
+           random-data: no
+             direction: both
+               tx-size: 1000
+               rx-size: 1000
+[admin@MikroTik] /tool&gt;</pre>
+</div></div><p><span class="auto-cursor-target" style="color:var(--ds-text-accent-lime-bolder,#37471f);"><strong>Link-local IPv6 example</strong><span style="color:var(--ds-text-accent-lime-bolder,#37471f);">:</span></span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; /tool bandwidth-test fe80::34:23ff:fe6a:570c%local
+                status: running
+              duration: 5s
+            rx-current: 23.9Mbps
+  rx-10-second-average: 15.1Mbps
+      rx-total-average: 15.1Mbps
+          lost-packets: 0
+           random-data: no
+             direction: receive
+               rx-size: 1500</pre>
+</div></div></div>
+</div>
+</div>
+</div>
+                    </div>
+
+                                        
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:54</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

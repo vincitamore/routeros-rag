@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : MACsec</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Bridging-and-Switching_328068.html">Bridging and Switching</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : MACsec
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Edgars P.</span>, last updated by <span class='editor'> Guntis G.</span> on Mar 28, 2024
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742024168 {padding: 0px;}
+div.rbtoc1747742024168 ul {margin-left: 0px;}
+div.rbtoc1747742024168 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742024168'>
+<ul class='toc-indentation'>
+<li><a href='#MACsec-Overview'>Overview</a></li>
+<li><a href='#MACsec-BasicConfigurationExample'>Basic Configuration Example</a></li>
+<li><a href='#MACsec-PropertyReference'>Property Reference</a>
+<ul class='toc-indentation'>
+<li><a href='#MACsec-Interfacesettings'>Interface settings</a></li>
+<li><a href='#MACsec-Profilesettings'>Profile settings</a></li>
+</ul>
+</li>
+</ul>
+</div></p><h1 id="MACsec-Overview">Overview</h1><p>The MACsec (Media Access Control Security) protocol is a standard security technology employed in Ethernet networks to ensure the confidentiality, integrity, and authenticity of data transmitted over the physical medium. MACsec is defined by IEEE standard 802.1AE.</p><p>MACsec utilizes GCM-AES-128 encryption over Ethernet and secures all LAN traffic, including DHCP, ARP, LLDP, and higher-layer protocols.</p><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>RouterOS MACsec implementation is in the early stage, it <strong>does not support</strong> dynamic key management via <a href="https://help.mikrotik.com/docs/display/ROS/Dot1X" rel="nofollow">Dot1x</a> (manual key configuration is required) and hardware-accelerated encryption (maximum throughput is highly limited by the device CPU).</p></div></div><h1 id="MACsec-BasicConfigurationExample">Basic Configuration Example</h1><p>Imagine Host1 ether1 is connected to Switch ether1 and Host2 ether1 is connected to Switch ether2. In this example, we will create two MACsec interface pairs and use a bridge to create a secure Layer2 connection between both end devices. </p><p>First, configure MACsec interfaces on Host1 and Host2. We can specify only the Ethernet interface and RouterOS will automatically generate the Connectivity Association Key (CAK) and connectivity association name (CKN). Use the <span style="color:var(--ds-icon-accent-magenta,#cd519d);"><code>print</code></span> command to see the values:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false"># Host1
+/interface macsec
+add interface=ether1 name=macsec1
+
+[admin@Host2] /interface/macsec print
+Flags: I - inactive, X - disabled, R - running 
+ 0   name=&quot;macsec1&quot; mtu=1468 interface=ether1 status=&quot;negotiating&quot; cak=71a7c363794da400dbde595d3926b0e9
+     ckn=f2c4660060169391d29d8db8a1f06e5d4b84a128bad06ad43ea2bd4f7d21968f profile=default
+
+# Host2
+/interface macsec
+add interface=ether1 name=macsec1
+
+[admin@Host2] /interface/macsec print
+Flags: I - inactive, X - disabled, R - running 
+ 0   name=&quot;macsec1&quot; mtu=1468 interface=ether1 status=&quot;negotiating&quot; cak=dc47d94291d19a6bb26a0c393a1af9a4
+     ckn=e9bd0811dad1e56f06876aa7715de1855f1aee0baf5982ac8b508d4fc0f162d9 profile=default</pre>
+</div></div><p>On the Switch device, to enable MACsec we need to configure the matching CAK and CKN values for the appropriate Ethernet interface:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false"># Switch
+/interface macsec
+add comment=Host1 cak=71a7c363794da400dbde595d3926b0e9 ckn=f2c4660060169391d29d8db8a1f06e5d4b84a128bad06ad43ea2bd4f7d21968f interface=ether1 name=macsec1
+add comment=Host2 cak=dc47d94291d19a6bb26a0c393a1af9a4 ckn=e9bd0811dad1e56f06876aa7715de1855f1aee0baf5982ac8b508d4fc0f162d9 interface=ether2 name=macsec2</pre>
+</div></div><p>Once the pre-shared keys are successfully exchanged, the MACsec Key Agreement (MKA) protocol is activated. MKA is responsible for ensuring the continuity of MACsec on the link and determines which side becomes the key server in a point-to-point connection. The key server generates a Secure Association Key (SAK) that is shared exclusively with the device on the other end of the link. This SAK is used to secure all data traffic passing through the link. Periodically, the key server generates a new randomly-created SAK and shares it over the point-to-point link to maintain MACsec functionality.</p><p>In RouterOS, the MACsec interface can be configured like any Ethernet interface. It can be used as a routable interface with an IP address, or placed inside a bridge. On Host1 and Host2 we will add an IP address from the same network. On Switch, we will use a bridge. </p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false"># Host1
+/ip address
+add address=192.168.10.10/24 interface=macsec1
+
+# Host2
+/ip address
+add address=192.168.10.20/24 interface=macsec1
+
+# Switch
+/interface bridge
+add name=bridge1
+/interface bridge port
+add bridge=bridge1 interface=macsec1
+add bridge=bridge1 interface=macsec2</pre>
+</div></div><p>Last, confirm that Host1 can reach Host2 using a ping.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false"> [admin@Host1] &gt; ping 192.168.10.20
+  SEQ HOST                                     SIZE TTL TIME       STATUS
+    0 192.168.10.20                              56  64 1ms438us  
+    1 192.168.10.20                              56  64 818us     
+    2 192.168.10.20                              56  64 791us     
+    3 192.168.10.20                              56  64 817us     
+    4 192.168.10.20                              56  64 783us     
+    sent=5 received=5 packet-loss=0% min-rtt=783us avg-rtt=929us max-rtt=1ms438us</pre>
+</div></div><h1 id="MACsec-PropertyReference"><span class="mw-headline">Property Reference</span></h1><h2 id="MACsec-Interfacesettings"><span class="mw-headline">Interface settings</span></h2><p><strong>Sub-menu:</strong> <code>/interface/macsec</code></p><p>Configuration settings for the MACsec interface.</p><div class="table-wrap"><table class="wrapped confluenceTable"><colgroup class=""><col class=""/><col class=""/></colgroup><thead class=""><tr class=""><th style="text-align: left;" class="confluenceTh"><p>Property</p></th><th style="text-align: left;" class="confluenceTh"><p>Description</p></th></tr></thead><tbody class=""><tr class=""><td style="text-align: left;" class="confluenceTd"><strong>cak</strong><span> (<em>string</em>; Default: )</span></td><td style="text-align: left;" class="confluenceTd">A 16-byte pre-shared connectivity association key (CAK). To enable MACsec, configure the matching CAK and CKN on both ends of the link. When not specified, RouterOS will automatically generate a random value.</td></tr><tr class=""><td style="text-align: left;" class="confluenceTd"><strong>ckn<span> </span></strong>(<em>string</em>; Default: )</td><td style="text-align: left;" class="confluenceTd">A 32-byte connectivity association name (CKN). To enable MACsec, configure the matching CAK and CKN on both ends of the link. When not specified, RouterOS will automatically generate a random value.</td></tr><tr class=""><td style="text-align: left;" class="confluenceTd"><strong>comment</strong><span> </span>(<em>string</em>; Default: )</td><td style="text-align: left;" class="confluenceTd">Short description of the interface.</td></tr><tr class=""><td style="text-align: left;" class="confluenceTd"><strong>disabled</strong><span> </span>(<em>yes | no</em>; Default:<span> </span><strong>no</strong>)</td><td style="text-align: left;" class="confluenceTd">Changes whether the interface is disabled.</td></tr><tr class=""><td style="text-align: left;" class="confluenceTd"><strong>interface</strong><span> </span>(<em>name</em>; Default:<span> </span>)</td><td style="text-align: left;" class="confluenceTd">Ethernet interface name where MACsec is created on, limited to one MACsec interface per Ethernet.</td></tr><tr class=""><td style="text-align: left;" class="confluenceTd"><strong>mtu</strong><span> </span>(<em>integer</em>; Default:<span> </span><strong>1468</strong>)</td><td style="text-align: left;" class="confluenceTd"><p>Sets the maximum transmission unit. The<span> </span><code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">l2mtu</span></code><span> </span>will be set automatically according to the associated<span> </span><code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">interface</span></code><span> </span>(subtracting 32 bytes corresponding to the MACsec encapsulation). The<span> </span><code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">l2mtu</span></code><span> </span>cannot be changed.</p></td></tr><tr class=""><td style="text-align: left;" class="confluenceTd"><strong>name</strong><span> </span>(<span><em>string</em></span>; Default:<span> </span><strong>macsec1</strong>)</td><td style="text-align: left;" class="confluenceTd">Name of the interface.</td></tr><tr class=""><td style="text-align: left;" class="confluenceTd"><strong>profile</strong><span> </span>(<em>name</em>; Default:<span> <strong>default</strong></span>)</td><td style="text-align: left;" class="confluenceTd"><p>Sets MACsec profile, used for determining the key server in a point-to-point connection.</p></td></tr><tr><td style="text-align: left;" class="confluenceTd"><strong>status </strong>(<em>read-only: disabled |<span style="color:var(--ds-text,#172b4d);">initializing</span> | <span style="color:var(--ds-text,#172b4d);">invalid</span> | negotiating | open-encrypted</em>)</td><td style="text-align: left;" class="confluenceTd"><p>Shows the current MACsec interface status.</p></td></tr></tbody></table></div><h2 id="MACsec-Profilesettings"><span class="mw-headline">Profile settings</span></h2><p><strong>Sub-menu:</strong> <code>/interface/macsec/profile</code></p><p>Configuration settings for the MACsec profile.</p><div class="table-wrap"><table class="wrapped confluenceTable"><colgroup class=""><col class=""/><col class=""/></colgroup><thead class=""><tr class=""><th style="text-align: left;" class="confluenceTh"><p>Property</p></th><th style="text-align: left;" class="confluenceTh"><p>Description</p></th></tr></thead><tbody class=""><tr class=""><td style="text-align: left;" class="confluenceTd"><strong>name</strong><span> (<em>string</em>; Default: )</span></td><td style="text-align: left;" class="confluenceTd">Name of the profile.</td></tr><tr class=""><td style="text-align: left;" class="confluenceTd"><strong>server-priority<span> </span></strong>(<em>integer: 0..255</em>; Default: <strong>10</strong>)</td><td style="text-align: left;" class="confluenceTd"><span style="color:var(--ds-text,#172b4d);">Sets the priority for determining the key server in a point-to-point connection, a lower value means higher priority. In case of a priority match, the interface with the lowest MAC address will be acting as a key server.</span></td></tr></tbody></table></div>
+                    </div>
+
+                                        
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

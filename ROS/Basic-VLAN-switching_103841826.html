@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : Basic VLAN switching</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Bridging-and-Switching_328068.html">Bridging and Switching</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Bridging-and-Switching-Case-Studies_119144611.html">Bridging and Switching Case Studies</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : Basic VLAN switching
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Edgars P.</span>, last updated on Feb 10, 2025
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742024713 {padding: 0px;}
+div.rbtoc1747742024713 ul {margin-left: 0px;}
+div.rbtoc1747742024713 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742024713'>
+<ul class='toc-indentation'>
+<li><a href='#BasicVLANswitching-Introduction'>Introduction</a></li>
+<li><a href='#BasicVLANswitching-CRS3xx,CRS5xxseriesswitches,CCR2116,CCR2216andRTL8367,88E6393X,88E6191X,88E6190,MT7621,MT7531andEN7562CTswitchchips'>CRS3xx, CRS5xx series switches, CCR2116, CCR2216 and RTL8367, 88E6393X, 88E6191X, 88E6190, MT7621, MT7531 and EN7562CT switch chips</a></li>
+<li><a href='#BasicVLANswitching-CRS1xx/CRS2xxseriesswitches'>CRS1xx/CRS2xx series switches</a></li>
+<li><a href='#BasicVLANswitching-Otherdeviceswithabuilt-inswitchchip'>Other devices with a built-in switch chip</a></li>
+<li><a href='#BasicVLANswitching-Otherdeviceswithoutabuilt-inswitchchip'>Other devices without a built-in switch chip</a></li>
+</ul>
+</div></p><h1 id="BasicVLANswitching-Introduction"><span class="mw-headline">Introduction</span></h1><hr/><p>Many MikroTik devices come with built-in switch chips that usually have an option to do VLAN switching on a hardware level, this means that you can achieve wire-speed performance using VLANs if a proper configuration method is used. The configuration method changes across different models, this guide will focus on setting up a basic trunk/access port with a management port from the trunk port using different devices with the right configuration to achieve the best performance and to fully utilize the available hardware components.</p><p><span class="confluence-embedded-file-wrapper image-center-wrapper"><img class="confluence-embedded-image image-center" draggable="false" src="attachments/103841826/129531963.jpg" data-image-src="attachments/103841826/129531963.jpg" data-unresolved-comment-count="0" data-linked-resource-id="129531963" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="700px-Basic_vlan_switching.jpg" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/jpeg" data-linked-resource-container-id="103841826" data-linked-resource-container-version="11" tabindex="0" alt=""></span></p><h1 id="BasicVLANswitching-CRS3xx,CRS5xxseriesswitches,CCR2116,CCR2216andRTL8367,88E6393X,88E6191X,88E6190,MT7621,MT7531andEN7562CTswitchchips"><span class="mw-headline">CRS3xx, CRS5xx series switches, CCR2116, CCR2216 and <span style="color:var(--ds-text,#172B4D);">RTL8367, 88E6393X, 88E6191X, 88E6190, MT7621, MT7531 and EN7562CT switch chips</span></span></h1><hr/><p><br/></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface bridge
+add name=bridge1 frame-types=admit-only-vlan-tagged
+/interface bridge port
+add bridge=bridge1 interface=ether1 frame-types=admit-only-vlan-tagged
+add bridge=bridge1 interface=ether2 pvid=20 frame-types=admit-only-untagged-and-priority-tagged
+add bridge=bridge1 interface=ether3 pvid=30 frame-types=admit-only-untagged-and-priority-tagged
+/interface bridge vlan
+add bridge=bridge1 tagged=ether1 vlan-ids=20
+add bridge=bridge1 tagged=ether1 vlan-ids=30
+add bridge=bridge1 tagged=ether1,bridge1 vlan-ids=99
+/interface vlan
+add interface=bridge1 vlan-id=99 name=MGMT
+/ip address
+add address=192.168.99.1/24 interface=MGMT
+/interface bridge
+set bridge1 vlan-filtering=yes</pre>
+</div></div><p class="auto-cursor-target">More detailed examples can be found<span> </span><a href="https://help.mikrotik.com/docs/display/ROS/Bridging+and+Switching#BridgingandSwitching-BridgeVLANFiltering" rel="nofollow">here</a>.</p><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>RTL8367, 88E6393X, 88E6191X, <span style="color:var(--ds-text,#172B4D);">88E6190, </span>MT7621, MT7531, <span style="color:var(--ds-text,#172b4d);">EN7562CT</span> switch chips can use HW offloaded vlan-filtering since RouterOS v7.</p></div></div><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p> Bridge ports with <span style="color:var(--ds-icon-success,#22A06B);"><code>frame-types</code></span> set to <code><span style="color:var(--ds-icon-success,#22A06B);">admit-all</span></code> or <span style="color:var(--ds-icon-success,#22A06B);"><code>admit-only-untagged-and-priority-tagged</code></span> will be automatically added as untagged ports for the <span style="color:var(--ds-icon-success,#22A06B);"><code>pvid</code></span> VLAN.</p></div></div><h1 id="BasicVLANswitching-CRS1xx/CRS2xxseriesswitches"><span class="mw-headline">CRS1xx/CRS2xx series switches</span></h1><hr/><p><br/></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface bridge
+add name=bridge1
+/interface bridge port
+add bridge=bridge1 interface=ether1
+add bridge=bridge1 interface=ether2
+add bridge=bridge1 interface=ether3
+/interface ethernet switch ingress-vlan-translation
+add ports=ether2 customer-vid=0 new-customer-vid=20
+add ports=ether3 customer-vid=0 new-customer-vid=30
+/interface ethernet switch egress-vlan-tag
+add tagged-ports=ether1 vlan-id=20
+add tagged-ports=ether1 vlan-id=30
+add tagged-ports=ether1,switch1-cpu vlan-id=99
+/interface ethernet switch vlan
+add ports=ether1,ether2 vlan-id=20
+add ports=ether1,ether3 vlan-id=30
+add ports=ether1,switch1-cpu vlan-id=99
+/interface vlan
+add interface=bridge1 vlan-id=99 name=MGMT
+/ip address
+add address=192.168.99.1/24 interface=MGMT
+/interface ethernet switch
+set drop-if-invalid-or-src-port-not-member-of-vlan-on-ports=ether1,ether2,ether3</pre>
+</div></div><p>More detailed examples can be found<span> </span><a href="https://help.mikrotik.com/docs/pages/viewpage.action?pageId=103841836#CRS1xx/2xxseriesswitchesexamples-VLAN" rel="nofollow">here</a>.</p><h1 id="BasicVLANswitching-Otherdeviceswithabuilt-inswitchchip"><span class="mw-headline">Other devices with a built-in switch chip</span></h1><hr/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface bridge
+add name=bridge1
+/interface bridge port
+add bridge=bridge1 interface=ether1
+add bridge=bridge1 interface=ether2
+add bridge=bridge1 interface=ether3
+/interface ethernet switch vlan
+add ports=ether1,ether2 switch=switch1 vlan-id=20
+add ports=ether1,ether3 switch=switch1 vlan-id=30
+add ports=ether1,switch1-cpu switch=switch1 vlan-id=99
+/interface vlan
+add interface=bridge1 vlan-id=99 name=MGMT
+/ip address
+add address=192.168.99.1/24 interface=MGMT
+/interface ethernet switch port
+set ether1 vlan-mode=secure vlan-header=add-if-missing
+set ether2 vlan-mode=secure vlan-header=always-strip default-vlan-id=20
+set ether3 vlan-mode=secure vlan-header=always-strip default-vlan-id=30
+set switch1-cpu vlan-header=leave-as-is vlan-mode=secure</pre>
+</div></div><p class="auto-cursor-target">More detailed examples can be found<span> </span><a href="https://help.mikrotik.com/docs/display/ROS/Switch+Chip+Features#SwitchChipFeatures-SetupExamples" rel="nofollow">here</a>.</p><div role="region" aria-label="Warning" class="confluence-information-macro  confluence-information-macro-warning" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-error confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Not all devices with a switch chip are capable of VLAN switching on a hardware level, check the supported features for each switch chip, the compatibility table can be found <a href="https://help.mikrotik.com/docs/display/ROS/Switch+Chip+Features#SwitchChipFeatures-Introduction" rel="nofollow">here</a>. If a device has <code>VLAN table</code> support, then it is capable of VLAN switching using the built-in switch chip. You can check the device's switch chip either in the provided link or by using <span style="color:var(--ds-icon-success,#22A06B);"><code>/interface ethernet switch print</code></span></p></div></div><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p><span style="color:var(--ds-text,#333333);">On </span><strong>QCA8337</strong><span style="color:var(--ds-text,#333333);"> and </span><strong>Atheros8327</strong><span style="color:var(--ds-text,#333333);"> switch chips, a default </span><code>vlan-header=leave-as-is</code><span style="color:var(--ds-text,#333333);"> property should be used. The switch chip will determine which ports are access ports by using the </span><code>default-vlan-id</code><span style="color:var(--ds-text,#333333);"> property. The </span><span style="color:var(--ds-icon-success,#22A06B);"><code>default-vlan-id</code></span><span style="color:var(--ds-text,#333333);"> should only be used on access/hybrid ports to specify which VLAN the untagged ingress traffic is assigned to.</span></p></div></div><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>This type of configuration should be used on RouterBOARD series devices, this includes RB4xx, RB9xx, RB2011, RB3011, hAP, hEX, cAP, and other devices.</p></div></div><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>By default, the bridge interface is configured with protocol-mode set to <code>rstp</code>. For some devices, this can disable hardware offloading because specific switch chips do not support this feature. See the <a href="https://help.mikrotik.com/docs/display/ROS/Bridging+and+Switching#BridgingandSwitching-BridgeHardwareOffloading" rel="nofollow">Bridge Hardware Offloading</a> section with supported features.</p></div></div><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>For devices that have multiple switch chips (for example, RB2011, RB3011, RB1100), each switch chip is only able to switch VLAN traffic between ports that are on the same switch chip, VLAN filtering will not work on a hardware level between ports that are on different switch chips, this means you should not add all ports to a single bridge if you are intending to use VLAN filtering using the switch chip, VLANs between switch chips will not get filtered. You can connect a single cable between both switch chips to work around this hardware limitation, another option is to use Bridge VLAN Filtering, but it disables hardware offloading (and lowers the total throughput).</p></div></div><h1 id="BasicVLANswitching-Otherdeviceswithoutabuilt-inswitchchip"><span class="mw-headline">Other devices without a built-in switch chip</span></h1><hr/><p>It is possible to do VLAN filtering using the CPU, there are multiple ways to do it, but it is highly recommended to use bridge VLAN filtering.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface bridge
+add name=bridge1 frame-types=admit-only-vlan-tagged
+/interface bridge port
+add bridge=bridge1 interface=ether1 frame-types=admit-only-vlan-tagged
+add bridge=bridge1 interface=ether2 pvid=20 frame-types=admit-only-untagged-and-priority-tagged
+add bridge=bridge1 interface=ether3 pvid=30 frame-types=admit-only-untagged-and-priority-tagged
+/interface bridge vlan
+add bridge=bridge1 tagged=ether1 vlan-ids=20
+add bridge=bridge1 tagged=ether1 vlan-ids=30
+add bridge=bridge1 tagged=ether1,bridge1 vlan-ids=99
+/interface vlan
+add interface=bridge1 vlan-id=99 name=MGMT
+/ip address
+add address=192.168.99.1/24 interface=MGMT
+/interface bridge
+set bridge1 vlan-filtering=yes</pre>
+</div></div><p>More detailed examples can be found<span> </span><a href="https://help.mikrotik.com/docs/display/ROS/Bridging+and+Switching#BridgingandSwitching-BridgeVLANFiltering" rel="nofollow">here</a>.</p>
+                    </div>
+
+                                                            <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/103841826/103841827.png">700px-Basic_vlan_switching.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/103841826/129531963.jpg">700px-Basic_vlan_switching.jpg</a> (image/jpeg)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

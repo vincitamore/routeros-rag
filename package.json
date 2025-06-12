@@ -1,0 +1,27 @@
+{
+  "name": "routeros-rag-monorepo",
+  "private": true,
+  "description": "A RAG implementation for RouterOS documentation with a web UI and MCP server.",
+  "scripts": {
+    "api": "pnpm --filter api",
+    "web": "pnpm --filter web",
+    "mcp": "pnpm --filter mcp-server"
+  },
+  "keywords": [
+    "routeros",
+    "rag",
+    "mcp",
+    "ai"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^20.11.25",
+    "@types/node-fetch": "2.x",
+    "chromadb": "^3.0.3",
+    "dotenv": "^16.5.0",
+    "node-fetch": "2.6.7",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.2"
+  }
+}

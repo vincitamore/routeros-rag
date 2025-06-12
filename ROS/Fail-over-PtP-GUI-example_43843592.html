@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : Fail-over PtP GUI example</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Wireless_1409138.html">Wireless</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="W60G_39059501.html">W60G</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : Fail-over PtP GUI example
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Krists Dūčis</span>, last updated by <span class='editor'> Unknown User (0testing)</span> on May 08, 2023
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <h2 id="FailoverPtPGUIexample-Summary"><span class="mw-headline">Summary</span></h2><hr/><p>This example shows how to configure automatic fail-over (bonding) 5Ghz link in combination with 60Ghz devices in GUI.<br/>When a connection between 60Ghz wireless is lost, it will automatically use the bonded interface.<br/>Example is done from empty configuration state with [<a class="external-link" href="https://mikrotik.com/download" rel="nofollow">WinBox</a>] utility</p><h2 id="FailoverPtPGUIexample-Connecttothedevice"><span class="mw-headline">Connect to the device</span></h2><hr/><p>After configuration reset - only mac-telnet is possible. In main WinBox screen press on Neighbours, choose your devices MAC address and press Connect:</p><ol><li>Select correct device <strong>MAC Address;</strong></li><li>Login by default is &quot;<strong>admin</strong>&quot; and no password is set;</li><li>Press <strong>Connect.</strong></li></ol><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/43843592/68944073.png" data-image-src="attachments/43843592/68944073.png" data-unresolved-comment-count="0" data-linked-resource-id="68944073" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="connect_To_device.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="43843592" data-linked-resource-container-version="2" tabindex="0" alt=""></span></p><h2 id="FailoverPtPGUIexample-Configurebridge"><span class="mw-headline">Configure bridge<br/></span></h2><hr/><p>Add new bridge.</p><ol><li>Open Bridge sub-menu;</li><li>Press on &quot;+&quot; to add new bridge;</li><li>Apply your changes.</li></ol><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/43843592/43843597.png" data-image-src="attachments/43843592/43843597.png" data-unresolved-comment-count="0" data-linked-resource-id="43843597" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="winbox_bridge_screen.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="43843592" data-linked-resource-container-version="2" tabindex="0" alt=""></span></p><p><em>Later in the instructions it requires to assign bridge members to it. This will allow to pass traffic from Ethernet to W60G interface without routing.</em></p><h2 id="FailoverPtPGUIexample-Setup60Ghzwirelessconnection"><span class="mw-headline">Set up 60Ghz wireless connection</span></h2><hr/><p>All previously explained steps are identical to <strong>bridge</strong> and <strong>station</strong> devices. Different modes needs to be used when configuring wireless interfaces.</p><p>Configure <strong>bridge</strong> device as follows:</p><ol><li>Open Interface menu;</li><li>Double click on wlan60-1 interface;</li><li>Press on Wireless sub-menu and set mode to <strong>bridge (</strong>or<strong> ap-bridge </strong>for PtmP);</li><li>Set SSID and password and region;</li><li>Select previously created bridge under &quot;Put Stations In Bridge&quot;;</li><li>Apply your changes;</li><li>Press enable to start transmitting.</li></ol><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/43843592/68944056.png" data-image-src="attachments/43843592/68944056.png" data-unresolved-comment-count="0" data-linked-resource-id="68944056" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="60Ghz_connection_bridge.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="43843592" data-linked-resource-container-version="2" tabindex="0" alt=""></span></p><p>Configure <strong>station</strong> device as follows:</p><ol><li>Open Interface menu;</li><li>Double click on wlan60-1 interface;</li><li>Press on Wireless sub-menu and set mode to <strong>station bridge;</strong></li><li>Set SSID and password;</li><li>Apply your changes;</li><li>Press enable to start transmitting.</li></ol><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/43843592/68944057.png" data-image-src="attachments/43843592/68944057.png" data-unresolved-comment-count="0" data-linked-resource-id="68944057" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="60Ghz_station.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="43843592" data-linked-resource-container-version="2" tabindex="0" alt=""></span></p><h2 id="FailoverPtPGUIexample-Setup5Ghzwirelessconnection"><span class="mw-headline">Set up 5Ghz wireless connection</span></h2><hr/><p><strong>Choose Security Profile for your devices -</strong></p><ol><li>Choose <strong>Wireless</strong> menu</li><li>Choose <strong>Security Profiles </strong>sub-menu</li><li>Add new profile with &quot;<strong>+</strong>&quot; sign</li><li>Choose <strong>name</strong>, <strong>mode</strong>, <strong>authentication type</strong> and a secure password.</li><li><strong>Apply </strong>the configuration.</li></ol><p><strong><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/43843592/68944059.png" data-image-src="attachments/43843592/68944059.png" data-unresolved-comment-count="0" data-linked-resource-id="68944059" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="5Ghz_security_profile.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="43843592" data-linked-resource-container-version="2" tabindex="0" alt=""></span></strong></p><p><em><strong>For bridge device -</strong></em></p><ol><li>Open <strong>Interfaces</strong> menu;</li><li>Double click on <strong>wlan1 </strong>interface;</li><li>Press on <strong>Wireless</strong> sub-menu and set mode to <strong>bridge </strong>(or<strong> ap-bridge </strong>for PtmP);</li><li>Set <strong>SSID</strong>, <strong>password</strong> and <strong>country.</strong></li><li>Press on <strong>Advanced Mode.</strong></li></ol><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/43843592/68944060.png" data-image-src="attachments/43843592/68944060.png" data-unresolved-comment-count="0" data-linked-resource-id="68944060" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="5ghz_bridge1.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="43843592" data-linked-resource-container-version="2" tabindex="0" alt=""></span></p><ol><li>Choose your <strong>Security Profile</strong>;</li><li><strong>Apply</strong> your changes;</li><li>Press <strong>enable</strong> to start transmitting.</li></ol><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/43843592/68944061.png" data-image-src="attachments/43843592/68944061.png" data-unresolved-comment-count="0" data-linked-resource-id="68944061" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="5ghz_bridge2.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="43843592" data-linked-resource-container-version="2" tabindex="0" alt=""></span></p><p><strong><em>For station device -</em></strong></p><ol><li>Open <strong>Interfaces</strong> menu;</li><li>Double click on <strong>wlan1</strong> interface;</li><li>Press on <strong>Wireless</strong> sub-menu and set mode to <strong>station-bridge</strong>;</li><li>Set <strong>SSID</strong>, <strong>password</strong> and <strong>country</strong>;</li><li>Press on <strong>advanced</strong> mode ( similar to bridge device* );</li><li>Choose <strong>Security Profile</strong>;</li><li><strong>Apply </strong>your changes;</li><li>Press <strong>enable</strong> to start transmitting.</li></ol><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/43843592/68944063.png" data-image-src="attachments/43843592/68944063.png" data-unresolved-comment-count="0" data-linked-resource-id="68944063" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="5ghz_station.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="43843592" data-linked-resource-container-version="2" tabindex="0" alt=""></span></p><p><em>If everything is done correctly - running (R) flags should appear as shown in the screenshot -</em><br/><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/43843592/68944064.png" data-image-src="attachments/43843592/68944064.png" data-unresolved-comment-count="0" data-linked-resource-id="68944064" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="R_flags.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="43843592" data-linked-resource-container-version="2" tabindex="0" alt=""></span></p><h2 id="FailoverPtPGUIexample-Configurebonding"><span class="mw-headline">Configure bonding<br/></span></h2><hr/><p class="auto-cursor-target"><em>Configure bonding and assign slave interfaces in this setup it is selected as built in wlan1 interface, but it can be also ether interface in other kind of setups.</em></p><p><em><strong>For bridge device -</strong></em></p><ol><li>Press on <strong>Bonding</strong> sub-menu;</li><li> Add new member with &quot;<strong>+</strong>&quot;;</li><li>Add interface members (<strong>wlan1 </strong>and <strong>wlan60-station-1</strong>) to <strong>bonding</strong> interface as <strong>Slaves;</strong></li><li>Add interface member <strong>wlan60-station-1 </strong>as <strong>Primary</strong> interface;</li><li>Choose Mode as <strong>active backup</strong>;</li><li><strong>Apply</strong> configuration.</li></ol><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/43843592/68944066.png" data-image-src="attachments/43843592/68944066.png" data-unresolved-comment-count="0" data-linked-resource-id="68944066" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="Bridge_bonding.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="43843592" data-linked-resource-container-version="2" tabindex="0" alt=""></span></p><p><em><strong>For station device -</strong></em></p><ol><li>Press on <strong>Bonding</strong> sub-menu;</li><li> Add new member with &quot;<strong>+</strong>&quot;;</li><li>Add interface members (<strong>wlan1 </strong>and <strong>wlan60-1</strong>) to <strong>bonding</strong> interface as <strong>Slaves;</strong></li><li>Add interface member <strong>wlan60-1</strong> as <strong>Primary</strong> interface;</li><li>Choose Mode as <strong>active backup</strong>;</li><li><strong>Apply</strong> configuration.</li></ol><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/43843592/68944067.png" data-image-src="attachments/43843592/68944067.png" data-unresolved-comment-count="0" data-linked-resource-id="68944067" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="Station_bonding.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="43843592" data-linked-resource-container-version="2" tabindex="0" alt=""></span></p><h2 id="FailoverPtPGUIexample-Configurebridge.1"><span class="mw-headline">Configure bridge<br/></span></h2><hr/><p class="auto-cursor-target"><em>Configuring bridge settings including the bonding interface is mandatory for the active-backup to work on used devices ( In this case bridge and station devices settings are the same ).<br/></em></p><ol><li>Press on <strong>Bridge </strong>sub-menu;</li><li>Add new member with &quot;<strong>+</strong>&quot;;</li><li>Add interface member as <strong>ether1 </strong>and Bridge member as <strong>bridge1;</strong></li><li><strong>Apply</strong> configuration.</li></ol><p class="auto-cursor-target"><em><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/43843592/68944069.png" data-image-src="attachments/43843592/68944069.png" data-unresolved-comment-count="0" data-linked-resource-id="68944069" data-linked-resource-version="2" data-linked-resource-type="attachment" data-linked-resource-default-alias="bridge_port1.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="43843592" data-linked-resource-container-version="2" tabindex="0" alt=""></span></em></p><ol><li>Press on <strong>Bridge </strong>sub-menu;</li><li>Add new member with &quot;<strong>+</strong>&quot;;</li><li>Add interface member as <strong>bonding1 </strong>and Bridge member as <strong>bridge1;</strong></li><li><strong>Apply</strong> configuration.</li></ol><p class="auto-cursor-target"><em><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/43843592/68944071.png" data-image-src="attachments/43843592/68944071.png" data-unresolved-comment-count="0" data-linked-resource-id="68944071" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="bonding_ports2.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="43843592" data-linked-resource-container-version="2" tabindex="0" alt=""></span></em></p><h2 id="FailoverPtPGUIexample-Additionalconfiguration"><span class="mw-headline">Additional configuration</span></h2><hr/><p><span class="mw-headline">Interfaces when enabled from greyed out will become active.</span></p><p><span class="mw-headline">Link should be established after all previously explained steps are done. It's recommended to set up administrator password on both devices. </span></p>
+                    </div>
+
+                                                            <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/43843592/43843596.png">winbox_bridge_ports_settings.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/43843592/43843597.png">winbox_bridge_screen.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/43843592/43843598.png">Winbox_main_screen.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/43843592/43843599.png">winbox_ports_settings.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/43843592/43843600.png">winbox_w60g_bridge.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/43843592/43843601.png">winbox_w60g_station.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/43843592/43843602.png">bonding.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/43843592/43843604.png">bridge_bond1_ether1.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/43843592/43843605.png">ap_bridge_bonding_pw.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/43843592/43843606.png">station_bridge_pw_bonding.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/43843592/68944056.png">60Ghz_connection_bridge.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/43843592/68944057.png">60Ghz_station.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/43843592/68944059.png">5Ghz_security_profile.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/43843592/68944060.png">5ghz_bridge1.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/43843592/68944061.png">5ghz_bridge2.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/43843592/68944063.png">5ghz_station.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/43843592/68944064.png">R_flags.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/43843592/68944066.png">Bridge_bonding.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/43843592/68944067.png">Station_bonding.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/43843592/68944070.png">bridge_port1.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/43843592/68944069.png">bridge_port1.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/43843592/68944071.png">bonding_ports2.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/43843592/68944073.png">connect_To_device.png</a> (image/png)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

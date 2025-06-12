@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : ZeroTier</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Virtual-Private-Networks_119144597.html">Virtual Private Networks</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : ZeroTier
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Normunds R.</span>, last updated by <span class='editor'> Oskars K.</span> on Jan 08, 2025
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p style="text-align: left;"><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742034672 {padding: 0px;}
+div.rbtoc1747742034672 ul {margin-left: 0px;}
+div.rbtoc1747742034672 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742034672'>
+<ul class='toc-indentation'>
+<li><a href='#ZeroTier-Introduction'>Introduction</a>
+<ul class='toc-indentation'>
+<li><a href='#ZeroTier-Videotutorial'>Video tutorial</a></li>
+</ul>
+</li>
+<li><a href='#ZeroTier-RequiredNetworkConfiguration'>Required Network Configuration</a>
+<ul class='toc-indentation'>
+<li><a href='#ZeroTier-WhatportsdoesZeroTieruse?'>What ports does ZeroTier use?</a></li>
+<li><a href='#ZeroTier-RecommendedLocalNetworkandInternetGatewayConfiguration'>Recommended Local Network and Internet Gateway Configuration</a></li>
+</ul>
+</li>
+<li><a href='#ZeroTier-Configurationexample'>Configuration example</a>
+<ul class='toc-indentation'>
+<li><a href='#ZeroTier-Peer'>Peer</a></li>
+</ul>
+</li>
+<li><a href='#ZeroTier-Parameters'>Parameters</a></li>
+<li><a href='#ZeroTier-Controller'>Controller</a>
+<ul class='toc-indentation'>
+<li><a href='#ZeroTier-Parameters.1'>Parameters</a></li>
+<li><a href='#ZeroTier-Configurationexample.1'>Configuration example</a>
+<ul class='toc-indentation'>
+<li><a href='#ZeroTier-RouterOSHome'>RouterOS Home</a></li>
+<li><a href='#ZeroTier-RouterOSOffice'>RouterOS Office</a></li>
+<li><a href='#ZeroTier-Otherdevices'>Other devices</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div></p><h1 style="text-align: left;" id="ZeroTier-Introduction">Introduction</h1><p style="text-align: left;">The<span> </span><a class="external-link" href="https://www.zerotier.com/manual/" rel="nofollow">ZeroTier</a><span> </span>network hypervisor is a self-contained network virtualization engine that implements an Ethernet virtualization layer similar to<span> </span><a class="external-link" href="https://en.wikipedia.org/wiki/Virtual_Extensible_LAN" rel="nofollow" style="text-decoration: underline;">VXLAN</a> <span style="text-decoration: none;color:var(--ds-text-accent-gray,#44546F);">built atop a cryptographically secure global peer-to-peer network. It provides advanced network virtualization and management capabilities on par with an enterprise SDN switch, but across both local and wide area networks and connecting almost any kind of app or device.</span></p><p style="text-align: left;"><span style="text-decoration: none;color:var(--ds-text-accent-gray,#44546F);">MikroTik has added ZeroTier to RouterOS v7.1rc2 as a separate package for the <strong>ARM/ARM64</strong> architecture. </span></p><p style="text-align: left;"><span style="text-decoration: none;color:var(--ds-text-accent-gray,#44546F);">Zerotier has been upgraded to 1.14.0 on 7.17rc6 ROS version.</span></p><p>Wait, so what can I use it for?</p><ul><li>Hosting a game server at home (useful for LAN only games) or simply creating a LAN party with your friends;</li><li>Accessing LAN devices behind NAT directly;</li><li>Accessing LAN devices via SSH without opening port to the Internet;</li><li>Using your local Pi-Hole setup from anywhere via the Internet;</li></ul><h2 id="ZeroTier-Videotutorial">Video tutorial</h2><ul><li><a class="external-link" href="https://youtu.be/60uIlyF8Z5s" rel="nofollow">ZeroTier</a></li></ul><h1 style="text-align: left;" id="ZeroTier-RequiredNetworkConfiguration"><span style="text-decoration: none;color:var(--ds-text-accent-gray,#44546F);">Required Network Configuration</span></h1><h2 id="ZeroTier-WhatportsdoesZeroTieruse?">What ports does ZeroTier use?</h2><p>It listens on three 3 UDP ports:</p><ul><li>9993 - The default</li><li><span class="pl-c">A random, high numbered port derived from your ZeroTier address<br/></span></li><li><span class="pl-c">A random, high numbered port for use with UPnP/NAT-PMP mappings</span></li></ul><p>That means your<span> </span><em>peers</em><span> </span>could be listening on any port. To talk with them directly, you need to be able to send them to any port.</p><h2 id="ZeroTier-RecommendedLocalNetworkandInternetGatewayConfiguration">Recommended Local Network and Internet Gateway Configuration</h2><p><span style="color:var(--ds-text,#333333);">These ZeroTier recommended guidelines are consistent with the vast majority of typical deployments using commodity gateways and access points:</span></p><ul><li>Don't restrict outbound UDP traffic.</li><li>Supporting either UPnP or NAT-PMP on your network can greatly improve performance by allowing ZeroTier endpoints to map external ports and avoid NAT traversal entirely.</li><li>IPv6 is recommended and can greatly improve direct connection reliability if supported on both ends of a direct link. If present it should be implemented without NAT (NAT is wholly unnecessary with IPv6 and only adds complexity) and with a stateful firewall that permits bidirectional UDP conversations.</li><li>Don't use &quot;symmetric&quot; NAT. Use &quot;full cone&quot; or &quot;port restricted cone&quot; NAT. Symmetric NAT is extremely hostile to peer-to-peer traffic and will degrade VoIP, video chat, games, WebRTC, and many other protocols as well as ZeroTier.</li><li>No more than one layer of NAT should be present between ZeroTier endpoints and the Internet. Multiple layers of NAT introduce connection instability due to chaotic interactions between states and behaviors at different levels.<span> </span><strong>No Double NAT.</strong></li><li>NATs should have a port mapping or connection timeout no shorter than 60 seconds.</li><li>Place no more than about 16,000 devices behind each NAT-managed external IP address to ensure that each device can map a sufficient number of ports.</li><li>Switches and wireless access points should allow direct local traffic between local devices. Turn off any &quot;local isolation&quot; features. Some switches might allow finer-grained control, and on these, it would be sufficient to allow local UDP traffic to/from 9993 (or in general).</li></ul><h1 style="text-align: left;" id="ZeroTier-Configurationexample"><span style="text-decoration: none;color:var(--ds-text-accent-gray,#44546F);">Configuration example</span></h1><p><span class="confluence-embedded-file-wrapper image-center-wrapper"><img class="confluence-embedded-image image-center" draggable="false" src="attachments/83755083/100892674.png" data-image-src="attachments/83755083/100892674.png" data-unresolved-comment-count="0" data-linked-resource-id="100892674" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="ZeroTier_ilustracija.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="83755083" data-linked-resource-container-version="35" tabindex="0" alt=""></span></p><p><span style="text-decoration: none;color:var(--ds-text-accent-gray,#44546F);">By default, ZeroTier <span style="color:var(--ds-text,#333333);">is designed to be zero-configuration. A user can start a new ZeroTier node without having to write configuration files or provide the IP addresses of other nodes. It’s also designed to be fast. Any two devices in the world should be able to locate each other and communicate almost instantly so the following example will enable ZeroTier on RouterOS device and connect one mobile phone using the ZeroTier application.</span></span></p><p><br/></p><ol><li>Register on<span> </span><a class="external-link" href="https://my.zerotier.com/" rel="nofollow">my.zerotier.com</a><span> </span>and <strong>Create A Network</strong>, obtain the <em>Network ID</em>, in this example: <em>1d71939404912b40</em>;<br/><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/83755083/100892673.png" data-image-src="attachments/83755083/100892673.png" data-unresolved-comment-count="0" data-linked-resource-id="100892673" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="network.jpg.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="83755083" data-linked-resource-container-version="35" tabindex="0" alt=""></span></li><li><a class="external-link" href="https://mikrotik.com/download" rel="nofollow">Download</a> and Install ZeroTier NPK package in RouterOS, you can find under in the &quot;Extra packages&quot;, upload package on the device and reboot the unit;</li><li><p class="auto-cursor-target">Enable the default (official) ZeroTier instance:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@mikrotik] &gt; zerotier/enable zt1</pre>
+</div></div></li><li><p class="auto-cursor-target">Add a new network, specifying the network ID you created in the ZeroTier cloud console:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@mikrotik] zerotier/interface/add network=1d71939404912b40 instance=zt1</pre>
+</div></div></li><li><p class="auto-cursor-target">Verify ZeroTier configuration:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; zerotier/interface/print
+Flags: R - RUNNING
+Columns: NAME, MAC-ADDRESS, NETWORK, NETWORK-NAME, STATUS
+#   NAME       MAC-ADDRESS        NETWORK           NETWORK-NAME     STATUS
+0 R zerotier1  42:AC:0D:0F:C6:F6  1d71939404912b40  modest_metcalfe  OK   </pre>
+</div></div></li><li><p class="auto-cursor-target">Now you might need to allow connections from the ZeroTier interface to your router, and<span> </span><strong>optionally</strong>, to your other LAN interfaces: </p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip firewall filter add action=accept chain=forward in-interface=zerotier1 place-before=0
+/ip firewall filter add action=accept chain=input in-interface=zerotier1 place-before=0</pre>
+</div></div></li><li>Install a ZeroTier client on your smartphone or computer, follow the ZeroTier manual on how to connect to the same network from there.</li><li>If <strong>&quot;</strong><span style="color:var(--ds-text,#333333);"><strong>Access Control&quot;</strong> is set to <strong>&quot;Private&quot;</strong>, you must authorize nodes before they become members:</span><br/><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/83755083/100892675.png" data-image-src="attachments/83755083/100892675.png" data-unresolved-comment-count="0" data-linked-resource-id="100892675" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="Screenshot_2.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="83755083" data-linked-resource-container-version="35" tabindex="0" alt=""></span></li><li><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; ip/address/print where interface~&quot;zero&quot;
+Flags: D - DYNAMIC
+Columns: ADDRESS, NETWORK, INTERFACE
+#   ADDRESS             NETWORK        INTERFACE
+3 D 192.168.192.105/24  192.168.192.0  zerotier1
+
+[admin@MikroTik] &gt; ping 192.168.192.252 count=3
+SEQ HOST                                     SIZE TTL TIME       STATUS                                                                                                                                           
+0 192.168.192.252                            56  64 407us     
+1 192.168.192.252                            56  64 452us     
+2 192.168.192.252                            56  64 451us     
+sent=3 received=3 packet-loss=0% min-rtt=407us avg-rtt=436us max-rtt=452us </pre>
+</div></div></li></ol><div role="region" aria-label="Tip" class="confluence-information-macro  confluence-information-macro-tip" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-approve confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>You should specify routes to specific internal subnets in the<span> </span><a class="external-link" href="https://my.zerotier.com/" rel="nofollow">ZeroTier cloud console</a>, to make sure you can access those networks when connecting from other devices. </p></div></div><h3 class="auto-cursor-target" id="ZeroTier-Peer">Peer</h3><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">zerotier/peer/</pre>
+</div></div><p>ZeroTier`s peer is an informative section with a list of nodes that your node knows about. Nodes can not talk to each other unless they are joined and authorized on the same network.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@Home] &gt; zerotier/peer/print 
+Columns: INSTANCE, ZT-ADDRESS, LATENCY, ROLE, PATH
+# INSTANCE  ZT-ADDRESS  LATENCY  ROLE    PATH                                                            
+0 zt1       61d294b9cb  186ms    PLANET  active,preferred,50.7.73.34/9993,recvd:4s526ms                  
+1 zt1       62f865ae71  270ms    PLANET  active,preferred,50.7.252.138/9993,recvd:4s440ms,sent:9s766ms   
+2 zt1       778cde7190  132ms    PLANET  active,preferred,103.195.103.66/9993,recvd:4s579ms,sent:9s766ms 
+3 zt1       992fcf1db7  34ms     PLANET  active,preferred,195.181.173.159/9993,recvd:4s675ms,sent:4s712ms
+4 zt1       159924d630  130ms    LEAF    active,preferred,34.121.192.xx/21002,recvd:3s990ms,sent:3s990ms</pre>
+</div></div><h1 class="auto-cursor-target" id="ZeroTier-Parameters">Parameters</h1><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; zerotier/</pre>
+</div></div><div class="table-wrap"><table class="relative-table wrapped confluenceTable" style="width: 99.859%;"><colgroup><col style="width: 15.2614%;"/><col style="width: 84.6915%;"/></colgroup><tbody><tr><th style="text-align: center;" scope="col" class="confluenceTh">Property</th><th style="text-align: center;" scope="col" class="confluenceTh">Description</th></tr><tr><td style="text-align: center;" class="confluenceTd"><strong>name </strong>(s<em>tring</em>; default: <strong>zt1</strong>)</td><td style="text-align: left;" class="confluenceTd">Instance name.</td></tr><tr><td style="text-align: center;" class="confluenceTd"><strong>port </strong>(<em>number; </em>default: <strong>9993</strong>)</td><td style="text-align: left;" class="confluenceTd">Port number the instance listen to.</td></tr><tr><td style="text-align: center;" class="confluenceTd"><strong>identity </strong>(<em>string</em>; default)</td><td style="text-align: left;" class="confluenceTd">Instance <span style="color:var(--ds-text,#333333);">40-bit unique address.</span></td></tr><tr><td style="text-align: center;" class="confluenceTd"><strong>interface </strong>(string; default: <strong>all)</strong></td><td style="text-align: left;" class="confluenceTd">List of interfaces that are used in order to discover ZeroTier peers, by using ARP and IP type connections.</td></tr><tr><td style="text-align: center;" class="confluenceTd"><strong>route-distance</strong> (number; default: <strong>1</strong> )</td><td style="text-align: left;" class="confluenceTd">Route distance for routes obtained from planet/moon servers.</td></tr></tbody></table></div><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; zerotier/interface/</pre>
+</div></div><div class="table-wrap"><table class="relative-table wrapped confluenceTable" style="width: 99.7158%;"><colgroup><col style="width: 15.2687%;"/><col style="width: 84.6906%;"/></colgroup><tbody><tr><th style="text-align: center;" class="confluenceTh">Property</th><th style="text-align: center;" class="confluenceTh">Description</th></tr><tr><td style="text-align: center;" class="confluenceTd"><strong>allow-default</strong> (<em>string; yes | no)</em></td><td style="text-align: left;" class="confluenceTd"><span style="color:var(--ds-text,#333333);">A network can override the systems default route (force VPN mode).</span></td></tr><tr><td style="text-align: center;" class="confluenceTd"><strong>allow-global </strong>(<em>string; yes | no)</em></td><td style="text-align: left;" class="confluenceTd"><span style="color:var(--ds-text,#333333);"><span> </span>ZeroTier IP addresses and routes can overlap public IP space.</span></td></tr><tr><td style="text-align: center;" class="confluenceTd"><strong>allow-managed </strong>(<em>string; yes | no)</em></td><td style="text-align: left;" class="confluenceTd"><span style="color:var(--ds-text,#333333);">ZeroTier managed IP addresses and routes are assigned.</span></td></tr><tr><td style="text-align: center;" class="confluenceTd"><strong>arp-timeout</strong> ( <em>number</em>; default: <strong>auto</strong>)</td><td style="text-align: left;" class="confluenceTd">ARP timeouts value.</td></tr><tr><td style="text-align: center;" class="confluenceTd"><strong>comment</strong><span> </span>(<em>string</em>; Default: )</td><td style="text-align: left;" class="confluenceTd">Descriptive comment for the interfaces.</td></tr><tr><td style="text-align: center;" class="confluenceTd"><strong>copy-from </strong></td><td style="text-align: left;" class="confluenceTd">Allows copying existing interfaces configuration.</td></tr><tr><td style="text-align: center;" class="confluenceTd"><strong>disable-running-check </strong>(<em>string; yes | no)</em></td><td style="text-align: left;" class="confluenceTd">Force interface in &quot;running&quot; state.</td></tr><tr><td style="text-align: center;" class="confluenceTd"><strong><span style="color:var(--ds-text,#333333);">instance<span> </span></span></strong><span style="color:var(--ds-text,#333333);">(<em>string</em>; Default:</span><strong><span style="color:var(--ds-text,#333333);"><span> </span>zt1</span></strong><span style="color:var(--ds-text,#333333);">)</span></td><td style="text-align: left;" class="confluenceTd">ZeroTier instance name.</td></tr><tr><td style="text-align: center;" class="confluenceTd"><strong>name </strong>(s<em>tring</em>; default: <strong>zerotier1</strong>)</td><td style="text-align: left;" class="confluenceTd"><span style="color:var(--ds-text,#333333);">A short name.</span></td></tr><tr><td style="text-align: center;" class="confluenceTd"><span style="color:var(--ds-text,#333333);"><strong>network<span> </span></strong>(<em>string</em>; Default)</span></td><td style="text-align: left;" class="confluenceTd"><span style="color:var(--ds-text,#333333);">16-digit network ID.</span></td></tr></tbody></table></div><h1 id="ZeroTier-Controller">Controller</h1><p><br/></p><p><span style="color:var(--ds-text,#333333);">RouterOS implements ZeroTier functionality in the role of a node where most of the network configuration must be done on the ZeroTier webpage dashboard. However, in situations where you would prefer to do all the configuration on your own device, RouterOS offers to host your own controller</span></p><p><span style="color:var(--ds-text,#333333);">A common misunderstanding is to conflate network controllers with root servers (planet and moons). Root servers are connection facilitators that operate at the <strong><a class="external-link" href="https://docs.zerotier.com/zerotier/manual/#2networkhypervisoroverviewaname2a" rel="nofollow">VL1 level</a></strong>. Network controllers are configuration managers and certificate authorities that belong to the <strong><a class="external-link" href="https://docs.zerotier.com/zerotier/manual/#22vl2theethernetvirtualizationlayeraname2_2a" rel="nofollow">VL2 level</a>.</strong> Generally, root servers don’t join or control virtual networks and network controllers are not root servers, though it is possible to have a node do both.</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/zerotier/controller/</pre>
+</div></div><p>Every ZeroTier instance has a self-hosting network controller that can be used to host virtual networks. <u>A controller is responsible for admitting members to the network, and issuing default configuration information including certificates. </u>Controllers can in theory host up to 2^24 networks and serve many millions of devices (or more), but we recommend spreading large numbers of networks across many controllers for load balancing and fault tolerance reasons.</p><h2 id="ZeroTier-Parameters.1">Parameters</h2><div class="table-wrap"><table class="relative-table wrapped confluenceTable" style="width: 99.5568%;"><colgroup><col style="width: 16.2819%;"/><col style="width: 83.6776%;"/></colgroup><tbody><tr><th style="text-align: center;" class="confluenceTh">Property</th><th style="text-align: center;" class="confluenceTh">Description</th></tr><tr><td style="text-align: center;" class="confluenceTd"><span style="color:var(--ds-text,#333333);"><strong>broadcast  </strong><em>( yes | no; Default: <strong>yes</strong>)</em></span></td><td style="text-align: left;" class="confluenceTd">Allow receiving broadcast (<em>FF:FF:FF:FF:FF:FF</em>) packets.</td></tr><tr><td style="text-align: center;" class="confluenceTd"><strong>comment</strong><span> </span>(<em>string</em>; Default: )</td><td style="text-align: left;" class="confluenceTd">Descriptive comment for the controller.</td></tr><tr><td style="text-align: center;" class="confluenceTd"><div class="content-wrapper"><p><strong>copy-from</strong> (<em>string</em>; Default: )</p></div></td><td style="text-align: left;" class="confluenceTd">Copies an existing item. It takes default values of a new item's properties from another item. If you do not want to make an exact copy, you can specify new values for some properties. When copying items that have names, you will usually have to give a new name to a copy.</td></tr><tr><td style="text-align: center;" class="confluenceTd"><strong><span style="color:var(--ds-text,#333333);">instance </span></strong><span style="color:var(--ds-text,#333333);">(<em>string</em>; Default:</span><strong><span style="color:var(--ds-text,#333333);"> zt1</span></strong><span style="color:var(--ds-text,#333333);">)</span></td><td style="text-align: left;" class="confluenceTd">ZeroTier instance name.<span style="color:var(--ds-text,#333333);"><br/></span></td></tr><tr><td style="text-align: center;" class="confluenceTd"><span style="color:var(--ds-text,#333333);"><strong>ip-range </strong>(<em>IP</em>; Default: )</span></td><td style="text-align: left;" class="confluenceTd">IP range, <em>for example, 172.16.16.1-172.16.16.254.</em></td></tr><tr><td style="text-align: center;" class="confluenceTd"><span style="color:var(--ds-text,#333333);"> <strong>ip6-6plane</strong> <em>( yes | no; Default: <strong>no</strong>)</em></span></td><td style="text-align: left;" class="confluenceTd">An option <span style="color:var(--ds-text,#333333);">gives every member a /80 within a /40 network but uses NDP emulation to route<span> </span></span><em>all</em><span style="color:var(--ds-text,#333333);"><span> </span>IPs under that /80 to their owner. The<span> </span></span><code>6plane</code><span style="color:var(--ds-text,#333333);"><span> </span>mode is great for use cases like Docker since it allows every member to assign IPv6 addresses within its /80 that just work instantly and globally across the network.</span></td></tr><tr><td style="text-align: center;" class="confluenceTd"><span style="color:var(--ds-text,#333333);"><strong>ip6-rfc4193</strong> <em>( yes | no; Default: <strong>no</strong>)</em></span></td><td style="text-align: left;" class="confluenceTd"><span style="color:var(--ds-text,#333333);">The<span> </span></span><em>rfc4193</em><span style="color:var(--ds-text,#333333);"><span> </span>mode gives every member a /128 on a /88 network.</span></td></tr><tr><td style="text-align: center;" class="confluenceTd"><span style="color:var(--ds-text,#333333);"><strong>ip6-range</strong> (<em>IPv6</em>; Default: )</span></td><td style="text-align: left;" class="confluenceTd">IPv6 range, <em>for example fd00:feed:feed:beef::-fd00:feed:feed:beef:ffff:ffff:ffff:ffff.</em></td></tr><tr><td style="text-align: center;" class="confluenceTd"><strong>mtu </strong><em>(integer;</em> Default: <strong>2800</strong>)</td><td style="text-align: left;" class="confluenceTd">Network MTU.</td></tr><tr><td style="text-align: center;" class="confluenceTd"><strong><span style="color:var(--ds-text,#333333);">multicast-limit </span></strong><span style="color:var(--ds-text,#333333);">(<em>integer</em>: Default: <strong>32</strong>)</span></td><td style="text-align: left;" class="confluenceTd"><span style="color:var(--ds-text,#333333);">Maximum recipients for a multicast packet.</span></td></tr><tr><td style="text-align: center;" class="confluenceTd"><span style="color:var(--ds-text,#333333);"><strong>name </strong>(<em>string</em>; Default: )</span></td><td style="text-align: left;" class="confluenceTd"><span style="color:var(--ds-text,#333333);">A short name for this controller.</span></td></tr><tr><td style="text-align: center;" class="confluenceTd"><span style="color:var(--ds-text,#333333);"><strong>network </strong>(<em>string</em>; Default)</span></td><td style="text-align: left;" class="confluenceTd"><span style="color:var(--ds-text,#333333);">16-digit network ID.</span></td></tr><tr><td style="text-align: center;" class="confluenceTd"><span style="color:var(--ds-text,#333333);"><strong>private </strong><em>( yes | no; Default: <strong>yes</strong>)</em></span></td><td style="text-align: left;" class="confluenceTd">Enables access control.</td></tr><tr><td style="text-align: center;" class="confluenceTd"><strong><span style="color:var(--ds-text,#333333);">routes </span></strong><span style="color:var(--ds-text,#333333);">(<em>IP@GW</em>; Default: )</span></td><td style="text-align: left;" class="confluenceTd">Push routes in the following format:<br/><em>Routes ::= Route[,Routes]</em><br/><em>  Route ::= Dst[@Gw]</em></td></tr></tbody></table></div><h2 class="auto-cursor-target" id="ZeroTier-Configurationexample.1">Configuration example</h2><p>In the following example, we will use RouterOS built-in ZeroTier controller to send our new network hosts <span style="color:var(--ds-text,#333333);">appropriate certificates, credentials, and configuration information. </span><span style="color:var(--ds-text,#333333);">The controller will operate from the &quot;RouterOS Home&quot; device and we will join in our network 3 units: mobile phone, laptop, RouterOS Office device, but theoretically, you can join up to 100 devices in one network.</span></p><p><span class="confluence-embedded-file-wrapper image-center-wrapper"><img class="confluence-embedded-image image-center" draggable="false" src="attachments/83755083/119144569.png" data-image-src="attachments/83755083/119144569.png" data-unresolved-comment-count="0" data-linked-resource-id="119144569" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="ZeroTier_ilustracija_2.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="83755083" data-linked-resource-container-version="35" tabindex="0" alt=""></span></p><h3 class="auto-cursor-target" id="ZeroTier-RouterOSHome">RouterOS Home</h3><p class="auto-cursor-target">First, we enable the default instance which operates at the <strong>VL1</strong> level :</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@Home] /zerotier&gt; print
+Columns: NAME, PORT, IDENTITY.PUBLIC
+# NAME  PORT  IDENTITY.PUBLIC                                                                                                                              
+;;; ZeroTier Central controller - https://my.zerotier.com/
+0 zt1   9993  879c0b5265:0:d5fd2d17805e011d9b93ce8779385e427c8f405e520eea9284809d8444de0335a817xxb21aa4ba153bfbc229ca34d94e08de96d925a4aaa19b252da546693a28</pre>
+</div></div><p class="auto-cursor-target">Now we create a new network via the controller section which will operate at the <strong>VL2</strong> level. Each network has its own controller and each network ID is generated from the controller address and controller ID combination.</p><p class="auto-cursor-target">Note that we use the<strong> <em>private=yes</em></strong> option for a more secure network:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@Home] /zerotier&gt; controller/add name=ZT-private instance=zt1 ip-range=172.27.27.10-172.27.27.20 private=yes routes=172.27.27.0/24
+[admin@Home] /zerotier&gt; controller/print
+Columns: INSTANCE, NAME, NETWORK, PRIVATE
+# INSTANCE  NAME        NETWORK           PRIVATE
+0 zt1       ZT-private  879c0b5265a99e4b  yes</pre>
+</div></div><p class="auto-cursor-target">Add our new network under the interface section:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@Home] /zerotier&gt; interface/add network=879c0b5265a99e4b name=myZeroTier instance=zt1 
+[admin@Home] /zerotier&gt; interface/print interval=1
+Columns: NAME, MAC-ADDRESS, NETWORK, STATUS
+# NAME        MAC-ADDRESS        NETWORK           STATUS       
+0 myZeroTier  4A:19:35:6E:00:6E  879c0b5265a99e4b  ACCESS_DENIED</pre>
+</div></div><p class="auto-cursor-target">Each new peer asks for a controller to join the network, in this situation, we have <em>ACCESS_DENIED</em> status and we have to authorize a new peer, that is because we used the <strong>private=yes</strong> option.</p><p class="auto-cursor-target">After authorization, each member in the network receives information from the controller about new peers and approval they can exchange packets with them:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@Home] /zerotier&gt; controller/member/print
+Columns: NETWORK, ZT-ADDRESS
+#  NETWORK     ZT-ADDRESS
+0  ZT-private  879a0b5265
+[admin@Home] /zerotier&gt; controller/member/set 0 authorized=yes</pre>
+</div></div><p class="auto-cursor-target">Verify newly configured IP address and route:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@Home] /zerotier&gt; /ip/address/print where interface~&quot;Zero&quot;
+Flags: D - DYNAMIC
+Columns: ADDRESS, NETWORK, INTERFACE
+#   ADDRESS          NETWORK      INTERFACE 
+4 D 172.27.27.15/24  172.27.27.0  myZeroTier
+
+[admin@Home] /zerotier&gt; /ip/route/pr where gateway~&quot;Zero&quot;
+Flags: D - DYNAMIC; A - ACTIVE; c, y - COPY
+Columns: DST-ADDRESS, GATEWAY, DISTANCE
+    DST-ADDRESS     GATEWAY     DISTANCE
+DAc 172.27.27.0/24  myZeroTier         0</pre>
+</div></div><h3 class="auto-cursor-target" id="ZeroTier-RouterOSOffice">RouterOS Office</h3><p class="auto-cursor-target">Configuration on the Office device. We will enable the default instance and ask a controller to join the <em>879c0b5265a99e4b </em>network:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@office] /zerotier&gt; interface/add network=879c0b5265a99e4b instance=zt1 name=ZT-interface 
+[admin@office] /zerotier&gt; interface/print interval=1
+Columns: NAME, MAC-ADDRESS, NETWORK, STATUS
+# NAME          MAC-ADDRESS        NETWORK           STATUS       
+0 ZT-interface  4A:40:1C:38:97:BA  879c0b5265a99e4b  ACCESS_DENIED</pre>
+</div></div><p class="auto-cursor-target">As previously, because our network is private, we have to authorize a new peer via &quot;RouterOS home device&quot;. After that verify from controller received IP address and route:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@Home] /zerotier&gt; controller/member/print
+Flags: A - AUTHORIZED
+Columns: NETWORK, ZT-ADDRESS, IP-ADDRESS, LAST-SEEN
+#    NETWORK     ZT-ADDRESS  IP-ADDRESS    LAST-SEEN
+0 A  ZT-private  879a0b5265  172.27.27.15           
+1 A  ZT-private  554a914c7f  172.27.27.17           
+2 A  ZT-private  a83ac6032a  172.27.27.10           
+3    ZT-private  deba5dc5b1  172.27.27.13  3s348ms  
+[admin@Home] /zerotier&gt; controller/member/set 3 authorized=yes
+[admin@Home] /zerotier&gt; controller/member/print               
+Flags: A - AUTHORIZED
+Columns: NETWORK, ZT-ADDRESS, IP-ADDRESS, LAST-SEEN
+#    NETWORK     ZT-ADDRESS  IP-ADDRESS    LAST-SEEN
+0 A  ZT-private  879a0b5265  172.27.27.15           
+1 A  ZT-private  554a914c7f  172.27.27.17           
+2 A  ZT-private  a83ac6032a  172.27.27.10           
+3 A  ZT-private  deba5dc5b1  172.27.27.13  4s55ms </pre>
+</div></div><p class="auto-cursor-target">Verify via ZeroTier obtained IP address and route:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@office] /zerotier&gt; /ip/address/print where interface~&quot;ZT&quot;
+Flags: D - DYNAMIC
+Columns: ADDRESS, NETWORK, INTERFACE
+#   ADDRESS          NETWORK      INTERFACE   
+0 D 172.27.27.13/24  172.27.27.0  ZT-interface
+
+[admin@office] /zerotier&gt; /ip/route/print where gateway~&quot;ZT&quot;
+Flags: D - DYNAMIC; A - ACTIVE; c, y - COPY
+Columns: DST-ADDRESS, GATEWAY, DISTANCE
+    DST-ADDRESS     GATEWAY       DISTANCE
+DAc 172.27.27.0/24  ZT-interface         0</pre>
+</div></div><h3 class="auto-cursor-target" id="ZeroTier-Otherdevices">Other devices</h3><p class="auto-cursor-target"><br/><a class="external-link" href="https://www.zerotier.com/download/" rel="nofollow">Download the ZeroTier app</a> for your mobile phone or computer and join your newly created network:</p><p class="auto-cursor-target">1) Via our Laptop ZeroTier application we join the <em>879c0b5265a99e4b </em>network;</p><p class="auto-cursor-target">2) User Zerotier mobile app to join the <em>879c0b5265a99e4b</em><em> </em>network;</p><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Also all other new hosts you have to authorize under the <em>/zerotier/controller/member/ </em>section.</p></div></div><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/83755083/119144570.png" data-image-src="attachments/83755083/119144570.png" data-unresolved-comment-count="0" data-linked-resource-id="119144570" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="Screenshot_7.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="83755083" data-linked-resource-container-version="35" tabindex="0" alt=""></span></p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/83755083/120324128.png" data-image-src="attachments/83755083/120324128.png" data-unresolved-comment-count="0" data-linked-resource-id="120324128" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="ztAPP (2).png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="83755083" data-linked-resource-container-version="35" tabindex="0" alt=""></span></p><p><br/></p><div><div><div class="simple-translate-button isShow" style="height: 22.0px;width: 22.0px;"><br/></div><div class="simple-translate-panel" style="width: 300.0px;height: 200.0px;font-size: 13.0px;background-color: rgb(255,255,255);"><div class="simple-translate-result-wrapper"><div class="simple-translate-move"><br/></div><div class="simple-translate-result-contents"><p class="simple-translate-result" style="color:var(--ds-text,#333333);"><br/></p><p class="simple-translate-candidate" style="color:var(--ds-text,#707070);"><br/></p></div></div></div></div></div><div><div><div class="simple-translate-button isShow" style="height: 22.0px;width: 22.0px;"><br/></div><div class="simple-translate-panel" style="width: 300.0px;height: 200.0px;font-size: 13.0px;background-color: rgb(255,255,255);"><div class="simple-translate-result-wrapper"><div class="simple-translate-move"><br/></div><div class="simple-translate-result-contents"><p class="simple-translate-result" style="color:var(--ds-text,#333333);"><br/></p><p class="simple-translate-candidate" style="color:var(--ds-text,#707070);"><br/></p></div></div></div></div></div><div><div><div class="simple-translate-button isShow" style="height: 22.0px;width: 22.0px;"><br/></div><div class="simple-translate-panel" style="width: 300.0px;height: 200.0px;font-size: 13.0px;background-color: rgb(255,255,255);"><div class="simple-translate-result-wrapper"><div class="simple-translate-move"><br/></div><div class="simple-translate-result-contents"><p class="simple-translate-result" style="color:var(--ds-text,#333333);"><br/></p><p class="simple-translate-candidate" style="color:var(--ds-text,#707070);"><br/></p></div></div></div></div></div><div><div><div class="simple-translate-button isShow" style="height: 22.0px;width: 22.0px;"><br/></div><div class="simple-translate-panel" style="width: 300.0px;height: 200.0px;font-size: 13.0px;background-color: rgb(255,255,255);"><div class="simple-translate-result-wrapper"><div class="simple-translate-move"><br/></div><div class="simple-translate-result-contents"><p class="simple-translate-result" style="color:var(--ds-text,#333333);"><br/></p><p class="simple-translate-candidate" style="color:var(--ds-text,#707070);"><br/></p></div></div></div></div></div>
+                    </div>
+
+                                                            <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/83755083/100892673.png">network.jpg.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/83755083/100892674.png">ZeroTier_ilustracija.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/83755083/100892675.png">Screenshot_2.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/83755083/100892677.png">IMG-1302.PNG</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/83755083/100892678.png">IMG-1302.PNG</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/83755083/100892676.png">IMG-1302.PNG</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/83755083/100892680.png">IMG-13102.PNG</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/83755083/119144569.png">ZeroTier_ilustracija_2.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/83755083/119144570.png">Screenshot_7.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/83755083/119144571.jpg">IMG-1522.jpg</a> (image/jpeg)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/83755083/120324124.png">ztAPP.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/83755083/120324128.png">ztAPP (2).png</a> (image/png)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

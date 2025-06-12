@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : Bluetooth tag-tracking using MQTT and ThingsBoard</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Internet-of-Things_46759975.html">Internet of Things</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Bluetooth_78086201.html">Bluetooth</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : Bluetooth tag-tracking using MQTT and ThingsBoard
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Deniss M.</span>, last updated on Mar 06, 2025
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742038186 {padding: 0px;}
+div.rbtoc1747742038186 ul {margin-left: 0px;}
+div.rbtoc1747742038186 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742038186'>
+<ul class='toc-indentation'>
+<li><a href='#BluetoothtagtrackingusingMQTTandThingsBoard-Introduction'>Introduction</a>
+<ul class='toc-indentation'>
+<li><a href='#BluetoothtagtrackingusingMQTTandThingsBoard-Setuprequirements:'>Setup requirements:</a></li>
+</ul>
+</li>
+<li><a href='#BluetoothtagtrackingusingMQTTandThingsBoard-Scenarioexplanation'>Scenario explanation</a>
+<ul class='toc-indentation'>
+<li><a href='#BluetoothtagtrackingusingMQTTandThingsBoard-Example#1'>Example #1</a>
+<ul class='toc-indentation'>
+<li><a href='#BluetoothtagtrackingusingMQTTandThingsBoard-Configuration'>Configuration</a>
+<ul class='toc-indentation'>
+<li><a href='#BluetoothtagtrackingusingMQTTandThingsBoard-ThingsBoardpreparation'>ThingsBoard preparation</a></li>
+<li><a href='#BluetoothtagtrackingusingMQTTandThingsBoard-RouterOSconfiguration'>RouterOS configuration</a>
+<ul class='toc-indentation'>
+<li><a href='#BluetoothtagtrackingusingMQTTandThingsBoard-Preparation'>Preparation</a></li>
+<li><a href='#BluetoothtagtrackingusingMQTTandThingsBoard-MQTTbroker'>MQTT broker</a></li>
+<li><a href='#BluetoothtagtrackingusingMQTTandThingsBoard-Script'>Script</a></li>
+<li><a href='#BluetoothtagtrackingusingMQTTandThingsBoard-Scheduler'>Scheduler</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href='#BluetoothtagtrackingusingMQTTandThingsBoard-ThingsBoarddatavisualizationandresultverification'>ThingsBoard data visualization and result verification</a></li>
+</ul>
+</li>
+<li><a href='#BluetoothtagtrackingusingMQTTandThingsBoard-Example#2'>Example #2</a>
+<ul class='toc-indentation'>
+<li><a href='#BluetoothtagtrackingusingMQTTandThingsBoard-Configuration.1'>Configuration</a>
+<ul class='toc-indentation'>
+<li><a href='#BluetoothtagtrackingusingMQTTandThingsBoard-ThingsBoardpreparation.1'>ThingsBoard preparation</a></li>
+<li><a href='#BluetoothtagtrackingusingMQTTandThingsBoard-RouterOSconfiguration.1'>RouterOS configuration</a>
+<ul class='toc-indentation'>
+<li><a href='#BluetoothtagtrackingusingMQTTandThingsBoard-Preparation.1'>Preparation</a></li>
+<li><a href='#BluetoothtagtrackingusingMQTTandThingsBoard-MQTTbroker.1'>MQTT broker</a></li>
+<li><a href='#BluetoothtagtrackingusingMQTTandThingsBoard-Script.1'>Script</a>
+<ul class='toc-indentation'>
+<li><a href='#BluetoothtagtrackingusingMQTTandThingsBoard-Scriptthatincludestemperaturedata(optional)'>Script that includes temperature data (optional)</a></li>
+<li><a href='#BluetoothtagtrackingusingMQTTandThingsBoard-ScriptthatincludesGPSdata(optional)'>Script that includes GPS data (optional)</a></li>
+</ul>
+</li>
+<li><a href='#BluetoothtagtrackingusingMQTTandThingsBoard-Scheduler.1'>Scheduler</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href='#BluetoothtagtrackingusingMQTTandThingsBoard-ThingsBoarddatavisualizationandresultverification.1'>ThingsBoard data visualization and result verification</a>
+<ul class='toc-indentation'>
+<li><a href='#BluetoothtagtrackingusingMQTTandThingsBoard-Temperaturevisualization(optional)'>Temperature visualization (optional)</a></li>
+<li><a href='#BluetoothtagtrackingusingMQTTandThingsBoard-GPScoordinatevisualization(optional)'>GPS coordinate visualization (optional)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div></p><h1 id="BluetoothtagtrackingusingMQTTandThingsBoard-Introduction">Introduction</h1><p>Bluetooth interface implementation in RouterOS allows the device to capture Bluetooth advertising packets that are broadcasted over 37, 38, and 39 advertising channels. More information can be found in the <a href="https://help.mikrotik.com/docs/display/ROS/Bluetooth" rel="nofollow">guide here</a>.</p><p>Bluetooth tags like, for example, <a class="external-link" href="https://mikrotik.com/product/tg_bt5_in" rel="nofollow">TG-BT5-IN</a> and <a class="external-link" href="https://mikrotik.com/product/tg_bt5_out" rel="nofollow">TG-BT5-OUT</a>, do exactly that. They broadcast advertising payloads over the mentioned channels. To understand what kind of information is stored in the payload, make sure to check the <a href="https://help.mikrotik.com/docs/display/UM/MikroTik+Tag+advertisement+formats#heading-MikroTikPDUPayloadstructure" rel="nofollow">link</a>. The tags can be configured (using the <a href="https://help.mikrotik.com/docs/display/UM/MikroTik+Beacon+Manager" rel="nofollow">MikroTik Beacon Manager</a> app) to broadcast the payloads automatically, with an interval or/and when a movement, tilt, or free-fall trigger is detected. In simple terms, the tag will &quot;tell&quot; (broadcast to) all the surrounding Bluetooth scanners (like the <a class="external-link" href="https://mikrotik.com/product/knot" rel="nofollow">KNOT</a>) information about itself periodically.</p><p>When the payload is broadcasted by the tag, and the tag is within the KNOT's Bluetooth operating range, the KNOT will capture and display the payload under its &quot;scanner&quot; Bluetooth interface section. It would look like this:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/iot bluetooth scanners advertisements print
+Columns: DEVICE, PDU-TYPE, TIME, ADDRESS-TYPE, ADDRESS, RSSI, LENGTH, DATA
+#  DEVICE  PDU-TYPE        TIME                  ADDRESS-TYPE  ADDRESS            RSSI    LENGTH  DATA                                        
+0  bt1     adv-noconn-ind  mar/07/2023 12:11:57  public        DC:2C:6E:0F:C0:3D  -51dBm      22  15ff4f09010079100000ffff0000cf188a6b2b000064
+1  bt1     adv-noconn-ind  mar/07/2023 12:11:58  public        2C:C8:1B:4B:BB:0A  -49dBm      22  15ff4f090100168dfefffffffeffa51ae1362200005e </pre>
+</div></div><p>The example above shows us, that the KNOT sees two Bluetooth tags within its operating range with MAC addresses &quot;DC:2C:6E:0F:C0:3D&quot; and &quot;2C:C8:1B:4B:BB:0A&quot;, their respective payloads (&quot;DATA&quot; field) and the signal strength (&quot;RSSI&quot; field).</p><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body">When testing locally to see how many payloads can the KNOT handle, we've achieved the following results →  with 300 tags (in factory settings), scattered around the KNOT and using a Bluetooth filter &quot;keep-newest&quot; (which overwrites previously received payloads for each unique MAC address with the newest one, so that the Bluetooth list would display 1 payload per 1 unique tag's MAC address at all times), all 300 MAC addresses appeared in the KNOT's range after 30-40 seconds. This is where you need to keep in mind that all 300 tags broadcasting over the same channels at the same time will cause interference (delay in the reception). When we &quot;cleared&quot; the Bluetooth payload list, each second the list got 20 new entries and after about ~15 seconds, the list had 250-290 payloads. Then after ~15 seconds more, the list displayed all 300 unique tag payloads. <strong>The actual number of tags your KNOT is able to handle is heavily dependent on the environment, so it is better to test it on sight.</strong></div></div><p>With the help of RouterOS <a href="https://help.mikrotik.com/docs/display/ROS/Scripting" rel="nofollow">scripting</a> and <a href="https://help.mikrotik.com/docs/display/ROS/Scheduler" rel="nofollow">scheduling</a>, we can make the KNOT automatically-periodically scan the payload list and, in case, a specific payload or a specific tag's MAC address is found on the list, we can make the KNOT structure an MQTT message (out of the printed information shown in the example above) and send it to the configured server via <a href="https://help.mikrotik.com/docs/display/ROS/MQTT" rel="nofollow">MQTT</a>, <a href="https://help.mikrotik.com/docs/display/ROS/E-mail" rel="nofollow">e-mail</a> or <a href="https://help.mikrotik.com/docs/display/ROS/Fetch" rel="nofollow">HTTP</a> post. Script examples will be shown later on in the guide.</p><p>As the title suggests, the goal is to implement a <strong>Bluetooth tag-tracking solution </strong>and the idea is quite simple. <strong>When you have 2 KNOTs</strong> (KNOT-A and KNOT-B), running the same script on a scheduler, <strong>and the tag moves between their Bluetooth operating ranges</strong>, the data on <strong>the server will indicate</strong> <strong>whether</strong> it was <strong>KNOT-A or KNOT-B</strong> that <strong>have sent</strong> <strong>the</strong> tag's <strong>payload</strong>. That will help you figure out the proximity of the tag. Whether the tag is broadcasting payloads in the KNOT-A zone, or in the KNOT-B zone.</p><p>You will need a server where the data is going to be stored and visualized. In this guide, we will showcase a platform called <a class="external-link" href="https://thingsboard.io/" rel="nofollow">ThingsBoard</a> and how to communicate with it using the MQTT protocol.</p><p>ThingsBoard has a cloud solution and different local installation options (on different OS). Since we've added a <a href="https://help.mikrotik.com/docs/display/ROS/Container" rel="nofollow">container</a> feature, it became possible to also run the platform within RouterOS. In order to do that, you will need a RouterOS device that has at least<strong> </strong>2 GB RAM to spare or 1 GB RAM to spare with minimal load, has the option to increase storage (for example, an additional USB port), and is either ARM64 or AMD64<strong> </strong>architecture. Consider using <a href="https://help.mikrotik.com/docs/pages/viewpage.action?pageId=18350234" rel="nofollow">CHR</a> machine, as it could be a good fit.</p><h2 id="BluetoothtagtrackingusingMQTTandThingsBoard-Setuprequirements:">Setup requirements:</h2><ul><li>a running ThingsBoard server;</li><li>2+ <a class="external-link" href="https://mikrotik.com/product/knot" rel="nofollow">KNOT</a>s with access to the server's network via ethernet, Wi-Fi, or cellular connection (the amount of the units required depends on the size of the area that needs to be covered);</li><li>1+ Bluetooth <a class="external-link" href="https://mikrotik.com/product/tg_bt5_in" rel="nofollow">TG-BT5-IN</a> and/or <a class="external-link" href="https://mikrotik.com/product/tg_bt5_out" rel="nofollow">TG-BT5-OUT</a> tags (depending on how many assets you need to track - 1 tag per asset).</li></ul><h1 id="BluetoothtagtrackingusingMQTTandThingsBoard-Scenarioexplanation">Scenario explanation</h1><p>Let's take a look at a basic example first. We have two KNOTs (KNOT-A and KNOT-B). We've tested Bluetooth ranges in our environment and could verify that both KNOTs are able to capture the tag at a 70-meter distance. If we install KNOT-A and KNOT-B 140 meters apart, their Bluetooth ranges will not overlap or overlap just slightly. When the tag moves into the KNOT-A range → the payload from the monitored tag will appear under the Bluetooth scanner list →  the script will be initiated on a set schedule → an MQTT message with a report is going to be sent to the server →  and, finally, the server will display that the tag is in the KNOT-A zone. When the tag moves into the KNOT-B range, the same happens, and the server will display that the tag is inside the KNOT-B zone.</p><p>The actual Bluetooth operating distance can vary from site to site because a lot of different factors can impact it, like 2.4 GHz interference or the surrounding materials used. For example, in line of sight, with no interference, the distance at which the KNOT is able to capture the tag's broadcasted payload, can be up to 180 meters (KNOT — ~180 meters — TG-BT5-OUT). But you also have to keep in mind that with further distance, more packets will be lost on the way. In the office environment, the range can go down to 30-100 meters.</p><p>Logically, if the Bluetooth operating ranges overlap and the tag is within the overlapped area (at the same time within KNOT-A and KNOT-B Bluetooth ranges), both KNOTs will send the data and the server is going to show that the tag is reported by both devices at the same time.</p><p><strong>Surely, there will be zones where two or more KNOT's Bluetooth ranges overlap and you can use it to your advantage</strong>. Basically, you will have information that the tag, right now, is on the edges of the Bluetooth ranges in-between specific KNOT zones. In other words, when the asset moves into the overlapped area, you will have information on the server that the asset is somewhere between the two KNOT operating ranges, which is useful information to have <strong>as it gives more precision</strong>.</p><p>Additionally, <strong>the tag's output power can be reduced using <a href="https://help.mikrotik.com/docs/display/UM/MikroTik+Beacon+Manager+for+Android+devices#heading-TxPower" rel="nofollow">Tx power</a> parameter</strong>. Meaning, that even if the tag's payloads are broadcasted way too far and they are caught by other KNOTs that are not supposed to see those payloads (at longer distances) → you can reduce the output power of the tag, which will reduce the distance at which the KNOT is able to capture it. That way, you can &quot;tweak&quot; the &quot;range&quot; of reception and also avoid &quot;interfering&quot; with the signal in other zones.</p><p>The scripts we've prepared also allows you to set up a filter (that will be shown later on), which will make the KNOT ignore the payloads that the scanner captures unless the signal strength (RSSI) is stronger than the specified value. In the Bluetooth scanner example print shown above under the &quot;<a href="https://help.mikrotik.com/docs/display/ROS/Bluetooth+tag-tracking+using+MQTT+and+ThingsBoard#BluetoothtagtrackingusingMQTTandThingsBoard-Introduction" rel="nofollow">Introduction</a>&quot; section, we can see that the KNOT sees one of the tags with an <strong>RSSI</strong> signal strength of<strong> -51 dBm</strong> (tag with a MAC address &quot;<strong>DC:2C:6E:0F:C0:3D</strong>&quot;) and the other one with an <strong>RSSI</strong> signal strength of <strong>-49 dBm</strong> (tag with a MAC address &quot;<strong>2C:C8:1B:4B:BB:0A</strong>&quot;). So, <strong>if we </strong>apply a filter to the script<strong> </strong>to<strong> ignore</strong> all payloads that are received with signal strength (<strong>RSSI</strong>) <strong>weaker than -50 dBm</strong>, our<strong> KNOT would report that only tag &quot;2C:C8:1B:4B:BB:0A&quot; is within the Bluetooth range</strong>, because its RSSI is -49 dBm, and the second tag (with RSSI -51 dBm) will be ignored. What this means, essentially, it is a second way of &quot;tweaking&quot; the &quot;range&quot; of reception. The actual signal strength will vary between different locations (as mentioned before, because of interference and surrounding materials), so it needs to be tested on sight.</p><h2 id="BluetoothtagtrackingusingMQTTandThingsBoard-Example#1">Example #1</h2><p>One of the use cases is shown in the topology below:</p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/176914435/177405988.png" data-image-src="attachments/176914435/177405988.png" data-unresolved-comment-count="0" data-linked-resource-id="177405988" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2023-3-8_11-47-43.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="176914435" data-linked-resource-container-version="178" tabindex="0" alt=""></span></p><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>The scale of objects and Bluetooth operating ranges are just shown as an example, to help visually understand and imagine the topology!</p></div></div><p>We have a warehouse area and <strong>we have 3 assets</strong> (pallets) that we are interested in tracking. <strong>We</strong> also<strong> have 3 zones</strong>: zone <strong>A</strong>, where newly arrived pallets are stored; zone <strong>B</strong>, where our assets are relocated to be inspected; and zone <strong>C</strong>, where assets are moved after inspection. To achieve Bluetooth asset-tracking, just install x1 KNOT per zone and x1 tag per asset.</p><p>If TAG 1 and TAG 2 (pallets) arrive in the &quot;arrival&quot; zone A, KNOT A will report to the server that both assets are within its Bluetooth range. If TAG 3 gets moved to zone C, the server will indicate it is within the KNOT C range. If TAG 1 and TAG 2 move toward the B zone, and stay on the edges between A and B zones, the server will show that it is in the overlapped area (at the same time within KNOT-A and KNOT-B ranges). If the tags move to the middle of the warehouse, the server will indicate that they are in all 3 zones at once, in the overlapping area.</p><h3 id="BluetoothtagtrackingusingMQTTandThingsBoard-Configuration">Configuration</h3><p>In this example, we will showcase a basic topology, when two KNOTs are used and we just want to know whether the tag is located in one part of the building or the other one (whether it is inside zone A or zone B).</p><h4 id="BluetoothtagtrackingusingMQTTandThingsBoard-ThingsBoardpreparation">ThingsBoard preparation</h4><p>Check the guide over <a href="https://help.mikrotik.com/docs/display/ROS/MQTT+and+ThingsBoard+configuration" rel="nofollow">here</a> to understand how the ThingsBoard and the RouterOS can be set up to utilize MQTT communication.</p><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>This example will showcase <a href="https://help.mikrotik.com/docs/display/ROS/MQTT+and+ThingsBoard+configuration#MQTTandThingsBoardconfiguration-Accesstokenscenario.1" rel="nofollow">access-token</a> scenario for simplicity reasons, but you can use other available options as well. For the production environment, it is suggested to use SSL-MQTT, as non-SSL-MQTT can be easily packet captured and inspected.</p><p>To understand how to implement SSL-MQTT communication on the instance that is run with the <a href="https://help.mikrotik.com/docs/display/ROS/Container" rel="nofollow">container</a>. Check the guide linked <a href="https://help.mikrotik.com/docs/pages/viewpage.action?pageId=166920348" rel="nofollow">here</a> (<a href="https://help.mikrotik.com/docs/pages/viewpage.action?pageId=166920348#ContainerThingsBoardMQTT/HTTPserver-EnablingHTTPSandSSLMQTT" rel="nofollow">Enabling HTTPS and SSL MQTT</a> section).</p></div></div><p>Create 2 KNOTs under the ThingsBoard GUI and make them &quot;gateways&quot;.</p><p>Go to the &quot;Devices&quot; section, click on &quot;+&quot; button and &quot;Add new device&quot;:</p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/176914435/177406006.png" data-image-src="attachments/176914435/177406006.png" data-unresolved-comment-count="0" data-linked-resource-id="177406006" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2023-3-8_13-29-22.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="176914435" data-linked-resource-container-version="178" tabindex="0" alt=""></span></p><p>Name the device and checkbox the &quot;Is gateway&quot; option:</p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/176914435/177406007.png" data-image-src="attachments/176914435/177406007.png" data-unresolved-comment-count="0" data-linked-resource-id="177406007" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2023-3-8_13-31-35.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="176914435" data-linked-resource-container-version="178" tabindex="0" alt=""></span></p><p>Do that for each KNOT that you have:</p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/176914435/177406010.png" data-image-src="attachments/176914435/177406010.png" data-unresolved-comment-count="0" data-linked-resource-id="177406010" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2023-3-8_13-38-3.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="176914435" data-linked-resource-container-version="178" tabindex="0" alt=""></span></p><p>Set up a unique access token (unique credentials) for each KNOT under the device you've just created, under the &quot;Manage credentials&quot; tab:</p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/176914435/177406017.png" data-image-src="attachments/176914435/177406017.png" data-unresolved-comment-count="0" data-linked-resource-id="177406017" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2023-3-8_13-47-8.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="176914435" data-linked-resource-container-version="178" tabindex="0" alt=""></span></p><h4 id="BluetoothtagtrackingusingMQTTandThingsBoard-RouterOSconfiguration">RouterOS configuration</h4><h5 id="BluetoothtagtrackingusingMQTTandThingsBoard-Preparation">Preparation</h5><p>Before we proceed, we need to confirm that our Bluetooth tag actually appears in the KNOT's Bluetooth range and that the KNOT detects them. To do that, you can issue the command &quot;<code>/iot bluetooth scanners advertisements print</code>&quot;:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/iot bluetooth scanners advertisements print
+ # DEVICE     PDU-TYPE        TIME                 ADDRESS-TYPE ADDRESS                    RSSI     LENGTH DATA                                           
+ 0 bt1        adv-noconn-ind  mar/08/2023 12:35:15 public       2C:C8:1B:4B:BB:0A        -50dBm         22 15ff4f090100b0110100ffff00000019d68d2300005d   
+ 1 bt1        adv-noconn-ind  mar/08/2023 12:35:16 public       DC:2C:6E:0F:C0:3D        -39dBm         22 15ff4f0901008f3cfcfffbfffaff301783c22c000064   
+ 2 bt1        adv-noconn-ind  mar/08/2023 12:35:35 public       2C:C8:1B:4B:BB:0A        -50dBm         22 15ff4f09010084d500000400ffff0319ea8d2300005d   
+ 3 bt1        adv-noconn-ind  mar/08/2023 12:35:45 public       2C:C8:1B:4B:BB:0A        -50dBm         22 15ff4f090100e607faffffff03000319f48d2300005d   
+</pre>
+</div></div><p>Or you can check it using <a href="https://help.mikrotik.com/docs/display/ROS/Webfig" rel="nofollow">Webfig</a> or <a href="https://help.mikrotik.com/docs/display/ROS/Winbox" rel="nofollow">Winbox</a> under the IoT&gt;Bluetooth&gt;Advertising reports tab.</p><p>The list can be chaotic. Random payloads can appear on the list as the scanner captures everything around it. To help reduce the list, you can filter it using the tag's MAC address &quot;<code>/iot bluetooth scanners advertisements print where address=DC:2C:6E:0F:C0:3D</code>&quot;:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/iot bluetooth scanners advertisements print where address=DC:2C:6E:0F:C0:3D
+ # DEVICE    PDU-TYPE        TIME                 ADDRESS-TYPE ADDRESS                    RSSI     LENGTH DATA                                           
+ 0 bt1       adv-noconn-ind  mar/08/2023 12:41:06 public       DC:2C:6E:0F:C0:3D        -49dBm         22 15ff4f0901005ab20100fdfffdff4017e1c32c000064   
+ 1 bt1       adv-noconn-ind  mar/08/2023 12:41:26 public       DC:2C:6E:0F:C0:3D        -40dBm         22 15ff4f090100349704000000fcff4017f5c32c000064   
+ 2 bt1       adv-noconn-ind  mar/08/2023 12:41:36 public       DC:2C:6E:0F:C0:3D        -49dBm         22 15ff4f09010073fb0000000000003017ffc32c000064   
+ 3 bt1       adv-noconn-ind  mar/08/2023 12:41:46 public       DC:2C:6E:0F:C0:3D        -43dBm         22 15ff4f090100b88cffffffffffff401709c42c000064   
+</pre>
+</div></div><p>To figure out how to decypher the payload, please check the guide <a href="https://help.mikrotik.com/docs/display/UM/MikroTik+Tag+advertisement+formats#heading-Scriptfordecoding" rel="nofollow">here</a>.</p><h5 id="BluetoothtagtrackingusingMQTTandThingsBoard-MQTTbroker">MQTT broker</h5><p>On each KNOT setup MQTT broker.</p><p>For KNOT A:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/iot/mqtt/brokers/add name=tb address=x.x.x.x port=1883 username=knot-A_access_token</pre>
+</div></div><p>Where:</p><ul><li><code>name</code> is the name that you wish to give to the broker and this name will be used later in the script;</li><li><code>address</code> is the IP address of the broker/ThingsBoard server;</li><li><code>port</code> is the TCP port that the broker is listening for → for non-SSL it is typically TCP 1883;</li><li><code>username</code> is dictated by the MQTT broker and, in our case, it is an &quot;access token&quot; that was generated in the ThingsBoard management portal.</li></ul><p>For KNOT B → Do the same step. Just change <code>username</code> to the respective access token that was generated for the KNOT B device (gateway).</p><h5 id="BluetoothtagtrackingusingMQTTandThingsBoard-Script">Script</h5><p>Import the script shown below to each KNOT. To do that, just copy the below shown &quot;code&quot; and paste it into a new terminal window and press &quot;ENTER&quot;:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/system script add dont-require-permissions=no name=tracking owner=admin policy=\
+    ftp,reboot,read,write,policy,test,password,sniff,sensitive,romon source=&quot;# Requ\
+    ired packages: iot\r\
+    \n\r\
+    \n################################ Configuration ##############################\
+    ##\r\
+    \n# Name of an existing MQTT broker that should be used for publishing\r\
+    \n:local broker \&quot;tb\&quot;\r\
+    \n\r\
+    \n# MQTT topic where the message should be published\r\
+    \n:local topic \&quot;v1/gateway/telemetry\&quot;\r\
+    \n\r\
+    \n# POSIX regex for filtering advertisement Bluetooth addresses. E.g. \&quot;^BC:33:\
+    AC\&quot;\r\
+    \n# would only include addresses which start with those 3 octets.\r\
+    \n# To disable this filter, set it to \&quot;\&quot;\r\
+    \n:local addressRegex \&quot;\&quot;\r\
+    \n\r\
+    \n# POSIX regex for filtering Bluetooth advertisements based on their data. Sam\
+    e\r\
+    \n# usage as with &#39;addressRegex&#39;.\r\
+    \n:local advertisingDataRegex \&quot;\&quot;\r\
+    \n\r\
+    \n# Signal strength filter. E.g. -40 would only include Bluetooth advertisement\
+    s\r\
+    \n# whose signal strength is stronger than -40dBm.\r\
+    \n# To disable this filter, set it to \&quot;\&quot;\r\
+    \n:local rssiThreshold \&quot;\&quot;\r\
+    \n\r\
+    \n#Name the KNOT. Identity of the unit that will be senting the message. This n\
+    ame will be reported to the MQTT broker.\r\
+    \n:local gwName \&quot;KNOT_A\&quot;\r\
+    \n\r\
+    \n################################## Bluetooth ################################\
+    ##\r\
+    \n:put (\&quot;[*] Gathering Bluetooth info...\&quot;)\r\
+    \n\r\
+    \n:global makeRecord do={\r\
+    \n    :local jsonStr \&quot;{\\\&quot;ts\\\&quot;:\$ts,\\\&quot;values\\\&quot;:{\\\&quot;reporter\\\&quot;:\\\&quot;\$\
+    gwName\\\&quot;,\\\&quot;rssi\\\&quot;:\$rssi}}\&quot;\r\
+    \n    :return \$jsonStr\r\
+    \n}   \r\
+    \n\r\
+    \n# array of record strings collected for each advertising MAC address\r\
+    \n:global macRecords [:toarray \&quot;\&quot;]\r\
+    \n\r\
+    \n# process advertisements and update macRecords\r\
+    \n:local advertisements [/iot bluetooth scanners advertisements print detail as\
+    -value where \\\r\
+    \naddress ~ \$addressRegex and \\\r\
+    \ndata ~ \$advertisingDataRegex and \\\r\
+    \nrssi &gt; \$rssiThreshold]\r\
+    \n\r\
+    \n/iot/bluetooth/scanners/advertisements clear\r\
+    \n\r\
+    \n:foreach adv in=\$advertisements do={\r\
+    \n:local address (\$adv-&gt;\&quot;address\&quot;)\r\
+    \n:local rssi (\$adv-&gt;\&quot;rssi\&quot;)\r\
+    \n:local epoch (\$adv-&gt;\&quot;epoch\&quot;)\r\
+    \n                \r\
+    \n:local recordStr [\$makeRecord ts=\$epoch gwName=\$gwName rssi=\$rssi]\r\
+    \n\r\
+    \n:if ([:len (\$macRecords-&gt;\$address)] &gt; 0) do={\r\
+    \n:local str (\$macRecords-&gt;\$address)\r\
+    \n:local newStr \&quot;\$str,\$recordStr\&quot;\r\
+    \n:set (\$macRecords-&gt;\$address) \$newStr} else={:set (\$macRecords-&gt;\$address)\
+    \_\$recordStr}}\r\
+    \n\r\
+    \n# TODO: add some logic to decide when we want to send data\r\
+    \n:local sendData true\r\
+    \n\r\
+    \n:if (\$sendData) do={\r\
+    \n:local jsonStr \&quot;{\&quot;\r\
+    \n\r\
+    \n:foreach addr,advRec in=\$macRecords do={\r\
+    \n:set jsonStr \&quot;\$jsonStr\\\&quot;\$addr\\\&quot;:[\$advRec],\&quot;}\r\
+    \n\r\
+    \n:local payloadlength\r\
+    \n:set payloadlength [:len (\$jsonStr)]\r\
+    \n:local remcom\r\
+    \n:set remcom [:pick \$jsonStr 0 (\$payloadlength-1)]\r\
+    \n:set jsonStr \&quot;\$remcom}\&quot;\r\
+    \n:local message\r\
+    \n:set message \&quot;\$jsonStr\&quot;\r\
+    \n:log info \&quot;\$message\&quot;;\r\
+    \n:put (\&quot;[*] Message structured: \$message\&quot;)\r\
+    \n:put (\&quot;[*] Total message size: \$[:len \$message] bytes\&quot;)\r\
+    \n:put (\&quot;[*] Sending message to MQTT broker...\&quot;)\r\
+    \n/iot mqtt publish broker=\&quot;\$broker\&quot; topic=\&quot;\$topic\&quot; message=\$message}&quot;</pre>
+</div></div><p>The script should appear under the &quot;System&gt;Scripts&gt;Script List&quot; tab with the name &quot;tracking&quot; or with the help of the command &quot;<code>/system script print</code>&quot;.</p><p>There are certain script lines that you need to pay attention to.</p><p>Broker name configuration line, where you need to input the MQTT broker name that you have set:</p><blockquote><p>     :local broker &quot;tb&quot;</p></blockquote><p>You need to input a correct topic, used by the MQTT broker. Check <a class="external-link" href="https://thingsboard.io/docs/reference/gateway-mqtt-api/" rel="nofollow">ThingsBoard documentation</a> for more details and, by default, the topic should be:</p><blockquote><p>     :local topic &quot;v1/gateway/telemetry&quot;</p></blockquote><p>MAC address filtering option inside the script itself. You can type in all 6 octets of the MAC address (to apply the filter to 1 specific tag), or you can filter the list using a few/couple of octets, like &quot;^BC:33:AC&quot; (to apply the filter, so that only MAC addresses that begin with &quot;BC:33:AC:...&quot; would be processed):</p><blockquote><p>    :local addressRegex &quot;DC:2C:6E:0F:C0:3D&quot;</p></blockquote><p>Payload content/data line. Allows you to filter the list, per specific payload content, like &quot;<a href="https://help.mikrotik.com/docs/display/UM/MikroTik+Tag+advertisement+formats#heading-MikroTikPDUPayloadstructure" rel="nofollow">manufacturer data</a>&quot;. For example, &quot;15ff4f09&quot; would discard all payloads that are not MikroTik format payloads:</p><blockquote><p>    :local advertisingDataRegex &quot;15ff4f09&quot;</p></blockquote><p>RSSI signal strength filtering option. This filtering option was mentioned in the &quot;<a href="https://help.mikrotik.com/docs/display/ROS/Bluetooth+tag-tracking+using+MQTT+and+ThingsBoard#BluetoothtagtrackingusingMQTTandThingsBoard-Scenarioexample" rel="nofollow">Scenario explanation</a>&quot; section. This filter allows you to ignore any payload that has RSSI weaker than the configured value. For example. &quot;-40&quot; would only include Bluetooth advertisements that have signal strength stronger than -40dBm:</p><blockquote><p>    :local rssiThreshold &quot;-40&quot;</p></blockquote><p>KNOT identifier line. You will need to change it for each unique KNOT. For example, name your first KNOT →  KNOT_A and your second KNOT →  KNOT_B:</p><blockquote>:local gwName &quot;KNOT_A&quot;</blockquote><p>The rest of the script does not need to be changed/altered</p><p>How does the script work when you run it? The script &quot;inspects&quot; the &quot;Advertising reports&quot; tab (payload list tab) using the filters applied and structures a JSON message. An example of the JSON message would be:</p><pre>{
+  &quot;2C:C8:1B:4B:BB:0A&quot;: [
+    {
+      &quot;ts&quot;: 1678967250600,
+      &quot;values&quot;: {
+        &quot;reporter&quot;: &quot;KNOT_A&quot;,
+        &quot;rssi&quot;: -47
+      }
+    }
+  ],
+  &quot;DC:2C:6E:0F:C0:3D&quot;: [
+    {
+      &quot;ts&quot;: 1678967247850,
+      &quot;values&quot;: {
+        &quot;reporter&quot;: &quot;KNOT_A&quot;,
+        &quot;rssi&quot;: -59
+      }
+    },
+    {
+      &quot;ts&quot;: 1678967257849,
+      &quot;values&quot;: {
+        &quot;reporter&quot;: &quot;KNOT_A&quot;,
+        &quot;rssi&quot;: -67
+      }
+    }
+  ]
+}</pre><p>The data is structured per the <a class="external-link" href="https://thingsboard.io/docs/reference/gateway-mqtt-api/#telemetry-upload-api" rel="nofollow">ThingsBoard guide</a>, where &quot;<code>2C:C8:1B:4B:BB:0A</code>&quot; and &quot;<code>DC:2C:6E:0F:C0:3D</code>&quot; are MAC addresses of tags that appeared in the KNOT's range, &quot;<code>ts</code>&quot; is unix timestamp of each payload broadcasted by the tag in milliseconds, &quot;<code>reporter</code>&quot; indicates which specific KNOT has sent the message and &quot;<code>rssi</code>&quot; is the signal strength of each payload broadcasted by the tag in dBm.</p><p>After the payload list is &quot;searched&quot; and the JSON message is structured, the Bluetooth interface payload list gets &quot;cleaned&quot; (or &quot;flashed&quot;), and the previously structured JSON message is sent to the ThingsBoard MQTT broker.</p><p>To run the script, use the command:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/system script run tracking</pre>
+</div></div><h5 id="BluetoothtagtrackingusingMQTTandThingsBoard-Scheduler">Scheduler</h5><p>Apply a scheduler to the script, so that RouterOS periodically initiates the script by itself:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/system/scheduler/add name=bluetoothscheduler interval=30s on-event=&quot;/system/script/run tracking&quot;</pre>
+</div></div><p>You can set up shorter and longer intervals. If you want to send data more often, so that the data is &quot;fresher&quot; →  set up shorter time intervals (10-15 seconds). If you want to send fewer messages, less often → you can set up longer time intervals (30min+).</p><p>The JSON message structured using the script has a &quot;<code>ts</code>&quot; value (timestamp) assigned for each payload received. Meaning that <strong>when the script is run</strong>, for example, <strong>every minute</strong>, 1 tag is used and <strong>the tag broadcasts </strong>1 payload every 10 seconds (that is <strong>6 payloads per minute</strong>) → ThingsBoard data (GUI) will be updated every minute, and every minute, 6 new entries will appear (each entry will indicate that it was received 10 seconds after the previous one). And if you send the message every 15 minutes when using 1 tag that is broadcasting a payload every 10 seconds (that is 6*15=90 payloads per 15 minutes) → ThingsBoard data (GUI) will be updated every 15 minutes but 90 entries will appear.</p><h3 id="BluetoothtagtrackingusingMQTTandThingsBoard-ThingsBoarddatavisualizationandresultverification">ThingsBoard data visualization and result verification</h3><p>After you run the script with <code>/system script run tracking</code> or via a scheduler and refresh the GUI portal → all MAC addresses (tags) that are found in the JSON message, will be made into new devices under the ThingsBoard GUI:</p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/176914435/177406074.png" data-image-src="attachments/176914435/177406074.png" data-unresolved-comment-count="0" data-linked-resource-id="177406074" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2023-3-10_16-27-20.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="176914435" data-linked-resource-container-version="178" tabindex="0" alt=""></span></p><p>To help you visualize the data, you can use the built-in <a class="external-link" href="https://thingsboard.io/docs/user-guide/ui/widget-library/" rel="nofollow">widgets</a> or create your own one.</p><p>Select the tag's MAC address from the list of devices, go to the &quot;Latest telemetry&quot; section, checkbox the &quot;reporter&quot; parameter, and click on the &quot;Show on widget&quot; button:</p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/176914435/177406075.png" data-image-src="attachments/176914435/177406075.png" data-unresolved-comment-count="0" data-linked-resource-id="177406075" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2023-3-10_16-28-25.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="176914435" data-linked-resource-container-version="178" tabindex="0" alt=""></span></p><p>Select a widget that you wish to use, for example under the &quot;Cards&quot; bundle, &quot;Timeseries table&quot; and click on &quot;Add to dashboard&quot;:</p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/176914435/177406076.png" data-image-src="attachments/176914435/177406076.png" data-unresolved-comment-count="0" data-linked-resource-id="177406076" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2023-3-10_16-31-2.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="176914435" data-linked-resource-container-version="178" tabindex="0" alt=""></span></p><p>Create a new dashboard and name it, however, you like. Click on &quot;Add&quot;:</p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/176914435/177406077.png" data-image-src="attachments/176914435/177406077.png" data-unresolved-comment-count="0" data-linked-resource-id="177406077" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2023-3-10_16-32-45.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="176914435" data-linked-resource-container-version="178" tabindex="0" alt=""></span></p><p>Do the same steps for your other tags that appeared under the &quot;Devices&quot; tab. Create a new widget for each unique tag under the same dashboard.</p><p>Change the widget's &quot;Timewindow&quot; from &quot;Realtime-last minute&quot; (which is used by default) to &quot;Realtime-current day&quot;:</p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/176914435/178585706.png" data-image-src="attachments/176914435/178585706.png" data-unresolved-comment-count="0" data-linked-resource-id="178585706" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2023-3-16_15-5-32.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="176914435" data-linked-resource-container-version="178" tabindex="0" alt=""></span></p><p>As a result, if both tags are inside the <strong>KNOT A</strong> <strong>range</strong>, the dashboard would show:</p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/176914435/178585707.png" data-image-src="attachments/176914435/178585707.png" data-unresolved-comment-count="0" data-linked-resource-id="178585707" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2023-3-16_15-10-47.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="176914435" data-linked-resource-container-version="178" tabindex="0" alt=""></span></p><p>If they move to the <strong>KNOT B range</strong>, it would show:</p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/176914435/178585709.png" data-image-src="attachments/176914435/178585709.png" data-unresolved-comment-count="0" data-linked-resource-id="178585709" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2023-3-16_15-18-17.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="176914435" data-linked-resource-container-version="178" tabindex="0" alt=""></span></p><p>If the tags move to the <strong>overlapped area</strong>, inside both ranges, both reporters (KNOT_A and KNOT_B) should show up within a few seconds after each other, depending on the interval used in the scheduler:</p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/176914435/178585710.png" data-image-src="attachments/176914435/178585710.png" data-unresolved-comment-count="0" data-linked-resource-id="178585710" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2023-3-16_15-20-49.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="176914435" data-linked-resource-container-version="178" tabindex="0" alt=""></span></p><h2 id="BluetoothtagtrackingusingMQTTandThingsBoard-Example#2">Example #2</h2><p>In the second example, we will showcase another topology:</p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/176914435/185172060.png" data-image-src="attachments/176914435/185172060.png" data-unresolved-comment-count="0" data-linked-resource-id="185172060" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="KNOT_illustration_2023_advanced(3).png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="176914435" data-linked-resource-container-version="178" tabindex="0" alt=""></span></p><p>We have a few warehouses, a few company delivery vehicles, and 3 assets that we are interested in tracking. Our assets are pallets that hold cargo and our goals are to know:</p><ul><li>in which specific warehouse (equipped with the KNOT) the asset (equipped with the tag) is currently in and how much time it spent inside the specific warehouse;</li><li>whether the asset (equipped with the tag) is on the road, traveling between warehouses, and how much time it spent inside the vehicle (equipped with the KNOT);</li><li><strong>(optionally) if <a class="external-link" href="https://mikrotik.com/product/tg_bt5_out" rel="nofollow">TG-BT5-OUT</a> tags are used</strong>, what was the temperature during all this time? You can also/instead monitor other parameters that you can get out of the advertised <a href="https://help.mikrotik.com/docs/display/UM/MikroTik+Tag+advertisement+formats#heading-Example" rel="nofollow">payload</a>, like for example acceleration;</li><li><strong>(optionally) </strong>find out the KNOT's GPS location.</li></ul><p>To achieve Bluetooth asset-tracking, just install x1 KNOT per warehouse, x1 KNOT per vehicle, and x1 tag per asset.</p><p>We can see that TAG 1 is inside the vehicle, and this vehicle just parked near the warehouse. Both KNOT 1 and KNOT 4 will report to the server that the asset is inside their ranges. This will tell you that the asset is parked but not being transported yet.</p><p>We can see that TAG 2 is traveling between the warehouses and is only inside the KNOT 5 Bluetooth range. In this case, KNOT 5 will be the only reporter and the result that is displayed on the server would mean that the asset is getting transported.</p><p>We can see that TAG 3 is inside the warehouse. The server will indicate just that.</p><p>The data on the server will show the timestamps of each report sent by the KNOT, which will tell you for how long did the asset stay inside the specific device's Bluetooth range.</p><h3 id="BluetoothtagtrackingusingMQTTandThingsBoard-Configuration.1">Configuration</h3><p>In this example, we will showcase a basic topology with 2 warehouses, 1 vehicle/truck traveling between them, and 1 asset/pallet/tag.</p><h4 id="BluetoothtagtrackingusingMQTTandThingsBoard-ThingsBoardpreparation.1">ThingsBoard preparation</h4><p>Check the guide over <a href="https://help.mikrotik.com/docs/display/ROS/MQTT+and+ThingsBoard+configuration" rel="nofollow">here</a> to understand how the ThingsBoard and the RouterOS can be set up to utilize MQTT communication.</p><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>This example will showcase <a href="https://help.mikrotik.com/docs/display/ROS/MQTT+and+ThingsBoard+configuration#MQTTandThingsBoardconfiguration-Accesstokenscenario.1" rel="nofollow">access-token</a> scenario for simplicity reasons, but you can use other available options as well. For the production environment, it is suggested to use SSL-MQTT, as non-SSL-MQTT can be easily packet captured and inspected.</p><p>To understand how to implement SSL-MQTT communication on the instance that is run with the <a href="https://help.mikrotik.com/docs/display/ROS/Container" rel="nofollow">container</a>. Check the guide linked <a href="https://help.mikrotik.com/docs/pages/viewpage.action?pageId=166920348" rel="nofollow">here</a> (<a href="https://help.mikrotik.com/docs/pages/viewpage.action?pageId=166920348#ContainerThingsBoardMQTT/HTTPserver-EnablingHTTPSandSSLMQTT" rel="nofollow">Enabling HTTPS and SSL MQTT</a> section).</p></div></div><p>Create 3 KNOTs under the ThingsBoard GUI and make them &quot;gateways&quot;.</p><p>Go to the &quot;Devices&quot; section, click on &quot;+&quot; button and &quot;Add new device&quot;:</p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/176914435/177406006.png" data-image-src="attachments/176914435/177406006.png" data-unresolved-comment-count="0" data-linked-resource-id="177406006" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2023-3-8_13-29-22.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="176914435" data-linked-resource-container-version="178" tabindex="0" alt=""></span></p><p>Name the device and checkbox the &quot;Is gateway&quot; option:</p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/176914435/182845515.png" data-image-src="attachments/176914435/182845515.png" data-unresolved-comment-count="0" data-linked-resource-id="182845515" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2023-4-3_14-57-56.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="176914435" data-linked-resource-container-version="178" tabindex="0" alt=""></span></p><p>Do that for each KNOT that you have:</p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/176914435/182845516.png" data-image-src="attachments/176914435/182845516.png" data-unresolved-comment-count="0" data-linked-resource-id="182845516" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2023-4-3_14-58-22.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="176914435" data-linked-resource-container-version="178" tabindex="0" alt=""></span></p><p>Set up a unique access token (unique credentials) for each KNOT under the device you've just created, under the &quot;Manage credentials&quot; tab:</p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/176914435/182845518.png" data-image-src="attachments/176914435/182845518.png" data-unresolved-comment-count="0" data-linked-resource-id="182845518" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2023-4-3_14-59-8.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="176914435" data-linked-resource-container-version="178" tabindex="0" alt=""></span></p><h4 id="BluetoothtagtrackingusingMQTTandThingsBoard-RouterOSconfiguration.1">RouterOS configuration</h4><h5 id="BluetoothtagtrackingusingMQTTandThingsBoard-Preparation.1">Preparation</h5><p>Before we proceed, we need to confirm that our Bluetooth tag actually appears in the KNOT's Bluetooth range and that the KNOT detects them. To do that, you can issue the command &quot;<code>/iot bluetooth scanners advertisements print</code>&quot;:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/iot bluetooth scanners advertisements print
+ # DEVICE     PDU-TYPE        TIME                 ADDRESS-TYPE ADDRESS                    RSSI     LENGTH DATA                                           
+ 0 bt1        adv-noconn-ind  mar/08/2023 12:35:15 public       2C:C8:1B:4B:BB:0A        -50dBm         22 15ff4f090100b0110100ffff00000019d68d2300005d   
+ 1 bt1        adv-noconn-ind  mar/08/2023 12:35:16 public       DC:2C:6E:0F:C0:3D        -39dBm         22 15ff4f0901008f3cfcfffbfffaff301783c22c000064   
+ 2 bt1        adv-noconn-ind  mar/08/2023 12:35:35 public       2C:C8:1B:4B:BB:0A        -50dBm         22 15ff4f09010084d500000400ffff0319ea8d2300005d   
+ 3 bt1        adv-noconn-ind  mar/08/2023 12:35:45 public       2C:C8:1B:4B:BB:0A        -50dBm         22 15ff4f090100e607faffffff03000319f48d2300005d   
+</pre>
+</div></div><p>Or you can check it using <a href="https://help.mikrotik.com/docs/display/ROS/Webfig" rel="nofollow">Webfig</a> or <a href="https://help.mikrotik.com/docs/display/ROS/Winbox" rel="nofollow">Winbox</a> under the IoT&gt;Bluetooth&gt;Advertising reports tab.</p><p>The list can be chaotic. Random payloads can appear on the list as the scanner captures everything around it. To help reduce the list, you can filter it using the tag's MAC address &quot;<code>/iot bluetooth scanners advertisements print where address=DC:2C:6E:0F:C0:3D</code>&quot;:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/iot bluetooth scanners advertisements print where address=DC:2C:6E:0F:C0:3D
+ # DEVICE    PDU-TYPE        TIME                 ADDRESS-TYPE ADDRESS                    RSSI     LENGTH DATA                                           
+ 0 bt1       adv-noconn-ind  mar/08/2023 12:41:06 public       DC:2C:6E:0F:C0:3D        -49dBm         22 15ff4f0901005ab20100fdfffdff4017e1c32c000064   
+ 1 bt1       adv-noconn-ind  mar/08/2023 12:41:26 public       DC:2C:6E:0F:C0:3D        -40dBm         22 15ff4f090100349704000000fcff4017f5c32c000064   
+ 2 bt1       adv-noconn-ind  mar/08/2023 12:41:36 public       DC:2C:6E:0F:C0:3D        -49dBm         22 15ff4f09010073fb0000000000003017ffc32c000064   
+ 3 bt1       adv-noconn-ind  mar/08/2023 12:41:46 public       DC:2C:6E:0F:C0:3D        -43dBm         22 15ff4f090100b88cffffffffffff401709c42c000064   
+</pre>
+</div></div><p>To figure out how to decypher the payload, please check the guide <a href="https://help.mikrotik.com/docs/display/UM/MikroTik+Tag+advertisement+formats#heading-Scriptfordecoding" rel="nofollow">here</a>.</p><h5 id="BluetoothtagtrackingusingMQTTandThingsBoard-MQTTbroker.1">MQTT broker</h5><p>On each KNOT setup MQTT broker.</p><p>For KNOT_1:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/iot/mqtt/brokers/add name=tb address=x.x.x.x port=1883 username=knot-1_access_token</pre>
+</div></div><p>Where:</p><ul><li><code>name</code> is the name that you wish to give to the broker and this name will be used later in the script;</li><li><code>address</code> is the IP address of the broker/ThingsBoard server;</li><li><code>port</code> is the TCP port that the broker is listening for → for non-SSL it is typically TCP 1883;</li><li><code>username</code> is dictated by the MQTT broker and, in our case, it is an &quot;access token&quot; that was generated in the ThingsBoard management portal.</li></ul><p>For KNOT_2 and KNOT_3 → Do the same steps. Just change <code>username</code> to the respective access token that was generated.</p><h5 id="BluetoothtagtrackingusingMQTTandThingsBoard-Script.1">Script</h5><p>Import the script shown below to each KNOT. To do that, just copy the below shown &quot;code&quot; and paste it into a new terminal window and press &quot;ENTER&quot;:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/system script add dont-require-permissions=no name=tracking owner=admin policy=\
+    ftp,reboot,read,write,policy,test,password,sniff,sensitive,romon source=&quot;# Required package\
+    s: iot\r\
+    \n\r\
+    \n################################ Configuration ################################\r\
+    \n# Name of an existing MQTT broker that should be used for publishing\r\
+    \n:local broker \&quot;tb\&quot;\r\
+    \n\r\
+    \n# MQTT topic where the message should be published\r\
+    \n:local topic \&quot;v1/gateway/telemetry\&quot;\r\
+    \n\r\
+    \n# POSIX regex for filtering advertisement Bluetooth addresses. E.g. \&quot;^BC:33:AC\&quot;\r\
+    \n# would only include addresses which start with those 3 octets.\r\
+    \n# To disable this filter, set it to \&quot;\&quot;\r\
+    \n:local addressRegex \&quot;\&quot;\r\
+    \n\r\
+    \n# POSIX regex for filtering Bluetooth advertisements based on their data. Same\r\
+    \n# usage as with &#39;addressRegex&#39;.\r\
+    \n:local advertisingDataRegex \&quot;\&quot;\r\
+    \n\r\
+    \n# Signal strength filter. E.g. -40 would only include Bluetooth advertisements\r\
+    \n# whose signal strength is stronger than -40dBm.\r\
+    \n# To disable this filter, set it to \&quot;\&quot;\r\
+    \n:local rssiThreshold \&quot;\&quot;\r\
+    \n\r\
+    \n#Name the KNOT. Identity of the unit that will be senting the message. This name will be \
+    reported to the MQTT broker.\r\
+    \n:local gwName \&quot;1\&quot;\r\
+    \n\r\
+    \n################################## Bluetooth ##################################\r\
+    \n:put (\&quot;[*] Gathering Bluetooth info...\&quot;)\r\
+    \n\r\
+    \n:global makeRecord do={\r\
+    \n    :local jsonStr \&quot;{\\\&quot;ts\\\&quot;:\$ts,\\\&quot;values\\\&quot;:{\\\&quot;KNOT_\$gwName\\\&quot;:\\\&quot;\$gwName\
+    \\\&quot;,\\\&quot;rssi\\\&quot;:\$rssi}}\&quot;\r\
+    \n    :return \$jsonStr\r\
+    \n}   \r\
+    \n\r\
+    \n# array of record strings collected for each advertising MAC address\r\
+    \n:global macRecords [:toarray \&quot;\&quot;]\r\
+    \n\r\
+    \n# process advertisements and update macRecords\r\
+    \n:local advertisements [/iot bluetooth scanners advertisements print detail as-value where\
+    \_\\\r\
+    \naddress ~ \$addressRegex and \\\r\
+    \ndata ~ \$advertisingDataRegex and \\\r\
+    \nrssi &gt; \$rssiThreshold]\r\
+    \n\r\
+    \n/iot/bluetooth/scanners/advertisements clear\r\
+    \n\r\
+    \n:foreach adv in=\$advertisements do={\r\
+    \n:local address (\$adv-&gt;\&quot;address\&quot;)\r\
+    \n:local rssi (\$adv-&gt;\&quot;rssi\&quot;)\r\
+    \n:local epoch (\$adv-&gt;\&quot;epoch\&quot;)\r\
+    \n                \r\
+    \n:local recordStr [\$makeRecord ts=\$epoch gwName=\$gwName rssi=\$rssi]\r\
+    \n\r\
+    \n:if ([:len (\$macRecords-&gt;\$address)] &gt; 0) do={\r\
+    \n:local str (\$macRecords-&gt;\$address)\r\
+    \n:local newStr \&quot;\$str,\$recordStr\&quot;\r\
+    \n:set (\$macRecords-&gt;\$address) \$newStr} else={:set (\$macRecords-&gt;\$address) \$recordStr\
+    }}\r\
+    \n\r\
+    \n# TODO: add some logic to decide when we want to send data\r\
+    \n:local sendData true\r\
+    \n\r\
+    \n:if (\$sendData) do={\r\
+    \n:local jsonStr \&quot;{\&quot;\r\
+    \n\r\
+    \n:foreach addr,advRec in=\$macRecords do={\r\
+    \n:set jsonStr \&quot;\$jsonStr\\\&quot;\$addr\\\&quot;:[\$advRec],\&quot;}\r\
+    \n\r\
+    \n:local payloadlength\r\
+    \n:set payloadlength [:len (\$jsonStr)]\r\
+    \n:local remcom\r\
+    \n:set remcom [:pick \$jsonStr 0 (\$payloadlength-1)]\r\
+    \n:set jsonStr \&quot;\$remcom}\&quot;\r\
+    \n:local message\r\
+    \n:set message \&quot;\$jsonStr\&quot;\r\
+    \n:log info \&quot;\$message\&quot;;\r\
+    \n:put (\&quot;[*] Message structured: \$message\&quot;)\r\
+    \n:put (\&quot;[*] Total message size: \$[:len \$message] bytes\&quot;)\r\
+    \n:put (\&quot;[*] Sending message to MQTT broker...\&quot;)\r\
+    \n/iot mqtt publish broker=\&quot;\$broker\&quot; topic=\&quot;\$topic\&quot; message=\$message}&quot;</pre>
+</div></div><p>The script should appear under the &quot;System&gt;Scripts&gt;Script List&quot; tab with the name &quot;tracking&quot; or with the help of the command &quot;<code>/system script print</code>&quot;.</p><p>There are certain script lines that you need to pay attention to.</p><p>Broker name configuration line, where you need to input the MQTT broker name that you have set:</p><blockquote><p>     :local broker &quot;tb&quot;</p></blockquote><p>You need to input a correct topic, used by the MQTT broker. Check <a class="external-link" href="https://thingsboard.io/docs/reference/gateway-mqtt-api/" rel="nofollow">ThingsBoard documentation</a> for more details and, by default, the topic should be:</p><blockquote><p>     :local topic &quot;v1/gateway/telemetry&quot;</p></blockquote><p>MAC address filtering option inside the script itself. You can type in all 6 octets of the MAC address (to apply the filter to 1 specific tag), or you can filter the list using a few/couple of octets, like &quot;^BC:33:AC&quot; (to apply the filter, so that only MAC addresses that begin with &quot;BC:33:AC:...&quot; would be processed):</p><blockquote><p>    :local addressRegex &quot;DC:2C:6E:0F:C0:3D&quot;</p></blockquote><p>Payload content/data line. Allows you to filter the list, per specific payload content, like &quot;<a href="https://help.mikrotik.com/docs/display/UM/MikroTik+Tag+advertisement+formats#heading-MikroTikPDUPayloadstructure" rel="nofollow">manufacturer data</a>&quot;. For example, &quot;15ff4f09&quot; would discard all payloads that are not MikroTik format payloads:</p><blockquote><p>    :local advertisingDataRegex &quot;15ff4f09&quot;</p></blockquote><p>RSSI signal strength filtering option. This filtering option was mentioned in the &quot;<a href="https://help.mikrotik.com/docs/display/ROS/Bluetooth+tag-tracking+using+MQTT+and+ThingsBoard#BluetoothtagtrackingusingMQTTandThingsBoard-Scenarioexample" rel="nofollow">Scenario explanation</a>&quot; section. This filter allows you to ignore any payload that has RSSI weaker than the configured value. For example. &quot;-40&quot; would only include Bluetooth advertisements that have signal strength stronger than -40dBm:</p><blockquote><p>    :local rssiThreshold &quot;-40&quot;</p></blockquote><p>KNOT identifier line. You will need to change it for each unique KNOT. For example, ID your first KNOT as &quot;1&quot;, your second KNOT as &quot;2&quot; and your third KNOT as &quot;3&quot;:</p><blockquote>:local gwName &quot;1&quot;</blockquote><p>The rest of the script does not need to be changed/altered</p><p>How does the script work when you run it? The script &quot;inspects&quot; the &quot;Advertising reports&quot; tab (payload list tab) using the filters applied and structures a JSON message. An example of the JSON message would be:</p><pre>{
+  &quot;2C:C8:1B:4B:BB:0A&quot;: [
+    {
+      &quot;ts&quot;: 1680526087729,
+      &quot;values&quot;: {
+        &quot;KNOT_1&quot;: &quot;1&quot;,
+        &quot;rssi&quot;: -47
+      }
+    }
+  ],
+  &quot;DC:2C:6E:0F:C0:3D&quot;: [
+    {
+      &quot;ts&quot;: 1680526065000,
+      &quot;values&quot;: {
+        &quot;KNOT_1&quot;: &quot;1&quot;,
+        &quot;rssi&quot;: -49
+      }
+    },
+    {
+      &quot;ts&quot;: 1680526075001,
+      &quot;values&quot;: {
+        &quot;KNOT_1&quot;: &quot;1&quot;,
+        &quot;rssi&quot;: -50
+      }
+    }
+  ]
+}</pre><p>The data is structured per the <a class="external-link" href="https://thingsboard.io/docs/reference/gateway-mqtt-api/#telemetry-upload-api" rel="nofollow">ThingsBoard guide</a>, where &quot;<code>2C:C8:1B:4B:BB:0A</code>&quot; and &quot;<code>DC:2C:6E:0F:C0:3D</code>&quot; are MAC addresses of tags that appeared in the KNOT's range, &quot;<code>ts</code>&quot; is unix timestamp of each payload broadcasted by the tag in milliseconds, &quot;<code>KNOT_X</code>&quot; indicates which specific KNOT has sent the message and &quot;<code>rssi</code>&quot; is the signal strength of each payload broadcasted by the tag in dBm.</p><p>After the payload list is &quot;searched&quot; and the JSON message is structured, the Bluetooth interface payload list gets &quot;cleaned&quot; (or &quot;flashed&quot;), and the previously structured JSON message is sent to the ThingsBoard MQTT broker.</p><p>To run the script, use the command:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/system script run tracking</pre>
+</div></div><h6 id="BluetoothtagtrackingusingMQTTandThingsBoard-Scriptthatincludestemperaturedata(optional)">Script that includes temperature data (optional)</h6><p>In case you wish to add temperature reports to the structured message, use the script below:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/system script add dont-require-permissions=no name=tracking+temp owner=admin policy=\
+    ftp,reboot,read,write,policy,test,password,sniff,sensitive,romon source=&quot;# Required package\
+    s: iot\r\
+    \n\r\
+    \n################################ Configuration ################################\r\
+    \n# Name of an existing MQTT broker that should be used for publishing\r\
+    \n:local broker \&quot;tb\&quot;\r\
+    \n\r\
+    \n# MQTT topic where the message should be published\r\
+    \n:local topic \&quot;v1/gateway/telemetry\&quot;\r\
+    \n\r\
+    \n# POSIX regex for filtering advertisement Bluetooth addresses. E.g. \&quot;^BC:33:AC\&quot;\r\
+    \n# would only include addresses which start with those 3 octets.\r\
+    \n# To disable this filter, set it to \&quot;\&quot;\r\
+    \n:local addressRegex \&quot;\&quot;\r\
+    \n\r\
+    \n# POSIX regex for filtering Bluetooth advertisements based on their data. Same\r\
+    \n# usage as with &#39;addressRegex&#39;.\r\
+    \n:local advertisingDataRegex \&quot;\&quot;\r\
+    \n\r\
+    \n# Signal strength filter. E.g. -40 would only include Bluetooth advertisements\r\
+    \n# whose signal strength is stronger than -40dBm.\r\
+    \n# To disable this filter, set it to \&quot;\&quot;\r\
+    \n:local rssiThreshold \&quot;\&quot;\r\
+    \n\r\
+    \n#Name the KNOT. Identity of the unit that will be senting the message. This name will be \
+    reported to the MQTT broker.\r\
+    \n:local gwName \&quot;1\&quot;\r\
+    \n\r\
+    \n################################## Bluetooth ##################################\r\
+    \n:global invertU16 do={\r\
+    \n    :local inverted 0\r\
+    \n    :for idx from=0 to=15 step=1 do={\r\
+    \n        :local mask (1 &lt;&lt; \$idx)\r\
+    \n        :if (\$1 &amp; \$mask = 0) do={\r\
+    \n            :set \$inverted (\$inverted | \$mask)\r\
+    \n        }\r\
+    \n    }\r\
+    \n    return \$inverted\r\
+    \n}\r\
+    \n\r\
+    \n:global le16ToHost do={\r\
+    \n    :local lsb [:pick \$1 0 2]\r\
+    \n    :local msb [:pick \$1 2 4]\r\
+    \n\r\
+    \n    :return [:tonum \&quot;0x\$msb\$lsb\&quot;]\r\
+    \n}\r\
+    \n:local from88 do={\r\
+    \n    :global invertU16\r\
+    \n    :global le16ToHost\r\
+    \n    :local num [\$le16ToHost \$1]\r\
+    \n\r\
+    \n    # Handle negative numbers\r\
+    \n    :if (\$num &amp; 0x8000) do={\r\
+    \n        :set num (-1 * ([\$invertU16 \$num] + 1))\r\
+    \n    }\r\
+    \n\r\
+    \n    # Convert from 8.8. Scale by 1000 since floating point is not supported\r\
+    \n    :return ((\$num * 125) / 32)\r\
+    \n}\r\
+    \n:put (\&quot;[*] Gathering Bluetooth info...\&quot;)\r\
+    \n\r\
+    \n:global makeRecord do={\r\
+    \n    :local jsonStr \&quot;{\\\&quot;ts\\\&quot;:\$ts,\\\&quot;values\\\&quot;:{\\\&quot;KNOT_\$gwName\\\&quot;:\\\&quot;\$gwName\
+    \\\&quot;,\\\&quot;temp\\\&quot;:\$temp}}\&quot;\r\
+    \n    :return \$jsonStr\r\
+    \n}   \r\
+    \n\r\
+    \n# array of record strings collected for each advertising MAC address\r\
+    \n:global macRecords [:toarray \&quot;\&quot;]\r\
+    \n\r\
+    \n# process advertisements and update macRecords\r\
+    \n:local advertisements [/iot bluetooth scanners advertisements print detail as-value where\
+    \_\\\r\
+    \naddress ~ \$addressRegex and \\\r\
+    \ndata ~ \$advertisingDataRegex and \\\r\
+    \nrssi &gt; \$rssiThreshold]\r\
+    \n\r\
+    \n/iot/bluetooth/scanners/advertisements clear\r\
+    \n\r\
+    \n:foreach adv in=\$advertisements do={\r\
+    \n:local address (\$adv-&gt;\&quot;address\&quot;)\r\
+    \n:local ad (\$adv-&gt;\&quot;data\&quot;)\r\
+    \n:local rssi (\$adv-&gt;\&quot;rssi\&quot;)\r\
+    \n:local epoch (\$adv-&gt;\&quot;epoch\&quot;)\r\
+    \n:local temp [\$from88 [:pick \$ad 28 32]]\r\
+    \n                \r\
+    \n:local recordStr [\$makeRecord ts=\$epoch gwName=\$gwName temp=\$temp]\r\
+    \n\r\
+    \n:if ([:len (\$macRecords-&gt;\$address)] &gt; 0) do={\r\
+    \n:local str (\$macRecords-&gt;\$address)\r\
+    \n:local newStr \&quot;\$str,\$recordStr\&quot;\r\
+    \n:set (\$macRecords-&gt;\$address) \$newStr} else={:set (\$macRecords-&gt;\$address) \$recordStr\
+    }}\r\
+    \n\r\
+    \n# TODO: add some logic to decide when we want to send data\r\
+    \n:local sendData true\r\
+    \n\r\
+    \n:if (\$sendData) do={\r\
+    \n:local jsonStr \&quot;{\&quot;\r\
+    \n\r\
+    \n:foreach addr,advRec in=\$macRecords do={\r\
+    \n:set jsonStr \&quot;\$jsonStr\\\&quot;\$addr\\\&quot;:[\$advRec],\&quot;}\r\
+    \n\r\
+    \n:local payloadlength\r\
+    \n:set payloadlength [:len (\$jsonStr)]\r\
+    \n:local remcom\r\
+    \n:set remcom [:pick \$jsonStr 0 (\$payloadlength-1)]\r\
+    \n:set jsonStr \&quot;\$remcom}\&quot;\r\
+    \n:local message\r\
+    \n:set message \&quot;\$jsonStr\&quot;\r\
+    \n:log info \&quot;\$message\&quot;;\r\
+    \n:put (\&quot;[*] Message structured: \$message\&quot;)\r\
+    \n:put (\&quot;[*] Total message size: \$[:len \$message] bytes\&quot;)\r\
+    \n:put (\&quot;[*] Sending message to MQTT broker...\&quot;)\r\
+    \n/iot mqtt publish broker=\&quot;\$broker\&quot; topic=\&quot;\$topic\&quot; message=\$message}&quot;</pre>
+</div></div><p>In this case, the JSON message would look like this:</p><pre>{
+  &quot;2C:C8:1B:4B:BB:0A&quot;: [
+    {
+      &quot;ts&quot;: 1680527467840,
+      &quot;values&quot;: {
+        &quot;KNOT_1&quot;: &quot;1&quot;,
+        &quot;temp&quot;: 26460
+      }
+    }
+  ],
+  &quot;DC:2C:6E:0F:C0:3D&quot;: [
+    {
+      &quot;ts&quot;: 1680527464996,
+      &quot;values&quot;: {
+        &quot;KNOT_1&quot;: &quot;1&quot;,
+        &quot;temp&quot;: 24750
+      }
+    },
+    {
+      &quot;ts&quot;: 1680527474996,
+      &quot;values&quot;: {
+        &quot;KNOT_1&quot;: &quot;1&quot;,
+        &quot;temp&quot;: 24750
+      }
+    }
+  ]
+}</pre><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Because of the fact that floating point is not supported → every calculation behind a decimal point will be &quot;rounded up&quot; to a whole number. This is why the script will calculate the temperature and acceleration values <strong>scaled by 1000</strong> (multiplied by <strong>1000</strong>).<br/>So, if you see the temperature as <strong>temp=24750</strong>, the real temperature is <strong>24.750 C</strong>. To add a decimal point, you will need to do an additional result &quot;translation&quot; on the server side or with additional scripting on the RouterOS side, which will increase the CPU usage of the device.</p></div></div><h6 id="BluetoothtagtrackingusingMQTTandThingsBoard-ScriptthatincludesGPSdata(optional)">Script that includes GPS data (optional)</h6><p>In case you also wish to include GPS data (longitude and latitude values from the KNOTs), use the script shown below:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/system script add dont-require-permissions=no name=tracking+gps+temp owner=admin policy=\
+    ftp,reboot,read,write,policy,test,password,sniff,sensitive,romon source=&quot;# Required package\
+    s: iot\r\
+    \n\r\
+    \n################################ Configuration ################################\r\
+    \n# Name of an existing MQTT broker that should be used for publishing\r\
+    \n:local broker \&quot;tb\&quot;\r\
+    \n\r\
+    \n# MQTT topic where the message should be published\r\
+    \n:local topic \&quot;v1/gateway/telemetry\&quot;\r\
+    \n:local gwtopic \&quot;v1/devices/me/telemetry\&quot;\r\
+    \n\r\
+    \n# POSIX regex for filtering advertisement Bluetooth addresses. E.g. \&quot;^BC:33:AC\&quot;\r\
+    \n# would only include addresses which start with those 3 octets.\r\
+    \n# To disable this filter, set it to \&quot;\&quot;\r\
+    \n:local addressRegex \&quot;\&quot;\r\
+    \n\r\
+    \n# POSIX regex for filtering Bluetooth advertisements based on their data. Same\r\
+    \n# usage as with &#39;addressRegex&#39;.\r\
+    \n:local advertisingDataRegex \&quot;15ff\&quot;\r\
+    \n\r\
+    \n# Signal strength filter. E.g. -40 would only include Bluetooth advertisements\r\
+    \n# whose signal strength is stronger than -40dBm.\r\
+    \n# To disable this filter, set it to \&quot;\&quot;\r\
+    \n:local rssiThreshold \&quot;\&quot;\r\
+    \n\r\
+    \n#Name the KNOT. Identity of the unit that will be senting the message. This name will be \
+    reported to the MQTT broker.\r\
+    \n:local gwName \&quot;2\&quot;\r\
+    \n\r\
+    \n###########GPS#############\r\
+    \n:global lat\r\
+    \n:global lon\r\
+    \n\r\
+    \n/interface ppp-client set ppp-out1 disabled=yes\r\
+    \n:log info (\&quot;disabling WWAN to get GPS coordinates\&quot;)\r\
+    \n\r\
+    \n/interface ppp-client at-chat ppp-out1 input=\&quot;AT+QGPSCFG=\\\&quot;priority\\\&quot;,0\&quot;\r\
+    \n:log info (\&quot;enabling priority for GPS\&quot;)\r\
+    \n\r\
+    \n###the time in the delay below is the time that the device will wait for to get the coord\
+    inate fix\r\
+    \n:delay 32000ms\r\
+    \n:log info (\&quot;reading GPS coordinates\&quot;)\r\
+    \n/system gps monitor once do={\r\
+    \n:set \$lat \$(\&quot;latitude\&quot;)\r\
+    \n:set \$lon \$(\&quot;longitude\&quot;)\r\
+    \n}\r\
+    \n:if (\$lat != \&quot;none\&quot;) do={\\\r\
+    \n:log info (\&quot;enabling priority back to WWAN\&quot;)\r\
+    \n/interface ppp-client at-chat ppp-out1 input=\&quot;AT+QGPSCFG=\\\&quot;priority\\\&quot;,1\&quot;\r\
+    \n:log info (\&quot;enabling WWAN\&quot;)\r\
+    \n/interface ppp-client set ppp-out1 disabled=no\r\
+    \n:delay 1000ms\r\
+    \n###if dial on demand is enabled\r\
+    \n/ping 1.1.1.1 count=1\r\
+    \n\r\
+    \n#the delay below waits for 5 seconds for the ppp connection to get established - this tim\
+    e can differ based on the signal strength\r\
+    \n:delay 5000ms\r\
+    \n:log info (\&quot;posting coordinates via mqtt\&quot;)\r\
+    \n:local gpsmessage \\\r\
+    \n    \&quot;{\\\&quot;latitude\\\&quot;:\$lat,\\\r\
+    \n    \\\&quot;longitude\\\&quot;:\$lon}\&quot;\r\
+    \n/iot mqtt publish broker=\$broker topic=\$gwtopic message=\$gpsmessage} else={\\\r\
+    \n:log info (\&quot;could not read GPS coordinates...enabling back WWAN\&quot;)\r\
+    \n/interface ppp-client at-chat ppp-out1 input=\&quot;AT+QGPSCFG=\\\&quot;priority\\\&quot;,1\&quot;\r\
+    \n/interface ppp-client set ppp-out1 disabled=no\r\
+    \n:delay 1000ms\r\
+    \n###if dial on demand is enabled\r\
+    \n/ping 1.1.1.1 count=1\r\
+    \n:delay 5000ms\r\
+    \n}\r\
+    \n\r\
+    \n##################################Bluetooth##################################\r\
+    \n:global invertU16 do={\r\
+    \n    :local inverted 0\r\
+    \n    :for idx from=0 to=15 step=1 do={\r\
+    \n        :local mask (1 &lt;&lt; \$idx)\r\
+    \n        :if (\$1 &amp; \$mask = 0) do={\r\
+    \n            :set \$inverted (\$inverted | \$mask)\r\
+    \n        }\r\
+    \n    }\r\
+    \n    return \$inverted\r\
+    \n}\r\
+    \n\r\
+    \n:global le16ToHost do={\r\
+    \n    :local lsb [:pick \$1 0 2]\r\
+    \n    :local msb [:pick \$1 2 4]\r\
+    \n\r\
+    \n    :return [:tonum \&quot;0x\$msb\$lsb\&quot;]\r\
+    \n}\r\
+    \n:local from88 do={\r\
+    \n    :global invertU16\r\
+    \n    :global le16ToHost\r\
+    \n    :local num [\$le16ToHost \$1]\r\
+    \n\r\
+    \n    # Handle negative numbers\r\
+    \n    :if (\$num &amp; 0x8000) do={\r\
+    \n        :set num (-1 * ([\$invertU16 \$num] + 1))\r\
+    \n    }\r\
+    \n\r\
+    \n    # Convert from 8.8. Scale by 1000 since floating point is not supported\r\
+    \n    :return ((\$num * 125) / 32)\r\
+    \n}\r\
+    \n:put (\&quot;[*] Gathering Bluetooth info...\&quot;)\r\
+    \n\r\
+    \n:global makeRecord do={\r\
+    \n    :local jsonStr \&quot;{\\\&quot;ts\\\&quot;:\$ts,\\\&quot;values\\\&quot;:{\\\&quot;KNOT_\$gwName\\\&quot;:\\\&quot;\$gwName\
+    \\\&quot;,\\\&quot;temp\\\&quot;:\$temp}}\&quot;\r\
+    \n    :return \$jsonStr\r\
+    \n}   \r\
+    \n\r\
+    \n# array of record strings collected for each advertising MAC address\r\
+    \n:global macRecords [:toarray \&quot;\&quot;]\r\
+    \n\r\
+    \n# process advertisements and update macRecords\r\
+    \n:local advertisements [/iot bluetooth scanners advertisements print detail as-value where\
+    \_\\\r\
+    \naddress ~ \$addressRegex and \\\r\
+    \ndata ~ \$advertisingDataRegex and \\\r\
+    \nrssi &gt; \$rssiThreshold]\r\
+    \n\r\
+    \n/iot/bluetooth/scanners/advertisements clear\r\
+    \n\r\
+    \n:foreach adv in=\$advertisements do={\r\
+    \n:local address (\$adv-&gt;\&quot;address\&quot;)\r\
+    \n:local ad (\$adv-&gt;\&quot;data\&quot;)\r\
+    \n:local rssi (\$adv-&gt;\&quot;rssi\&quot;)\r\
+    \n:local epoch (\$adv-&gt;\&quot;epoch\&quot;)\r\
+    \n:local temp [\$from88 [:pick \$ad 28 32]]\r\
+    \n                \r\
+    \n:local recordStr [\$makeRecord ts=\$epoch gwName=\$gwName temp=\$temp]\r\
+    \n\r\
+    \n:if ([:len (\$macRecords-&gt;\$address)] &gt; 0) do={\r\
+    \n:local str (\$macRecords-&gt;\$address)\r\
+    \n:local newStr \&quot;\$str,\$recordStr\&quot;\r\
+    \n:set (\$macRecords-&gt;\$address) \$newStr} else={:set (\$macRecords-&gt;\$address) \$recordStr\
+    }}\r\
+    \n\r\
+    \n# TODO: add some logic to decide when we want to send data\r\
+    \n:local sendData true\r\
+    \n\r\
+    \n:if (\$sendData) do={\r\
+    \n:local jsonStr \&quot;{\&quot;\r\
+    \n\r\
+    \n:foreach addr,advRec in=\$macRecords do={\r\
+    \n:set jsonStr \&quot;\$jsonStr\\\&quot;\$addr\\\&quot;:[\$advRec],\&quot;}\r\
+    \n\r\
+    \n:local payloadlength\r\
+    \n:set payloadlength [:len (\$jsonStr)]\r\
+    \n:local remcom\r\
+    \n:set remcom [:pick \$jsonStr 0 (\$payloadlength-1)]\r\
+    \n:set jsonStr \&quot;\$remcom}\&quot;\r\
+    \n:local message\r\
+    \n:set message \&quot;\$jsonStr\&quot;\r\
+    \n:log info \&quot;\$message\&quot;;\r\
+    \n:put (\&quot;[*] Message structured: \$message\&quot;)\r\
+    \n:put (\&quot;[*] Total message size: \$[:len \$message] bytes\&quot;)\r\
+    \n:put (\&quot;[*] Sending message to MQTT broker...\&quot;)\r\
+    \n/iot mqtt publish broker=\&quot;\$broker\&quot; topic=\&quot;\$topic\&quot; message=\$message}&quot;</pre>
+</div></div><p>This is where you need to keep in mind the <a href="https://help.mikrotik.com/docs/display/UM/WWAN+and+GNSS+priority+automatization" rel="nofollow">BG77 modem behavior</a> → BG77 cellular modem (used in the KNOT) can not be used to have a cellular CAT-M/NB-IoT ongoing connection and to obtain GPS coordinates at the same time.</p><p>When the script is run:</p><ul><li>PPP interface is disabled and the highest priority is set for GPS reception (while the cellular PPP interface is down) for 32 seconds (this time can be altered in the script);</li><li>(a) If the device managed to obtain GPS latitude value during the configured 32 seconds (if the value obtained equals anything other than &quot;none&quot;), the script will structure a JSON message with captured latitude and longitude values, the script will set the highest priority for WWAN (change the priority from GPS to WWAN) and enable PPP interface back (for internet access). After that, the script will send GPS data JSON message via the first MQTT publish and, the script will run the Bluetooth part, where the Bluetooth data JSON message is structured and sent via the second MQTT publish (x2 MQTT messages are sent → GPS data MQTT message and Bluetooth data MQTT message);</li><li>(b) If the device fails to obtain GPS latitude value during the 32-second interval (if the value obtained equals &quot;none&quot;), the script sets the highest priority for WWAN (changes the priority from GPS to WWAN), enables PPP interface back (for internet access) and just processes the Bluetooth part, where the Bluetooth data JSON message is structured and sent via MQTT publish (basically, if GPS data could not be obtained, x1 MQTT message with Bluetooth data is sent).</li></ul><h5 id="BluetoothtagtrackingusingMQTTandThingsBoard-Scheduler.1">Scheduler</h5><p>Apply a scheduler to the script, so that RouterOS periodically initiates the script by itself:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/system/scheduler/add name=bluetoothscheduler interval=50s on-event=&quot;/system/script/run tracking&quot;</pre>
+</div></div><p>You can set up shorter and longer intervals. If you want to send data more often, so that the data is &quot;fresher&quot; →  set up shorter time intervals (10-15 seconds). If you want to send fewer messages, less often → you can set up longer time intervals (30min+).</p><p>The JSON message structured using the script has a &quot;<code>ts</code>&quot; value (timestamp) assigned for each payload received. Meaning that <strong>when the script is run</strong>, for example, <strong>every minute</strong>, 1 tag is used and <strong>the tag broadcasts </strong>1 payload every 10 seconds (that is <strong>6 payloads per minute</strong>) → ThingsBoard data (GUI) will be updated every minute, and every minute, 6 new entries will appear (each entry will indicate that it was received 10 seconds after the previous one). And if you send the message every 15 minutes when using 1 tag that is broadcasting a payload every 10 seconds (that is 6*15=90 payloads per 15 minutes) → ThingsBoard data (GUI) will be updated every 15 minutes but 90 entries will appear.</p><h3 id="BluetoothtagtrackingusingMQTTandThingsBoard-ThingsBoarddatavisualizationandresultverification.1">ThingsBoard data visualization and result verification</h3><p>After you run the script with <code>/system script run tracking</code> or via a scheduler and refresh the GUI portal → all MAC addresses (tags) that are found in the JSON message, will be made into new devices under the ThingsBoard GUI:</p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/176914435/177406074.png" data-image-src="attachments/176914435/177406074.png" data-unresolved-comment-count="0" data-linked-resource-id="177406074" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2023-3-10_16-27-20.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="176914435" data-linked-resource-container-version="178" tabindex="0" alt=""></span></p><p>To help you visualize the data, you can use the built-in <a class="external-link" href="https://thingsboard.io/docs/user-guide/ui/widget-library/" rel="nofollow">widgets</a> or create your own one.</p><p>Select the tag's MAC address from the list of devices, go to the &quot;Latest telemetry&quot; section, checkbox KNOT IDs that you wish to monitor, and click on the &quot;Show on widget&quot; button:</p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/176914435/182845616.png" data-image-src="attachments/176914435/182845616.png" data-unresolved-comment-count="0" data-linked-resource-id="182845616" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2023-4-3_16-25-5.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="176914435" data-linked-resource-container-version="178" tabindex="0" alt=""></span></p><p>Select a widget that you wish to use, for example under the &quot;Charts&quot; bundle, &quot;Timeseries Bar Chart&quot; and click on &quot;Add to dashboard&quot;:</p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/176914435/182845617.png" data-image-src="attachments/176914435/182845617.png" data-unresolved-comment-count="0" data-linked-resource-id="182845617" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2023-4-3_16-26-10.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="176914435" data-linked-resource-container-version="178" tabindex="0" alt=""></span></p><p>Create a new dashboard and name it, however, you like. Click on &quot;Add&quot;:</p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/176914435/182845618.png" data-image-src="attachments/176914435/182845618.png" data-unresolved-comment-count="0" data-linked-resource-id="182845618" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2023-4-3_16-26-58.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="176914435" data-linked-resource-container-version="178" tabindex="0" alt=""></span></p><p>Change the widget's &quot;Timewindow&quot; from &quot;Realtime-last minute&quot; (which is used by default) to &quot;Realtime-last 5 hours&quot; and disable &quot;data aggregation function&quot; (select &quot;none&quot;):</p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/176914435/182845619.png" data-image-src="attachments/176914435/182845619.png" data-unresolved-comment-count="0" data-linked-resource-id="182845619" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2023-4-3_16-29-52.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="176914435" data-linked-resource-container-version="178" tabindex="0" alt=""></span></p><p>To help you better visualize the result, edit the widget and then edit each &quot;KNOT_X&quot; parameter/key. Enable the &quot;Show points&quot; checkbox for each key:</p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/176914435/182845622.png" data-image-src="attachments/176914435/182845622.png" data-unresolved-comment-count="0" data-linked-resource-id="182845622" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2023-4-3_16-34-15.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="176914435" data-linked-resource-container-version="178" tabindex="0" alt=""></span></p><p>Check the ThingsBoard widget <a class="external-link" href="https://thingsboard.io/docs/user-guide/ui/chart-widget/#timeseries-bar-chart" rel="nofollow">guide</a> for more options that you have.</p><p>The end result would look like this:</p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/176914435/182845694.png" data-image-src="attachments/176914435/182845694.png" data-unresolved-comment-count="0" data-linked-resource-id="182845694" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2023-4-4_12-44-37.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="176914435" data-linked-resource-container-version="178" tabindex="0" alt=""></span></p><p>Per the dashboard, we can tell that:</p><ul><li>from ~11:00 to ~11:30, our asset was inside KNOT_1 Bluetooth range (inside warehouse #1);</li><li>from ~11:30 to ~11:35, our asset was relocated to the vehicle (KNOT_2) that was parked near the warehouse (the tag was inside both KNOT's ranges);</li><li>from ~11:35 to ~12:00, the tag was inside the truck (KNOT_2) - traveling to another warehouse;</li><li>from ~12:00 to ~12:05, the asset was parked outside of warehouse #2, and it was inside both KNOT_2 and KNOT_3 ranges at the same time;</li><li>from ~12:05 to 12:30, our asset was stored inside warehouse #2 (KNOT_3);</li><li>from ~12.:30 onwards, the tag was on the road again, inside the truck (KNOT_2).</li></ul><h4 id="BluetoothtagtrackingusingMQTTandThingsBoard-Temperaturevisualization(optional)">Temperature visualization (optional)</h4><p>Select the tag's MAC address from the list of devices, go to the &quot;Latest telemetry&quot; section, checkbox &quot;<code>temp</code>&quot; parameter, and click on the &quot;Show on widget&quot; button:</p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/176914435/182845695.png" data-image-src="attachments/176914435/182845695.png" data-unresolved-comment-count="0" data-linked-resource-id="182845695" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2023-4-4_12-47-9.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="176914435" data-linked-resource-container-version="178" tabindex="0" alt=""></span></p><p>Select a widget that you wish to use, for example under the &quot;Charts&quot; bundle, &quot;Timeseries Line Chart&quot;. Click on &quot;Add to dashboard&quot;, and choose the dashboard where you want to add the widget.</p><p>The result would look like this:</p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/176914435/182845699.png" data-image-src="attachments/176914435/182845699.png" data-unresolved-comment-count="0" data-linked-resource-id="182845699" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2023-4-4_12-52-40.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="176914435" data-linked-resource-container-version="178" tabindex="0" alt=""></span></p><p>Now you have an additional graph that indicates how the tag's temperature changes during different time intervals.</p><h4 id="BluetoothtagtrackingusingMQTTandThingsBoard-GPScoordinatevisualization(optional)">GPS coordinate visualization (optional)</h4><p>Per the script in the <a href="https://help.mikrotik.com/docs/display/ROS/Bluetooth+tag-tracking+using+MQTT+and+ThingsBoard#BluetoothtagtrackingusingMQTTandThingsBoard-ScriptthatincludesGPSdata" rel="nofollow">Script that includes GPS data</a> section, the script sends x2 MQTT messages. Each message is sent to a different MQTT topic. GPS coordinate message will be posted to a topic named &quot;1/devices/me/telemetry&quot;, while Bluetooth data will be posted to a topic named &quot;v1/gateway/telemetry&quot;. Coordinates will be available to you under the ThingsBoard device list, under the specific gateway:</p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/176914435/186056728.png" data-image-src="attachments/176914435/186056728.png" data-unresolved-comment-count="0" data-linked-resource-id="186056728" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2023-4-19_14-5-14.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="176914435" data-linked-resource-container-version="178" tabindex="0" alt=""></span></p><p>Checkbox both &quot;latitude&quot; and &quot;longitude&quot; parameters, click on the &quot;Show on widget button&quot;, select &quot;Current bundle&quot; to &quot;Maps&quot;, and choose the &quot;Route Map - OpenStreetMap&quot; widget:</p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/176914435/186056729.png" data-image-src="attachments/176914435/186056729.png" data-unresolved-comment-count="0" data-linked-resource-id="186056729" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2023-4-19_14-8-34.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="176914435" data-linked-resource-container-version="178" tabindex="0" alt=""></span></p><p>To finish things up, click on the &quot;Add to dashboard&quot; button and choose the dashboard where you want the widget to be shown.</p><p>After adding 3 widgets into 1 dashboard (temperature line chart, Bluetooth reporter bar chart, and GPS coordinates map), you would get something similar to this:</p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/176914435/186056733.png" data-image-src="attachments/176914435/186056733.png" data-unresolved-comment-count="0" data-linked-resource-id="186056733" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2023-4-19_14-14-2.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="176914435" data-linked-resource-container-version="178" tabindex="0" alt=""></span></p><ul><li>You will have a graph showing temperature changes (the tag's surrounding temperature);</li><li>You will have the chart that indicates which specific KNOT has sent the report, that tells you in which KNOT's Bluetooth range the tag is currently in;</li><li>You will have a map that shows the GPS position of the KNOT.</li></ul>
+                    </div>
+
+                                                            <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/176914435/176914439.png">image-2023-3-6_11-55-20.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/176914435/177405988.png">image-2023-3-8_11-47-43.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/176914435/177406006.png">image-2023-3-8_13-29-22.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/176914435/177406007.png">image-2023-3-8_13-31-35.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/176914435/177406010.png">image-2023-3-8_13-38-3.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/176914435/177406017.png">image-2023-3-8_13-47-8.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/176914435/177406062.png">image-2023-3-10_16-15-44.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/176914435/177406063.png">image-2023-3-10_16-16-19.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/176914435/177406064.png">image-2023-3-10_16-17-6.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/176914435/177406066.png">image-2023-3-10_16-18-4.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/176914435/177406067.png">Screenshot 2023-03-10 161815.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/176914435/177406069.png">image-2023-3-10_16-19-45.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/176914435/177406070.png">image-2023-3-10_16-19-55.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/176914435/177406072.png">image-2023-3-10_16-20-56.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/176914435/177406073.png">image-2023-3-10_16-26-33.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/176914435/177406074.png">image-2023-3-10_16-27-20.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/176914435/177406075.png">image-2023-3-10_16-28-25.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/176914435/177406076.png">image-2023-3-10_16-31-2.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/176914435/177406077.png">image-2023-3-10_16-32-45.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/176914435/177406078.png">image-2023-3-10_16-41-2.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/176914435/177406079.png">image-2023-3-10_16-41-18.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/176914435/177406081.png">image-2023-3-10_16-47-13.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/176914435/177406082.png">image-2023-3-10_16-48-53.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/176914435/177406083.png">image-2023-3-10_16-50-0.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/176914435/177406084.png">image-2023-3-10_16-50-6.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/176914435/177406085.png">image-2023-3-10_16-50-24.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/176914435/177406086.png">image-2023-3-10_16-51-52.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/176914435/177406087.png">image-2023-3-10_16-52-54.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/176914435/178585705.png">image-2023-3-16_15-4-55.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/176914435/178585706.png">image-2023-3-16_15-5-32.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/176914435/178585707.png">image-2023-3-16_15-10-47.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/176914435/178585709.png">image-2023-3-16_15-18-17.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/176914435/178585710.png">image-2023-3-16_15-20-49.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/176914435/182845514.png">image-2023-4-3_14-57-20.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/176914435/182845515.png">image-2023-4-3_14-57-56.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/176914435/182845516.png">image-2023-4-3_14-58-22.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/176914435/182845517.png">image-2023-4-3_14-58-55.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/176914435/182845518.png">image-2023-4-3_14-59-8.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/176914435/182845615.png">image-2023-4-3_16-24-49.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/176914435/182845616.png">image-2023-4-3_16-25-5.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/176914435/182845617.png">image-2023-4-3_16-26-10.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/176914435/182845618.png">image-2023-4-3_16-26-58.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/176914435/182845619.png">image-2023-4-3_16-29-52.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/176914435/182845620.png">image-2023-4-3_16-32-25.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/176914435/182845622.png">image-2023-4-3_16-34-15.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/176914435/182845693.png">image-2023-4-4_12-44-3.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/176914435/182845694.png">image-2023-4-4_12-44-37.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/176914435/182845695.png">image-2023-4-4_12-47-9.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/176914435/182845698.png">image-2023-4-4_12-50-23.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/176914435/182845699.png">image-2023-4-4_12-52-40.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/176914435/185172050.png">image-2023-4-14_10-37-7.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/176914435/185172060.png">KNOT_illustration_2023_advanced(3).png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/176914435/186056726.png">image-2023-4-19_14-4-34.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/176914435/186056727.png">image-2023-4-19_14-4-48.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/176914435/186056728.png">image-2023-4-19_14-5-14.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/176914435/186056729.png">image-2023-4-19_14-8-34.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/176914435/186056732.png">image-2023-4-19_14-13-48.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/176914435/186056733.png">image-2023-4-19_14-14-2.png</a> (image/png)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

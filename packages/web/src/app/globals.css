@@ -1,0 +1,95 @@
+/* Enhanced CSS reset with mobile-first foundation */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  /* Responsive breakpoints */
+  --mobile: 480px;
+  --tablet: 768px;
+  --desktop: 1024px;
+  --wide: 1440px;
+  
+  /* Fluid spacing scale */
+  --space-xs: clamp(0.25rem, 0.5vw, 0.5rem);
+  --space-sm: clamp(0.5rem, 1vw, 1rem);
+  --space-md: clamp(1rem, 2vw, 1.5rem);
+  --space-lg: clamp(1.5rem, 3vw, 2rem);
+  --space-xl: clamp(2rem, 4vw, 3rem);
+  
+  /* Fluid typography */
+  --text-xs: clamp(0.75rem, 1.5vw, 0.875rem);
+  --text-sm: clamp(0.875rem, 1.8vw, 1rem);
+  --text-base: clamp(1rem, 2.2vw, 1.125rem);
+  --text-lg: clamp(1.125rem, 2.5vw, 1.25rem);
+  --text-xl: clamp(1.25rem, 3vw, 1.5rem);
+  
+  /* Touch targets */
+  --touch-target: 44px;
+  
+  /* Animation */
+  --transition-fast: 200ms ease;
+  --transition-smooth: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+html {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Softer dark theme with warmer tones */
+body {
+  background: linear-gradient(135deg, #1a1d29 0%, #2d3748 100%); /* Gradient background */
+  color: #e2e8f0; /* Softer light gray text */
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+
+a {
+  color: #63b3ed; /* Softer blue for links */
+  text-decoration: none;
+}
+
+a:hover {
+  color: #90cdf4; /* Lighter blue on hover */
+  text-decoration: underline;
+}
+
+/* Scrollbar styling for a modern look */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #2d3748;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #4a5568;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #718096;
+}
+
+/* Enhanced touch interactions */
+@media (hover: none) and (pointer: coarse) {
+  button, [role="button"], a {
+    min-height: var(--touch-target);
+    min-width: var(--touch-target);
+  }
+  
+  /* Remove hover effects on touch devices */
+  button:hover, [role="button"]:hover, a:hover {
+    transform: none;
+  }
+}

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : GPS</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Mobile-Networking_119144655.html">Mobile Networking</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : GPS
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Deniss M.</span>, last updated by <span class='editor'> Guntis G.</span> on Apr 26, 2024
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><span class="mw-headline"><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742029534 {padding: 0px;}
+div.rbtoc1747742029534 ul {margin-left: 0px;}
+div.rbtoc1747742029534 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742029534'>
+<ul class='toc-indentation'>
+<li><a href='#GPS-Summary'>Summary</a></li>
+<li><a href='#GPS-ConfigurationProperties'>Configuration Properties</a></li>
+<li><a href='#GPS-MonitoringStatus'>Monitoring Status</a></li>
+<li><a href='#GPS-Basicexamples'>Basic examples</a></li>
+<li><a href='#GPS-Troubleshooting'>Troubleshooting</a></li>
+</ul>
+</div></span></p><h2 id="GPS-Summary"><span class="mw-headline">Summary</span></h2><p><strong>Package requirement:</strong> <code>gps</code> <br/><strong>Sub-menu:</strong> <span style="color:var(--ds-background-accent-green-bolder,#1f845A);"><code>/system gps</code></span> <br/><strong>Standards:</strong> <code>GPS, NMEA 0183, <a class="external-link" href="http://www8.garmin.com/support/text_out.html" rel="nofollow">Simple Text Output Protocol</a></code></p><p>Global Positioning System (GPS) is used for determining the precise location of a GPS receiver. </p><h2 id="GPS-ConfigurationProperties"><span class="mw-headline">Configuration Properties</span></h2><div class="table-wrap"><table class="wrapped confluenceTable"><colgroup><col/><col/></colgroup><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>channel</strong> (<em>integer [0..4294967295]</em>; Default: <strong>0</strong>)</td><td class="confluenceTd">Port channel used by the device</td></tr><tr><td class="confluenceTd"><strong>coordinate-format</strong> (<em>dd | dms | ddmm</em>; Default: <strong>no</strong>)</td><td class="confluenceTd">Which coordinate format to use, &quot;Decimal Degrees&quot;, &quot;Degrees Minutes Seconds&quot; or &quot;NMEA format DDDMM.MM[MM]&quot;</td></tr><tr><td class="confluenceTd"><strong>enabled</strong> (<em>yes | no</em>; Default: <strong>no</strong>)</td><td class="confluenceTd">Whether GPS is enabled</td></tr><tr><td class="confluenceTd"><strong>gps-antenna-select</strong> (<em>external | internal</em>; Default: <strong>internal</strong>)</td><td class="confluenceTd">Depending on the model. Internal antenna can be selected, if the device has one installed.</td></tr><tr><td class="confluenceTd"><strong>init-channel</strong> (<em>integer [0..4294967295]</em>; Default: )</td><td class="confluenceTd">Channel for init-string execution</td></tr><tr><td class="confluenceTd"><strong>init-string</strong> (<em>string</em>; Default: )</td><td class="confluenceTd">AT init string for GPS initialization</td></tr><tr><td class="confluenceTd"><strong>port</strong> (<em>string</em>; Default: )</td><td class="confluenceTd">Name of the USB/Serial port where the GPS receiver is connected</td></tr><tr><td class="confluenceTd"><strong>set-system-time</strong> (<em>yes | no</em>; Default: <strong>no</strong>)</td><td class="confluenceTd">Whether to set the router's date and time to one received from GPS.</td></tr></tbody></table></div><h2 id="GPS-MonitoringStatus"><span class="mw-headline">Monitoring Status</span></h2><p><strong>Command:</strong> <span style="color:var(--ds-background-accent-green-bolder,#1f845A);"><code>/system gps monitor</code></span></p><p>This command is used for monitoring the data received from a GPS receiver.</p><p><strong>Parameters:</strong></p><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Starting with the 7.1rc3 firmware release, a new parameter was added, called &quot;data-age&quot; (measured in seconds). This parameter displays the time that has passed since the device received the last NMEA message.</p></div></div><div class="table-wrap"><table class="wrapped confluenceTable"><colgroup><col/><col/></colgroup><tbody><tr><th class="highlight-grey confluenceTh" title="Background color :" data-highlight-colour="grey">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>date-and-time</strong> (<em>date</em>)</td><td class="confluenceTd">Date and time received from GPS</td></tr><tr><td class="confluenceTd"><strong>latitude</strong> (<em>none | string</em>)</td><td class="confluenceTd">Latitude in DM (Degrees Minute decimal) format</td></tr><tr><td class="confluenceTd"><strong>longitude</strong> (<em>none | string</em>)</td><td class="confluenceTd">Longitude in DM (Degrees Minute decimal) format</td></tr><tr><td class="confluenceTd"><strong>altitude</strong> (<em>none | string</em>)</td><td class="confluenceTd">Altitude based on GPS data</td></tr><tr><td class="confluenceTd"><strong>speed</strong> (<em>none | string</em>)</td><td class="confluenceTd">The current moving speed of the GPS unit</td></tr><tr><td class="confluenceTd"><strong>destination-bearing</strong> (<em>none | string</em>)</td><td class="confluenceTd">The direction toward which a GPS is moving</td></tr><tr><td class="confluenceTd"><strong>true-bearing</strong> (<em>none | string</em>)</td><td class="confluenceTd">The direction toward which a GPS is moving</td></tr><tr><td class="confluenceTd"><strong>magnetic-bearing</strong> (<em>none | string</em>)</td><td class="confluenceTd">The direction toward which a GPS is moving</td></tr><tr><td class="confluenceTd"><strong>valid</strong> (<em>yes | no</em>)</td><td class="confluenceTd"><br/></td></tr><tr><td class="confluenceTd"><strong>satellites</strong> (<em>integer</em>)</td><td class="confluenceTd">Number of satellites seen by the device.</td></tr><tr><td class="confluenceTd"><strong>fix-quality</strong> (<em>integer</em>)</td><td class="confluenceTd">Quality of the signal</td></tr><tr><td class="confluenceTd"><strong>horizontal-dilution</strong> (<em>integer</em>)</td><td class="confluenceTd">Horizontal dilution of precision (HDOP);</td></tr><tr><td colspan="1" class="confluenceTd"><strong>data-age </strong>(integer)</td><td colspan="1" class="confluenceTd">The time that has passed since the device received the last NMEA message</td></tr></tbody></table></div><h2 id="GPS-Basicexamples"><span class="mw-headline">Basic examples</span></h2><p>Check port usage, as only one instance can use the serial port simultaneously:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] /port print
+Flags: I - inactive 
+ #   DEVICE NAME                     CHANNELS USED-BY                   BAUD-RATE
+ 0          serial0                         1 Serial Console            auto    </pre>
+</div></div><p>In case there is one port and it is used by the console, release it from the console menu:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; /system console print 
+Flags: X - disabled, U - used, F - free
+ #   PORT                                                                       TERM                                                                     
+ 0 U serial0                                                                    vt102 
+
+[admin@MikroTik] &gt; /system console disable 0   </pre>
+</div></div><p>Adjust port settings specifically for your device (leave &quot;auto&quot; for LtAP mini):</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] /port&gt; set 0 baud-rate=4800 parity=odd
+[admin@MikroTik] /port&gt; print detail 
+Flags: I - inactive 
+ 0   name=&quot;usb1&quot; used-by=&quot;&quot; channels=1 baud-rate=4800 data-bits=8 parity=odd stop-bits=1 flow-control=none</pre>
+</div></div><p>Enable GPS:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] /system gps&gt; set enable=yes port=usb1
+[admin@MikroTik] /system gps&gt; print 
+          enabled: yes
+             port: usb1
+          channel: 0
+     init-channel: 0
+      init-string:
+  set-system-time: no</pre>
+</div></div><p>Monitor status:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] /system gps&gt; monitor  
+        date-and-time: sep/07/2021 08:26:26
+             latitude: 56.969689
+            longitude: 24.162471
+             altitude: 25.799999m
+                speed: 0.759320 km/h
+  destination-bearing: none
+         true-bearing: 185.500000 deg. True
+     magnetic-bearing: 0.000000 deg. Mag
+                valid: yes
+           satellites: 6
+          fix-quality: 1
+  horizontal-dilution: 1.3</pre>
+</div></div><p>Port and GPS settings for <strong>LtAP</strong></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/port set serial1 baud-rate=115200</pre>
+</div></div><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/system gps set port=serial1 channel=0 enabled=yes</pre>
+</div></div><p>We have also created an in-depth article about live GPS tracking, using scripting and a web server: <a href="https://help.mikrotik.com/docs/display/ROS/GPS-tracking+using+HTTP+POST" rel="nofollow">GPS-tracking</a>.</p><h2 id="GPS-Troubleshooting"><span class="mw-headline">Troubleshooting</span></h2><p>Note that sometimes to make the GPS module recognized in RouterOS you need to change the baud-rate setting in the '<code><span style="color:var(--ds-background-accent-green-bolder,#1f845A);">/port</span></code>' menu.</p><p><a class="external-link" href="https://mikrotik.com/product/ltap_mini" rel="nofollow">LtAP mini</a> has a low-gain GPS antenna built-in and for a better experience, we suggest using an additional <a class="external-link" href="https://mikrotik.com/product/acgpsa" rel="nofollow">external antenna</a>.</p><p>Switch between internal and external antennas under the GPS menu:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; /system gps set gps-antenna-select=external</pre>
+</div></div><p>On some modems with GPS support, you need to send multiple init commands for continuous GPS monitoring, for example, for Huawei cards you need to send &quot;AT^WPDST=1,AT^WPDGP&quot; init string to get continuous monitoring.</p>
+                    </div>
+
+                                        
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

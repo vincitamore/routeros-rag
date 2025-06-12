@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : Device-mode</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="System-Information-and-Utilities_119144657.html">System Information and Utilities</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : Device-mode
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Oskars K.</span>, last updated by <span class='editor'> Serhii T.</span> on Mar 28, 2025
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p>The <strong>device-mode</strong> is a feature which sets specific limitations on a device, or limits access to specific configuration options. Such feature is required in order to protect your router and network from attackers who might in some way gain access to your router and use it as a gateway for attacks to other networks. By protecting your device in such a way, even if an attacker manages to gain access to your unprotected device, he will not be able to use it in order to abuse your or any other network.</p><p>There are three available modes: <em>advanced,</em> <em>home and basic</em>. <span class="Y2IQFc" lang="en"><span style="text-decoration: none;color:var(--ds-text,#172b4d);">Device modes are factory pre-installed to routers, if the router is manufactured and shipped with MikroTik RouterOS v7.17 or later. <em>Advanced (previously called enterprise)</em> mode is assigned to CCR and 1100 series devices, <em>home</em> mode is assigned to home routers and basic mode to any other type of device. <span style="text-decoration: none;color:var(--ds-text,#333333);">For devices running versions prior to RouterOS version 7.17, all devices use the <em>advanced/enterprise</em> mode. <br/></span></span></span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; system/device-mode/print 
+                 mode: advanced     
+     allowed-versions: 7.13+,6.49.8+
+              flagged: no           
+     flagging-enabled: yes          
+            scheduler: yes          
+                socks: yes          
+                fetch: yes          
+                 pptp: yes          
+                 l2tp: yes          
+       bandwidth-test: yes          
+          traffic-gen: no           
+              sniffer: yes          
+                ipsec: yes          
+                romon: yes          
+                proxy: yes          
+              hotspot: yes          
+                  smb: yes          
+                email: yes          
+             zerotier: yes          
+            container: no           
+  install-any-version: no           
+           partitions: no           
+          routerboard: yes          
+        attempt-count: 0   </pre>
+</div></div><p class="auto-cursor-target"><span class="Y2IQFc" lang="en">The device-mode can be changed by the user, but remote access to the device is not enough to change it. After changing the device-mode, you need to confirm it, by pressing a button on the device itself, or perform a &quot;cold reboot&quot; - that is, unplug the power. When the change is confirmed, regardless of confirmation mode, the <strong>device will be rebooted</strong>! <br/></span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; system/device-mode/update mode=home 
+  update: please activate by turning power off or pressing reset or mode button 
+          in 5m00s
+-- [Q quit|D dump|C-z pause]</pre>
+</div></div><p><span class="Y2IQFc" lang="en"><span style="color:var(--ds-text,#333333);">If no power off or button press is performed within the specified time, the mode change is canceled. If another update command is run in parallel, both will be canceled. </span></span></p><div role="region" aria-label="Warning" class="confluence-information-macro  confluence-information-macro-warning" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-error confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p><span style="color:var(--ds-text,#333333);">There are several EOL products which do not &quot;confirm&quot; mode changes with a reset button press. These routers can confirm mode change only with a power cycle.</span></p></div></div><p><span style="color:var(--ds-text,#172b4d);">In order to protect your device against attacker who might silently gain access to your router, abuse it with some scripts and simply try to wait until you will reboot your router and not even know that at that time you are accepting changes requested by some intruder, you can &quot;update&quot; mode only three times. There is a counter which will count how many update attempts are made and will not allow any more updates. This counter can be reset only when administrator does power-cycle the router or press a button when seeing such a warning on mode settings update attempt (same as with accepting any updates).</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; system/device-mode/update container=yes 
+  update: too many unsuccessful attempts, turn off power or reboot by pressing reset or mode button in 4m55s to reset attempt-count</pre>
+</div></div><p><span style="color:var(--ds-text,#172b4d);">The following commands are available in the</span><span style="color:var(--ds-text,#172b4d);"> /<strong>system/device-mode</strong> menu: </span></p><div class="table-wrap"><table class="relative-table wrapped confluenceTable" style="width: 76.9463%;"><colgroup><col style="width: 40.9626%;"/><col style="width: 58.9391%;"/></colgroup><tbody><tr><th style="text-align: center;" class="confluenceTh">Property</th><th style="text-align: center;" class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><p>get</p></td><td class="confluenceTd"><p><span style="color:var(--ds-text,#333333);">Returns value that you can assign to variable or print on the screen.</span></p></td></tr><tr><td class="confluenceTd">print</td><td class="confluenceTd">Shows the active mode and its properties.</td></tr><tr><td class="confluenceTd">update</td><td class="confluenceTd">Applies changes to the specified properties, see below. </td></tr></tbody></table></div><h2 id="Devicemode-Availabledevice-modemodes">Available device-mode modes</h2><p>There are three device modes available for configuration (mode=advanced is default one), each mode has a subset of features that are not allowed when it is used. Note that <u><span style="color:var(--ds-text,#172b4d);">there is no mode, which has all features enabled</span></u>. Certain features need to be enabled even if you have &quot;advanced&quot; mode enabled. See section &quot;Feature clarification&quot; for more details about what each option means. So, as per the below table it can be seen that &quot;traffic-gen, container, partitions, routerboard&quot; features are always disabled, unless specifically enabled by the admin user. </p><div class="table-wrap"><table class="relative-table wrapped confluenceTable" style="width: 76.85246%;"><colgroup><col style="width: 41.211605%;"/><col style="width: 58.70307%;"/></colgroup><tbody><tr><th scope="col" class="confluenceTh">Mode</th><th scope="col" class="confluenceTh">Description of <em>disabled</em> features</th></tr><tr><td class="confluenceTd">advanced (default)</td><td class="confluenceTd">traffic-gen, container, <span style="letter-spacing: 0.0px;">install-any-version</span><span style="letter-spacing: 0.0px;">, partitions, routerboard</span></td></tr><tr><td class="confluenceTd">basic</td><td class="confluenceTd"><p>socks, bandwidth-test, traffic-gen, proxy, hotspot, zerotier, container, <span>install-any-version</span>, partitions, routerboard</p></td></tr><tr><td class="confluenceTd">home</td><td class="confluenceTd">scheduler, socks, fetch, bandwidth-test, traffic-gen, sniffer, romon, proxy, hotspot, email, zerotier, container, <span style="letter-spacing: 0.0px;">install-any-version</span><span style="letter-spacing: 0.0px;">, partitions, routerboard</span></td></tr></tbody></table></div><h2 id="Devicemode-Listofavailableproperties">List of available properties</h2><div class="table-wrap"><table class="relative-table wrapped confluenceTable" style="width: 76.9463%;"><colgroup><col style="width: 41.0609%;"/><col style="width: 58.8409%;"/></colgroup><thead><tr><th style="text-align: left;" class="confluenceTh"><p>Property</p></th><th style="text-align: left;" class="confluenceTh"><p>Description</p></th></tr></thead><tbody><tr><td style="text-align: left;" class="confluenceTd"><strong>scheduler, socks, fetch, pptp, l2tp, bandwidth-test, traffic-gen, sniffer, ipsec, romon, proxy, hotspot, smb, email, zerotier, container, <span style="letter-spacing: 0.0px;">install-any-version</span></strong><strong style="letter-spacing: 0.0px;">, partitions, routerboard  </strong><span style="letter-spacing: 0.0px;">(</span><em style="letter-spacing: 0.0px;">yes | no</em><span style="letter-spacing: 0.0px;">)</span></td><td style="text-align: left;" class="confluenceTd">The list of available features, which can be controlled with the <strong>device-mode</strong> option. See section &quot;Feature clarification&quot; for more details about what each option means. </td></tr><tr><td style="text-align: left;" class="confluenceTd"><strong>activation-timeout </strong>(default: <strong>5m</strong>);</td><td style="text-align: left;" class="confluenceTd">The reset button or power off activation timeout can be set in range 00:00:10 .. 1d00:00:00. If the reset button is not pressed (or cold reboot is not performed) during this interval, the update will be canceled. </td></tr><tr><td style="text-align: left;" class="confluenceTd"><strong>flagging-enabled </strong>(<em>yes | no</em>; Default:<span> </span><strong>yes</strong>)</td><td style="text-align: left;" class="confluenceTd"><p>Device will perform configuration analysis and if traces of suspicious code are found, flagged mode will be triggered, setting <strong>flagged=yes</strong>, enabling restrictions described in the <strong>flagged=yes</strong>. See the See the &quot;<a href="https://help.mikrotik.com/docs/spaces/ROS/pages/93749258/Device-mode#Devicemode-Flaggedstatus" rel="nofollow">Flagged status</a>&quot; paragraph.</p></td></tr><tr><td style="text-align: left;" class="confluenceTd"><strong>flagged </strong>(<em>yes | no</em>; Default:<span> </span><strong>no</strong>)</td><td style="text-align: left;" class="confluenceTd">RouterOS employs various mechanisms to detect tampering with it's system files. If the system has detected unauthorized access to RouterOS, the status &quot;flagged&quot; is set to yes. If &quot;flagged&quot; is set to yes, for your safety, certain limitations are put in place. See below chapter for more information. </td></tr><tr><td style="text-align: left;" class="confluenceTd"><span><strong>mode:</strong> </span>(basic, home, advanced; default: <strong>advanced</strong>);</td><td style="text-align: left;" class="confluenceTd">Allows choosing from available modes that will limit device functionality.<br/><p><span class="Y2IQFc" lang="en">By default, <strong>advanced </strong>mode allows options except<strong> traffic-gen, container, partitions, </strong></span><strong>install-any-version</strong><span class="Y2IQFc" lang="en"><strong>, routerboard.</strong> So to use these features, you will need to turn it on by performing a device-mode update. </span></p><p><span class="Y2IQFc" lang="en">By default, <strong>home </strong>mode disables the following features: <strong>scheduler, socks, fetch, bandwidth-test, traffic-gen, sniffer, romon, proxy, hotspot, email, zerotier, container, </strong></span><strong>install-any-version</strong><span class="Y2IQFc" lang="en"><strong>, partitions, routerboard.</strong></span></p></td></tr></tbody></table></div><p class="auto-cursor-target"><span class="Y2IQFc" lang="en">More specific control over the available features is possible. Each of the features controlled by device-mode can be specifically turned on or off. </span></p><p>For instance <strong>scheduler</strong> won't allow to perform any action at system scheduler. Used device-mode disables all listed features, for instance  <strong>mode</strong>=home is used, but <strong>zerotier</strong> is required for your setup, device-mode update /system device-mode update zerotier=yes will be required with the physical access to device to push the button or cut the power.</p><p class="auto-cursor-target"><span class="Y2IQFc" lang="en"> </span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; system/device-mode/update mode=home email=yes
+[admin@MikroTik] &gt; system/device-mode/update mode=advanced zerotier=no</pre>
+</div></div><p class="auto-cursor-target"><span class="Y2IQFc" lang="en">If the update command specifies any of the mode<strong> </strong>parameters, this update replaces the entire device-mode configuration. In this case, all &quot;per-feature&quot; settings will be lost, except those specified with this command. For instance:</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; system/device-mode/update mode=home email=yes fetch=yes
+[admin@MikroTik] &gt; system/device-mode/print config
+   mode: home
+  fetch: yes
+  email: yes
+[admin@MikroTik] &gt; system/device-mode/update mode=advanced sniffer=no
+-- reboot --
+[admin@MikroTik] &gt; system/device-mode/print config
+     mode: advanced
+  sniffer: no
+
+</pre>
+</div></div><p class="auto-cursor-target"><span><span class="Y2IQFc" lang="en">We see that fetch = yes and email = yes is missing, as they were overriden with the mode change. However, specifying only &quot;per-feature&quot; settings will change only those:</span></span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; system/device-mode/update hotspot=no
+-- reboot --
+[admin@MikroTik] &gt; system/device-mode/print config
+     mode: advanced
+  sniffer: no
+  hotspot: no</pre>
+</div></div><p class="auto-cursor-target"><span><span class="Y2IQFc" lang="en">If the feature is disabled, an error message is displayed for interactive commands:</span></span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; system/device-mode/print config
+     mode: advanced
+  sniffer: no
+  hotspot: no
+[admin@MikroTik] &gt; tool/sniffer/quick 
+failure: not allowed by device-mode</pre>
+</div></div><p><span class="Y2IQFc" lang="en">However, it is possible to add the configuration to a disabled feature, but there will be a comment showing the disabled feature in the device-mode:</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; ip hotspot/add interface=ether1 
+[admin@MikroTik] &gt; ip hotspot/print 
+Flags: X, S - HTTPS
+Columns: NAME, INTERFACE, PROFILE, IDLE-TIMEOUT
+#   NAME      INTERFACE  PROFILE  IDLE-TIMEOUT
+;;; inactivated, not allowed by device-mode
+0 X hotspot1  ether1     default  5m          </pre>
+</div></div><h2 id="Devicemode-Featureclarification">Feature clarification </h2><div class="table-wrap"><table class="wrapped confluenceTable"><colgroup class=""><col class=""/><col class=""/></colgroup><tbody class=""><tr class=""><td class="highlight-grey confluenceTd" style="vertical-align: bottom;" data-highlight-colour="grey">Feature</td><td class="highlight-grey confluenceTd" style="vertical-align: bottom;" data-highlight-colour="grey">Clarification of which menus become unavailable to change</td></tr><tr class=""><td style="vertical-align: bottom;" class="confluenceTd"><a href="https://help.mikrotik.com/docs/spaces/ROS/pages/7962644/Bandwidth+Test" rel="nofollow">bandwidth-test</a></td><td style="vertical-align: bottom;" class="confluenceTd"><p><em>/tool bandwidth-test</em><br/><em>/tool bandwidth-server</em></p><p><em>/tool speed-test</em></p></td></tr><tr class=""><td style="vertical-align: bottom;" class="confluenceTd"><a href="https://help.mikrotik.com/docs/spaces/ROS/pages/40992878/RouterBOARD" rel="nofollow">routerboard</a></td><td style="vertical-align: bottom;" class="confluenceTd"><em>/system routerboard settings</em> (except auto-upgrade option)</td></tr><tr class=""><td style="vertical-align: bottom;" class="confluenceTd"><a href="https://help.mikrotik.com/docs/spaces/ROS/pages/84901929/Container" rel="nofollow">container</a></td><td style="vertical-align: bottom;" class="confluenceTd">all container functionality</td></tr><tr class=""><td style="vertical-align: bottom;" class="confluenceTd"><p><span>install-any-version</span></p></td><td style="vertical-align: bottom;" class="confluenceTd"><p>RouterOS will no longer allow for you to install RouterOS version below versions listed under &quot;<span>allowed-versions</span>&quot; attribute.</p></td></tr><tr class=""><td style="vertical-align: bottom;" class="confluenceTd"><a href="https://help.mikrotik.com/docs/spaces/ROS/pages/24805377/E-mail" rel="nofollow">email</a></td><td style="vertical-align: bottom;" class="confluenceTd"><em>/tool e-mail </em></td></tr><tr class=""><td style="vertical-align: bottom;" class="confluenceTd"><a href="https://help.mikrotik.com/docs/spaces/ROS/pages/8978514/Fetch" rel="nofollow">fetch</a></td><td style="vertical-align: bottom;" class="confluenceTd"><em>/tool fetch</em></td></tr><tr class=""><td style="vertical-align: bottom;" class="confluenceTd"><a href="https://help.mikrotik.com/docs/spaces/ROS/pages/56459266/HotSpot+-+Captive+portal" rel="nofollow">hotspot</a></td><td style="vertical-align: bottom;" class="confluenceTd"><em>/ip hotspot</em></td></tr><tr class=""><td style="vertical-align: bottom;" class="confluenceTd"><a href="https://help.mikrotik.com/docs/spaces/ROS/pages/11993097/IPsec" rel="nofollow">ipsec</a></td><td style="vertical-align: bottom;" class="confluenceTd"><em>/ip ipsec</em></td></tr><tr class=""><td style="vertical-align: bottom;" class="confluenceTd"><a href="https://help.mikrotik.com/docs/spaces/ROS/pages/2031631/L2TP" rel="nofollow">l2tp</a></td><td style="vertical-align: bottom;" class="confluenceTd"><p><em>/interface l2tp-server</em></p><p><em>/interface l2tp-client</em></p></td></tr><tr class=""><td style="vertical-align: bottom;" class="confluenceTd"><a href="https://help.mikrotik.com/docs/spaces/ROS/pages/328103/Partitions" rel="nofollow">partitions</a></td><td style="vertical-align: bottom;" class="confluenceTd"><p><em>/partitions </em></p><p>does not allow to change count of partitions. If your router is unable to boot, it will still be able to boot into your other partitions. No restriction for crash recovery.</p></td></tr><tr class=""><td style="vertical-align: bottom;" class="confluenceTd"><a href="https://help.mikrotik.com/docs/spaces/ROS/pages/2031638/PPTP" rel="nofollow">pptp</a></td><td style="vertical-align: bottom;" class="confluenceTd"><p><em>/interface pptp-server</em></p><p><em>/interface pptp-client</em></p></td></tr><tr class=""><td style="vertical-align: bottom;" class="confluenceTd"><a href="https://help.mikrotik.com/docs/spaces/ROS/pages/132350000/Proxy" rel="nofollow">proxy</a></td><td style="vertical-align: bottom;" class="confluenceTd"><em>/ip proxy</em></td></tr><tr class=""><td style="vertical-align: bottom;" class="confluenceTd"><a href="https://help.mikrotik.com/docs/spaces/ROS/pages/8978569/RoMON" rel="nofollow">romon</a></td><td style="vertical-align: bottom;" class="confluenceTd"><em>/tool romon</em></td></tr><tr class=""><td style="vertical-align: bottom;" class="confluenceTd"><a href="https://help.mikrotik.com/docs/spaces/ROS/pages/40992881/Scheduler" rel="nofollow">scheduler</a></td><td style="vertical-align: bottom;" class="confluenceTd"><em>/system scheduler</em></td></tr><tr class=""><td style="vertical-align: bottom;" class="confluenceTd"><a href="https://help.mikrotik.com/docs/spaces/ROS/pages/117145608/SMB" rel="nofollow">smb</a></td><td style="vertical-align: bottom;" class="confluenceTd"><em>/ip smb</em></td></tr><tr class=""><td style="vertical-align: bottom;" class="confluenceTd"><a href="https://help.mikrotik.com/docs/spaces/ROS/pages/8323088/Packet+Sniffer" rel="nofollow">sniffer</a></td><td style="vertical-align: bottom;" class="confluenceTd"><em>/tool sniffer</em></td></tr><tr class=""><td style="vertical-align: bottom;" class="confluenceTd"><a href="https://help.mikrotik.com/docs/spaces/ROS/pages/73826308/SOCKS" rel="nofollow">socks</a></td><td style="vertical-align: bottom;" class="confluenceTd"><em>/ip socks</em></td></tr><tr class=""><td style="vertical-align: bottom;" class="confluenceTd"><a href="https://help.mikrotik.com/docs/spaces/ROS/pages/128221376/Traffic+Generator" rel="nofollow">traffic-gen</a></td><td style="vertical-align: bottom;" class="confluenceTd"><p><em>/tool traffic-generator</em></p><p><em>/tool flood-ping</em></p><p><em>/tool ping-speed</em></p></td></tr><tr class=""><td style="vertical-align: bottom;" class="confluenceTd"><a href="https://help.mikrotik.com/docs/spaces/ROS/pages/83755083/ZeroTier" rel="nofollow">zerotier</a></td><td style="vertical-align: bottom;" class="confluenceTd"><em>/zerotier</em></td></tr></tbody></table></div><h1 id="Devicemode-Allowedversions">Allowed versions</h1><p>Device mode lists in its parameters an argument called &quot;<span>allowed-versions</span>&quot;. This is a list of versions which MikroTik considers as secure and which ones do not include any serious vulnerabilities which could be used by an attacker. This list can be updated to versions which includes some major changes in RouterOS below which downgrade should not be allowed.<br/><br/>This setting does not depend on the installed RouterOS version and works as a separate mechanism, in order to disallow attacker to downgrade version step-by-step in order to reach some vulnerable RouterOS release. This means that if you upgrade RouterOS to a release where a newer &quot;allowed-versions&quot; list is available, oldest list will be overwritten. If you downgrade RouterOS, &quot;allowed-versions&quot; list will not change and will remain updated to the latest list.</p><p>This list is ignored, if device-mode &quot;install-any-version&quot; is enabled.</p><h1 id="Devicemode-Flaggedstatus">Flagged status</h1><p><span class="Y2IQFc" lang="en">Along with the<strong> </strong>device-mode feature, RouterOS now can analyze the whole configuration at system startup, to determine if there are any signs of unauthorized access to your router. If suspicious configuration is detected, the suspicious configuration will be disabled and the <strong>flagged</strong> parameter will be set to &quot;yes&quot;. The device has now a Flagged state and enforces certain limitations. </span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; system/device-mode/print 
+     mode: advanced
+  flagged: yes
+  sniffer: no
+  hotspot: no</pre>
+</div></div><p><span class="Y2IQFc" lang="en">If the system has this flagged status, the current configuration works, but it is not possible to perform the following actions: <br/><br/>bandwidth-test, traffic-generator, sniffer, as well as configuration actions that enable or create new configuration entries (it will still be possible to disable or delete them) for the following programs: <em>system scheduler, SOCKS proxy, pptp, l2tp, ipsec, proxy, smb</em>.<br/><br/>When performing the aforementioned actions while the router has the flagged state, you will receive an error message:</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; /tool sniffer/quick 
+failure: configuration flagged, check all router configuration for unauthorized changes and update device-mode
+[admin@MikroTik] &gt; /int l2tp-client/add connect-to=1.1.1.1 user=user
+failure: configuration flagged, check all router configuration for unauthorized changes and update device-mode</pre>
+</div></div><p><span style="text-decoration: none;color:var(--ds-text-accent-purple-bolder,#352c63);">To exit the flagged state, you must perform the command &quot;/system/device-mode/update flagged=no&quot;. The system will ask to either press a button, or issue a hard reboot (cut power physically or do a hard reboot of the virtual machine). <br/><br/><strong>Important! </strong>Although the system has disabled any malicious looking rules, which triggered the flagged state, it is crucial to inspect all of your configuration for other unknown things, before exiting the flagged state. If your system has been flagged, assume that your system has been compromised and do a full audit of all settings before re-enabling the system for use. After completing the audit, change all the system passwords and upgrade to the latest RouterOS version. </span></p><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p><span style="color:var(--ds-text,#172b4d);">Starting from RouterOS version 7.17 device-mode restricts SwOS/RouterOS transition for dual-boot; in order to enable: system/device-mode/update routerboard=yes</span></p></div></div><p><br/></p>
+                    </div>
+
+                                                            <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/93749258/273219726.csv">Untitled 1.csv</a> (text/csv)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

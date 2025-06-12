@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : OpenVPN</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Virtual-Private-Networks_119144597.html">Virtual Private Networks</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : OpenVPN
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Artūrs C.</span>, last updated by <span class='editor'> Oskars K.</span> on Mar 11, 2025
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <h1 id="OpenVPN-Overview"><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742034085 {padding: 0px;}
+div.rbtoc1747742034085 ul {margin-left: 0px;}
+div.rbtoc1747742034085 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742034085'>
+<ul class='toc-indentation'>
+<li><a href='#OpenVPN-Overview'>Overview</a></li>
+<li><a href='#OpenVPN-Introduction'>Introduction</a></li>
+<li><a href='#OpenVPN-Limitations'>Limitations</a></li>
+<li><a href='#OpenVPN-OVPNClient'>OVPN Client</a></li>
+<li><a href='#OpenVPN-Tls-crypt,tls-cryptv2'>Tls-crypt, tls-crypt v2</a></li>
+<li><a href='#OpenVPN-OVPNServer'>OVPN Server</a>
+<ul class='toc-indentation'>
+<li><a href='#OpenVPN-ServerConfiguration'>Server Configuration</a>
+<ul class='toc-indentation'>
+<li><a href='#OpenVPN-Properties'>Properties</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href='#OpenVPN-Example'>Example</a>
+<ul class='toc-indentation'>
+<li><a href='#OpenVPN-SetupOverview'>Setup Overview</a></li>
+<li><a href='#OpenVPN-CreatingCertificates'>Creating Certificates</a></li>
+<li><a href='#OpenVPN-ServerConfig'>Server Config</a></li>
+<li><a href='#OpenVPN-ClientConfig'>Client Config</a></li>
+<li><a href='#OpenVPN-PushRoute'>Push Route</a></li>
+<li><a href='#OpenVPN-VRFsupport'>VRF support</a></li>
+</ul>
+</li>
+</ul>
+</div>Overview</h1><p>The OpenVPN security model is based on SSL, the industry standard for secure communications via the internet. OpenVPN implements OSI layer 2 or 3 secure network extensions using the SSL/TLS protocol. Support IPv4, IPv6.</p><h1 id="OpenVPN-Introduction">Introduction</h1><p>OpenVPN has been ported to various platforms, including Linux and Windows, and its configuration is likewise on each of these systems, so it makes it easier to support and maintain. OpenVPN can run over User Datagram Protocol (UDP) or Transmission Control Protocol (TCP) transports, multiplexing created SSL tunnels on a single TCP/UDP port. OpenVPN is one of the few VPN protocols that can make use of a proxy, which might be handy sometimes.</p><h1 id="OpenVPN-Limitations">Limitations</h1><p>ROS has its own ovpn implementation , not all ovpn features are supported and not all unsupported are listed. Currently, noteable unsupported OpenVPN features:</p><ul><li data-uuid="ce47d300-e97d-4a0f-8c95-a6126ec102e7">LZO compression.</li><li data-uuid="db92045b-6a3d-40af-9169-2b193d079fab">NCP autonegotiation, cipher has to been specified in .ovpn file when connecting to an ROS ovpn server. </li></ul><p>OpenVPN username is limited to 27 characters and the password to 233 characters. Password cap increased in 7.18_ab253 to 1000 characters.</p><h1 id="OpenVPN-OVPNClient"><span class="mw-headline">OVPN Client</span></h1><div class="table-wrap"><table class="wrapped confluenceTable"><colgroup><col/><col/></colgroup><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>add-default-route</strong> (<em>yes </em>|<em> no</em>; Default: <strong>no</strong>)</td><td class="confluenceTd">Whether to add OVPN remote address as a default route.</td></tr><tr><td class="confluenceTd"><strong>auth</strong> (<em>md5 </em>|<em> sha1 </em>|<em> null </em>|<em> sha256 </em>|<em> sha512</em>; Default: <strong>sha1</strong>)</td><td class="confluenceTd">Allowed authentication methods.</td></tr><tr><td class="confluenceTd"><strong>certificate</strong> (<em>string </em>|<em> none</em>; Default: <strong>none</strong>)</td><td class="confluenceTd">Name of the client certificate</td></tr><tr><td class="confluenceTd"><strong>cipher</strong> (<em>null</em> | <em>aes128-cbc</em> | <em>aes128-gcm</em> | <em>aes192-cbc</em> | <em>aes192-gcm</em> | <em>aes256-cbc</em> | <em>aes256-gcm</em> | <em>blowfish128</em>; Default: <strong>blowfish128</strong>)</td><td class="confluenceTd">Allowed ciphers. In order to use GCM type ciphers, the &quot;auth&quot; parameter must be set to &quot;null&quot;, because GCM cipher is also responsible for &quot;auth&quot;, if used.</td></tr><tr><td class="confluenceTd"><strong>comment</strong> (<em>string</em>; Default: )</td><td class="confluenceTd">Descriptive name of an item</td></tr><tr><td class="confluenceTd"><strong>connect-to</strong> (<em>IP|IPv6</em>; Default: )</td><td class="confluenceTd">Remote address of the OVPN server.</td></tr><tr><td class="confluenceTd"><strong>disabled</strong> (<em>yes </em>|<em> no</em>; Default: <strong>yes</strong>)</td><td class="confluenceTd">Whether the interface is disabled or not. By default it is disabled.</td></tr><tr><td class="confluenceTd"><strong>mac-address</strong> (<em>MAC</em>; Default: )</td><td class="confluenceTd">Mac address of OVPN interface. Will be automatically generated if not specified.</td></tr><tr><td class="confluenceTd"><strong>max-mtu</strong> (<em>integer</em>; Default: <strong>1500</strong>)</td><td class="confluenceTd">Maximum Transmission Unit. Max packet size that the OVPN interface will be able to send without packet fragmentation.</td></tr><tr><td class="confluenceTd"><strong>mode</strong> (<em>ip </em>|<em> ethernet</em>; Default: <strong>ip</strong>)</td><td class="confluenceTd">Layer3 or layer2 tunnel mode (alternatively tun, tap)</td></tr><tr><td class="confluenceTd"><strong>name</strong> (<em>string</em>; Default: )</td><td class="confluenceTd">Descriptive name of the interface.</td></tr><tr><td class="confluenceTd"><strong>password</strong> (<em>string</em>; Default: <strong>&quot;&quot;</strong>)</td><td class="confluenceTd">Password used for authentication. Value of password should not be longer than 1000 chars.</td></tr><tr><td class="confluenceTd"><strong>port</strong> (<em>integer</em>; Default: <strong>1194</strong>)</td><td class="confluenceTd">Port to connect to.</td></tr><tr><td class="confluenceTd"><strong>profile</strong> (<em>name</em>; Default: <strong>default</strong>)</td><td class="confluenceTd">Specifies which PPP profile configuration will be used when establishing the tunnel.</td></tr><tr><td class="confluenceTd"><strong>protocol</strong> (<em>tcp </em>|<em> udp</em>; Default: <strong>tcp</strong>)</td><td class="confluenceTd"><span style="text-decoration: none;color:var(--ds-text-accent-gray,#44546f);">indicates the protocol to use when connecting with the remote endpoint.</span></td></tr><tr><td class="confluenceTd"><strong>verify-server-certificate </strong>(<em>yes </em>|<em> no</em>; Default:<strong> no</strong>)</td><td class="confluenceTd"><p>Checks the certificates CN or SAN against the &quot;connect-to&quot; parameter. The IP or hostname must be present in the server's certificate.</p></td></tr><tr><td class="confluenceTd"><strong>tls-version </strong>(<em>any </em>|<em> only-1.2</em>; Default: <strong>any</strong>)</td><td class="confluenceTd">Specifies which TLS versions to allow</td></tr><tr><td class="confluenceTd"><strong>use-peer-dns </strong>(<em>yes </em>|<em> no</em>; Default: <strong>no</strong>)</td><td class="confluenceTd">Whether to add DNS servers provided by the OVPN server to IP/DNS configuration.</td></tr><tr><td class="confluenceTd"><p><strong>route-nopull </strong>(<em>yes </em>|<em> no</em>; Default: <strong>no</strong>)</p></td><td class="confluenceTd"><span style="text-decoration: none;color:var(--ds-text-accent-gray,#44546f);">Specifies whether to allow the OVPN server to add routes to the OVPN client instance routing table.</span></td></tr><tr><td class="confluenceTd"><strong>user</strong> (<em>string</em>; Default: )</td><td class="confluenceTd">User name used for authentication.</td></tr></tbody></table></div><p class="auto-cursor-target">Also, it is possible to import the OVPN client configuration from a .ovpn configuration file. Such a file usually is provided from the OVPN server side and already includes configuration so you need to worry only about a few parameters.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface/ovpn-client/import-ovpn-configuration ovpn-password=securepassword \
+key-passphrase=certificatekeypassphrase ovpn-user=myuserid skip-cert-import=no </pre>
+</div></div><p>OVPN client supports tls authentication. The configuration of tls-auth can be added only by importing .ovpn configuration file. Using tls-auth requires that you generate a shared-secret key, this key should be added to the client configuration file .ovpn.</p><p>Note* ROS client requires user name and password. Authentication is managed by server side, if its supports tls, then user name will be ignored.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">key-direction 1
+&lt;tls-auth&gt;
+#
+# 2048 bit OpenVPN static key
+#
+-----BEGIN OpenVPN Static key V1-----
+-----END OpenVPN Static key V1-----
+&lt;/tls-auth&gt;</pre>
+</div></div><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">7.17beta5 added support to allow non-null auth in gcm mode.</pre>
+</div></div><h1 id="OpenVPN-Tls-crypt,tls-cryptv2"><span class="mw-headline">Tls-crypt, tls-crypt v2</span></h1><p><span class="mw-headline">To improve TLS auth, Tls-crypt is added in version 7.17rc3. </span></p><p><span class="mw-headline">Tls-crypt, tls-crypt v2 is suppoorted only for ovpn client with following settings:</span></p><p><span class="mw-headline"><span style="color:var(--ds-text,#172b4d);">“auth SHA256” and no key-direction in server configuration,</span></span></p><p><span class="mw-headline"><span style="color:var(--ds-text,#172b4d);">“auth SHA256” and “key-direction 1” in client configuration is needed for authentication to work.<span> </span></span></span></p><p><span class="mw-headline"><span style="color:var(--ds-text,#172b4d);"><span>Example configuration files:</span></span></span></p><p><span class="mw-headline"><a href="attachments/2031655/291241994.ovpn" data-linked-resource-id="291241994" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="client-1.ovpn" data-linked-resource-content-type="application/octet-stream" data-linked-resource-container-id="2031655" data-linked-resource-container-version="42">client-1.ovpn</a></span></p><p><span class="mw-headline"><a href="attachments/2031655/291241995.conf" data-linked-resource-id="291241995" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="server-1.conf" data-linked-resource-content-type="application/octet-stream" data-linked-resource-container-id="2031655" data-linked-resource-container-version="42">server-1.conf</a></span></p><h1 id="OpenVPN-OVPNServer"><span class="mw-headline">OVPN Server</span></h1><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface ovpn-server</pre>
+</div></div><p>An interface is created for each tunnel established to the given server. There are two types of interfaces in the OVPN server's configuration</p><ul class="bullets"><li>Static interfaces are added administratively if there is a need to reference the particular interface name (in firewall rules or elsewhere) created for the particular user.</li><li>Dynamic interfaces are added to this list automatically whenever a user is connected and its username does not match any existing static entry (or in case the entry is active already, as there can not be two separate tunnel interfaces referenced by the same name).</li></ul><p>Dynamic interfaces appear when a user connects and disappear once the user disconnects, so it is impossible to reference the tunnel created for that use in router configuration (for example, in the firewall), so if you need a persistent rule for that user, create a static entry for him/her. Otherwise, it is safe to use dynamic configuration.</p><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>After upgrade to 7.17 version ovpn server will receive its configuration, due to multiple server support. </p><p>An disabled ovpn server with added mac will appear in configuration: <br/><span style="color:var(--ds-background-accent-gray-bolder,#626f86);">/interface ovpn-server server add mac-address=99:99:99:99:99:99 name=ovpn-server1</span></p></div></div><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>In both cases PPP users must be configured properly - static entries do not replace PPP configuration.</p></div></div><h2 class="auto-cursor-target" id="OpenVPN-ServerConfiguration">Server Configuration</h2><h3 class="auto-cursor-target" id="OpenVPN-Properties">Properties</h3><div class="table-wrap"><table class="wrapped confluenceTable"><colgroup><col/><col/></colgroup><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>auth</strong> (<em>md5 </em>|<em> sha1 </em>|<em> null </em>|<em> sha256 </em>|<em> sha512</em>; Default: <strong>sha1,md5,sha256,sha512</strong>)</td><td class="confluenceTd">Authentication methods that the server will accept.</td></tr><tr><td class="confluenceTd"><strong>certificate</strong> (<em>name </em>|<em> none</em>; Default: <strong>none</strong>)</td><td class="confluenceTd">Name of the certificate that the OVPN server will use.</td></tr><tr><td class="confluenceTd"><strong>cipher</strong> (<em>null</em> | <em>aes128-cbc</em> | <em>aes128-gcm</em> | <em>aes192-cbc</em> | <em>aes192-gcm</em> | <em>aes256-cbc</em> | <em>aes256-gcm</em> | <em>blowfish128</em>; Default: <strong>aes128-cbc,blowfish128</strong>)</td><td class="confluenceTd">Allowed ciphers.</td></tr><tr><td class="confluenceTd"><strong>default-profile</strong> (<em>name</em>; Default: <strong>default</strong>)</td><td class="confluenceTd">Default profile to use.</td></tr><tr><td class="confluenceTd"><strong>disabled</strong> (<em>yes </em>|<em> no</em>; Default: <strong>yes</strong>)</td><td class="confluenceTd">Defines whether the OVPN server is enabled or not.</td></tr><tr><td class="confluenceTd"><strong>protocol (<em>tcp </em>|<em> udp</em>; Default: tcp)</strong></td><td class="confluenceTd">Indicates the protocol to use when connecting with the remote endpoint.</td></tr><tr><td class="confluenceTd"><strong>keepalive-timeout</strong> (<em>integer </em>|<em> disabled</em>; Default: <strong>60</strong>)</td><td class="confluenceTd">Defines the time period (in seconds) after which the router is starting to send keepalive packets every second. If no traffic and no keepalive responses have come for that period of time (i.e. 2 * keepalive-timeout), not responding client is proclaimed disconnected</td></tr><tr><td class="confluenceTd"><strong>mac-address</strong> (<em>MAC</em>; Default: )</td><td class="confluenceTd">Automatically generated MAC address of the server.</td></tr><tr><td class="confluenceTd"><strong>max-mtu</strong> (<em>integer</em>; Default: <strong>1500</strong>)</td><td class="confluenceTd">Maximum Transmission Unit. Max packet size that the OVPN interface will be able to send without packet fragmentation.</td></tr><tr><td class="confluenceTd"><strong>mode</strong> (<em>ip </em>|<em> ethernet</em>; Default: <strong>ip</strong>)</td><td class="confluenceTd">Layer3 or layer2 tunnel mode (alternatively tun, tap)</td></tr><tr><td class="confluenceTd"><strong>name </strong><em>(string)</em><strong><br/></strong></td><td class="confluenceTd">Name of the server</td></tr><tr><td class="confluenceTd"><strong>netmask</strong> (<em>integer</em>; Default: <strong>24</strong>)</td><td class="confluenceTd">Subnet mask to be applied to the client.</td></tr><tr><td class="confluenceTd"><strong>port</strong> (<em>integer</em>; Default: <strong>1194</strong>)</td><td class="confluenceTd">Port to run the server on.</td></tr><tr><td class="confluenceTd"><strong>require-client-certificate</strong> (<em>yes </em>|<em> no</em>; Default: <strong>no</strong>)</td><td class="confluenceTd">If set to yes, then the server checks whether the client's certificate belongs to the same certificate chain.</td></tr><tr><td class="confluenceTd"><strong>redirect-gateway </strong>(<em>def1 </em>|<em> disabled </em>|<em> ipv6;</em> Default: <strong>disabled</strong>) </td><td class="confluenceTd"><p>Specifies what kind of routes the OVPN client must add to the routing table. </p><p><code><span style="color:var(--ds-icon-success,#22a06b);">def1</span></code> – Use this flag to override the default gateway by using 0.0.0.0/1 and 128.0.0.0/1 rather than 0.0.0.0/0. This has the benefit of overriding but not wiping out the original default gateway.<br/><code><span style="color:var(--ds-icon-success,#22a06b);">disabled</span></code> - Do not send redirect-gateway flags to the OVPN client.<br/><code><span style="color:var(--ds-icon-success,#22a06b);">ipv6</span></code> - Redirect IPv6 routing into the tunnel on the client side. This works similarly to the def1 flag, that is, more specific IPv6 routes are added (2000::/4 and 3000::/4), covering the whole IPv6 unicast space.</p></td></tr><tr><td class="confluenceTd"><strong>enable-tun-ipv6 </strong>(y<em>es </em>|<em> no;</em> Default: <strong>no</strong>)</td><td class="confluenceTd"><p>Specifies if IPv6 IP tunneling mode should be possible with this OVPN server.</p></td></tr><tr><td class="confluenceTd"><strong>ipv6-prefix-len </strong>(<em>integer;</em> Default: <strong>64</strong>)</td><td class="confluenceTd"><p>Length of IPv6 prefix for IPv6 address which will be used when generating OVPN interface on the server side.</p></td></tr><tr><td class="confluenceTd"><strong>reneg-sec </strong> (<em>integer;</em> Default: <strong>3600)</strong></td><td class="confluenceTd"><p>Key renegotiate seconds, the time the server periodically renegotiates the secret key for the data channel.</p></td></tr><tr><td class="confluenceTd"><strong>push-routes </strong>(<em>string</em>; Default: )</td><td class="confluenceTd"><p>Push route support are added in 7.14, the maximum of possible input is limited to 1400 characters. </p></td></tr><tr><td class="confluenceTd"><strong>tls-version </strong>(any<em> </em>|<em> only-1.2 ;</em> Default: <strong>any</strong> )</td><td class="confluenceTd"><p>TLS protocol setting.</p></td></tr><tr><td class="confluenceTd"><strong>tun-server-ipv6 </strong>(<em>IPv6 prefix;</em> Default: <strong>::</strong>)</td><td class="confluenceTd"><p>IPv6 prefix address which will be used when generating the OVPN interface on the server side.</p></td></tr><tr><td class="confluenceTd"><strong>user-auth-method</strong> (<em>mschap2 | pap ; Default <strong>pap</strong></em>)</td><td class="confluenceTd"><p>By the default pap authentication method is used, if preferred server authentication with chap challenge set mschap2 in server settings.</p></td></tr><tr><td class="confluenceTd"><strong>vrf </strong>()<strong><br/></strong></td><td class="confluenceTd"><p>VRF in which listen for connection attempts</p></td></tr></tbody></table></div><p class="auto-cursor-target">Also, it is possible to prepare a .ovpn file for the OVPN client which can be easily imported on the end device. <strong>Server need to have option enabled - required client certificate to export work. </strong></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">interface/ovpn-server/server/export-client-configuration ca-certificate=ca.crt  client-certificate=cert_e
+xport_rw-client.crt  client-cert-key=cert_export_rw-client.key server-address=1.1.1.1 server=ovpn-server1 </pre>
+</div></div><div role="region" aria-label="Warning" class="confluence-information-macro  confluence-information-macro-warning" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-error confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>It is very important that the date on the router is within the range of the installed certificate's date of expiration. To overcome any certificate verification problems, enable <strong>NTP</strong> date synchronization on both the server and the client.</p></div></div><h1 class="auto-cursor-target" id="OpenVPN-Example">Example</h1><h2 id="OpenVPN-SetupOverview"><span class="mw-headline">Setup Overview</span></h2><p class="auto-cursor-target"><span class="confluence-embedded-file-wrapper image-center-wrapper"><img class="confluence-embedded-image image-center" draggable="false" src="attachments/2031655/58720298.png" data-image-src="attachments/2031655/58720298.png" data-unresolved-comment-count="0" data-linked-resource-id="58720298" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="OpenVPN.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="2031655" data-linked-resource-container-version="42" tabindex="0" alt=""></span></p><p class="auto-cursor-target">Assume that Office public IP address is 2.2.2.2 and we want two remote OVPN clients to have access to 10.5.8.20 and 192.168.55.0/24 networks behind the office gateway. </p><h2 id="OpenVPN-CreatingCertificates"><span class="mw-headline">Creating Certificates</span></h2><p>All certificates can be created on the RouterOS server using the certificate manager. <a href="https://help.mikrotik.com/docs/spaces/ROS/pages/2555969/Certificates" rel="nofollow"> See example &gt;&gt;</a>.</p><p>For the simplest setup, you need only an OVPN server certificate.</p><h2 id="OpenVPN-ServerConfig"><span class="mw-headline">Server Config</span></h2><p>The first step is to create an IP pool from which client addresses will be assigned and some users.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip pool add name=ovpn-pool range=192.168.77.2-192.168.77.254
+
+/ppp profile add name=ovpn local-address=192.168.77.1 remote-address=ovpn-pool
+/ppp secret
+add name=client1 password=123 profile=ovpn
+add name=client2 password=234 profile=ovpn</pre>
+</div></div><p>Assume that the server certificate is already created and named &quot;server&quot; </p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface ovpn-server server add disabled=no certificate=server name=myServer</pre>
+</div></div><h2 id="OpenVPN-ClientConfig"><span class="mw-headline">Client Config</span></h2><p style="text-align: left;"><span class="mw-headline">Add manually which networks you want to access over the tunnel. </span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface ovpn-client
+add name=ovpn-client1 connect-to=2.2.2.2 user=client1 password=123 disabled=no
+/ip route 
+add dst-address=10.5.8.20 gateway=ovpn-client1
+add dst-address=192.168.55.0/24 gateway=ovpn-client1
+/ip firewall nat add chain=srcnat action=masquerade out-interface=ovpn-client1</pre>
+</div></div><h2 id="OpenVPN-PushRoute"><span class="mw-headline">Push Route</span></h2><p><span class="mw-headline">Push route support are added in 7.14, the maximum of possible input is limited to <strong>1400</strong> characters. <br/>example: <span style="color:var(--ds-text,#172b4d);">route network/IP<span> </span></span><span class="error" style="color:var(--ds-text,#172b4d);">[netmask]</span><span style="color:var(--ds-text,#172b4d);"><span> </span></span><span class="error" style="color:var(--ds-text,#172b4d);">[gateway]</span><span style="color:var(--ds-text,#172b4d);"><span> </span></span><span class="error" style="color:var(--ds-text,#172b4d);">[metric].</span></span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface ovpn-server server set myServer push-routes=&quot;192.168.102.0 255.255.255.0 192.168.109.1 9&quot;</pre>
+</div></div><h2 id="OpenVPN-VRFsupport"><span class="mw-headline">VRF support </span></h2><p><span class="mw-headline">Support starting from <strong>7.17 version</strong> is added, and couple changes introduced in configuration, if you use latest version, please refer to this example:</span></p><p><span class="mw-headline">Server side configuration:</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">      /interface ovpn-server server
+        add disabled=no certificate=yourcert auth=sha1 cipher=aes128-cbc require-client-certificate=yes protocol=tcp name=ovpn-server1 vrf=main</pre>
+</div></div>
+                    </div>
+
+                                                            <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/2031655/47579187.png">Ipsec-road-warrior.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/2031655/58720298.png">OpenVPN.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/2031655/291241994.ovpn">client-1.ovpn</a> (application/octet-stream)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/2031655/291241995.conf">server-1.conf</a> (application/octet-stream)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

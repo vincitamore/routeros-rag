@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : Moving from ROSv6 to v7 with examples</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Routing_328222.html">Routing</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : Moving from ROSv6 to v7 with examples
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Māris B.</span>, last updated on May 05, 2022
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742031167 {padding: 0px;}
+div.rbtoc1747742031167 ul {margin-left: 0px;}
+div.rbtoc1747742031167 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742031167'>
+<ul class='toc-indentation'>
+<li><a href='#MovingfromROSv6tov7withexamples-RoutingTables'>Routing Tables</a></li>
+<li><a href='#MovingfromROSv6tov7withexamples-UseofRoutingTablesandPolicyRouting'>Use of Routing Tables and Policy Routing</a></li>
+<li><a href='#MovingfromROSv6tov7withexamples-OSPFConfiguration'>OSPF Configuration</a></li>
+<li><a href='#MovingfromROSv6tov7withexamples-BGPConfiguration'>BGP Configuration</a>
+<ul class='toc-indentation'>
+<li><a href='#MovingfromROSv6tov7withexamples-MonitoringAdvertisements'>Monitoring Advertisements</a></li>
+<li><a href='#MovingfromROSv6tov7withexamples-Networks'>Networks</a></li>
+</ul>
+</li>
+<li><a href='#MovingfromROSv6tov7withexamples-RoutingFilters'>Routing Filters</a></li>
+<li><a href='#MovingfromROSv6tov7withexamples-RPKI'>RPKI</a></li>
+<li><a href='#MovingfromROSv6tov7withexamples-RIPConfiguration'>RIP Configuration</a></li>
+</ul>
+</div></p><h1 id="MovingfromROSv6tov7withexamples-RoutingTables">Routing Tables</h1><p>By default, all routes are added to the &quot;main&quot; routing table as it was before. From a configuration point of view, the biggest differences are routing table limit increase, routing table monitoring differences, and how routes are added to specific routing tables (see next example)<br/>v7 introduces a new menu /routing route, which shows all address family routes as well as all filtered routes with all possible route attributes. <span style="color:var(--ds-text-accent-blue,#0055cc);"><code>/ip route</code> </span>and <code><span style="color:var(--ds-text-accent-blue,#0055cc);">/ipv6 route</span></code> menus are used to add static routes and for simplicity show only basic route attributes.</p><p>For more in-depth information on routing see this article (<a href="IP-Routing_328084.html">IP Routing</a>).</p><p>Another new change is that most common route print requests are processed by the routing process which significantly improves the speed compared to v6.</p><h1 id="MovingfromROSv6tov7withexamples-UseofRoutingTablesandPolicyRouting">Use of Routing Tables and Policy Routing</h1><p><br/></p><p>The main difference from v6 is that the routing table must be added to the <span style="color:var(--ds-text-accent-blue,#0055cc);"><code>/routing table</code></span> menu before actually referencing it anywhere in the configuration.  And <strong><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">fib </span></strong>parameter should be specified if the routing table is intended to push routes to the  FIB.<br/>The routing rule configuration is the same except for the menu location (instead of <code><span style="color:var(--ds-text-accent-blue,#0055cc);">/ip route rule</span></code>, now it is <code><span style="color:var(--ds-text-accent-blue,#0055cc);">/routing rule</span></code>).</p><p>Let's consider a basic example where we want to resolve 8.8.8.8 only in the routing table named myTable to the gateway 172.16.1.1:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/routing table add name=myTable fib
+/routing rule add dst-address=8.8.8.8 action=lookup-only-in-table table=myTable
+/ip route add dst-address=8.8.8.8 gateway=172.16.1.1@main routing-table=myTable</pre>
+</div></div><p><br/>Instead of routing rules, you could use mangle to mark packets with routing-mark, the same way as it was in ROSv6.</p><h1 id="MovingfromROSv6tov7withexamples-OSPFConfiguration">OSPF Configuration</h1><p>OSPFv3 and OSPFv2 are now merged into one single menu <code><span style="color:var(--ds-text-accent-blue,#0055cc);">/routing ospf</span></code>. At the time of writing this article, there are no default instances and areas.<br/>To start both OSPFv2 and OSPF v3 instances, first, you need to create an instance for each and then add an area to the instance.<br/><br/></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/routing ospf instance 
+add name=v2inst version=2 router-id=1.2.3.4
+add name=v3inst version=3 router-id=1.2.3.4
+/routing ospf area
+add name=backbone_v2 area-id=0.0.0.0 instance=v2inst
+add name=backbone_v3 area-id=0.0.0.0 instance=v3inst</pre>
+</div></div><p><br/></p><p>At this point, you are ready to start OSPF on the network interface. In the case of IPv6, you add either interface on which you want to run OSPF (the same as ROSv6) or the IPv6 network. In the second case, OSPF will automatically detect the interface. Here are some interface configuration examples:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/routing ospf interface-template
+add network=192.168.0.0/24 area=backbone_v2
+add network=2001:db8::/64 area=backbone_v3
+add network=ether1 area=backbone_v3</pre>
+</div></div><p class="auto-cursor-target">ROSv7 uses templates to match the interface against the template and apply configuration from the matched template.  OSPF menus <code><span style="color:var(--ds-text-accent-blue,#0055cc);">interface</span> </code>and <code><span style="color:var(--ds-text-accent-blue,#0055cc);">neighbor</span></code> contains read-only entries purely for status monitoring.</p><p class="auto-cursor-target"><s>All route distribution control is now done purely with routing filter select, no more redistribution knobs in the instance</s> (Since the v7.1beta7 redistribution knob is back, you still need to use routing filters to set route costs and type if necessary). This gives greater flexibility on what routes from which protocols you want to redistribute.<br/>For example, let's say you want to redistribute only static IPv4 routes from the 192.168.0.0/16 network range.<br/><br/></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/routing ospf instance
+set backbone_v2 out-filter-chain=ospf_out redistribute=static</pre>
+</div></div><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/routing filter rule add chain=ospf_out rule=&quot;if (dst in 192.168.0.0/16) {accept}&quot;</pre>
+</div></div><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>The default action of the routing filter chain is &quot;drop&quot;</p></div></div><h1 class="auto-cursor-target" id="MovingfromROSv6tov7withexamples-BGPConfiguration">BGP Configuration</h1><p class="auto-cursor-target">There is a complete redesign of the BGP configuration compared to ROSv6. The first biggest difference is that there is no more <span style="color:var(--ds-text-accent-blue,#0055cc);"><code><strong>instance</strong> </code></span>and <strong><code><span style="color:var(--ds-text-accent-blue,#0055cc);">peer</span> </code></strong>configuration menus. Instead, we have <strong><code><span style="color:var(--ds-text-accent-blue,#0055cc);">connection</span></code></strong>, <strong><code><span style="color:var(--ds-text-accent-blue,#0055cc);">template</span> </code></strong>and <strong><code><span style="color:var(--ds-text-accent-blue,#0055cc);">session</span></code></strong> menus.<br/>The reason for such a structure is to strictly split parameters that are responsible for connection and parameters that are BGP protocol specific.</p><p class="auto-cursor-target">Let's start with the Template. It contains all BGP protocol-related configuration options. It can be used as a template for dynamic peers and apply a similar config to a group of peers. Note that this is not the same as peer groups on Cisco devices, where the group is more than just a common configuration.</p><p class="auto-cursor-target">By default, there is a default template that requires you to set your own AS.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/routing/bgp/template set default as=65533</pre>
+</div></div><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Starting from v7.1beta4 template parameters are exposed in the &quot;connection&quot; configuration. This means that the template is not mandatory anymore, allowing for an easier basic BGP connection setup, similar to what it was in ROSv6.</p></div></div><p class="auto-cursor-target">Most of the parameters are similar to ROSv6 except that some are grouped in the output and input section making the config more readable and easier to understand whether the option is applied on input or output. If you are familiar with CapsMan then the syntax is the same, for example, to specify the output selection chain you set <code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">output.filter-chain</span>=myBgpChain</code>.</p><p class="auto-cursor-target">You can even inherit template parameters from another template, for example:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/routing/bgp/template 
+add name=myAsTemplate as=65500 output.filter-chain=myAsFilter
+set default template=myAsTemplate</pre>
+</div></div><p class="auto-cursor-target">Another important aspect of the new routing configuration is the global Router ID, which sets router-id and group peers in one instance. RouterOS adds a default ID which picks instance-id from any interface's highest IP. The default BGP template by default is set to use the &quot;default&quot; ID.<br/>If for any reason you need to tweak or add new instances it can be done in <code><span style="color:var(--ds-text-accent-blue,#0055cc);">/routing id</span></code> menu.<br/><br/></p><p class="auto-cursor-target">Very interesting parameters are <strong><code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">input.</span></code><code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">affinity </span></code></strong><code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);"><span style="color:var(--ds-text,#172b4d);">and</span></span></code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);"> </span><strong><code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">output.affinity</span></code></strong>, they allow control in which process input and output of active session will be processed:</p><ul><li class="auto-cursor-target"><strong>alone</strong> - input and output of each session are processed in its own process, most likely the best option when there are a lot of cores and a lot of peers</li><li class="auto-cursor-target"><strong>afi, instance, vrf, remote-as</strong> - try to run input/output of new session in process with similar parameters</li><li class="auto-cursor-target"><strong>main</strong> - run input/output in the main process (could potentially increase performance on single-core even possibly on multicore devices with small amount of cores)</li><li class="auto-cursor-target"><strong>input</strong> - run output in the same process as input (can be set only for output affinity)</li></ul><p class="auto-cursor-target">Now that we have parameters set for the template we can add BGP connections. A minimal set of parameters are <span style="color:var(--ds-background-accent-green-bolder,#1f845a);"><code>remote.address</code></span>, <code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">template, </span><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">connect</span></code>, <code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">listen </span></code>and <code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">local.role</span></code></p><p class="auto-cursor-target"><span style="letter-spacing: 0.0px;">Connect and listen to parameters specify whether peers will try to connect and listen to a remote address or just connect or just listen. It is possible that in setups where peer uses the multi-hop connection </span><code style="letter-spacing: 0.0px;"><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">local.address</span></code><span style="letter-spacing: 0.0px;"> must be configured too (similar as it was with </span><code style="letter-spacing: 0.0px;"><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">update-source</span></code><span style="letter-spacing: 0.0px;"> in ROSv6).</span></p><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>It is not mandatory to specify a remote AS number. ROS v7 can determine remote ASN from an open message. You should specify the remote AS only when you want to accept a connection from that specific AS.</p></div></div><p class="auto-cursor-target">Peer role is now a mandatory parameter, for basic setups, you can just use ibgp, ebgp (more information on available roles can be found in the corresponding RFC draft <a class="external-link" href="https://datatracker.ietf.org/doc/draft-ietf-idr-bgp-open-policy/?include_text=1" rel="nofollow">https://datatracker.ietf.org/doc/draft-ietf-idr-bgp-open-policy/?include_text=1</a>), keep in mind that at the moment capabilities, communities, and filtering described in the draft is not implemented.</p><p class="auto-cursor-target">Very basic iBGP set up to listen on the whole local network for connections:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/routing/bgp/connection
+add remote.address=10.155.101.0/24 listen=yes template=default local.role=ibgp </pre>
+</div></div><p class="auto-cursor-target">Now you can monitor the status of all connected and disconnected peers from <span style="color:var(--ds-text-accent-blue,#0055cc);"><code>/routing bgp session </code></span>menu.</p><p class="auto-cursor-target">Other great debugging information on all routing processes can be monitored from <span style="color:var(--ds-text-accent-blue,#0055cc);"><code>/routing stats</code></span> menu</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: text; gutter: false">[admin@v7_ccr_bgp] /routing/stats/process&gt; print interval=1
+Columns: TASKS, PRIVATE-MEM-BLOCKS, SHARED-MEM-BLOCKS, PSS, RSS, VMS, RETIRED, ID, PID, RPID, PROCESS-TIME, KERNEL-TIME, CUR-B&gt;
+# TASKS PRIVATE-M SHARED-ME PSS RSS VMS RET ID PID R PROCESS-TI KERN&gt;
+0 routing tables 12.2MiB 20.0MiB 18.7MiB 42.2MiB 83.4MiB 8 main 319 0 19s750ms 8s50&gt;
+rib &gt;
+connected networks &gt;
+1 fib 512.0KiB 0 7.4MiB 30.9MiB 83.4MiB fib 384 1 5s160ms 22s5&gt;
+2 ospf 1024.0KiB 1024.0KiB 5.9MiB 25.9MiB 83.4MiB 382 ospf 388 1 1m42s170ms 1m31&gt;
+connected networks &gt;
+3 fantasy 512.0KiB 0 2061.0KiB 5.9MiB 83.4MiB fantasy 389 1 1s410ms 870m&gt;
+4 configuration and reporting 40.0MiB 512.0KiB 45.0MiB 64.8MiB 83.4MiB static 390 1 12s550ms 1s17&gt;
+5 rip 768.0KiB 0 5.3MiB 24.7MiB 83.4MiB rip 387 1 1s380ms 1s20&gt;
+connected networks &gt;
+6 routing policy configuration 512.0KiB 256.0KiB 2189.0KiB 6.0MiB 83.4MiB policy 385 1 1s540ms 1s20&gt;
+7 BGP service 768.0KiB 0 2445.0KiB 6.2MiB 83.4MiB bgp 386 1 6s170ms 9s38&gt;
+8 BGP Input 10.155.101.217 8.8MiB 6.0MiB 15.6MiB 38.5MiB 83.4MiB 20 21338 1 25s170ms 3s23&gt;
+BGP Output 10.155.101.217 &gt;
+9 Global memory 256.0KiB global 0 0 &gt;
+-- [Q quit|D dump|C-z pause|right]</pre>
+</div></div><p class="auto-cursor-target">Route filtering differs a bit from ROSv6. In the BGP template, you can now specify <span style="color:var(--ds-background-accent-green-bolder,#1f845a);">output.filter-chain, output.filter-select</span>, <span style="color:var(--ds-background-accent-green-bolder,#1f845a);">input.filter</span> as well as several <span style="color:var(--ds-background-accent-green-bolder,#1f845a);">input.accept-</span>* options.</p><p class="auto-cursor-target">Now<span style="color:var(--ds-background-accent-green-bolder,#1f845a);"> input.accept-</span>* allows filtering incoming messages directly before they are even parsed and stored in memory, that way significantly reducing memory usage. Regular input filter chain can only reject prefixes which means that it will still eat memory and will be visible in <span style="color:var(--ds-text-accent-blue,#0055cc);">/routing route</span> table as &quot;not active, filtered&quot;, </p><p class="auto-cursor-target">A very basic example of a BGP input filter to accept prefixes from 192.168.0.0/16 subnet without modifying any attributes. For other prefixes subtract 1 from the received local pref value and set IGP metric to value from OSPF ext. Additionally, we will accept only specific  prefixes from the address list to reduce memory usage</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip/firewall/address-list
+add list=bgp_list dst-address=192.168.1.0/24
+add list=bgp_list dst-address=192.168.0.0/24
+add list=bgp_list dst-address=172.16.0.0/24
+
+/routing/bgp/template
+set default input.filter=bgp_in .accept-nlri=bgp_list
+</pre>
+</div></div><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/routing/filter/rule 
+add chain=bgp_in rule=&quot;if (dst in 192.168.0.0/16) {accept}&quot;
+add chain=bgp_in rule=&quot;set bgp-local-pref -1; set bgp-igp-metric ospf-ext-metric; accept&quot; </pre>
+</div></div><div role="region" aria-label="Warning" class="confluence-information-macro  confluence-information-macro-warning" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-error confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>If the routing filter chain is not specified BGP will try to advertise every active route it can find in the routing table</p></div></div><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>The default action of the routing filter chain is &quot;drop&quot;</p></div></div><h2 class="auto-cursor-target" id="MovingfromROSv6tov7withexamples-MonitoringAdvertisements">Monitoring Advertisements</h2><p>RouterOS v7 by default disables monitoring of the BGP output. This allows to significantly reduce resource usage on setups with large routing tables.</p><p>To be able to see output advertisements several steps should be taken:</p><ul><li>enable &quot;output.keep-sent-attributes&quot; in BGP connection configuration</li><li>run &quot;dump-saved-advertisements&quot; from BGP session menu</li><li>view saved output from &quot;/routing/stats/pcap&quot; menu</li></ul><p><br/></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@arm-bgp] /routing/bgp/connection&gt;  set 0 output.keep-sent-attributes=yes
+[admin@arm-bgp] /routing/bgp/session&gt; print 
+Flags: E - established 
+ 0 E remote.address=10.155.101.183 .as=444 .id=192.168.44.2 .refused-cap-opt=no .capabilities=mp,rr,gr,as4 
+     .afi=ip,ipv6 .messages=4 .bytes=219 .eor=&quot;&quot; 
+     local.address=10.155.101.186 .as=456 .id=10.155.255.186 .capabilities=mp,rr,gr,as4 .afi=ip,ipv6 
+     .messages=1 .bytes=19 .eor=&quot;&quot; 
+     output.procid=66 .filter-chain=bgp_out .network=bgp-nets .keep-sent-attributes=yes 
+     input.procid=66 ebgp 
+     hold-time=3m keepalive-time=1m uptime=4s30ms 
+
+[admin@arm-bgp] /routing/bgp/session&gt; dump-saved-advertisements 0 save-to=test_out.pcap
+
+</pre>
+</div></div><h2 class="auto-cursor-target" id="MovingfromROSv6tov7withexamples-Networks">Networks</h2><p class="auto-cursor-target">Lastly, you might notice that the <strong><code><span style="color:var(--ds-background-accent-blue-bolder,#0c66e4);">network </span></code></strong>menu is missing and probably wondering how to advertise your own networks. Now networks are added to the firewall address-list and referenced in the BGP configuration.<br/>Following ROSv6 network configuration:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/routing bgp network add network=192.168.0.0/24 synchronize=yes
+/ip route add dst-address=192.168.0.0/24 type=blackhole</pre>
+</div></div><p class="auto-cursor-target">would translate to v7 as:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip/firewall/address-list/
+add list=bgp-networks address=192.168.0.0/24
+
+/ip/route 
+add dst-address=192.168.0.0/24 blackhole
+
+/routing/bgp/connection
+set peer_name output.network=bgp-networks</pre>
+</div></div><p>There is more configuration to be done when adding just one network but offers simplicity when you have to deal with a large number of networks. v7 even allows specifying for each BGP connection its own set of networks. </p><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>In v7 it is not possible to turn off synchronization with IGP routes (the network will be advertised only if the corresponding IGP route is present in the routing table).</p></div></div><h1 class="auto-cursor-target" id="MovingfromROSv6tov7withexamples-RoutingFilters">Routing Filters</h1><p>Starting from ROSv7.1beta4, the routing filter configuration is changed to a script-like configuration. The rule now can have &quot;if .. then&quot; syntax to set parameters or apply actions based on conditions from the &quot;if&quot; statement.</p><p>Multiple rules without action are stacked in a single rule and executed in order like a firewall, the reason is that the &quot;set&quot; parameter order is important and writing one &quot;set&quot;s per line, allows for an easier understanding from top to bottom on what actions were applied.<br/><br/>For example, match static default route and apply action accept can be written in one config rule:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/routing/filter/rule
+add chain=ospf_in rule=&quot;if (dst==0.0.0.0/0 &amp;&amp; protocol static) { accept }&quot;</pre>
+</div></div><p class="auto-cursor-target"><br/>For example, ROSv6 rule &quot;/routing filter add chain=ospf_in prefix=172.16.0.0/16 prefix-length=24 protocol=static action=accept&quot; converted to ROSv7 would be:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/routing/filter/rule
+add chain=ospf_in rule=&quot;if (dst in 172.16.0.0/16 &amp;&amp; dst-len==24 &amp;&amp; protocol static) { accept }&quot;</pre>
+</div></div><p class="auto-cursor-target">Another example, to match prefixes from the 172.16.0.0/16 range with prefix length equal to 24 and set BGP med and prepend values</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/routing/filter/rule
+add chain=BGP_OUT rule=&quot;if (dst-len==24 &amp;&amp; dst in 172.16.0.0/16) { \n
+    set bgp-med 20; set bgp-path-prepend 2; accept }&quot;</pre>
+</div></div><p class="v1code-java"><br/></p><p>It is also possible to match prefix length range like this</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/routing/filter/rule
+add chain=BGP_OUT rule=&quot;if (dst-len&gt;13 &amp;&amp; dst-len&lt;31 &amp;&amp; dst in 172.16.0.0/16) { accept }&quot;</pre>
+</div></div><p class="v1code-java"><br/>Filter rules now can be used to match or set communities,  large communities, and extended communities from the community list:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/routing/filter/rule
+add chain=bgp_in rule=&quot;set bgp-large-communities 200001:200001:10 &quot;</pre>
+</div></div><p>If there are a lot of community sets, that need to be applied in multiple rules, then it is possible to define community sets and use them to match or set:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/routing/filter/large-community-set
+add set=myLargeComSet communities=200001:200001:10 
+
+
+/routing/filter/rule
+add chain=bgp_in rule=&quot;append bgp-large-communities myLargeComSet &quot;</pre>
+</div></div><p><br/></p><p>Since route-target is encoded in extended community attribute to change or match RT you need to operate on extended community attribute, for example:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/routing/filter/rule
+add chain=bgp_in rule=&quot;set bgp-ext-communities rt:327824:20 &quot;</pre>
+</div></div><h1 class="auto-cursor-target" id="MovingfromROSv6tov7withexamples-RPKI">RPKI</h1><p class="auto-cursor-target">RouterOS implements an RTR client. You connect to the server which will send route validity information. This information then can be used to validate routes in route filters against a group with &quot;rpki-validate&quot; and further in filters &quot;match-rpki&quot; can be used to match the exact state.</p><p class="auto-cursor-target">For more info refer to the <a href="RPKI_59277471.html">RPKI</a> documentation.</p><h1 class="auto-cursor-target" id="MovingfromROSv6tov7withexamples-RIPConfiguration">RIP Configuration</h1><p class="auto-cursor-target">To start RIP, the instance should be configured. There you should select which routes will be redistributed by RIP and if it will redistribute the default route.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/routing/rip/instance
+add name=instance1 originate-default=never redistribute=connected,static </pre>
+</div></div><p>Then interface-template should be configured. There is no need to define networks in ROS version 7 as it was in version 6.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/routing/rip/interface-template
+add interfaces=ether1 instance=instance1</pre>
+</div></div><p>Now the basic configuration is completed on one router. RIP neighbor router should be configured in a similar way. </p><p>In ROS v7 the neighbors will appear only when there are routes to be sent or/and to be received.</p><p><br/></p><p>Prefix lists from ROSv6 are deprecated, now all the filtering must be done by the routing filters.</p>
+                    </div>
+
+                                                            <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/30474256/100892682.png">image2021-12-21_11-48-29.png</a> (image/png)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

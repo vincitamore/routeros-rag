@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : Loop Protect</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Bridging-and-Switching_328068.html">Bridging and Switching</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Bridging-and-Switching-Case-Studies_119144611.html">Bridging and Switching Case Studies</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : Loop Protect
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Guntis G.</span>, last updated on Apr 17, 2024
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p>The loop protect feature can prevent Layer2 loops by sending loop protect protocol packets and shutting down interfaces in case they receive loop protect packets originating from themselves. The feature works by checking the source MAC address of the received loop-protect packet against the MAC addresses of loop-protect enabled interfaces. If the match is found, loop protect disables the interface that received the loop protect packet. Log message warns about this event and the interface is marked with a loop protect comment by the system. The RouterOS loop protect feature can be used on bridged interfaces as well as on Ethernet interfaces which are set for switching in RouterBoard switch chips.</p><p>Loop Protect works on Ethernet, VLAN, EoIP, VxLAN interfaces and its packets are encapsulated with EtherType 0x9003.<br/>There the loop protect packet interval and interface disable time can be adjusted. Configuration changes or expiration of disable time, resets loop protection on an interface.</p><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p><span style="color:var(--ds-text-accent-lime-bolder,#37471f);"><span> </span>Even though loop-protect can work on interfaces that are added to a bridge, it is still recommended to use (R/M)STP rather than loop-protect since (R/M)STP is compatible with most switches STP variants provide many more configuration options to fine-tune your network.</span></p></div></div><p><br/></p><p><strong>Sub-menu:</strong><span> </span><code>/interface ethernet;</code><span> </span><code>/interface vlan;</code><span> </span><code>/interface eoip;</code><span> </span><code>/interface eoipv6; /interface vxlan</code></p><div class="table-wrap"><table class="wrapped confluenceTable" style="margin-left: 16.2031px;"><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>loop-protect</strong><span> </span>(<em>on | off | default</em>; Default:<span> </span><strong>default</strong>)</td><td class="confluenceTd">Enables or disables loop protect on the selected interface.<span> </span><strong>default</strong><span> </span>works as turned off.</td></tr><tr><td class="confluenceTd"><strong>loop-protect-send-interval</strong><span> </span>(<em>time interval</em>; Default:<span> </span><strong>5s</strong>)</td><td class="confluenceTd">Sets how often loop protect packets are sent on the selected interface.</td></tr><tr><td class="confluenceTd"><strong>loop-protect-disable-time</strong><span> </span>(<em>time interval | 0</em>; Default:<span> </span><strong>5m</strong>)</td><td class="confluenceTd">Sets how long the selected interface is disabled when a loop is detected.<span> </span><strong>0</strong><span> </span>- forever.</td></tr></tbody></table></div><p><br/></p><p><strong><span class="mw-headline">Read-only properties</span></strong></p><div class="table-wrap"><table class="wrapped confluenceTable" style="margin-left: 16.2031px;"><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>loop-protect-status</strong><span> </span>(<em>on | off | disable</em>)</td><td class="confluenceTd"><ul><li><strong>on</strong><span> </span>- loop-protect feature is turned on, the interface is sending and listening for loop protect packets</li><li><strong>off</strong><span> </span>- loop-protect feature is turned off</li><li><strong>disable</strong><span> </span>- loop-protect feature is turned on, the interface has received loop protect packet and disabled itself to prevent loop.</li></ul></td></tr></tbody></table></div>
+                    </div>
+
+                                        
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

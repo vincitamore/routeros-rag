@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : Failover (WAN Backup)</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="High-Availability-Solutions_120324133.html">High Availability Solutions</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Load-Balancing_4390920.html">Load Balancing</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : Failover (WAN Backup)
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Artūrs C.</span>, last updated by <span class='editor'> Māris B.</span> on Nov 07, 2024
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <h1 id="Failover(WANBackup)-Introduction">Introduction</h1><p>In this article, we will look at another advanced method of failover using recursive routing and scopes from the routing section. Recursive routing occurs when a route (either static or dynamically learned) has a next-hop that is not directly connected to the local router. It is necessary to restrict a set of routes that can be used to look up immediate next-hops. Nexthop values of RIP or OSPF routes, for example, are supposed to be directly reachable and should be looked up only using connected routes. This is achieved using a scope and target-scope properties.</p><h1 id="Failover(WANBackup)-SetupOverview"><span style="color:var(--ds-text-accent-gray,#44546f);"><span style="color:var(--ds-text,#333333);">Setup Overview</span></span></h1><p>Let's assume that our gateway has two public network uplinks (&quot;ISP1&quot;, &quot;ISP2&quot;). First uplink should be preferred and second one should act as a backup. </p><p>Then we mark traffic in two parts, one with the name &quot;ISP1&quot; and the second as &quot;ISP2&quot; which goes through the ether1 and ether2 accordingly. In this setup, we want to monitor two hosts: Host1 and Host2. We will use Google DNS servers with IP 8.8.8.8 (Host1) and 8.8.4.4 (Host2), but it is not mandatory to use specifically these addresses.</p><p><br/></p><p><span class="confluence-embedded-file-wrapper image-center-wrapper"><img class="confluence-embedded-image image-center" draggable="false" src="attachments/26476608/28606475.jpg" data-image-src="attachments/26476608/28606475.jpg" data-unresolved-comment-count="0" data-linked-resource-id="28606475" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="Untitled Diagram.jpg" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/jpeg" data-linked-resource-container-id="26476608" data-linked-resource-container-version="19" tabindex="0" alt=""></span></p><p><br/></p><h1 id="Failover(WANBackup)-Configuration">Configuration</h1><h2 id="Failover(WANBackup)-Basicfailover">Basic failover</h2><p>First things first, since we have a local address space we need to masquerade LAN traffic on both uplinks:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip/firewall/nat
+add chain=srcnat action=masquerade out-interface=ether1
+add chain=srcnat action=masquerade out-interface=ether2</pre>
+</div></div><p>Next we want to pick tow hosts on the internet and make them reachable each on its own uplink. Generally you would pick hosts that are always supposed to be reachable, accepts ICMP, in this example we will use google DNS servers (8.8.8.8 and 8.8.4.4).</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip/route/ 
+add dst-address=8.8.8.8 scope=10 gateway=10.111.0.1
+add dst-address=8.8.4.4 scope=10 gateway=10.112.0.1</pre>
+</div></div><p>And add default routes recursively resolved over both hosts with ISP1 being the primary one (by having smaller distance):</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip/route/
+add distance=1 gateway=8.8.8.8 target-scope=11 check-gateway=ping
+add distance=2 gateway=8.8.4.4 target-scope=11 check-gateway=ping</pre>
+</div></div><p><br/></p><h2 id="Failover(WANBackup)-Improvedetectionreliability">Improve detection reliability</h2><p>At this point we are relying link reachability on a single host. Even though google services are very rarely down we can still improve reliability by adding a second host on each link.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip/route
+add dst-address=208.67.222.222 gateway=10.111.0.1 scope=10
+add dst-address=208.67.220.220 gateway=10.112.0.1 scope=10
+
+add distance=1 gateway=208.67.222.222 target-scope=11 check-gateway=ping
+add distance=2 gateway=208.67.220.220 target-scope=11 check-gateway=ping</pre>
+</div></div><p>Essentially what it does is creates ECMP default route and if only one of the gateways is not reachable default route on the first link will still be active. Complete switchover to second link will happen only if all the gateways become unreachable.</p>
+                    </div>
+
+                                                            <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/26476608/28606475.jpg">Untitled Diagram.jpg</a> (image/jpeg)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

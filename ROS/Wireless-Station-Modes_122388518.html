@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : Wireless Station Modes</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Wireless_1409138.html">Wireless</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Wireless-Case-Studies_120324140.html">Wireless Case Studies</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : Wireless Station Modes
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Unknown User (emils)</span>, last updated on Apr 26, 2022
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><span class="mw-headline"><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742037835 {padding: 0px;}
+div.rbtoc1747742037835 ul {margin-left: 0px;}
+div.rbtoc1747742037835 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742037835'>
+<ul class='toc-indentation'>
+<li><a href='#WirelessStationModes-Overview'>Overview</a></li>
+<li><a href='#WirelessStationModes-802.11limitationsforL2bridging'>802.11 limitations for L2 bridging</a></li>
+<li><a href='#WirelessStationModes-ApplicabilityMatrix'>Applicability Matrix</a></li>
+<li><a href='#WirelessStationModes-Modestation'>Mode station</a></li>
+<li><a href='#WirelessStationModes-Modestation-wds'>Mode station-wds</a></li>
+<li><a href='#WirelessStationModes-Modestation-pseudobridge'>Mode station-pseudobridge</a></li>
+<li><a href='#WirelessStationModes-Modestation-pseudobridge-clone'>Mode station-pseudobridge-clone</a></li>
+<li><a href='#WirelessStationModes-Modestation-bridge'>Mode station-bridge</a></li>
+</ul>
+</div></span></p><h1 id="WirelessStationModes-Overview"><span class="mw-headline">Overview</span></h1><p>Wireless interface in any of <em>station</em> modes will search for acceptable access point (AP) and connect to it. The connection between station and AP will behave in slightly different way depending on type of <em>station</em> mode used, so correct mode must be chosen for given application and equipment. This article attempts to describe differences between available <em>station</em> modes.</p><p>Primary difference between <em>station</em> modes is in how L2 addresses are processed and forwarded across wireless link. This directly affects the ability of wireless link to be part of L2 bridged infrastructure.</p><p>If L2 bridging over wireless link is not necessary - as in case of routed or MPLS switched network, basic <strong>mode=station</strong> setup is suggested and will provide highest efficiency.</p><p>Availability of particular <em>station</em> mode depends on <strong>wireless-protocol</strong> that is used in wireless network. Please refer to <a href="#WirelessStationModes-ApplicabilityMatrix">applicability matrix</a> for information on mode support in protocols. It is possible that connection between station and AP will be established even if particular mode is not supported for given protocol. Beware that such connection will not behave as expected with respect to L2 bridging.</p><h1 id="WirelessStationModes-802.11limitationsforL2bridging"><span class="mw-headline">802.11 limitations for L2 bridging</span></h1><p>Historically 802.11 AP devices were supposed to be able to bridge frames between wired network segment and wireless, but station device was not supposed to do L2 bridging.</p><p>Consider the following network:</p><pre>[X]---[AP]-(     )-[STA]---[Y]
+</pre><p>where X-to-AP and STA-to-Y are ethernet links, but AP-to-STA are connected wirelessly. According to 802.11, AP can transparently bridge traffic between X and STA, but it is not possible to bridge traffic between AP and Y, or X and Y.</p><p>802.11 standard specifies that frames between station and AP device must be transmitted in so called <em>3 address</em> frame format, meaning that header of frame contains 3 MAC addresses. Frame transmitted from AP to station has the following addresses:</p><ul><li>destination address - address of station device, also radio receiver address</li><li>radio transmitter address - address of AP</li><li>source address - address of originator of particular frame</li></ul><p>Frame transmitted from station to AP has the following addresses:</p><ul><li>radio receiver address - address of AP</li><li>source address - address of station device, also radio transmitter address</li><li>destination address</li></ul><p>Considering that every frame must include radio transmitter and receiver address, it is clear that <em>3 address</em> frame format is not suitable for transparent L2 bridging over station, because station can not send frame with source address different from its address - e.g. frame from Y, and at the same time AP can not format frame in a way that would include address of Y.</p><p>802.11 includes additional frame format, so called <em>4 address</em> frame format, intended for &quot;wireless distribution system&quot; (WDS) - a system to interconnect APs wirelessly. In this format additional address is added, producing header that contains the following addresses:</p><ul><li>radio receiver address</li><li>radio transmitter address</li><li>destination address</li><li>source address</li></ul><p>This frame format includes all necessary information for transparent L2 bridging over wireless link. Unluckily 802.11 does not specify how WDS connections should be established and managed, therefore any usage of <em>4 address</em> frame format (and WDS) is implementation specific.</p><p>Different <em>station</em> modes attempt to solve shortcomings of standard station mode to provide support for L2 bridging.</p><h1 id="WirelessStationModes-ApplicabilityMatrix"><span class="mw-headline">Applicability Matrix</span></h1><p>The following matrix specifies <em>station</em> modes available for each <strong>wireless-protocol</strong>. Note that there are 2 columns for 802.11 protocol: <strong>802.11</strong> specifies availability of mode in &quot;pure&quot; 802.11 network (when connecting to any vendor AP) and <strong>ROS 802.11</strong> specifies availability of mode when connecting to RouterOS AP that implements necessary proprietary extensions for mode to work.</p><p><em>Table applies to RouterOS v5rc11 and above:</em></p><div class="table-wrap"><table class="wrapped confluenceTable"><tbody><tr><th class="confluenceTh"><br/></th><th class="confluenceTh">802.11</th><th class="confluenceTh">ROS 802.11</th><th class="confluenceTh">nstreme</th><th class="confluenceTh">nv2</th></tr><tr><td class="confluenceTd"><strong>station</strong></td><td class="confluenceTd">V</td><td class="confluenceTd">V</td><td class="confluenceTd">V</td><td class="confluenceTd">V</td></tr><tr><td class="confluenceTd"><strong>station-wds</strong></td><td class="confluenceTd"><br/></td><td class="confluenceTd">V</td><td class="confluenceTd">V</td><td class="confluenceTd">V</td></tr><tr><td class="confluenceTd"><strong>station-pseudobridge</strong></td><td class="confluenceTd">V</td><td class="confluenceTd">V</td><td class="confluenceTd">V</td><td class="confluenceTd"><br/></td></tr><tr><td class="confluenceTd"><strong>station-pseudobridge-clone</strong></td><td class="confluenceTd">V</td><td class="confluenceTd">V</td><td class="confluenceTd">V</td><td class="confluenceTd"><br/></td></tr><tr><td class="confluenceTd"><strong>station-bridge</strong></td><td class="confluenceTd"><br/></td><td class="confluenceTd">V</td><td class="confluenceTd">V</td><td class="confluenceTd">V</td></tr></tbody></table></div><h1 id="WirelessStationModes-Modestation"><span class="mw-headline">Mode <em>station</em></span></h1><p>This is standard mode that does not support L2 bridging on station - attempts to put wireless interface in bridge will not produce expected results. On the other hand this mode can be considered the most efficient and therefore should be used if L2 bridging on station is not necessary - as in case of routed or MPLS switched network. This mode is supported for all wireless protocols.</p><h1 id="WirelessStationModes-Modestation-wds"><span class="mw-headline">Mode <em>station-wds</em></span></h1><p>This mode works only with RouterOS APs. As a result of negotiating connection, separate WDS interface is created on AP for given station. This interface can be thought of point-to-point connection between AP and given station - whatever is sent out WDS interface is delivered to station (and only to particular station) and whatever station sends to AP is received from WDS interface (and not subject to forwarding between AP clients), preserving L2 addresses.</p><p>This mode is supported for all wireless protocols except when 802.11 protocol is used in connection to non-RouterOS device. Mode uses <em>4 address</em> frame format when used with 802.11 protocol, for other protocols (such as nstreme or nv2), protocol internal means are used.</p><p>This mode is safe to use for L2 bridging and gives most administrative control on AP by means of separate WDS interface, for example use of bridge firewall, RSTP for loop detection and avoidance, etc.</p><p>With station-wds mode, it is not possible to connect to CAPsMAN controlled CAP.</p><h1 id="WirelessStationModes-Modestation-pseudobridge"><span class="mw-headline">Mode <em>station-pseudobridge</em></span></h1><p>From the wireless connection point of view, this mode is the same as standard station mode. It has limited support for L2 bridging by means of some services implemented in station:</p><ul><li>MAC address translation for IPv4 packets - station maintains IPv4-to-MAC mapping table and replaces source MAC address with its own address when sending frame to AP (in order to be able to use <em>3 address</em> frame format), and replaces destination MAC address with address from mapping table for frames received from AP. IPv4-to-MAC mappings are built also for VLAN encapsulated frames.</li><li>single MAC address translation for the rest of protocols - station learns source MAC address from first forwarded non-IPv4 frame and uses it as default for reverse translation - this MAC address is used to replace destination MAC address for frames received from AP if IPv4-to-MAC mapping can not be performed (e.g. - non-IPv4 frame or missing mapping).</li></ul><p>This mode is limited to complete L2 bridging of data to single device connected to station (by means of single MAC address translation) and some support for IPv4 frame bridging - bridging of non-IP protocols to more than one device will not work. Also MAC address translation limits access to station device from AP side to IPv4 based access - the rest of protocols will be translated by single MAC address translation and will not be received by station itself.</p><p>This mode is available for all protocols except nv2 and <strong>should be avoided when possible</strong>. The usage of this mode can only be justified if AP does not support better mode for L2 bridging (e.g. when non-RouterOS AP is used) or if only one end-user device must be connected to network by means of station device.</p><h1 id="WirelessStationModes-Modestation-pseudobridge-clone"><span class="mw-headline">Mode <em>station-pseudobridge-clone</em></span></h1><p>This mode is the same as <em>station-pseudobridge</em> mode, except that it connects to AP using &quot;cloned&quot; MAC address - that is either address configured in <strong>station-bridge-clone-mac</strong> parameter (if configured) or source address of first forwarded frame. This essentially appears on AP as if end-user device connected to station connected to AP.</p><h1 id="WirelessStationModes-Modestation-bridge"><span class="mw-headline">Mode <em>station-bridge</em></span></h1><p>This mode works only with RouterOS APs and provides support for transparent protocol-independent L2 bridging on the station device. RouterOS AP accepts clients in <em>station-bridge</em> mode when enabled using <strong>bridge-mode</strong> parameter. In this mode, the AP maintains a forwarding table with information on which MAC addresses are reachable over which station device.</p><p>This mode is MikroTik proprietary and cannot be used to connect to other brands of devices.</p><p>This mode is safe to use for L2 bridging and is the preferred mode unless there are specific reasons to use <em>station-wds</em> mode. With station-bridge mode, it is not possible to connect to CAPsMAN controlled CAP.</p>
+                    </div>
+
+                                        
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

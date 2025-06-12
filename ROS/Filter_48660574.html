@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : Filter</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Firewall-and-Quality-of-Service_119144601.html">Firewall and Quality of Service</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Firewall_250708066.html">Firewall</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : Filter
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Artūrs C.</span>, last updated by <span class='editor'> Guntis G.</span> on Aug 13, 2024
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742026133 {padding: 0px;}
+div.rbtoc1747742026133 ul {margin-left: 0px;}
+div.rbtoc1747742026133 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742026133'>
+<ul class='toc-indentation'>
+<li><a href='#Filter-Introduction'>Introduction</a></li>
+<li><a href='#Filter-FirewallExample'>Firewall Example</a>
+<ul class='toc-indentation'>
+<li><a href='#Filter-IPv4firewall'>IPv4 firewall</a>
+<ul class='toc-indentation'>
+<li><a href='#Filter-Protecttherouteritself'>Protect the router itself</a></li>
+<li><a href='#Filter-ProtecttheLANdevices'>Protect the LAN devices</a></li>
+</ul>
+</li>
+<li><a href='#Filter-IPv6firewall'>IPv6 firewall</a>
+<ul class='toc-indentation'>
+<li><a href='#Filter-Protecttherouteritself.1'>Protect the router itself</a></li>
+<li><a href='#Filter-ProtecttheLANdevices.1'>Protect the LAN devices</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href='#Filter-Matchers'>Matchers</a></li>
+<li><a href='#Filter-Actions'>Actions</a></li>
+<li><a href='#Filter-RAWFiltering'>RAW Filtering</a>
+<ul class='toc-indentation'>
+<li><a href='#Filter-BasicRAWExample'>Basic RAW Example</a></li>
+</ul>
+</li>
+<li><a href='#Filter-ReadMore'>Read More</a></li>
+</ul>
+</div></p><h1 id="Filter-Introduction">Introduction</h1><p>Firewall filters are used to allow or block specific packets forwarded to your local network, originating from your router, or destined to the router.</p><p>There are two methods on how to set up filtering:</p><ul><li>allow specific traffic and drop everything else</li><li>drop only malicious traffic, everything else is allowed.</li></ul><p>Both methods have pros and cons, for example, from a security point of view first method is much more secure, but requires administrator input whenever traffic for a new service needs to be accepted. This strategy provides good control over the traffic and reduces the possibility of a breach because of service misconfiguration.</p><p>On the other hand, when securing a customer network it would be an administrative nightmare to accept all possible services that users may use. Therefore careful planning of the firewall is essential in advanced setups.</p><p>A firewall filter consists of three predefined chains that cannot be deleted:</p><p><span class="confluence-embedded-file-wrapper image-center-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image image-center" draggable="false" height="400" src="attachments/48660574/48660602.png" data-image-src="attachments/48660574/48660602.png" data-unresolved-comment-count="0" data-linked-resource-id="48660602" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="Pfd1.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="48660574" data-linked-resource-container-version="47" tabindex="0" alt=""></span></p><ul class="bullets"><li><span style="color:var(--ds-text,#172b4d);"><strong>input</strong> -</span> used to process packets <span style="color:var(--ds-text,#172b4d);"><strong><u>entering the router</u></strong></span> through one of the interfaces with the destination IP address which is one of the router's addresses. Packets passing through the router are not processed against the rules of the input chain</li><li><span style="color:var(--ds-text,#172b4d);"><strong>forward</strong></span> - used to process packets <span style="color:var(--ds-text,#172b4d);"><strong><u>passing through the router</u></strong></span></li><li><strong><span style="color:var(--ds-text,#172b4d);">output</span></strong> - used to process packets <span style="color:var(--ds-text,#172b4d);"><strong><u>originating from the router</u></strong></span> and leaving it through one of the interfaces. Packets passing through the router are not processed against the rules of the output chain</li></ul><p>Firewall filter configuration is accessible from <span style="color:var(--ds-icon-success,#22a06b);"><code>ip/firewall/filter</code></span> menu for IPv4 and <span style="color:var(--ds-icon-success,#22a06b);"><code>ipv6/firewall/filter</code></span> menu for IPv6.</p><h1 id="Filter-FirewallExample"><span>Firewall Example</span></h1><p><span>Lets look at basic firewall example to protect router itself and clients behind the router, for both IPv4 and IPv6 protocols.</span></p><h2 id="Filter-IPv4firewall">IPv4 firewall </h2><h3 id="Filter-Protecttherouteritself">Protect the router itself</h3><p>Rules of thumb followed to set up the firewall:</p><ul><li>work with <code><span style="color:var(--ds-background-accent-green-bolder,#1f845A);">new</span></code> connections to decrease the load on a router;</li><li>accept what you need</li><li><code><span style="color:var(--ds-background-accent-green-bolder,#1f845A);">drop</span></code> everything else, <span style="color:var(--ds-background-accent-green-bolder,#1f845A);"><code>log=yes</code></span> could be set to log some attackers, but keep in mind that it may add some load to he CPU on heavy attacks.</li></ul><p><br/></p><p>We always start by accepting already known and accepted connections, so the first rule should be to accept &quot;established&quot; and &quot;related&quot; connections.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip firewall filter
+add action=accept chain=input comment=&quot;default configuration&quot; connection-state=established,related</pre>
+</div></div><p>Now we can proceed by accepting some new connections, in our example we want to allow access ICMP protocol from any address and everything else only from 192.168.88.2-192.168.88.254 address range. For that we create an address list and two firewall rules.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip firewall address-list
+add address=192.168.88.2-192.168.88.254 list=allowed_to_router
+/ip firewall filter
+add action=accept chain=input src-address-list=allowed_to_router
+add action=accept chain=input protocol=icmp
+</pre>
+</div></div><p>And lastly we drop everything else:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">add action=drop chain=input</pre>
+</div></div><p><br/></p><p>Complete set of just created rules:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip firewall filter
+add action=accept chain=input comment=&quot;default configuration&quot; connection-state=established,related
+add action=accept chain=input src-address-list=allowed_to_router
+add action=accept chain=input protocol=icmp
+add action=drop chain=input
+/ip firewall address-list
+add address=192.168.88.2-192.168.88.254 list=allowed_to_router</pre>
+</div></div><p><br/></p><h3 id="Filter-ProtecttheLANdevices">Protect the LAN devices</h3><p>Concept in protecting the users is very similar, except that in this case we are blocking unwanted traffic and accepting everythign else.</p><p>At first we will create <code><span style="color:var(--ds-background-accent-green-bolder,#1f845A);">address-list</span></code> with the name &quot;not_in_internet&quot; which we will use for the firewall filter rules:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip firewall address-list
+add address=0.0.0.0/8 comment=RFC6890 list=not_in_internet
+add address=172.16.0.0/12 comment=RFC6890 list=not_in_internet
+add address=192.168.0.0/16 comment=RFC6890 list=not_in_internet
+add address=10.0.0.0/8 comment=RFC6890 list=not_in_internet
+add address=169.254.0.0/16 comment=RFC6890 list=not_in_internet
+add address=127.0.0.0/8 comment=RFC6890 list=not_in_internet
+add address=224.0.0.0/4 comment=Multicast list=not_in_internet
+add address=198.18.0.0/15 comment=RFC6890 list=not_in_internet
+add address=192.0.0.0/24 comment=RFC6890 list=not_in_internet
+add address=192.0.2.0/24 comment=RFC6890 list=not_in_internet
+add address=198.51.100.0/24 comment=RFC6890 list=not_in_internet
+add address=203.0.113.0/24 comment=RFC6890 list=not_in_internet
+add address=100.64.0.0/10 comment=RFC6890 list=not_in_internet
+add address=240.0.0.0/4 comment=RFC6890 list=not_in_internet
+add address=192.88.99.0/24 comment=&quot;6to4 relay Anycast [RFC 3068]&quot; list=not_in_internet</pre>
+</div></div><p>Brief firewall filter rule explanation:</p><ul><li>packets with <em>connection-state=established,related</em> added to FastTrack for faster data throughput, the firewall will work with new connections only;</li><li>drop <em>invalid</em> connection and log them with prefix &quot;invalid&quot;;</li><li>drop attempts to reach not public addresses from your local network, apply <em>address-list=not_in_internet</em> before, &quot;bridge&quot; is local network interface, log=yes attempts with prefix &quot;!public_from_LAN&quot;;</li><li>drop incoming packets that are not NAT`ed, ether1 is public interface, log attempts with &quot;!NAT&quot; prefix;</li><li>jump to ICMP chain to drop unwanted ICMP messages</li><li>drop incoming packets from the Internet, which are not public IP addresses, ether1 is a public interface, log attempts with prefix &quot;!public&quot;;</li><li>drop packets from LAN that does not have LAN IP, 192.168.88.0/24 is local network used subnet;</li></ul><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip firewall filter
+add action=fasttrack-connection chain=forward comment=FastTrack connection-state=established,related
+add action=accept chain=forward comment=&quot;Established, Related&quot; connection-state=established,related
+add action=drop chain=forward comment=&quot;Drop invalid&quot; connection-state=invalid log=yes log-prefix=invalid
+add action=drop chain=forward comment=&quot;Drop tries to reach not public addresses from LAN&quot; dst-address-list=not_in_internet in-interface=bridge log=yes log-prefix=!public_from_LAN out-interface=!bridge
+add action=drop chain=forward comment=&quot;Drop incoming packets that are not NAT`ted&quot; connection-nat-state=!dstnat connection-state=new in-interface=ether1 log=yes log-prefix=!NAT
+add action=jump chain=forward protocol=icmp jump-target=icmp comment=&quot;jump to ICMP filters&quot;
+add action=drop chain=forward comment=&quot;Drop incoming from internet which is not public IP&quot; in-interface=ether1 log=yes log-prefix=!public src-address-list=not_in_internet
+add action=drop chain=forward comment=&quot;Drop packets from LAN that do not have LAN IP&quot; in-interface=bridge log=yes log-prefix=LAN_!LAN src-address=!192.168.88.0/24</pre>
+</div></div><p>Allow only needed ICMP codes in &quot;icmp&quot; chain:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip firewall filter
+  add chain=icmp protocol=icmp icmp-options=0:0 action=accept \
+    comment=&quot;echo reply&quot;
+  add chain=icmp protocol=icmp icmp-options=3:0 action=accept \
+    comment=&quot;net unreachable&quot;
+  add chain=icmp protocol=icmp icmp-options=3:1 action=accept \
+    comment=&quot;host unreachable&quot;
+  add chain=icmp protocol=icmp icmp-options=3:4 action=accept \
+    comment=&quot;host unreachable fragmentation required&quot;
+  add chain=icmp protocol=icmp icmp-options=8:0 action=accept \
+    comment=&quot;allow echo request&quot;
+  add chain=icmp protocol=icmp icmp-options=11:0 action=accept \
+    comment=&quot;allow time exceed&quot;
+  add chain=icmp protocol=icmp icmp-options=12:0 action=accept \
+    comment=&quot;allow parameter bad&quot;
+  add chain=icmp action=drop comment=&quot;deny all other types&quot;</pre>
+</div></div><h2 id="Filter-IPv6firewall"><br/>IPv6 firewall </h2><h3 id="Filter-Protecttherouteritself.1">Protect the router itself</h3><p>Very similar to IPv4 setup, except that we have to deal with more protocols required for IPv6 to function properly.</p><p>At first we create an <code><span style="color:var(--ds-background-accent-green-bolder,#1f845A);">address-list</span></code> from which you allow access to the device:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ipv6 firewall address-list add address=fd12:672e:6f65:8899::/64 list=allowed</pre>
+</div></div><p>Brief IPv6 firewall filter rule explanation:</p><ul><li>work with <em>new</em> packets, accept <em>established/related</em> packets;</li><li>drop <em>link-local</em> addresses from Internet(public) interface/interface-list;</li><li>accept access to a router from <em>link-local</em> addresses, accept <em>multicast</em> addresses for management purposes, accept your source <em>address-list</em> for router access;</li><li>drop anything else;</li></ul><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ipv6 firewall filter
+add action=accept chain=input comment=&quot;allow established and related&quot; connection-state=established,related
+add chain=input action=accept protocol=icmpv6 comment=&quot;accept ICMPv6&quot;
+add chain=input action=accept protocol=udp port=33434-33534 comment=&quot;defconf: accept UDP traceroute&quot;
+add chain=input action=accept protocol=udp dst-port=546 src-address=fe80::/10 comment=&quot;accept DHCPv6-Client prefix delegation.&quot;
+add action=drop chain=input in-interface=in_interface_name log=yes log-prefix=dropLL_from_public src-address=fe80::/10
+add action=accept chain=input comment=&quot;allow allowed addresses&quot; src-address-list=allowed
+add action=drop chain=input
+/ipv6 firewall address-list
+add address=fe80::/16 list=allowed
+add address=xxxx::/48 list=allowed
+add address=ff02::/16 comment=multicast list=allowed</pre>
+</div></div><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p><span style="color:var(--ds-text,#172b4d);">In certain setups where the DHCPv6 relay is used, the src address of the packets may not be from the link-local range. In that case, the src-address parameter of rule #4 must be removed or adjusted to accept the relay address.</span></p></div></div><h3 id="Filter-ProtecttheLANdevices.1">Protect the LAN devices</h3><p>This step is more important than it is for IPv4. In IPv4 setups clients mostly have addresses from local address range and are NATed to public IP, that way they are not directly reachable from the public networks. </p><p>IPv6 is a different story. In most common setups, enabled IPv6 makes your clients available from the public networks, so proper firewall filter rules to protect your customers are mandatory.</p><p>In brief we will very basic LAN protection should:</p><ul><li>accept <em>established/related</em> and work with <em>new</em> packets;</li><li>drop <em>invalid</em> packets;</li><li>accept ICMPv6 packets;</li><li>accept <em>new</em> connections originated only from your clients to the public network;</li><li>drop everything else.</li></ul><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ipv6 firewall filter
+add action=accept chain=forward comment=established,related connection-state=established,related
+add action=drop chain=forward comment=invalid connection-state=invalid log=yes log-prefix=ipv6,invalid
+add action=accept chain=forward comment=icmpv6 in-interface=!in_interface_name protocol=icmpv6
+add action=accept chain=forward comment=&quot;local network&quot; in-interface=!in_interface_name src-address-list=allowed
+add action=drop chain=forward log-prefix=IPV6</pre>
+</div></div><p><br/></p><h1 id="Filter-Matchers"><span class="mw-headline">Matchers</span></h1><p><span class="mw-headline">All matcher properties are common and listed <a href="Common-Firewall-Matchers-and-Actions_250708064.html">here</a>.</span></p><p><br/></p><h1 id="Filter-Actions"><span class="mw-headline">Actions</span></h1><p><span>Tables below shows list of filter specific actions and associated properties.  Other actions are<span class="mw-headline"> listed <a href="Common-Firewall-Matchers-and-Actions_250708064.html">here</a>.</span></span></p><p><br/></p><div class="table-wrap"><table class="wrapped relative-table confluenceTable" style="width: 80.2335%;"><colgroup><col style="width: 34.0636%;"/><col style="width: 65.9364%;"/></colgroup><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>action</strong><span> </span>(<em>action name</em>; Default:<span> </span><strong>accept</strong>)</td><td class="confluenceTd"><ul><li><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">drop</span><span style="letter-spacing: 0.0px;"> </span><span style="letter-spacing: 0.0px;">- silently drop the packet</span></li></ul><ul class="bullets" title=""><li><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">fasttrack-connection</span><span> </span>- process packets from a connection using FastPath by enabling<span> </span><a class="external-link" href="https://wiki.mikrotik.com/wiki/Manual:IP/Fasttrack" rel="nofollow" style="text-decoration: none;" title="Manual:IP/Fasttrack">FastTrack</a><span> </span>for the connection. <strong>IPv4</strong> only.</li><li><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">reject</span><span> </span>- drop the packet and send an ICMP reject message; this action allows ICMP reply specification, such as: prohibit or unreachable admin/host/network/port</li><li><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">tarpit</span><span> </span>- captures and holds TCP connections (replies with SYN/ACK to the inbound TCP SYN packet). <strong>IPv4</strong> only.</li></ul></td></tr><tr><td class="confluenceTd"><strong>reject-with</strong><span> </span>(<em>icmp-no-route | icmp-admin-prohibited | icmp-not-neighbour</em><em> | icmp-address-unreachable | icmp-port-unreachable | tcp-reset | icmp-err-src-routing-header | icmp-headers-too-long </em>; Default: <strong>icmp-no-route</strong>)</td><td class="confluenceTd"><p>Specifies <a class="external-link" href="https://www.iana.org/assignments/icmpv6-parameters/icmpv6-parameters.xhtml#icmpv6-parameters-codes-2" rel="nofollow">ICMP error</a> to be sent back if the packet is rejected. Applicable if<span> </span><span style="color:var(--ds-background-accent-green-bolder,#1f845A);"><code>action=reject</code></span></p><ul><li>icmp-no-route: sends ICMP address no-route message. ICMP type 2, code 0</li><li>icmp-admin-prohibited: sends ICMP address prohibited message. ICMP type 2, code 1</li><li>icmp-not-neighbour: sends ICMP address not-member message. ICMP type 2, code 2</li><li>icmp-address-unreachable: sends ICMP address unreachable message. ICMP type 2, code 3</li><li>icmp-port-unreachable: sends ICMP port unreachable message. ICMP type 2, code 4</li><li>tcp-reset: sends ICMP resetting a TCP connection. ICMP type 2, code 6</li><li>icmp-err-src-routing-header: sends ICMP Error in Source Routing Header message. ICMP type 2, code 7</li><li>icmp-headers-too-long: sends ICMP Headers too long message. ICMP type 2, code 8</li></ul></td></tr></tbody></table></div><h1 class="auto-cursor-target" id="Filter-RAWFiltering">RAW Filtering</h1><p>The firewall RAW table allows to selectively bypass or drop packets before connection tracking, that way significantly reducing the load on the CPU. The tool is very useful for DoS/DDoS attack mitigation.</p><p>RAW filter configuration is accessible from <span style="color:var(--ds-icon-success,#22a06b);"><code>ip/firewall/raw</code></span> menu for IPv4 and <span style="color:var(--ds-icon-success,#22a06b);"><code>ipv6/firewall/raw</code></span> menu for IPv6.</p><p>The RAW table does not have matchers that depend on connection tracking ( like connection-state, layer7, etc.).<br/>If a packet is marked to bypass the connection tracking packet de-fragmentation will not occur.</p><p>Also RAW firewall can have rules only in two chains:</p><ul class="bullets"><li><strong>prerouting</strong><span> </span>- used to process any packet entering the router</li><li><strong>output</strong><span> </span>- used to process packets originated from the router and leaving it through one of the interfaces. Packets passing through the router are not processed against the rules of the output chain</li></ul><p>And has one specific action:</p><div class="table-wrap"><table class="wrapped confluenceTable" style="margin-left: 23.1719px;"><colgroup class=""><col class=""/><col class=""/></colgroup><tbody class=""><tr class=""><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr class=""><td class="confluenceTd"><strong>action</strong><span> </span>(<em>action name</em>; Default:<span> </span><strong>accept</strong>)</td><td class="confluenceTd"><ul><li><code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">notrack</span></code><span> </span>- do not send a packet to connection tracking. Useful when you still need to use regular firewall, but do not require connection tracking.</li></ul></td></tr></tbody></table></div><h2 class="auto-cursor-target" id="Filter-BasicRAWExample">Basic RAW Example</h2><p class="auto-cursor-target">Let's assume that we have OSPF configuration, but due to connection tracking OSPF have adjacency problems. We can use RAW rules to fix this, by not sending OSPF packets to connection tracking.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip firewall raw 
+add chain=prerouting protocol=ospf action=notrack
+add chain=output protocol=ospf action=notrack</pre>
+</div></div><h1 class="auto-cursor-target" id="Filter-ReadMore">Read More</h1><ul><li class="auto-cursor-target"><a href="Building-Advanced-Firewall_328513.html">Building advanced firewall</a></li><li class="auto-cursor-target"><a href="Connection-rate_131366985.html">Connection Rate</a></li><li class="auto-cursor-target"><a href="Bruteforce-prevention_268337176.html">SSH bruteforce protection</a></li><li class="auto-cursor-target"><a href="DDoS-Protection_28606504.html">Syn/DoS protection</a></li></ul>
+                    </div>
+
+                                                            <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/48660574/48660602.png">Pfd1.png</a> (image/png)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

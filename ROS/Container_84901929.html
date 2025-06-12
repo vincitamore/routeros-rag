@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : Container</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Extended-features_120324125.html">Extended features</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : Container
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Unknown User (krisjanisj)</span>, last updated by <span class='editor'> Normunds R.</span> on May 06, 2025
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><br/></p><p><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742047098 {padding: 0px;}
+div.rbtoc1747742047098 ul {margin-left: 0px;}
+div.rbtoc1747742047098 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742047098'>
+<ul class='toc-indentation'>
+<li><a href='#Container-Summary'>Summary</a></li>
+<li><a href='#Container-Disclaimer'>Disclaimer</a>
+<ul class='toc-indentation'>
+<li><a href='#Container-Securityrisks:'>Security risks:</a></li>
+</ul>
+</li>
+<li><a href='#Container-Requirements'>Requirements</a></li>
+<li><a href='#Container-Properties'>Properties</a></li>
+<li><a href='#Container-Containerconfiguration'>Container configuration</a></li>
+<li><a href='#Container-Examples'>Examples</a>
+<ul class='toc-indentation'>
+<li><a href='#Container-RunningPi-hole'>Running Pi-hole</a>
+<ul class='toc-indentation'>
+<li><a href='#Container-Prerequisites'>Prerequisites</a></li>
+<li><a href='#Container-StepstorunPi-hole'>Steps to run Pi-hole</a></li>
+</ul>
+</li>
+<li><a href='#Container-AddingaContainerimage'>Adding a Container image</a>
+<ul class='toc-indentation'>
+<li><a href='#Container-OptionA:Getanimagefromanexternallibrary'>Option A: Get an image from an external library</a></li>
+<li><a href='#Container-OptionB:ImportimagefromPC'>Option B: Import image from PC</a></li>
+<li><a href='#Container-OptionC:BuildanimageonPC'>Option C: Build an image on PC</a>
+<ul class='toc-indentation'>
+<li><a href='#Container-Alternative:UsingDockertobuildContainerimages'>Alternative: Using Docker to build Container images</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href='#Container-Networkingexamples'>Networking examples</a>
+<ul class='toc-indentation'>
+<li><a href='#Container-BridgewithNAT'>Bridge with NAT</a></li>
+<li><a href='#Container-IsolatedContainers'>Isolated Containers</a></li>
+<li><a href='#Container-ContainerinLayer2network'>Container in Layer2 network</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href='#Container-Tipsandtricks'>Tips and tricks</a></li>
+</ul>
+</div></p><h1 id="Container-Summary"><span class="mw-headline">Summary</span></h1><p><strong>Sub-menu: </strong><code>/container</code><strong><br/>Packages requied: </strong><code>container</code></p><p><br/></p><p>A container is MikroTik's implementation of Linux containers, allowing users to run containerized environments within RouterOS. The container feature works in the latest MikroTik RouterOS v7.x version. Containers are compatible with images from Docker Hub, GCR, Quay, or other providers, as well as those built on other devices, using the same formats supported by these providers. While RouterOS uses different syntax compared to Docker, it still achieves similar functionality.</p><h1 id="Container-Disclaimer">Disclaimer</h1><div role="region" aria-label="Warning" class="confluence-information-macro  confluence-information-macro-warning" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-error confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>you need physical access to your RouterOS device to enable support for the container feature, it is disabled by default;</p><ul><li data-uuid="b882ce85-081d-4158-a7cf-9b1922022a29">once the container feature is enabled, containers can be added/configured/started/stopped/removed remotely!</li><li data-uuid="930d018b-ae4d-40b6-81e9-9ce066d7409b">if your RouterOS device is compromised, containers can be used to easily install malicious software in your RouterOS device and over network;</li><li data-uuid="6a11be5e-eb81-4471-ab94-1bad0fa55e17">your RouterOS device is as secure as anything you run in container;</li><li data-uuid="1971ea69-267d-410a-8d6a-cf101ccbbe4c">if you run container, there is no security guarantee of any kind;</li><li data-uuid="faacca05-a349-4674-8a9f-ac5b6511ac51">running a 3rd party container image on your RouterOS device could open a security hole/attack vector/attack surface;</li><li data-uuid="ce115c02-5494-4e32-9fda-7ec66aef5b3b">an expert with knowledge how to build exploits will be able to jailbreak/elevate to root;</li></ul></div></div><h2 id="Container-Securityrisks:"><strong>Security risks:</strong></h2><ul><li data-uuid="de0de37d-4b42-4abd-a542-b79a7f3fff13">When a security expert publishes his exploit research - anyone can apply such an exploit;</li><li data-uuid="3b52dab7-341c-40ad-baea-5e6af89aa12a">Someone can build a container image that can use the exploit AND provide a Linux root shell;</li><li data-uuid="337cba5b-7b93-4453-bd8c-75b72c758d25">By using a root shell someone may leave a permanent backdoor/vulnerability in your RouterOS system even after the container image is removed and the container feature disabled;</li><li data-uuid="5b6a8a38-6f22-4678-b0ff-2c310cda8ec2">If a vulnerability is injected into the primary or secondary RouterBOOT (or vendor pre-loader), then even Netinstall may not be able to fix it;</li></ul><h1 id="Container-Requirements"><span class="mw-headline">Requirements</span></h1><p><span class="mw-headline">Container package is compatible with <strong>arm, arm64</strong> and <strong>x86</strong> architectures. Using of remote-image (similar to docker pull) functionality requires a lot of free space in main memory, 16MB SPI flash boards may use pre-build images on USB or other disk media.</span></p><p><br/></p><div role="region" aria-label="Warning" class="confluence-information-macro  confluence-information-macro-warning" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-error confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><ul><li data-uuid="8628ab68-f02c-425a-8b98-d821a5aec2e9">External disk is highly recommended</li><li data-uuid="fd9daf2d-3c0d-4ffd-a293-7ae9711e6635">Container package needs to be installed</li><li data-uuid="ae72bcbc-dc37-4509-8dd3-1f384b7dac2f"><span style="color:var(--ds-text,#172b4d);" data-darkreader-inline-color="">For devices with EN7562CT CPU like the hEX Refresh, only <a class="external-link" href="https://hub.docker.com/u/arm32v5" rel="nofollow">arm32v5</a> container images are supported, meaning a limited number of containers can be run.</span></li></ul></div></div><p><br/></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/container</pre>
+</div></div><h1 id="Container-Properties"><span class="mw-headline">Properties</span></h1><div class="table-wrap"><table class="relative-table wrapped confluenceTable" style="width: 99.6822%;"><colgroup><col style="width: 17.9951%;"/><col style="width: 81.9806%;"/></colgroup><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><p><strong>cmd </strong> (string; Default: )</p></td><td class="confluenceTd">The main purpose of a CMD is to provide defaults for an executing container. These defaults can include an executable, or they can omit the executable, in which case you must specify an ENTRYPOINT instruction as well.</td></tr><tr><td class="confluenceTd"><p><strong>comment</strong> (<em>string</em>; Default: )</p></td><td class="confluenceTd">Short description</td></tr><tr><td class="confluenceTd"><p><strong>dns </strong>(string; Default: )</p></td><td class="confluenceTd">If container needs different DNS, it can be configured here</td></tr><tr><td class="confluenceTd"><p><strong>domain-name </strong>(string; Default: )</p></td><td class="confluenceTd"><br/></td></tr><tr><td class="confluenceTd"><p><strong>entrypoint (</strong>string; Default: <strong>)</strong></p></td><td class="confluenceTd">An ENTRYPOINT allows to specify executable to run when starting container. Example: /bin/sh</td></tr><tr><td class="confluenceTd"><strong>envlist</strong> (<em>string</em>; Default: )</td><td class="confluenceTd">list of environmental variables (configured under <em>/container envs </em>) to be used with container</td></tr><tr><td class="confluenceTd"><strong>file</strong> (<em>string; Default: </em>)</td><td class="confluenceTd">container *tar.gz tarball if the container is imported from a file</td></tr><tr><td class="confluenceTd"><strong>hostname </strong>(<em>string; Default: </em>)</td><td class="confluenceTd">Assigning a hostname to a container helps in identifying and managing the container more easily</td></tr><tr><td class="confluenceTd"><strong>interface</strong> (<em>string; Default: </em>)</td><td class="confluenceTd">veth interface to be used with the container</td></tr><tr><td class="confluenceTd"><strong>logging</strong> (<em>string; Default: </em>)</td><td class="confluenceTd">if set to yes, all container-generated output will be shown in the RouterOS log</td></tr><tr><td class="confluenceTd"><strong>mounts</strong> (<em>string; Default: </em>)</td><td class="confluenceTd">mounts from /container/mounts/ sub-menu to be used with this container</td></tr><tr><td class="confluenceTd"><strong>remote-image</strong> (<em>string; Default: </em>)</td><td class="confluenceTd">the container image name to be installed if an external registry is used (configured under /container/config set registry-url=...)</td></tr><tr><td class="confluenceTd"><strong>root-dir</strong> (<em>string; Default: </em>)</td><td class="confluenceTd">used to save container store outside main memory</td></tr><tr><td class="confluenceTd"><strong>stop-signal</strong> (<em>string; Default: </em>)</td><td class="confluenceTd"><br/></td></tr><tr><td class="confluenceTd"><strong>workdir</strong> (<em>string</em>; Default: )</td><td class="confluenceTd">the working directory for cmd entrypoint</td></tr></tbody></table></div><h1 id="Container-Containerconfiguration">Container configuration</h1><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/container/config/</pre>
+</div></div><p><br/></p><div class="table-wrap"><table class="wrapped confluenceTable"><colgroup><col/><col/></colgroup><tbody><tr><th scope="col" class="confluenceTh">Property</th><th scope="col" class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>registry-url</strong></td><td class="confluenceTd">external registry url from where the container will be downloaded (default : <a class="external-link" href="https://lscr.io/" rel="nofollow">https://lscr.io/</a> )</td></tr><tr><td class="confluenceTd"><strong><span style="color:var(--ds-text,#172b4d);" data-darkreader-inline-color="">tmpdir</span></strong></td><td class="confluenceTd">container extraction directory</td></tr><tr><td class="confluenceTd"><strong>ram-high</strong></td><td class="confluenceTd">RAM usage limit in bytes  ( <span style="color:var(--ds-text,#333333);" data-darkreader-inline-color="">0 for unlimited)</span></td></tr><tr><td class="confluenceTd"><strong>username</strong></td><td class="confluenceTd">Specifies the username for authentication ( starting from ROS 7.8)</td></tr><tr><td class="confluenceTd"><strong>password</strong></td><td class="confluenceTd">Specifies the password for authentication ( starting from ROS 7.8)</td></tr></tbody></table></div><h1 id="Container-Examples">Examples</h1><h2 id="Container-RunningPi-hole">Running Pi-hole</h2><h3 id="Container-Prerequisites">Prerequisites</h3><ol><li style="list-style-type: none;" data-uuid="351deb5c-2f7a-4641-b5fb-086c530e5e9b"><ol><li data-uuid="45d27c16-bb06-40b3-baeb-2e124715706c"><span>RouterOS device with RouterOS v7.4beta or later and <strong>installed Container package - </strong><a href="Packages_40992872.html">How to install packages</a><br/></span></li><li><span>Physical access to a device to enable container mode - will be explained down bellow<br/></span></li><li><span>Attached HDD, SSD or USB drive for storage - formatted with a filesystem supported by RouterOS - <a href="Disks_91193346.html">How to format/manage disks</a><br/></span></li></ol></li></ol><h3 id="Container-StepstorunPi-hole"><span>Steps to run Pi-hole</span></h3><ol><li><span>Enable Container mode and follow the instructions the command gives you (read more about <a href="https://help.mikrotik.com/docs/spaces/ROS/pages/93749258/Device-mode" rel="nofollow">Device-mode</a>). You will need to confirm the device-mode with a press of the <a href="https://help.mikrotik.com/docs/spaces/ROS/pages/24805498/Reset+Button" rel="nofollow">reset button</a>, or a cold reboot (if using Containers on x86):<br/></span><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/system/device-mode/update container=yes </pre>
+</div></div><span><br/></span><div role="region" aria-label="Warning" class="confluence-information-macro  confluence-information-macro-warning" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-error confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p><a href="Device-mode_93749258.html">Device-mode</a> limits container use by default, before granting container mode access - make sure your device is fully secured.</p></div></div></li><li data-uuid="a073edb5-052f-4ae5-a971-18b5af3854be"><span>Create a new veth interface and assign an IP address in a range that is unique in your network:<br/></span><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/interface/veth/add name=veth1 address=172.17.0.2/24 gateway=172.17.0.1</pre>
+</div></div><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>The following configuration is equivalent to &quot;bridge&quot; networking mode in other Container engines such as Docker. It is possible to create a &quot;host&quot; equivalent configuration as well.</p></div></div><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>One veth interface can be used for many Containers. You can create multiple veth interfaces to create <a href="https://help.mikrotik.com/docs/spaces/ROS/pages/84901929/Container#Container-IsolatedContainers" rel="nofollow">isolated</a> networks for different Containers.</p></div></div><span><br/></span></li><li data-uuid="f918d2be-7ab8-4657-b043-1aaee55e27c3"><span>Create a new <a href="https://help.mikrotik.com/docs/spaces/ROS/pages/328068/Bridging+and+Switching" rel="nofollow">bridge</a> that is going to be used for your Containers and assign the same IP address that was used for the veth interface's gateway:<br/></span><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/interface/bridge/add name=containers
+/ip/address/add address=172.17.0.1/24 interface=containers</pre>
+</div></div><span><br/></span></li><li data-uuid="ae32ecf4-8578-479d-9d85-efee5e786c78"><span>Add the veth interface to your newly created bridge:<br/></span><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/interface/bridge/port add bridge=containers interface=veth1</pre>
+</div></div></li><li data-uuid="21d436e9-a5e7-4e1c-964a-f2ab1544677f"><span>Create a NAT for outgoing traffic:<br/></span><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/ip/firewall/nat/add chain=srcnat action=masquerade src-address=172.17.0.0/24</pre>
+</div></div></li><li data-uuid="c9ae661a-df3d-410b-8c62-2f09b0d2425c"><span>Create environment variables for the Container:<br/></span><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/container/envs/add name=ENV_PIHOLE key=TZ value=&quot;Europe/Riga&quot;
+/container/envs/add name=ENV_PIHOLE key=WEBPASSWORD value=&quot;mysecurepassword&quot;
+/container/envs/add name=ENV_PIHOLE key=DNSMASQ_USER value=&quot;root&quot;</pre>
+</div></div></li><li data-uuid="53139956-329c-489d-b0a7-55ba39df5e02"><span>Create mounted volumes for the Container:<br/></span><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/container/mounts/add name=MOUNT_PIHOLE_PIHOLE src=disk1/volumes/pihole/pihole dst=/etc/pihole
+/container/mounts/add name=MOUNT_PIHOLE_DNSMASQD src=disk1/volumes/pihole/dnsmasq.d dst=/etc/dnsmasq.d</pre>
+</div></div><br/><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p><code>src=</code>  points to RouterOS location (could also be <code>src=disk1/etc_pihole</code> if, for example, You decide to put configuration files on external USB media), <code>dst=</code> points to defined location (consult containers manual/wiki/github for information on where to point). If <code>src</code>  directory does not exist on first time use then it will be populated with whatever container have in <code>dst</code>  location.</p></div></div><br/><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>It is highly recommended to place any Container volume on an attached disk to your RouterOS device. Avoid placing Container volumes on the built-in storage.</p></div></div></li><li data-uuid="21b58ed1-b0ce-4c84-9e02-02b34ca86be1"><span>Configure to use a specific Container repository, for example, to use Docker.io:<br/></span><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/container/config/set registry-url=https://registry-1.docker.io tmpdir=disk1/tmp</pre>
+</div></div><span><br/></span></li><li data-uuid="d817b728-9814-44df-a92e-cb7d4d658573"><span>Add a Containter:<br/></span><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/container/add remote-image=pihole/pihole interface=veth1 root-dir=disk1/images/pihole mounts=MOUNT_PIHOLE_PIHOLE,MOUNT_PIHOLE_DNSMASQD envlist=ENV_PIHOLE name=pihole</pre>
+</div></div><div role="region" aria-label="Tip" class="confluence-information-macro  confluence-information-macro-tip" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-approve confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>If You wish to see container output in <code>/log print</code>  , then add <code>logging=yes</code>  when creating a Container, root-dir should point to an external drive. It's not recommended to use internal storage for Containers.</p></div></div><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>There are multiple ways you can get a Container image, check the <a href="https://help.mikrotik.com/docs/spaces/ROS/pages/84901929/Container#Container-AddingaContainerimage" rel="nofollow">Adding a Container image</a> section if you need an alternative way of adding a Container image.</p></div></div><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Adding a Containter will start downloading or extracting it, the Container itself will not be started after it has been added, you need to start it manually for the first time after it has been downloaded/extracted.</p></div></div><br/><br/></li><li data-uuid="928645e5-1e5e-40ed-8c42-6e617eacf578"><span>Check the status of your Container and wait until downloading/extracting has been finished and the <code>status=stopped</code> :<br/></span><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/container/print</pre>
+</div></div></li><li data-uuid="d03b029f-115e-472e-ac8c-f0fe02a26ab9"><span>Start the Containter:<br/></span><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/container/start [find where name=pihole]</pre>
+</div></div></li><li data-uuid="922ef3f5-dade-44eb-9a82-c20a02ea7a8a">Create a port forwarding for your Container:<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip firewall nat
+add action=dst-nat chain=dstnat dst-address=192.168.88.1 dst-port=80 protocol=tcp to-addresses=172.17.0.2 to-ports=80</pre>
+</div></div></li><li data-uuid="06371bf3-9e4c-430a-a09a-b5af6ea89a44">You should be able to access the Pi-hole web panel by navigating to <code><a class="external-link" href="http://172.17.0.2/admin/" rel="nofollow">http://192.168.88.1/admin/</a></code>  in your web browser.</li><li data-uuid="78df30f8-0513-495a-bbc9-07540e526025">To start using Pi-hole on your devices, change their DNS configuration to use <code>192.168.88.1</code> as your DNS server.</li></ol><h2 id="Container-AddingaContainerimage">Adding a Container image</h2><p>There are multiple ways you can get a Container image running on your RouterOS device. Check the examples below.</p><h3 id="Container-OptionA:Getanimagefromanexternallibrary">Option A: Get an image from an external library</h3><p>Set registry-url (for downloading containers from Docker registry)  and set extract directory (tmpdir) to attached USB media:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/container/config/set registry-url=https://registry-1.docker.io tmpdir=disk1/tmp</pre>
+</div></div><p>pull image:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/container/add remote-image=pihole/pihole interface=veth1 root-dir=disk1/images/pihole mounts=MOUNT_PIHOLE_PIHOLE,MOUNT_PIHOLE_DNSMASQD envlist=ENV_PIHOLE name=pihole</pre>
+</div></div><p>The image will be automatically pulled and extracted to root-dir, status can be checked by using</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/container/print</pre>
+</div></div><h3 id="Container-OptionB:ImportimagefromPC">Option B: Import image from PC</h3><p>Your can use your PC running either Docker or Podman to download your required container image and save it to an archive. We recommend using <a class="external-link" href="https://podman.io/docs/installation" rel="nofollow">Podman</a> since it is easier to build and download containers for specific architectures using Podman.</p><ol><li data-uuid="c1b148c1-0a2f-424d-a622-22f9f2cae787">Download your required image based on the architecture of your RouterOS device:<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">#For ARM64
+podman pull --arch=arm64 docker.io/pihole/pihole
+
+#For ARM
+podman pull --arch=arm docker.io/pihole/pihole
+
+#For AMD64
+podman pull --arch=amd64 docker.io/pihole/pihole</pre>
+</div></div></li><li data-uuid="924e3b69-9311-4688-8dbf-d4e79f1182d0">Save the container image to an archive:<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">podman save pihole &gt; pihole.tar</pre>
+</div></div></li><li data-uuid="8cbd13e0-6708-4db1-a44d-4713410b862a">Upload the archive to your RouterOS device, for example:<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">rsync -av pihole.tar admin@192.168.88.1:/data/disk1/</pre>
+</div></div><div role="region" aria-label="Tip" class="confluence-information-macro  confluence-information-macro-tip" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-approve confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>You can also use Winbox to upload files!</p></div></div></li><li data-uuid="b57b97ff-3669-49bd-84f3-4ba9614fbec4">Create a Container on your RouterOS device using the uploaded container image archive file:<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/container/add file=disk1/pihole.tar interface=veth1 root-dir=disk1/pihole mounts=MOUNT_PIHOLE_PIHOLE,MOUNT_PIHOLE_DNSMASQD envlist=ENV_PIHOLE name=pihole</pre>
+</div></div></li></ol><h3 id="Container-OptionC:BuildanimageonPC">Option C: Build an image on PC</h3><p>You can build your own Containers and use them on your RouterOS device. While you can build Containers using Docker, we recommend using <a class="external-link" href="https://podman.io/docs/installation" rel="nofollow">Podman</a> since it is easier to build Containers for a specific architecture using Podman.</p><ol><li data-uuid="4a311ed2-27b3-49a8-b479-37b16eab7072">Get source files for your required Container image, for example by using git:<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">git clone https://github.com/pi-hole/docker-pi-hole.git
+cd docker-pi-hole</pre>
+</div></div></li><li data-uuid="818fc754-5dc2-45f6-9fef-9929b972f6dd">Build the Container image by specifying the Dockerfile or Containerfile and the target archiceture:<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">#For ARM64
+podman build --platform linux/arm64 --tag pihole -f ./src/Dockerfile
+
+#For ARM
+podman build --platform linux/arm --tag pihole -f ./src/Dockerfile
+
+#For AMD64
+podman build --platform linux/amd64 --tag pihole -f ./src/Dockerfile</pre>
+</div></div></li><li data-uuid="1d15a514-9aea-4b34-aca4-50107cf1a27f">Save the container image to an archive:<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">podman save pihole &gt; pihole.tar</pre>
+</div></div></li><li data-uuid="c069cd1d-a2d3-4890-88bb-69c2e2615baf">Upload the archive to your RouterOS device, for example:<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">rsync -av pihole.tar admin@192.168.88.1:/data/disk1/</pre>
+</div></div><div role="region" aria-label="Tip" class="confluence-information-macro  confluence-information-macro-tip" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-approve confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>You can also use Winbox to upload files!</p></div></div></li><li data-uuid="e247b3fb-690d-42c7-ae9f-84760870ecdb">Create a Container on your RouterOS device using the uploaded container image archive file:<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/container/add file=disk1/pihole.tar interface=veth1 root-dir=disk1/pihole mounts=MOUNT_PIHOLE_PIHOLE,MOUNT_PIHOLE_DNSMASQD envlist=ENV_PIHOLE name=pihole</pre>
+</div></div></li></ol><h4 id="Container-Alternative:UsingDockertobuildContainerimages">Alternative: Using Docker to build Container images</h4><p>To use Dockerfile and make your own docker package - docker needs to be installed as well as buildx or other builder toolkit.</p><p>Easiest way is to download and install Docker Engine:<br/><a class="external-link" href="https://docs.docker.com/engine/install/" rel="nofollow">https://docs.docker.com/engine/install/</a></p><p>After install check if extra architectures are available:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: bash; gutter: false">docker buildx ls</pre>
+</div></div><p>should return:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: bash; gutter: false">NAME/NODE DRIVER/ENDPOINT STATUS  PLATFORMS
+default * docker
+  default default         running linux/amd64, linux/arm64, linux/riscv64, linux/ppc64le, linux/s390x, linux/386, linux/arm/v7, linux/arm/v6</pre>
+</div></div><p>If not - install extra architectures:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: bash; gutter: false">docker run --privileged --rm tonistiigi/binfmt --install all</pre>
+</div></div><p>pull or create your project with Dockerfile included  and build, extract image (adjust --platform if needed):</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: bash; gutter: false">git clone https://github.com/pi-hole/docker-pi-hole.git
+cd docker-pi-hole
+docker buildx build  --no-cache --platform arm64 --output=type=docker -t pihole .
+docker save pihole &gt; pihole.tar</pre>
+</div></div><p>Upload <em>pihole.tar</em> to Your RouterOS device.</p><p>Images and objects on the Linux system can be <code><a class="external-link" href="https://docs.docker.com/engine/reference/commandline/system_prune/" rel="nofollow">pruned</a> </code></p><p>Create a container from the tar image</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/container/add file=pihole.tar interface=veth1 mounts=MOUNT_PIHOLE_PIHOLE,MOUNT_PIHOLE_DNSMASQD envlist=ENV_PIHOLE name=pihole</pre>
+</div></div><h2 id="Container-Networkingexamples">Networking examples</h2><h3 id="Container-BridgewithNAT">Bridge with NAT</h3><p>In this networking setup, all Containers use the same veth interface and communicate with each other without any Firewall restrictions, but you need to forward ports in order to allow access to a Container's port.</p><p>For example, a database Container needs to communicate with a web application Container, the web application needs the port <code>80</code> to be exposed to the world, but the database Container does not need any ports to be exposed to the world.</p><ul><li data-uuid="f9bd4be3-3430-46e5-a4a2-587fe9d90445">The network configuration:<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/interface/veth/add name=veth1 address=172.17.0.2/24 gateway=172.17.0.1
+/interface/bridge/add name=containers
+/ip/address/add address=172.17.0.1/24 interface=containers
+/interface/bridge/port add bridge=containers interface=veth1
+/ip firewall nat
+add chain=srcnat action=masquerade src-address=172.17.0.0/24
+add action=dst-nat chain=dstnat dst-address=192.168.88.1 dst-port=80 protocol=tcp to-addresses=172.17.0.2 to-ports=80</pre>
+</div></div></li><li data-uuid="744f8c82-609a-41ea-aeeb-43380d00a1dc">The database Container configuration:<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/container/envs/add name=ENV_POSTGRES key=POSTGRES_DB value=&quot;webapp&quot;
+/container/envs/add name=ENV_POSTGRES key=POSTGRES_PASSWORD value=&quot;&lt;changeme&gt;&quot;
+/container/envs/add name=ENV_POSTGRES key=POSTGRES_USER value=&quot;webapp&quot;
+/container/envs/add name=ENV_POSTGRES key=PGDATA value=&quot;/var/lib/postgresql/data/pgdata&quot;
+/container/envs/add name=ENV_POSTGRES key=POSTGRES_INITDB_ARGS value=&quot;--encoding=&#39;UTF8&#39; --lc-collate=&#39;C&#39; --lc-ctype=&#39;C&#39;&quot;
+/container/mounts/add name=MOUNT_POSTGRES src=disk1/volumes/postgres/data dst=/var/lib/postgresql/data
+/container/add remote-image=postgres:15 interface=veth1 root-dir=disk1/images/postgres mounts=MOUNT_POSTGRES envlist=ENV_POSTGRES name=postgres start-on-boot=yes logging=yes</pre>
+</div></div></li><li data-uuid="c036d988-9205-4ca3-bec8-81cc8d21a0a8">The webapp Container configuration:<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/container/add remote-image=dpage/pgadmin4 interface=veth1 root-dir=disk1/images/pgadmin name=pgadmin start-on-boot=yes logging=yes</pre>
+</div></div></li></ul><p>In this example, the <code>pgadmin</code> port 80 is accessible to everyone, but the <code>postgres</code> port 5432 is not accessible to everyone, it can only be accessed through either <code>pgadmin</code> as <code>127.0.0.1</code> or through the RouterOS device running the Containter as <code>172.17.0.2</code> .</p><h3 id="Container-IsolatedContainers"><span class="mw-headline">Isolated Containers</span></h3><p><span class="mw-headline">In this networking setup, you have multiple Containers and you want to make sure that some of them can communicate without Firewall restrictions, but some need to be isolated from other Containers. For example, you might want to create two database Containers and isolate them.</span></p><ul><li><span class="mw-headline">The network configuration:<br/></span><span class="mw-headline"><br/></span><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/interface/veth/add name=veth1 address=172.17.0.2/24 gateway=172.17.0.1
+/interface/veth/add name=veth2 address=172.18.0.2/24 gateway=172.18.0.1
+/interface/bridge/add name=containers1
+/interface/bridge/add name=containers2
+/ip/address/add address=172.17.0.1/24 interface=containers1
+/ip/address/add address=172.18.0.1/24 interface=containers2
+/interface/bridge/port add bridge=containers1 interface=veth1
+/interface/bridge/port add bridge=containers2 interface=veth2
+/ip firewall nat
+add chain=srcnat action=masquerade src-address=172.17.0.0/24
+add chain=srcnat action=masquerade src-address=172.18.0.0/24
+add action=dst-nat chain=dstnat dst-address=192.168.88.1 dst-port=81 protocol=tcp to-addresses=172.17.0.2 to-ports=80
+add action=dst-nat chain=dstnat dst-address=192.168.88.1 dst-port=82 protocol=tcp to-addresses=172.18.0.2 to-ports=80</pre>
+</div></div></li><li data-uuid="68270487-ed2a-4ef1-8420-9c20b51c823f"><span class="mw-headline">The first and second database Container configuration:<br/></span><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/container/envs/add name=ENV_POSTGRES1 key=POSTGRES_DB value=&quot;webapp1&quot;
+/container/envs/add name=ENV_POSTGRES1 key=POSTGRES_PASSWORD value=&quot;&lt;changeme&gt;&quot;
+/container/envs/add name=ENV_POSTGRES1 key=POSTGRES_USER value=&quot;webapp1&quot;
+/container/envs/add name=ENV_POSTGRES1 key=PGDATA value=&quot;/var/lib/postgresql/data/pgdata&quot;
+/container/envs/add name=ENV_POSTGRES1 key=POSTGRES_INITDB_ARGS value=&quot;--encoding=&#39;UTF8&#39; --lc-collate=&#39;C&#39; --lc-ctype=&#39;C&#39;&quot;
+/container/mounts/add name=MOUNT_POSTGRES1 src=disk1/volumes/postgres1/data dst=/var/lib/postgresql/data
+/container/add remote-image=postgres:15 interface=veth1 root-dir=disk1/images/postgres1 mounts=MOUNT_POSTGRES1 envlist=ENV_POSTGRES1 name=postgres1 start-on-boot=yes logging=yes</pre>
+</div></div><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/container/envs/add name=ENV_POSTGRES2 key=POSTGRES_DB value=&quot;webapp2&quot;
+/container/envs/add name=ENV_POSTGRES2 key=POSTGRES_PASSWORD value=&quot;&lt;changeme&gt;&quot;
+/container/envs/add name=ENV_POSTGRES2 key=POSTGRES_USER value=&quot;webapp2&quot;
+/container/envs/add name=ENV_POSTGRES2 key=PGDATA value=&quot;/var/lib/postgresql/data/pgdata&quot;
+/container/envs/add name=ENV_POSTGRES2 key=POSTGRES_INITDB_ARGS value=&quot;--encoding=&#39;UTF8&#39; --lc-collate=&#39;C&#39; --lc-ctype=&#39;C&#39;&quot;
+/container/mounts/add name=MOUNT_POSTGRES2 src=disk1/volumes/postgres2/data dst=/var/lib/postgresql/data
+/container/add remote-image=postgres:15 interface=veth2 root-dir=disk1/images/postgres2 mounts=MOUNT_POSTGRES2 envlist=ENV_POSTGRES2 name=postgres2 start-on-boot=yes logging=yes</pre>
+</div></div></li><li data-uuid="7ffefe70-439f-49d1-b3ed-b241684f7935"><span class="mw-headline">The first and second webapp Container configuration</span>:<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/container/add remote-image=dpage/pgadmin4 interface=veth1 root-dir=disk1/images/pgadmin1 name=pgadmin1 start-on-boot=yes logging=yes</pre>
+</div></div><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/container/add remote-image=dpage/pgadmin4 interface=veth2 root-dir=disk1/images/pgadmin2 name=pgadmin2 start-on-boot=yes logging=yes</pre>
+</div></div></li></ul><p><span class="mw-headline">In this example, <code>pgadmin1</code> is able to reach <code>postgres1</code> , but is not able to reach <code>postgres2</code> . Similarly <code>pgadmin2</code> is able to reach <code>postgres2</code> , but is not able to reach <code>postgres1</code> . </span></p><h3 id="Container-ContainerinLayer2network"><span class="mw-headline">Container in Layer2 network</span></h3><p><span class="mw-headline">In this networking setup, your Container is directly attached to a Layer2 network with other physical network devices. This networking setup is equivalent to &quot;host&quot; networking mode on other Container engines such as Docker.</span></p><div role="region" aria-label="Warning" class="confluence-information-macro  confluence-information-macro-warning" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-error confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>In this networking setup, all the ports on your Container are exposed. This is considered insecure, but does slightly improve the Container's networking performance.</p></div></div><ul><li><span class="mw-headline">The networking configuration:<br/></span><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/interface/veth/add name=veth1 address=192.168.88.2/24 gateway=192.168.88.1
+/interface/bridge/port add bridge=bridge interface=veth1</pre>
+</div></div></li><li data-uuid="dea78229-deb2-4006-91ab-cc1b75b98b83"><span class="mw-headline">In case your RouterOS device has services running on the same port, you need to disable them:<br/></span><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/ip service/disable [find where name=www]</pre>
+</div></div></li><li data-uuid="070b2ef0-053e-45f5-bd1c-f08398a9b8d6"><span class="mw-headline">The webapp configuration:<br/></span><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/container/add remote-image=dpage/pgadmin4 interface=veth1 root-dir=disk1/images/pgadmin name=pgadmin start-on-boot=yes logging=yes</pre>
+</div></div></li></ul><p><span class="mw-headline">In this example, <code>pgadmin</code> Container does not need port forwarding, but all other ports that the Container is using are now accessible to others on the same Layer2 network. This type of setup should only be used when your application requires that the Container has an IP address in the same Layer2 network such as application that use broadcast traffic for service discovery (in most cases such requirements can still be bypassed by using NAT).</span></p><h1 id="Container-Tipsandtricks"><span class="mw-headline">Tips and tricks</span></h1><ul><li data-uuid="8f441d55-0ace-4c85-8773-2f53387103d9"><span class="mw-headline">Containers use up a lot of disk space, USB/SATA, NVMe attached media is highly recommended. For devices with USB ports - USB to SATA adapters can be used with 2.5&quot; drives - for extra storage and faster file operations.</span></li><li data-uuid="30711f98-e074-491b-9f91-f8d61eb4a315"><span class="mw-headline">RAM usage can be limited by using:<br/></span></li></ul><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/container/config/set ram-high=200M</pre>
+</div></div><p>this will soft limit RAM usage - if a RAM usage goes over the high boundary, the processes of the cgroup are throttled and put under heavy reclaim pressure.</p><ul><li data-uuid="7380249d-dee3-4842-a5e9-ab7a366a9ef9"><p class="auto-cursor-target">For starting containers after router reboot use start-on-boot option (starting from 7.6beta6)</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/container/print
+ 0 name=&quot;2e679415-2edd-4300-8fab-a779ec267058&quot; tag=&quot;test_arm64:latest&quot; os=&quot;linux&quot; arch=&quot;arm&quot; interface=veth2 
+   root-dir=disk1/alpine mounts=&quot;&quot; dns=&quot;&quot; logging=yes start-on-boot=yes status=running 
+
+/container/set 0 start-on-boot=yes</pre>
+</div></div></li><li data-uuid="6a5f0346-115c-4955-ba19-819ed7292f50"><p class="auto-cursor-target">It is possible to get to <strong>running</strong> container shell:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/container/shell 0</pre>
+</div></div></li><li data-uuid="01cbaaa8-f734-4d9c-a520-1177009683b3"><p class="auto-cursor-target">Enable logging to get output from container:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/container/set 0 logging=yes</pre>
+</div></div><p><br/></p></li><li data-uuid="21d3410d-ec1b-4341-936c-1ab562a87ff2">Some containers will require additional privileges in order to be able to run properly:<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/container/set 0 user=0:0</pre>
+</div></div></li><li data-uuid="9f26c197-fc6a-4ed0-8e7d-4dc47a6b4d6e">Starting from <span class="text-strong">7.11beta5 version multiple addresses and ipv6 addresses can be added:</span><strong class="text-strong"><br/></strong><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">interface/veth add address=172.17.0.3/16,fd8d:5ad2:24:2::2/64 gateway=172.17.0.1 gateway6=fd8d:5ad2:24:2::1</pre>
+</div></div></li></ul>
+                    </div>
+
+                                        
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:54</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

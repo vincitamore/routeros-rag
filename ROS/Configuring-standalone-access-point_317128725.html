@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : Configuring standalone access point</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Wireless_1409138.html">Wireless</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="WiFi_224559120.html">WiFi</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : Configuring standalone access point
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Deniss M.</span>, last updated on May 20, 2025
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742035719 {padding: 0px;}
+div.rbtoc1747742035719 ul {margin-left: 0px;}
+div.rbtoc1747742035719 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742035719'>
+<ul class='toc-indentation'>
+<li><a href='#Configuringstandaloneaccesspoint-Overview'>Overview</a></li>
+<li><a href='#Configuringstandaloneaccesspoint-Accesspointsetup'>Access point setup</a>
+<ul class='toc-indentation'>
+<li><a href='#Configuringstandaloneaccesspoint-2.4GHzinterfaceconfiguration'>2.4 GHz interface configuration</a></li>
+<li><a href='#Configuringstandaloneaccesspoint-5GHzinterfaceconfiguration'>5 GHz interface configuration</a></li>
+<li><a href='#Configuringstandaloneaccesspoint-Optionalstep-addingvirtualinterface'>Optional step - adding virtual interface</a></li>
+<li><a href='#Configuringstandaloneaccesspoint-Bridgingandlisting'>Bridging and listing</a></li>
+<li><a href='#Configuringstandaloneaccesspoint-DHCP'>DHCP</a></li>
+</ul>
+</li>
+</ul>
+</div></p><h1 id="Configuringstandaloneaccesspoint-Overview">Overview</h1><p><strong>Package:</strong> <code>wifi-qcom</code></p><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>This guide is meant for 802.11 AX devices running <code><strong>wifi-qcom</strong></code> package/drivers.</p></div></div><p>Wi-Fi devices can play different roles. The most common device, almost every household has, is called a Wi-Fi router. A typical Wi-Fi router, usually, has a WAN port (for ISP connection), LAN ports (for local PCs, wired printers etc) and a WLAN network (Wi-Fi network). Routers are also called &quot;gateways&quot; and &quot;firewalls&quot;, because they act as a &quot;doorway&quot; for your local network clients into the internet (those devices &quot;hide&quot; LAN connected clients behind them and protect them).</p><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body">Router → is a firewall/gateway device, which has an ISP cable connected to it, is <a href="https://help.mikrotik.com/docs/spaces/ROS/pages/250708066/Firewall" rel="nofollow">firewall protected</a> and has <a href="https://help.mikrotik.com/docs/spaces/ROS/pages/24805500/DHCP#DHCP-DHCPServer" rel="nofollow">DHCP-server</a> functionality enabled (which provides IP address to the connected, both wirelessly and via a wire, LAN clients).</div></div><p>Another role for a Wi-Fi device, is called an &quot;access point&quot; or an &quot;AP&quot; for short. Those devices, typically, are connected to the main &quot;router/gateway/firewall&quot; via an ethernet connection (to the router's LAN port), they are not firewall protected, and do not have DHCP-server functionality enabled (they do not provide IP addresses). APs have all their Wi-Fi and LAN interfaces/ports bridged, and thus, APs &quot;take&quot; IP address from the router connection, and &quot;pass&quot; them down to AP-connected clients (acting as a &quot;layer2&quot; bridge/switch).</p><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body">Access point → are &quot;bridge&quot; devices, which are connected to the router using an Ethernet cable, they are not <a href="https://help.mikrotik.com/docs/spaces/ROS/pages/250708066/Firewall" rel="nofollow">firewall protected</a>, and they have <a href="https://help.mikrotik.com/docs/spaces/ROS/pages/24805500/DHCP#DHCP-DHCPServer" rel="nofollow">DHCP-server</a> functionality disabled (they &quot;bridge&quot; DHCP requests from the router to AP's clients).</div></div><p>In other words, a <strong>Wi-Fi router</strong><strong> is</strong> <strong>an AP with additional functionality</strong>.</p><p>APs (devices that broadcast Wi-Fi networks) run on 2.4 and/or 5 GHz frequency. 5 GHz networks enable a much better throughput, but with reduced range. 2.4 GHz networks ensure a better coverage, but with less throughput.</p><p>Indoor APs are, usually, equipped with omnidirectional antennas (which allow broadcasting the signal in a &quot;donut&quot; shape around the AP, 360°). For indoor and short distance outdoor installations, it is a perfect antenna to use. Using a simple home AP with omnidirection antennas, you can achieve a distance of up to ±100 meters in an &quot;ideal&quot; interference-free line of sight setup. Which is reduced much further inside buildings. Concrete, pipes, metal, water...and all kinds of other different materials affect WiFi indoors. Some items can absorb, some deflect, some diffract and some can scatter the signal.</p><p>With that in mind, it is not always possible to cover the required range with a single AP/router, and additional APs need to be installed. Meaning, that if you have a problematic spot in your home, where Wi-Fi signal is poor or non-existent, consider installing a new AP closer to the problematic spot.</p><div role="region" aria-label="Warning" class="confluence-information-macro  confluence-information-macro-warning" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-error confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p><strong>This guide is meant for</strong> a &quot;basic&quot; or a so-called <strong>&quot;standalone&quot; AP setup</strong>. You can use it, if you have a 3d-party vendor Wi-Fi router (non-MikroTik), if you have a legacy Wi-Fi 5 (AC) MikroTik router, or if your previous setup did not have any Wi-Fi APs at all.</p><p><strong>For setups that consist of <code>wifi-qcom</code> package/driver APs, use <a href="https://help.mikrotik.com/docs/spaces/ROS/pages/224559120/WiFi#WiFi-WiFiCAPsMAN" rel="nofollow">CAPSMAN management</a></strong>, as it enables 802.11 r/k/v roaming standards, which smoothen client's transition.</p></div></div><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><p class="title conf-macro-render">Non-802.11 r/k/v roaming!</p><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>In &quot;standalone&quot; AP setups, if you simply copy SSID name from your router settings and configure the AP to broadcast the same SSID name →  roaming will be purely client dependent.</p><p>Roaming is when your client device transitions between different APs which use the same WiFi name. There are standards that can help &quot;accelerate&quot; and &quot;smoothen&quot; the transition (like 802.11 r/k/v) but, unfortunately, they can not be used in this setup (because there is no &quot;manager&quot; device) and so, the decision, &quot;to roam&quot; or &quot;not to roam&quot; is up to the client fully. Different vendors have different algorithms implemented that decide how and when your client device should switch.</p><p>Keep that in mind! Some devices, that have a good algorithm (decision-making), will roam properly, while others might stick to a poor signal (furthest) AP.</p></div></div><p>Most, if not all, of our MikroTik Wi-Fi devices come pre-configured in the <a href="https://help.mikrotik.com/docs/spaces/ROS/pages/328151/First+Time+Configuration" rel="nofollow">&quot;router&quot; role</a>. This guide will show you how to turn them into standalone AP role devices (layer2 bridged APs).</p><h1 id="Configuringstandaloneaccesspoint-Accesspointsetup">Access point setup</h1><div role="region" aria-label="Warning" class="confluence-information-macro  confluence-information-macro-warning" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-error confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Because we will be changing Wi-Fi and port-related configurations, it is advised to connect to the device's settings via Ethernet port/cable, using MAC-address. You can use <a href="https://help.mikrotik.com/docs/spaces/ROS/pages/328129/WinBox" rel="nofollow">Winbox</a> &quot;Neighbors&quot; tab and double-click on the MAC-address of the device in the list. This way, you will not lose access later on when changing interface-related settings.</p></div></div><p>Overall configuration:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface wifi
+set [ find default-name=wifi2 ] configuration.mode=ap .ssid=router.ssid.2 disabled=no security.authentication-types=wpa2-psk .passphrase=router.password
+set [ find default-name=wifi1 ] configuration.mode=ap .ssid=router.ssid.5 disabled=no security.authentication-types=wpa2-psk .passphrase=router.password
+add configuration.mode=ap .ssid=guest.ssid.2 disabled=no master-interface=wifi2 name=wifi3 security.authentication-types=wpa2-psk .passphrase=guest.password
+/interface list
+add comment=defconf name=WAN
+add comment=defconf name=LAN
+/interface bridge
+add auto-mac=no comment=defconf name=bridge
+/interface bridge port
+add interface=all bridge=bridge 
+/interface list member
+add comment=defconf interface=bridge list=LAN
+/ip dhcp-client
+add interface=bridge</pre>
+</div></div><h2 id="Configuringstandaloneaccesspoint-2.4GHzinterfaceconfiguration">2.4 GHz interface configuration</h2><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface wifi
+set [ find default-name=wifi2 ] configuration.mode=ap .ssid=router.ssid.2 disabled=no security.authentication-types=wpa2-psk .passphrase=router.password
+</pre>
+</div></div><ul><li data-uuid="920a60bd-740d-4d5b-974d-164aac228f93"><code>configuration.mode=ap</code> → configures interface to work in &quot;access point&quot; mode.</li><li data-uuid="2c451d42-0080-487e-a9e5-bbb08c2e601c"><code>ssid=router.ssid.2</code> → configures wireless network name (SSID), which the AP needs to broadcast. It can be the same network name as the main router uses, or it can be a different name. For testing, better use a &quot;unique&quot; name so you can differentiate networks. For &quot;client roaming&quot; to happen, use the exact same WiFi name from the router settings.</li><li data-uuid="055d3bf6-6208-42e9-8c55-4da68864ec9c"><code>security.authentication-types=wpa2-psk</code> → select which authentication types to use. For &quot;client roaming&quot; to happen, use the exact same authentication type from the router settings.</li><li data-uuid="c3877476-4459-469c-9111-b4bd976042f7"><code>passphrase=router.password</code> → sets password from the AP's WiFi network. For &quot;client roaming&quot; to happen, use the exact same password from the router settings.</li></ul><h2 id="Configuringstandaloneaccesspoint-5GHzinterfaceconfiguration">5 GHz interface configuration</h2><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface wifi
+set [ find default-name=wifi1 ] configuration.mode=ap .ssid=router.ssid.5 disabled=no security.authentication-types=wpa2-psk .passphrase=router.password
+</pre>
+</div></div><ul><li data-uuid="8b458ef4-f26a-4c9e-9924-db201b2c7550"><code>configuration.mode=ap</code> → configures interface to work in &quot;access point&quot; mode.</li><li data-uuid="f49808a4-7676-4506-a23e-0bb375db1354"><code>ssid=router.ssid5</code> → configures wireless network name (SSID), which the AP needs to broadcast. It can be the same network name as the main router uses, or it can be a different name. For testing, better use a &quot;unique&quot; name so you can differentiate networks. For &quot;client roaming&quot; to happen, use the exact same WiFi name from the router settings.</li><li data-uuid="27d35ac5-7688-4eae-ab49-533d0c96cb50"><code>security.authentication-types=wpa2-psk</code> → select which authentication types to use. For &quot;client roaming&quot; to happen, use the exact same authentication type from the router settings.</li><li data-uuid="d64aa55f-4b3b-440f-8fd3-1824b45fcd77"><code>passphrase=router.password</code> → sets password from the AP's WiFi network. For &quot;client roaming&quot; to happen, use the exact same password from the router settings.</li></ul><h2 id="Configuringstandaloneaccesspoint-Optionalstep-addingvirtualinterface">Optional step - adding virtual interface</h2><p>In case, you want to create an additional network (an additional SSID name), you can create a <code>virtual</code> interface on top of another interface:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface wifi
+add configuration.mode=ap .ssid=guest.ssid.2 disabled=no master-interface=wifi2 name=wifi3 security.authentication-types=wpa2-psk .passphrase=guest.password
+</pre>
+</div></div><ul><li data-uuid="240538c4-9277-405a-8854-ee5a6190833e"><code>configuration.mode=ap</code> → ensures that it will act as an &quot;access point&quot; interface.</li><li data-uuid="6f724c12-8ffa-45d4-b5b8-de7c278dd8fe"><code>ssid=guest.ssid2</code> → configures wireless network name (SSID), which the AP needs to broadcast. For &quot;client roaming&quot; to happen, use the exact same WiFi name from the router settings.</li><li data-uuid="13631924-b7af-4ed7-bfc9-c8e4ad72f792"><code>master-interface=wifi2</code> → specify, which interface to &quot;base&quot; the &quot;virtual&quot; interface on (specify on-top of which interface to create it).</li><li data-uuid="13207ecb-0a46-4407-9d1c-f30cc276be15"><code>name=wifi3</code> → name the virtual interface.</li><li data-uuid="e301e280-4556-44aa-af3e-b3f014b16064"><code>security.authentication-types=wpa2-psk</code> → select which authentication types to use. For &quot;client roaming&quot; to happen, use the exact same authentication type from the router settings.</li><li data-uuid="5b630eaa-3c3c-404f-bf86-74ae68b13ea0"><code>passphrase=guest.password</code> → sets password from the AP's WiFi network. For &quot;client roaming&quot; to happen, use the exact same password from the router settings.</li></ul><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>The virtual interface will use the exact same frequency channel, which is used by the <code>master</code> interface. Wi-Fi frequency channel for this interface can not be changed.</p></div></div><h2 id="Configuringstandaloneaccesspoint-Bridgingandlisting">Bridging and listing</h2><p><a href="https://help.mikrotik.com/docs/spaces/ROS/pages/328068/Bridging+and+Switching#BridgingandSwitching-Example.1" rel="nofollow">Bridge all ports</a>:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface bridge
+add auto-mac=no comment=defconf name=bridge
+/interface bridge port
+add interface=all bridge=bridge </pre>
+</div></div><p>And, ensure, that the bridge is <a class="external-link" href="https://help.mikrotik.com/interface list member add comment=defconf interface=bridge list=LAN" rel="nofollow">listed as &quot;LAN&quot; interface</a>, so that the firewall rules do not block access to the AP's management:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface list member
+add comment=defconf interface=bridge list=LAN</pre>
+</div></div><p>That is, of course, if you have proper firewall and access restrictions added on the main router. Otherwise, restrict it.</p><h2 id="Configuringstandaloneaccesspoint-DHCP">DHCP</h2><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip dhcp-client
+add interface=bridge</pre>
+</div></div><p>Apply <a href="https://help.mikrotik.com/docs/spaces/ROS/pages/24805500/DHCP#DHCP-ConfigurationExamples" rel="nofollow">DHCP-client</a> on top of the bridge interface, so that the AP itself and all its connected clients get IP addresses from the main router.</p>
+                    </div>
+
+                                        
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

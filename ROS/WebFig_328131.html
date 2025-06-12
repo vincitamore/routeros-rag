@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : WebFig</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Management-tools_328121.html">Management tools</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : WebFig
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Normunds R.</span>, last updated by <span class='editor'> Serhii T.</span> on Feb 07, 2025
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742022043 {padding: 0px;}
+div.rbtoc1747742022043 ul {margin-left: 0px;}
+div.rbtoc1747742022043 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742022043'>
+<ul class='toc-indentation'>
+<li><a href='#WebFig-Introduction'>Introduction</a></li>
+<li><a href='#WebFig-ConnectingtoaRouter'>Connecting to a Router</a></li>
+<li><a href='#WebFig-EnableHTTPS'>Enable HTTPS</a></li>
+<li><a href='#WebFig-The&quot;Terminal&quot;'>The &quot;Terminal&quot;</a></li>
+<li><a href='#WebFig-Skins'>Skins</a>
+<ul class='toc-indentation'>
+<li><a href='#WebFig-Designingskins'>Designing skins</a></li>
+<li><a href='#WebFig-Skindesignexamples'>Skin design examples</a></li>
+<li><a href='#WebFig-Customizingskins'>Customizing skins</a></li>
+<li><a href='#WebFig-Usingskins'>Using skins</a></li>
+</ul>
+</li>
+</ul>
+</div></p><h1 id="WebFig-Introduction">Introduction</h1><p>WebFig is a web-based RouterOS utility that allows you to monitor, configure and troubleshoot the router. It is designed as an alternative of WinBox, both have similar layouts and both have access to almost any feature of RouterOS.</p><p>As Webfig is platform-independent, it can be used to configure a router directly from various devices without the need for software developed for specific platforms. In other words, there is no need to install additional software.</p><p>WebFig allows performing three basic actions:</p><ul><li data-uuid="b4aef34f-f583-49b3-94ca-b3790ea13e75">Configuration - view and edit current configuration;</li><li data-uuid="95e2a4c3-48cd-4a31-a746-30af864b5448">Monitoring - display the current status of the router, routing information, interface stats, logs, etc.;</li><li data-uuid="132ff2d2-09a4-4502-9d13-64e57eb70474">Troubleshooting - RouterOS has built-in many troubleshooting tools (like ping, traceroute, packet sniffers, traffic generators, etc.) and all of them can be used with WebFig</li></ul><h1 id="WebFig-ConnectingtoaRouter">Connecting to a Router</h1><p style="text-align: left;">As we already know from the <a href="First-Time-Configuration_328151.html">First Time Configuration</a> section, the device by default <span style="color:var(--ds-text,#172b4d);">has username<span> </span></span><strong>admin</strong><span style="color:var(--ds-text,#172b4d);"><span> </span>and<span> </span></span><strong>no password</strong> configured. Simply open a Web browser and in the search bar type device IP address which by default is <strong>192.168.88.1. </strong>Be sure your device has IP address from the same network, for example, 192.168.88.2 otherwise Layer3 communication will not work.</p><p style="text-align: left;"><br/></p><p class="auto-cursor-target" style="text-align: center;"><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" draggable="false" width="648" src="attachments/328131/277348390.png" data-image-src="attachments/328131/277348390.png" data-unresolved-comment-count="0" data-linked-resource-id="277348390" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2024-10-21_7-59-31.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="328131" data-linked-resource-container-version="19" tabindex="0" alt=""></span></p><h1 class="auto-cursor-target" id="WebFig-EnableHTTPS">Enable HTTPS</h1><p>For HTTPS to work properly, you need to specify a valid certificate that WebFig can use. You can use a certificate that is issued by a trusted Certificate Authority (CA) or you can create your own root CA and generate self-signed certificates. </p><div role="region" aria-label="Tip" class="confluence-information-macro  confluence-information-macro-tip" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-approve confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>WebFig supports wildcard certificates. You can generate such a certificate by specifying a wildcard in the common-name property, for example, <em>common-name=*.<a class="external-link" href="https://mikrotik.com" rel="nofollow">mikrotik.com</a>.</em></p></div></div><p>To generate your own certificates and enable HTTPS access, you must configure the following:</p><p>Create your own root CA on your router and sign it</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; certificate add name=local-cert common-name=local-cert key-usage=key-cert-sign,crl-sign 
+[admin@MikroTik] &gt; certificate sign local-cert 
+  progress: done</pre>
+</div></div><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>In case you already have set up your own CA or you are using a service that signs certificates for you, then you need to create and sign the certificate remotely and import the certificate on the router later. In case you are importing a certificate, then make sure you mark the certificate as trusted.</p></div></div><p class="auto-cursor-target">Create a new certificate for WebFig (non-root certificate)</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; certificate add name=webfig common-name=192.168.88.1
+[admin@MikroTik] &gt; certificate sign webfig 
+  progress: done
+[admin@MikroTik] &gt; certificate print
+Flags: K - private-key; A - authority; T - trusted
+Columns:NAME        COMMON-NAME     FINGERPRINT                                                     
+0  KAT  local-cert  local-cert      9b6363d033c4b2e6893c340675cfb8d1e330977526dba347a440fabffd983c5d
+1  KAT  webfig      192.168.88.1    9f84ac2979bea65dccd02652056e5559bcdf866f8da5f924139d99453402bd02</pre>
+</div></div><p>Enable <strong>www-ssl</strong> and specify to use the newly created certificate for WebFig</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; ip service
+set www-ssl certificate=webfig disabled=no</pre>
+</div></div><p>You can now visit <a class="external-link" href="https://192.168.88.1" rel="nofollow">https://192.168.88.1</a> and securely configure your router.</p><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>By default, browsers will not trust self-signed certificates, you will need to add the certificate as trusted on the first time you visit the page in your browser. Another approach is to export the root CA certificate and import it as a trusted root certificate on your computer, this way all certificates signed by this router will be considered as valid and will make it easier to manage certificates in your network.</p></div></div><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Most Internet browsers have their own certificate trust chain and work independently of the operating system's certificate trust chain, this means that you may have to add your own root CA's certificate as a trusted certificate in your browser settings since trusting the certificate in your operating system's settings might not have any effect when using your Internet browser.</p></div></div><h1 id="WebFig-The&quot;Terminal&quot;">The &quot;Terminal&quot;</h1><p>The &quot;Terminal&quot; or Command Line Interface (CLI) in WebFig is located in the top right corner. It offers the same functionality as the &quot;New Terminal&quot; in the WinBox GUI.</p><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" draggable="false" width="800" src="attachments/328131/277348422.png" data-image-src="attachments/328131/277348422.png" data-unresolved-comment-count="0" data-linked-resource-id="277348422" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2024-10-22_7-19-26.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="328131" data-linked-resource-container-version="19" tabindex="0" alt=""></span></p><h1 id="WebFig-Skins"><span class="mw-headline">Skins</span></h1><p><span style="color:var(--ds-text,#333333);">WebFig <strong>Design Skin</strong> is a handy tool to make the interface more user-friendly. It is not a security tool. If the user has sufficient rights it is possible to access hidden features by other means.</span></p><h4 id="WebFig-Designingskins"><span class="mw-headline">Designing skins</span></h4><p><span class="mw-headline"><span style="color:var(--ds-text,#333333);">If the user has sufficient permissions (the group has the policy &quot;policy&quot; and &quot;sensitive&quot; to edit permissions)<span> </span></span><strong>Design Skin</strong><span style="color:var(--ds-text,#333333);"><span> </span>button becomes available. Pressing that toggle button will open interface editing options. </span></span></p><p>To prevent the user from accessing the <span class="mw-headline"><strong>Design Skin</strong></span> menu, disable policy &quot;policy&quot; and &quot;sensitive&quot; under the user group configuration.</p><p>Possible operations are:</p><ul><li data-uuid="f005fc2e-5c0a-429e-a0fd-21ac18929823">Hide menu - this will hide all items from the menu and its submenus;</li><li data-uuid="a0f3d48e-a58d-4a60-b8e1-5c892cf8e2b5">Hide submenu - only certain submenu will be hidden;</li><li data-uuid="9907f010-e40b-4285-bd31-af20b1815f6f">Hide tabs - if submenu details have several tabs, it is possible to hide them this way;</li><li data-uuid="caae82b9-3ac5-44da-934a-a046e419bf99">Rename menus and items - make certain features more obvious or translate them into your language;</li><li data-uuid="48612cbb-1a46-45bc-b032-d9133ac3c727">Add a note to the item (in detail view) - to add comments on the field;</li><li data-uuid="64463777-b5ef-4049-afca-94315fbe09e6">Make item read-only (in detail view) - for user safety very sensitive fields can be made read only;</li><li data-uuid="269bb828-fcdd-4c79-a7f5-5c5f97f03472">Hide flags (in detail view) - while it is only possible to hide a flag in detail view, this flag will not be visible in list view and in detailed view;</li><li data-uuid="6b05d80e-33de-4a68-9117-2b82e5fad1b0">Add limits for the field - (in detail view) where it is the list of times that are comma or newline separated list of allowed values:<ul><li>number interval '..' example: 1..10 will allow values from 1 to 10 for fields with numbers, for example, MTU size.</li><li>field prefix (Text fields, MAC address, set fields, combo-boxes). If it is required to limit prefix length<span> </span><em>$</em><span> </span>should be added to the end. For example, limiting the wireless interface to &quot;station&quot; only, &quot;Add limit&quot; will contain &quot;station$&quot;</li></ul></li></ul><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" draggable="false" width="1800" src="attachments/328131/277348391.png" data-image-src="attachments/328131/277348391.png" data-unresolved-comment-count="0" data-linked-resource-id="277348391" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2024-10-21_8-10-27.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="328131" data-linked-resource-container-version="19" tabindex="0" alt=""></span></p><ul><li data-uuid="aa9fea63-0276-47b9-ab91-cf79b9f31265">Add<span> </span><em>Tab</em><span> </span>- will add a gray ribbon with an editable label that will separate the fields. Ribbon will be added before the field it is added to;</li><li data-uuid="4adfb35f-748f-476a-92af-3e940908659f">Add<span> </span><em>Separator</em><span> </span>- will add a low height horizontal separator before the field it is added to.</li></ul><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p><strong>Note:</strong><span style="color:var(--ds-text,#333333);"><span> </span>Number interval cannot be set to extend limitations set by RouterOS for that field</span></p></div></div><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p><strong>Note:</strong><span style="color:var(--ds-text,#333333);"><span> </span>Set fields are arguments that consist of a set of check-boxes, for example, setting up policies for user groups, RADIUS &quot;Service&quot;</span></p></div></div><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p><strong>Note:</strong><span style="color:var(--ds-text,#333333);"><span> </span>Limitations set for combo-boxes will also limit the values selectable from the dropdown</span></p></div></div><h4 id="WebFig-Skindesignexamples"><span class="mw-headline">Skin design examples</span></h4><p><span class="mw-headline">If you need to limit the user for some services<span style="color:var(--ds-text,#333333);"> </span></span></p><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" draggable="false" width="650" src="attachments/328131/277348392.png" data-image-src="attachments/328131/277348392.png" data-unresolved-comment-count="0" data-linked-resource-id="277348392" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2024-10-21_8-20-24.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="328131" data-linked-resource-container-version="19" tabindex="0" alt=""></span></p><p><span style="color:var(--ds-text,#333333);">Add a limit to the RADIUS Service.</span></p><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" draggable="false" width="1080" src="attachments/328131/277348393.png" data-image-src="attachments/328131/277348393.png" data-unresolved-comment-count="0" data-linked-resource-id="277348393" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2024-10-21_8-16-48.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="328131" data-linked-resource-container-version="19" tabindex="0" alt=""></span></p><p><span style="color:var(--ds-text,#333333);">The result will be only those services, that are pointed in the &quot;Limit&quot; field.</span></p><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" draggable="false" width="650" src="attachments/328131/277348394.png" data-image-src="attachments/328131/277348394.png" data-unresolved-comment-count="0" data-linked-resource-id="277348394" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2024-10-21_8-18-59.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="328131" data-linked-resource-container-version="19" tabindex="0" alt=""></span></p><h4 id="WebFig-Customizingskins"><span class="mw-headline">Customizing skins</span></h4><p>Here is an example of the &quot;Status&quot; page that can be used within the skin <strong>*.json</strong> file: <a href="attachments/328131/297795616.json" data-linked-resource-id="297795616" data-linked-resource-version="2" data-linked-resource-type="attachment" data-linked-resource-default-alias="status_main_example.json" data-linked-resource-content-type="application/json" data-linked-resource-container-id="328131" data-linked-resource-container-version="19">status.json</a></p><p>The status content is structured as follows:<br/><code>{&quot;Status&quot;: {&quot;Status&quot;: {}}}</code></p><p>Status records are displayed in numbered order, example:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: json; gutter: false">&quot;7&quot;: {
+  &quot;alias&quot;: (path to the record),
+  &quot;note&quot;: (optional; free form text that appears under the record),
+  &quot;name&quot;: (optional; alternative name for the record),
+  &quot;tab&quot;: (optional; name of the tab that this and following records belong to),
+  &quot;separator&quot;: 1 (optional; should a separating line be placed above his record)
+},</pre>
+</div></div><p><strong>Path (alias) Structure:</strong></p><p>The path (e.g. alias: <strong><code>&quot;IP:Firewall:Filter Rules:*17:Statistics:Packet Rate Graph&quot;</code></strong><code> and corresponding URL: &quot;</code><strong><code>router_IP/webfig/#IP:Firewall.Filter_Rules.17</code></strong>&quot;) consists of the following colon separated sections:</p><ul><li data-uuid="0720f2a6-eaf8-4973-ab0c-d8a830005644"><strong>Group</strong> (if any) → <em>IP:</em></li><li data-uuid="0272e50a-1fa2-4ca0-ac7f-cbee189ddaa8"><strong>Service or Name</strong> → <em>Firewall:</em></li><li data-uuid="7eec8b36-a44c-4362-892b-32c2dcefe4ba"><strong>Container or Tab Name</strong> → <em>Filter Rules</em><em>:</em></li><li data-uuid="7fbbb8a7-2a3b-4c34-8403-f3934e360c4b"><strong>Asterisk (*) and Object ID</strong> → Found in the URL of the opened object (<em>17</em>)</li><li data-uuid="b503745f-4540-40d3-8910-fc114b17ae0e"><strong>Tab Name in the form</strong> (if any) → <code>Statistics</code></li><li data-uuid="625e6677-6c53-4426-9066-990829f982a6"><strong>Input Field Name </strong>→ <code>Packet Rate Graph</code></li></ul><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" draggable="false" width="650" src="attachments/328131/297795600.png" data-image-src="attachments/328131/297795600.png" data-unresolved-comment-count="0" data-linked-resource-id="297795600" data-linked-resource-version="3" data-linked-resource-type="attachment" data-linked-resource-default-alias="status_page.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="328131" data-linked-resource-container-version="19" tabindex="0" alt=""></span></p><h4 id="WebFig-Usingskins"><span class="mw-headline">Using skins</span></h4><p>To use skins you have to assign the skin to the group. When that is done, users of that group will automatically use the selected skin as their default when logging into WebFig or WinBox.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/user/group/set your_group_name skin=your_skin</pre>
+</div></div><p><span style="color:var(--ds-text,#333333);">If it is required to use created skin on another router you can copy files to<span> the </span></span>skins<span style="color:var(--ds-text,#333333);"> folder on the other router. On the new router, it is required to add copied skin to the user group to use it.</span></p>
+                    </div>
+
+                                                            <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328131/2555910.png">webfig.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328131/2555911.png">webfig.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328131/2555909.png">webfig.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328131/156008462.png">image-2022-11-8_15-57-32.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328131/156008463.png">image-2022-11-8_16-41-16.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328131/156008464.png">image-2022-11-8_16-47-4.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328131/156008465.png">image-2022-11-8_16-55-47.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328131/156008466.png">image-2022-11-8_16-57-49.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328131/156008467.png">image-2022-11-8_17-6-52.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328131/156008468.png">image-2022-11-8_17-7-15.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328131/277348390.png">image-2024-10-21_7-59-31.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328131/277348391.png">image-2024-10-21_8-10-27.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328131/277348392.png">image-2024-10-21_8-20-24.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328131/277348393.png">image-2024-10-21_8-16-48.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328131/277348394.png">image-2024-10-21_8-18-59.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328131/277348422.png">image-2024-10-22_7-19-26.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328131/295239810.json">status.json</a> (application/json)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328131/297795615.png">status_page.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328131/297795617.png">status_page.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328131/297795619.json">status_main_example.json</a> (application/json)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328131/297795600.png">status_page.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328131/297795616.json">status_main_example.json</a> (application/json)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

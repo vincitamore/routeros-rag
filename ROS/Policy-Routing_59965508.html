@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : Policy Routing</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Routing_328222.html">Routing</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : Policy Routing
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Māris B.</span>, last updated on May 06, 2025
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <h1 id="PolicyRouting-Overview">Overview</h1><p>Policy routing is the method to steer traffic matching certain criteria to a certain gateway. This can be used to force some customers or specific protocols from the servers (for example HTTP traffic) to always be routed to a certain gateway. It can even be used to steer local and overseas traffic to different gateways.</p><p>RouterOS implements several components that can be used to achieve said task:</p><ul><li>routing tables</li><li>routing rules</li><li>firewall mangle marking</li></ul><p><br/></p><h1 id="PolicyRouting-RoutingTables">Routing Tables</h1><p>A router can have multiple routing tables with its own set of routes routing the same destination to different gateways.</p><p>Tables can be seen and configured from the <span style="color:var(--ds-text-accent-blue,#0055CC);"><code>/routing/table</code></span> menu.</p><p>By default, RouterOS has only the '<strong>main</strong>' routing table:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: text; gutter: false">[admin@rack1_b33_CCR1036] /routing/table&gt; print 
+Flags: D - dynamic; X - disabled, I - invalid; U - used 
+0 D name=&quot;main&quot; fib 
+</pre>
+</div></div><p>If a custom routing table is required, it should be defined in this menu prior to using it anywhere in the configuration.</p><p>Let's consider a basic example where we have two gateways 172.16.1.1 and 172.16.2.1 and we want to resolve 8.8.8.8 only in the routing table named '<strong>myTable</strong>' to the gateway 172.16.2.1:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/routing table add name=myTable fib
+/ip route add dst-address=8.8.8.8 gateway=172.16.1.1
+/ip route add dst-address=8.8.8.8 gateway=172.16.2.1@main routing-table=myTable</pre>
+</div></div><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>For a user-created table to be able to resolve the destination, the main routing table should be able to resolve the destination too.</p></div></div><p class="auto-cursor-target">In our example, the <strong>main</strong> routing table should also have a route to destination 8.8.8.8 or at least a default route, since the default route is dynamically added by the DHCP for safety reasons it is better to add 8.8.8.8 also in the main table.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: text; gutter: false">[admin@rack1_b33_CCR1036] /ip/route&gt; print detail Flags: D - dynamic; X - disabled, I - inactive, A - active; 
+c - connect, s - static, r - rip, b - bgp, o - ospf, d - dhcp, v - vpn, m - modem, y - cop
+y; 
+H - hw-offloaded; + - ecmp 
+   DAd   dst-address=0.0.0.0/0 routing-table=main pref-src=&quot;&quot; gateway=172.16.1.1
+         immediate-gw=172.16.1.1%ether8 distance=1 scope=30 target-scope=10 
+         vrf-interface=ether8 suppress-hw-offload=no 
+
+ 0  As   dst-address=8.8.8.8/32 routing-table=main pref-src=&quot;&quot; gateway=172.16.1.1
+         immediate-gw=172.16.1.1%ether8 distance=1 scope=30 target-scope=10 suppress-hw-offload=no 
+
+    DAc   dst-address=172.16.1.0/24 routing-table=main gateway=ether8 immediate-gw=ether8 
+         distance=0 scope=10 suppress-hw-offload=no local-address=172.16.1.2%ether8 
+
+    DAc   dst-address=172.16.2.0/24 routing-table=main gateway=ether7 immediate-gw=ether7 
+         distance=0 scope=10 suppress-hw-offload=no local-address=172.16.2.2%ether7
+   
+ 1  As   dst-address=8.8.8.8/32 routing-table=myTable pref-src=&quot;&quot; gateway=172.16.2.1
+         immediate-gw=172.16.2.1%ether7 distance=1 scope=30 target-scope=10 suppress-hw-offload=no 
+ </pre>
+</div></div><p><br/></p><p>But configuration above is not enough, we need a method to force the traffic to actually use our newly created table. RouterOS gives you two options to choose from:</p><ul><li>firewall mangle - it gives more control over the criteria to be used to steer traffic, for example, per connection or per packet balancing, etc. For more info on how to use mangle marking see <a href="https://help.mikrotik.com/docs/pages/viewpage.action?pageId=5668881">Firewall Marking</a> examples.</li><li>routing rules - a basic set of parameters that can be used to quickly steer traffic. This is the method we are going to use for our example.</li></ul><p>It is not recommended to use both methods at the same time or you should know exactly what you are doing. If you really do need to use both mangle and routing rules in the same setup then keep in mind that mangle has higher priority, meaning if the mangle marked traffic can be resolved in the table then route rules will never see this traffic.</p><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Routing table count is limited to 4096 unique tables.</p></div></div><p><br/></p><h1 class="auto-cursor-target" id="PolicyRouting-RoutingRules">Routing Rules</h1><p class="auto-cursor-target">Routing rules allow steering traffic based on basic parameters like a source address, a destination address, or in-interface as well as other parameters.</p><p class="auto-cursor-target">For our example, we want to select traffic with destination 8.8.8.8 and do not fall back to the <strong>main</strong> table:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/routing rule add dst-address=8.8.8.8 action=lookup-only-in-table table=myTable</pre>
+</div></div><p class="auto-cursor-target">Lets's say that we know that customer is connected to ether4 and we want only that customer to route 8.8.8.8 to a specific gateway. We can use the following rule:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/routing rule add dst-address=8.8.8.8 action=lookup-only-in-table table=myTable interface=ether4</pre>
+</div></div><p class="auto-cursor-target">If for some reason the gateway used in our table goes down, the whole lookup will fail and the destination will not be reachable. In active-backup setups we want the traffic to be able to fall back to the <strong>main</strong> table. To do that change the action from <span style="color:var(--ds-text-accent-orange,#A54800);"><code>lookup-only-in-table</code></span> to <code><span style="color:var(--ds-text-accent-orange,#A54800);">lookup</span></code>.</p><p class="auto-cursor-target">Also, routing rules can be used as a very &quot;basic firewall&quot;. Let's say we do not want to allow a customer connected to ether4 to be able to access the 192.168.1.0/24 network:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/routing rule add dst-address=192.168.1.0/24 interface=ether4 action=drop </pre>
+</div></div><p class="auto-cursor-target">List of all the parameters that can be used by routing rules:</p><div class="table-wrap"><table class="relative-table wrapped confluenceTable" style="width: 99.5128%;"><colgroup><col style="width: 17.3063%;"/><col style="width: 82.6937%;"/></colgroup><tbody><tr><th class="highlight-#deebff confluenceTh" data-highlight-colour="#deebff" style="text-align: left;">Property</th><th class="highlight-#deebff confluenceTh" data-highlight-colour="#deebff">Description</th></tr><tr><td colspan="1" class="confluenceTd"><strong>action</strong><span> </span>(<em>drop | lookup | lookup-only-in-table | unreachable</em>)</td><td colspan="1" class="confluenceTd"><p>An action to take on the matching packet:</p><ul><li><span style="color:var(--ds-text-accent-orange-bolder,#702E00);">drop</span> - silently drop the packet.</li><li><span style="color:var(--ds-text-accent-orange-bolder,#702E00);">lookup</span> - perform a lookup in routing tables.</li><li><span style="color:var(--ds-text-accent-orange-bolder,#702E00);">lookup-only-in-table</span> - perform lookup only in the specified routing table (see <span style="color:var(--ds-icon-success,#22A06B);">table</span> parameter).</li><li><span style="color:var(--ds-text-accent-orange-bolder,#702E00);">unreachable</span> - generate ICMP unreachable message and send it back to the source.</li></ul></td></tr><tr><td class="confluenceTd"><strong>comment</strong><span> </span>(<em>string</em>)</td><td class="confluenceTd"><br/></td></tr><tr><td class="highlight-#f4f5f7 confluenceTd" data-highlight-colour="#f4f5f7"><strong title="">disabled</strong><span title=""> </span>(<em>yes | no</em>)</td><td class="highlight-#f4f5f7 confluenceTd" data-highlight-colour="#f4f5f7">The disabled rule is not used.</td></tr><tr><td class="confluenceTd"><strong>dst-address</strong>()</td><td class="confluenceTd">The destination address of the packet to match.</td></tr><tr><td class="highlight-#f4f5f7 confluenceTd" data-highlight-colour="#f4f5f7"><strong title="">interface</strong><span title=""> </span>(<em title="">string</em>)</td><td class="highlight-#f4f5f7 confluenceTd" data-highlight-colour="#f4f5f7">Incoming interface to match.</td></tr><tr><td colspan="1" class="confluenceTd"><strong title="">min-prefix</strong><span title=""> </span>(<em title="">integer [0..4294967295]</em>)</td><td colspan="1" class="confluenceTd"><p>Routes from the routing table with specified prefix length is hidden to packets processed by routing rule.<br/><br/></p>Equivalent to Linux IP rule <code>suppress_prefixlength</code> . For example to suppress the default route in the routing decision set the value to 0.</td></tr><tr><td colspan="1" class="confluenceTd"><strong title="">routing-mark</strong><span title=""> </span>(<em title="">string</em>)</td><td colspan="1" class="confluenceTd">Match specific routing mark.</td></tr><tr><td colspan="1" class="confluenceTd"><strong title="">src-address</strong><span title=""> </span>(<em title="">string</em>)</td><td colspan="1" class="confluenceTd">The source address of the packet to match.</td></tr><tr><td colspan="1" class="confluenceTd"><strong title="">table</strong><span title=""> </span>(<em title="">name</em>)</td><td colspan="1" class="confluenceTd">Name of the routing table to use for lookup.</td></tr></tbody></table></div>
+                    </div>
+
+                                        
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

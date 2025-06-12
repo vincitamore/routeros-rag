@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : IS-IS</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Routing_328222.html">Routing</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : IS-IS
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Māris B.</span>, last updated on Jan 27, 2025
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742032331 {padding: 0px;}
+div.rbtoc1747742032331 ul {margin-left: 0px;}
+div.rbtoc1747742032331 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742032331'>
+<ul class='toc-indentation'>
+<li><a href='#ISIS-Overview'>Overview</a></li>
+<li><a href='#ISIS-IS-ISTerminology'>IS-IS Terminology</a></li>
+<li><a href='#ISIS-BasicConfigurationExample'>Basic Configuration Example</a></li>
+<li><a href='#ISIS-Troubleshooting'>Troubleshooting</a>
+<ul class='toc-indentation'>
+<li><a href='#ISIS-ISISdoesnotworkandprintswarningmessage&quot;invalid3waytlv&quot;'>ISIS does not work and prints warning message &quot;invalid 3way tlv&quot;</a></li>
+</ul>
+</li>
+</ul>
+</div></p><h1 id="ISIS-Overview">Overview</h1><p><span style="text-decoration: none;color:var(--ds-text-accent-gray,#44546F);">The IS-IS (Intermediate System - Intermediate System) protocol is an Interior Gateway Protocol (IGP) used to distribute IP routing information throughout a single Autonomous System.</span></p><p><span style="text-decoration: none;color:var(--ds-text-accent-gray,#44546F);">It was originally developed as a routing protocol for CLNP but later extended to include IP routing when IP became popular.  An extended version is sometimes referred to as Integrated IS-IS.</span></p><p><span style="text-decoration: none;color:var(--ds-text-accent-gray,#44546F);">IS-IS belongs to the link-state protocol family, which exchanges topology information between nearest neighbors and floods it throughout the AS. The main advantage is that complete knowledge of the network topology allows one to choose the best path to the destination. It can also be useful for traffic engineering purposes.</span></p><p><span style="text-decoration: none;color:var(--ds-text-accent-gray,#44546F);">Neighbours periodically exchange <strong>Hello</strong> packets, forms adjacency and selects designated IS based on the negotiation. Hello packets are sent individually for <strong>Level-1</strong> and <strong>Level-2</strong>.</span></p><p>Standards and Technologies:</p><ul class="bullets" style="text-decoration: none;"><li><a class="external-link" href="https://datatracker.ietf.org/doc/html/rfc1195" rel="nofollow">RFC 1195</a> Use of OSI IS-IS for Routing in TCP/IP and Dual Environments</li><li><a class="external-link" href="https://datatracker.ietf.org/doc/html/rfc5302" rel="nofollow">RFC 5302</a> <span class="h1">Domain-Wide Prefix Distribution with Two-Level IS-IS</span></li><li><a class="external-link" href="https://datatracker.ietf.org/doc/html/rfc5303" rel="nofollow">RFC 5303</a> <span class="h1">Three-Way Handshake for IS-IS Point-to-Point Adjacencies</span></li><li><a class="external-link" href="https://datatracker.ietf.org/doc/html/rfc5305" rel="nofollow" style="letter-spacing: 0.0px;">RFC 5305</a><span style="letter-spacing: 0.0px;"> IS-IS Extensions for Traffic Engineering (only wide metric support)</span></li><li><a class="external-link" href="https://datatracker.ietf.org/doc/html/rfc5308" rel="nofollow">RFC 5308</a> <span class="h1">Routing IPv6 with IS-IS</span></li></ul><h1 id="ISIS-IS-ISTerminology">IS-IS Terminology</h1><p><br/></p><ul><li><strong>IS </strong>- Intermediate System is a router capable of forwarding traffic between distantly located hosts.</li><li><strong>LSP</strong> - <span style="text-decoration: none;color:var(--ds-text-accent-gray,#44546F);">Link State PDU contains information on the router's local state (usable interfaces, reachable neighbours, and the cost of the interfaces)</span></li><li><span style="text-decoration: none;color:var(--ds-text-accent-gray,#44546F);"><strong>SPF</strong> - Shortest-path-first algorithm</span></li><li><span style="text-decoration: none;color:var(--ds-text-accent-gray,#44546F);"><strong>DIS</strong> - designated intermediate system. DIS ensures that all routes in the network maintain synchronised database. <span style="text-decoration: none;color:var(--ds-text-accent-gray,#44546F);">Separate DISs are elected for L1 and L2 routing. Election of the DIS is based on the highest interface priority.</span></span></li><li><span style="text-decoration: none;color:var(--ds-text-accent-gray,#44546F);"><span style="text-decoration: none;color:var(--ds-text-accent-gray,#44546F);"><strong>Level-1 (L1) routing</strong> - Controls distribution of routing information within an IS-IS area. L1 routing is based on system ID.</span></span></li><li><span style="text-decoration: none;color:var(--ds-text-accent-gray,#44546F);"><span style="text-decoration: none;color:var(--ds-text-accent-gray,#44546F);"><strong>Level-2 (L2) routing</strong> - Controls distribution of routing information between IS-IS areas. L2 routing is based on area ID.</span></span></li><li><span style="text-decoration: none;color:var(--ds-text-accent-gray,#44546F);"><span style="text-decoration: none;color:var(--ds-text-accent-gray,#44546F);"><strong>IS-IS Adjacency</strong> - link between IS-IS neighbours. The type of adjacency formed depends on the parameters exchanged in the IS-IS Hello packets. Each of the the adjacent routers runs the DIS election process to determine whether it is eligible to be an L1 or L2 DIS on the broadcast network.</span></span></li></ul><p><br/></p><h1 id="ISIS-BasicConfigurationExample">Basic Configuration Example</h1><p>Basic IS-IS setup between three routers.</p><p>R1:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/routing isis instance
+add afi=ip areas=49.2222 disabled=no name=isis-instance-1 system-id=90ab.cdef.0001
+/routing isis interface-template
+add instance=isis-instance-1 interfaces=ether1 levels=l1,l2
+
+
+[] /routing/isis/neighbor&gt; print 
+ 0 instance=isis-instance-1 interface=ether1 level-type=l2 snpa=08:00:27:22:B4:A2 srcid=&quot;1111.2222.aded&quot; state=up 
+
+ 1 instance=isis-instance-1 interface=ether1 level-type=l2 snpa=D4:CA:6D:78:2F:2E srcid=&quot;1111.2222.cded&quot; state=up 
+
+ 2 instance=isis-instance-1 interface=ether1 level-type=l1 snpa=08:00:27:22:B4:A2 srcid=&quot;1111.2222.aded&quot; state=up 
+
+ 3 instance=isis-instance-1 interface=ether1 level-type=l1 snpa=D4:CA:6D:78:2F:2E srcid=&quot;1111.2222.cded&quot; state=up 
+
+
+[] /routing/route&gt; print where is-is
+Flags: A - ACTIVE; i - IS-IS
+Columns: DST-ADDRESS, GATEWAY, AFI, DISTANCE, SCOPE, TARGET-SCOPE, IMMEDIATE-GW
+   DST-ADDRESS        GATEWAY                AFI  DISTANCE  SCOPE  TARGET-SCOPE  IMMEDIATE-GW         
+ i 0.0.0.0/0          10.155.101.214%ether1  ip4       115     20            10  10.155.101.214%ether1
+ i 10.155.101.0/24    10.155.101.216%ether1  ip4       115     20            10  10.155.101.216%ether1
+Ai 10.255.255.162/32  10.155.101.216%ether1  ip4       115     20            10  10.155.101.216%ether1
+
+
+</pre>
+</div></div><p>R2:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/routing isis instance
+add afi=ip areas=49.2222 disabled=no l1.originate-default=always l2.originate-default=always name=isis-instance-1 \
+    system-id=1111.2222.cded
+/routing isis interface-template
+add instance=isis-instance-1 interfaces=sfp12 levels=l1,l2
+add instance=isis-instance-1 interfaces=lo levels=l2
+
+
+[] /routing/isis/neighbor&gt; print 
+ 0 instance=isis-instance-1 interface=sfp12 level-type=l1 snpa=08:00:27:22:B4:A2 srcid=&quot;1111.2222.aded&quot; state=up 
+
+ 1 instance=isis-instance-1 interface=sfp12 level-type=l1 snpa=C4:AD:34:43:EA:5C srcid=&quot;90ab.cdef.0001&quot; state=up 
+
+ 2 instance=isis-instance-1 interface=sfp12 level-type=l2 snpa=08:00:27:22:B4:A2 srcid=&quot;1111.2222.aded&quot; state=up 
+
+ 3 instance=isis-instance-1 interface=sfp12 level-type=l2 snpa=C4:AD:34:43:EA:5C srcid=&quot;90ab.cdef.0001&quot; state=up 
+
+
+
+</pre>
+</div></div><p>R3 Cisco:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">interface Loopback0
+ ip address 10.255.255.162 255.255.255.255
+ ip router isis 
+!
+interface GigabitEthernet1
+ ip address dhcp
+ ip router isis 
+ negotiation auto
+!
+router isis
+ net 49.2222.1111.2222.aded.00
+!
+
+
+
+# show isis neighbors 
+
+Tag null:
+System Id      Type Interface   IP Address      State Holdtime Circuit Id
+90AB.CDEF.0001 L1   Gi1         10.155.101.183  UP    27       1111.2222.CDED.01  
+90AB.CDEF.0001 L2   Gi1         10.155.101.183  UP    27       1111.2222.CDED.01  
+1111.2222.CDED L1   Gi1         10.155.101.214  UP    9        1111.2222.CDED.01  
+1111.2222.CDED L2   Gi1         10.155.101.214  UP    9        1111.2222.CDED.01 
+
+# show ip route
+
+i*L1  0.0.0.0/0 [115/11] via 10.155.101.214, 4w5d, GigabitEthernet1
+      10.0.0.0/8 is variably subnetted, 5 subnets, 2 masks
+C        10.155.101.0/24 is directly connected, GigabitEthernet1
+L        10.155.101.216/32 is directly connected, GigabitEthernet1
+i L2     10.155.255.214/32 [115/10] via 10.155.101.183, 2w3d, GigabitEthernet1
+
+</pre>
+</div></div><p><br/></p><h1 id="ISIS-Troubleshooting">Troubleshooting</h1><h2 id="ISIS-ISISdoesnotworkandprintswarningmessage&quot;invalid3waytlv&quot;">ISIS does not work and prints warning message &quot;invalid 3way tlv&quot;</h2><p>This warning indicates that most likely remote neighbor does not comply  to 3-way handshake for point-to-point networks from RFC 5302. For example, on Cisco you have to enable &quot;isis three-way-handshake ietf&quot; on interface to have 15byte TLV.</p>
+                    </div>
+
+                                        
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

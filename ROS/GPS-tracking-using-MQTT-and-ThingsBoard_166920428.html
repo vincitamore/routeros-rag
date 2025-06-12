@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : GPS-tracking using MQTT and ThingsBoard</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Mobile-Networking_119144655.html">Mobile Networking</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="GPS_84901890.html">GPS</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : GPS-tracking using MQTT and ThingsBoard
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Deniss M.</span>, last updated by <span class='editor'> Guntis G.</span> on Apr 26, 2024
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742029607 {padding: 0px;}
+div.rbtoc1747742029607 ul {margin-left: 0px;}
+div.rbtoc1747742029607 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742029607'>
+<ul class='toc-indentation'>
+<li><a href='#GPStrackingusingMQTTandThingsBoard-Introduction'>Introduction</a></li>
+<li><a href='#GPStrackingusingMQTTandThingsBoard-Configuration'>Configuration</a>
+<ul class='toc-indentation'>
+<li><a href='#GPStrackingusingMQTTandThingsBoard-ThingsBoardpreparation'>ThingsBoard preparation</a></li>
+<li><a href='#GPStrackingusingMQTTandThingsBoard-MQTTbrokerconfiguration'>MQTT broker configuration</a></li>
+<li><a href='#GPStrackingusingMQTTandThingsBoard-MQTTpublish'>MQTT publish</a></li>
+</ul>
+</li>
+<li><a href='#GPStrackingusingMQTTandThingsBoard-Resultverification'>Result verification</a></li>
+<li><a href='#GPStrackingusingMQTTandThingsBoard-Datavisualizationusingmaps'>Data visualization using maps</a></li>
+</ul>
+</div></p><h1 id="GPStrackingusingMQTTandThingsBoard-Introduction">Introduction</h1><p>Many RouterOS devices have <a href="https://help.mikrotik.com/docs/display/ROS/GPS" rel="nofollow">GPS</a> support. It allows RouterOS to determine the precise location of its GPS receiver. GPS coordinates will indicate the latitude and the longitude values (among other parameters) of the current position.</p><p>Let's say, you have <a class="external-link" href="https://mikrotik.com/product/ltap" rel="nofollow">LTAP</a> (or any other RouterOS device with GPS support) and you wish to track its location. You want the router to send this data to a server, where the data will be stored and integrated into a map, as it is more convenient to monitor. In this guide, we will showcase how you can do that. This scenario will utilize MQTT protocol communication with a platform called <a class="external-link" href="https://thingsboard.io/" rel="nofollow">ThingsBoard</a>.</p><p>ThingsBoard has a cloud solution and different local installation options (on different OS).</p><p>Since we've added a <a href="https://help.mikrotik.com/docs/display/ROS/Container" rel="nofollow">container</a> feature, it became possible to also run the platform within the RouterOS. Meaning, you can build this scenario, solely on RouterOS units → devices with GPS support that you wish to track (for example, cars equipped with <a class="external-link" href="https://mikrotik.com/product/ltap" rel="nofollow">LTAP</a>s → RouterOS devices that act as <strong>MQTT publishers</strong>), and a ThingsBoard server run within a more powerful RouterOS device (like a <a href="https://help.mikrotik.com/docs/pages/viewpage.action?pageId=18350234" rel="nofollow">CHR</a> machine → RouterOS device that acts as an <strong>MQTT broker</strong>).</p><p>If you want to choose this route (container route), make sure to pick the devices that you plan on using as a &quot;server&quot; carefully, because this implementation can be heavy on RAM usage (it is suggested to have a device that has at least<strong> 2 GB</strong> <strong>RAM</strong> or <strong>1 GB RAM</strong> <strong>with minimal load</strong> and is either <strong>ARM64</strong> or <strong>AMD64 </strong>architecture).</p><h1 id="GPStrackingusingMQTTandThingsBoard-Configuration">Configuration</h1><p>In this guide, we will demonstrate how to configure a GPS receiver (MQTT publisher) and how to set up ThingsBoard.</p><p>In case you want to use the container feature to run the ThingsBoard instance (MQTT broker), check the guide <a href="https://help.mikrotik.com/docs/pages/viewpage.action?pageId=166920348" rel="nofollow">over here</a>. General guidelines on ThingsBoard and MQTT configuration can be found in the guide <a href="https://help.mikrotik.com/docs/display/ROS/MQTT+and+ThingsBoard+configuration" rel="nofollow">over here</a>. Make sure to explore both guides as they will have additional useful information.</p><p>Before proceeding, make sure that the ThingsBoard is up and running and that you can access its WEB management portal. Confirm that the MQTT port is open and/or port-forwarded properly.</p><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p><strong>Package requirement:</strong> <code>gps, iot</code></p></div></div><h2 id="GPStrackingusingMQTTandThingsBoard-ThingsBoardpreparation">ThingsBoard preparation</h2><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>This example will showcase <a href="https://help.mikrotik.com/docs/display/ROS/MQTT+and+ThingsBoard+configuration#MQTTandThingsBoardconfiguration-Accesstokenscenario.1" rel="nofollow">access-token</a> and <a href="https://help.mikrotik.com/docs/display/ROS/MQTT+and+ThingsBoard+configuration#MQTTandThingsBoardconfiguration-One-waySSLcommunicationscenario.1" rel="nofollow">one-way SSL communication via access-token</a> scenarios for simplicity reasons, but you can use other available options as well.</p></div></div><p>Navigate to the &quot;<strong>Devices</strong>&quot; menu and add a new device via the &quot;<strong>Add new device</strong>&quot; button → name it and create it (for example, LTAP):</p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/166920428/169246761.png" data-image-src="attachments/166920428/169246761.png" data-unresolved-comment-count="0" data-linked-resource-id="169246761" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2023-2-1_12-51-0.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="166920428" data-linked-resource-container-version="59" tabindex="0" alt=""></span></p><p>Click on the device you've just added, go to the &quot;<strong>Details</strong>&quot; section, and generate an access token under the &quot;<strong>Manage credentials/Device Credentials</strong>&quot; setting:</p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/166920428/169246762.png" data-image-src="attachments/166920428/169246762.png" data-unresolved-comment-count="0" data-linked-resource-id="169246762" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2023-2-1_13-5-15.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="166920428" data-linked-resource-container-version="59" tabindex="0" alt=""></span></p><h2 id="GPStrackingusingMQTTandThingsBoard-MQTTbrokerconfiguration">MQTT broker configuration</h2><p>In case it is a local test or the broker is available through the VPN, you can use non-SSL MQTT:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/iot/mqtt/brokers/add name=tb address=x.x.x.x port=1883 username=access_token</pre>
+</div></div><p>Where:</p><ul><li><code>name</code> is the name that you wish to give to the broker and this name will be used later in the script;</li><li><code>address</code> is the IP address of the broker;</li><li><code>port</code> is the TCP port that the broker is listening for → for non-SSL it is typically TCP 1883;</li><li><code>username</code> is dictated by the MQTT broker and, in our case, it is an &quot;access token&quot; that was generated in the ThingsBoard management portal.</li></ul><p>In case it is public access (when you want to access the broker via its public IP address), <strong>we advise you to use SSL MQTT</strong>:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/iot/mqtt/brokers/add name=tb address=x.x.x.x port=8883 username=access_token ssl=yes</pre>
+</div></div><p>Where:</p><ul><li><code>name</code> is the name that you wish to give to the broker and this name will be used later in the script;</li><li><code>address</code> is the IP address of the broker;</li><li><code>port</code> is the TCP port that the broker is listening for → for SSL it is typically TCP 8883;</li><li><code>username</code> is dictated by the MQTT broker, and, in our case, it is an &quot;access token&quot; that was generated in the ThingsBoard management portal;</li><li><code>ssl</code> enables SSL MQTT communication.</li></ul><h2 id="GPStrackingusingMQTTandThingsBoard-MQTTpublish">MQTT publish</h2><p>You can test MQTT publish with a static message by using the command:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/iot/mqtt/publish broker=&quot;tb&quot; topic=&quot;v1/devices/me/telemetry&quot; message=&quot;{\&quot;test\&quot;:\&quot;123\&quot;}&quot;</pre>
+</div></div><p>To post GPS coordinates, import the script shown below:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/system/script/add dont-require-permissions=no name=mqttgps owner=admin policy=&quot;ftp,re\
+    boot,read,write,policy,test,password,sniff,sensitive,romon&quot; \
+    source=&quot;    ###Configuration###\r\
+    \n    #Enter pre-configured broker&#39;s name within \&quot;\&quot;:\r\
+    \n    :local broker \&quot;tb\&quot;\r\
+    \n    #Enter the topic name within \&quot;\&quot;, per the broker&#39;s config\
+    uration:\r\
+    \n    :local topic \&quot;v1/devices/me/telemetry\&quot;\r\
+    \n\r\
+    \n    ###Variables####\r\
+    \n    :global lat\r\
+    \n    :global lon\r\
+    \n    :global alt1\r\
+    \n    :global alt2\r\
+    \n\r\
+    \n    ###GPS####\r\
+    \n    :put (\&quot;[*] Capturing GPS coordinates...\&quot;)\r\
+    \n    /system gps monitor once do={\r\
+    \n    :set \$lat \$(\&quot;latitude\&quot;);\r\
+    \n    :set \$lon \$(\&quot;longitude\&quot;);\r\
+    \n    :set \$alt1 \$(\&quot;altitude\&quot;)}\r\
+    \n    ###remove \&quot;meters\&quot; from the value because JSON format wi\
+    ll not understand it###\r\
+    \n    :set \$alt2 [:pick \$alt1 0 [find \$alt1 \&quot; m\&quot;]]\r\
+    \n\r\
+    \n    :local message \\\r\
+    \n    \&quot;{\\\&quot;latitude\\\&quot;:\$lat,\\\r\
+    \n    \\\&quot;longitude\\\&quot;:\$lon,\\\r\
+    \n    \\\&quot;altitude\\\&quot;:\$alt2}\&quot;\r\
+    \n\r\
+    \n    ###MQTT###\r\
+    \n    :if (\$lat != \&quot;none\&quot;) do={\\\r\
+    \n    :put (\&quot;[*] Sending message to MQTT broker...\&quot;);\r\
+    \n    /iot mqtt publish broker=\$broker topic=\$topic message=\$\
+    message} else={:put (\&quot;[*] Lattitude=none, not posting anything!\
+    \&quot;);:log info \&quot;Latitude=none, not posting anything!\&quot;}&quot;</pre>
+</div></div><p>In short, the script captures GPS information, specifically the latitude, longitude, and altitude values. Then it structures a JSON message out of them. In case, at the moment when the script is initiated, the latitude value equals anything other than &quot;none&quot; (equals any actual value-number) → it sends the JSON message via MQTT to the broker named &quot;<strong>tb</strong>&quot;. In case, the GPS data can not be captured →  &quot;latitude&quot; is recognized as &quot;none&quot; →  the script just logs that nothing could be captured and does nothing else.</p><p>This is a very basic example. Feel free to alter the script and add your own &quot;if&quot; (maybe an email notification if there is no GPS signal) and additional parameters (any other RouterOS captured value, like, maybe, its firmware version) per your requirements.</p><p>Run the script with the command:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/system/script/run mqttgps 
+[*] Capturing GPS coordinates...
+        date-and-time: feb/01/2023 10:39:37
+             latitude: 56.969862
+            longitude: 24.162425
+             altitude: 31.799999 m
+                speed: 1.000080 km/h
+  destination-bearing: none
+         true-bearing: 153.089996 deg. True
+     magnetic-bearing: 0.000000 deg. Mag
+                valid: yes
+           satellites: 6
+          fix-quality: 1
+  horizontal-dilution: 1.42
+             data-age: 0s
+[*] Sending message to MQTT broker...</pre>
+</div></div><p class="auto-cursor-target">To automate the process, add a <a href="https://help.mikrotik.com/docs/display/ROS/Scheduler" rel="nofollow">scheduler</a> (to run the script, for example, every 30 seconds):</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/system/scheduler/add name=mqttgpsscheduler interval=30s on-event=&quot;/system/script/run mqttgps&quot;</pre>
+</div></div><h1 class="auto-cursor-target" id="GPStrackingusingMQTTandThingsBoard-Resultverification">Result verification</h1><p>Go the the &quot;Latest telemetry&quot; section under your created device and confirm that the data was posted:</p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/166920428/169246766.png" data-image-src="attachments/166920428/169246766.png" data-unresolved-comment-count="0" data-linked-resource-id="169246766" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2023-2-1_13-15-24.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="166920428" data-linked-resource-container-version="59" tabindex="0" alt=""></span></p><h1 id="GPStrackingusingMQTTandThingsBoard-Datavisualizationusingmaps">Data visualization using maps</h1><p>ThingsBoard allows you to use <a class="external-link" href="https://thingsboard.io/docs/user-guide/ui/widget-library/" rel="nofollow">Widgets</a> to create visually appealing dashboards. In our case, we want to track our LTAP GPS coordinates, so we will need a map widget.</p><p>Select the latitude and longitude values and click on the &quot;<strong>Show on widget</strong>&quot; button:</p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/166920428/169246767.png" data-image-src="attachments/166920428/169246767.png" data-unresolved-comment-count="0" data-linked-resource-id="169246767" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2023-2-1_13-20-36.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="166920428" data-linked-resource-container-version="59" tabindex="0" alt=""></span></p><p>Find the &quot;<strong>Maps</strong>&quot; bundle and click on the &quot;<strong>Add to dashboard</strong>&quot;:</p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/166920428/169246768.png" data-image-src="attachments/166920428/169246768.png" data-unresolved-comment-count="0" data-linked-resource-id="169246768" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2023-2-1_13-21-49.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="166920428" data-linked-resource-container-version="59" tabindex="0" alt=""></span></p><p>Select an existing dashboard or create a new one and name it however you like:</p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/166920428/169246769.png" data-image-src="attachments/166920428/169246769.png" data-unresolved-comment-count="0" data-linked-resource-id="169246769" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2023-2-1_13-23-9.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="166920428" data-linked-resource-container-version="59" tabindex="0" alt=""></span></p><p>Run the script via the scheduler or manually and check the result:</p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/166920428/169246770.png" data-image-src="attachments/166920428/169246770.png" data-unresolved-comment-count="0" data-linked-resource-id="169246770" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2023-2-1_13-27-0.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="166920428" data-linked-resource-container-version="59" tabindex="0" alt=""></span></p><p>Now, we can install it on a moving target and track its location:</p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/166920428/169246785.png" data-image-src="attachments/166920428/169246785.png" data-unresolved-comment-count="0" data-linked-resource-id="169246785" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2023-2-2_15-12-5.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="166920428" data-linked-resource-container-version="59" tabindex="0" alt=""></span></p>
+                    </div>
+
+                                                            <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/166920428/169246761.png">image-2023-2-1_12-51-0.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/166920428/169246762.png">image-2023-2-1_13-5-15.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/166920428/169246766.png">image-2023-2-1_13-15-24.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/166920428/169246767.png">image-2023-2-1_13-20-36.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/166920428/169246768.png">image-2023-2-1_13-21-49.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/166920428/169246769.png">image-2023-2-1_13-23-9.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/166920428/169246770.png">image-2023-2-1_13-27-0.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/166920428/169246784.png">image-2023-2-2_15-11-59.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/166920428/169246785.png">image-2023-2-2_15-12-5.png</a> (image/png)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

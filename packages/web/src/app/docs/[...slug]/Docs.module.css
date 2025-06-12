@@ -1,0 +1,254 @@
+/* packages/web/src/app/docs/[...slug]/Docs.module.css */
+
+.container {
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.header {
+  margin-bottom: 2rem;
+  border-bottom: 1px solid #4a5568;
+  padding-bottom: 1rem;
+}
+
+.title {
+  font-size: 2.25rem;
+  color: #f7fafc;
+  margin: 0 0 1rem 0;
+  line-height: 1.2;
+}
+
+.contentInfo {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.badge {
+  background-color: #2d3748;
+  color: #90cdf4;
+  padding: 0.25rem 0.75rem;
+  border-radius: 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border: 1px solid #4a5568;
+}
+
+.loading,
+.error {
+  padding: 2rem;
+  text-align: center;
+  color: #a0aec0;
+  font-size: 1.125rem;
+}
+
+.error {
+  color: #fc8181;
+  background-color: rgba(254, 178, 178, 0.1);
+  border: 1px solid rgba(254, 178, 178, 0.2);
+  border-radius: 0.5rem;
+}
+
+.prose {
+  line-height: 1.7;
+  color: #e2e8f0;
+}
+
+.htmlContent {
+  /* Additional styling for HTML content */
+}
+
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4,
+.prose h5,
+.prose h6 {
+  color: #f7fafc;
+  margin-top: 1.5em;
+  margin-bottom: 0.75em;
+  line-height: 1.2;
+}
+
+.prose h1 {
+  font-size: 2.25rem;
+  border-bottom: 1px solid #4a5568;
+  padding-bottom: 0.3em;
+}
+
+.prose h2 {
+  font-size: 1.75rem;
+  border-bottom: 1px solid #4a5568;
+  padding-bottom: 0.3em;
+}
+
+.prose h3 {
+  font-size: 1.375rem;
+}
+
+.prose p {
+  margin-bottom: 1.25em;
+}
+
+.prose a {
+  color: #63b3ed;
+  text-decoration: none;
+}
+
+.prose a:hover {
+  color: #90cdf4;
+  text-decoration: underline;
+}
+
+.prose ul,
+.prose ol {
+  padding-left: 2em;
+  margin-bottom: 1.25em;
+}
+
+.prose li {
+  margin-bottom: 0.5em;
+}
+
+.prose pre {
+  background-color: #2d3748;
+  color: #e2e8f0;
+  padding: 1rem;
+  border-radius: 6px;
+  overflow-x: auto;
+  margin-bottom: 1.5em;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 0.9rem;
+  border: 1px solid #4a5568;
+}
+
+.prose code {
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  background-color: rgba(160, 174, 192, 0.2);
+  padding: 0.2em 0.4em;
+  margin: 0;
+  font-size: 85%;
+  border-radius: 3px;
+}
+
+.prose pre code {
+  background-color: transparent;
+  padding: 0;
+  margin: 0;
+  font-size: inherit;
+}
+
+.prose blockquote {
+  border-left: 0.25em solid #4a5568;
+  padding-left: 1em;
+  color: #a0aec0;
+  margin-left: 0;
+  margin-right: 0;
+  margin-bottom: 1.25em;
+}
+
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1.5em;
+  background-color: #1a202c;
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.prose th,
+.prose td {
+  border: 1px solid #4a5568;
+  padding: 0.75em 1em;
+  text-align: left;
+}
+
+.prose thead {
+  background-color: #2d3748;
+}
+
+.prose thead th {
+  font-weight: 600;
+  color: #f7fafc;
+}
+
+.prose tbody tr:nth-child(even) {
+  background-color: rgba(45, 55, 72, 0.3);
+}
+
+.prose img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+  margin: 1rem 0;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Attachments section */
+.attachments {
+  margin-top: 3rem;
+  padding: 1.5rem;
+  background-color: #2d3748;
+  border-radius: 0.75rem;
+  border: 1px solid #4a5568;
+}
+
+.attachments h3 {
+  margin: 0 0 1rem 0;
+  color: #f7fafc;
+  font-size: 1.125rem;
+}
+
+.attachments ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.attachmentLink {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  background-color: #1a202c;
+  border: 1px solid #4a5568;
+  border-radius: 0.5rem;
+  color: #90cdf4;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  font-size: 0.875rem;
+}
+
+.attachmentLink:hover {
+  background-color: #2d3748;
+  border-color: #63b3ed;
+  color: #63b3ed;
+  transform: translateY(-1px);
+}
+
+.attachmentLink::before {
+  content: "📄";
+  margin-right: 0.5rem;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .title {
+    font-size: 1.875rem;
+  }
+  
+  .contentInfo {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .prose table {
+    font-size: 0.875rem;
+  }
+  
+  .prose th,
+  .prose td {
+    padding: 0.5rem;
+  }
+} 

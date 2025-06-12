@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : SSH</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Management-tools_328121.html">Management tools</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : SSH
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Unknown User (emils)</span>, last updated by <span class='editor'> Matīss O.</span> on Jan 21, 2025
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742021835 {padding: 0px;}
+div.rbtoc1747742021835 ul {margin-left: 0px;}
+div.rbtoc1747742021835 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742021835'>
+<ul class='toc-indentation'>
+<li><a href='#SSH-SSHServer'>SSH Server</a>
+<ul class='toc-indentation'>
+<li><a href='#SSH-Properties'>Properties</a></li>
+<li><a href='#SSH-EnablingPKIauthentication'>Enabling PKI authentication</a></li>
+</ul>
+</li>
+<li><a href='#SSH-SSHClient'>SSH Client</a>
+<ul class='toc-indentation'>
+<li><a href='#SSH-Simplelog-intoremotehost'>Simple log-in to remote host</a></li>
+<li><a href='#SSH-Log-infromcertainIPaddressoftherouter'>Log-in from certain IP address of the router</a></li>
+<li><a href='#SSH-Log-inusingRSApublic/privatekey'>Log-in using RSA public/private key</a></li>
+<li><a href='#SSH-Executingremotecommands'>Executing remote commands</a></li>
+</ul>
+</li>
+<li><a href='#SSH-SSHexec'>SSH exec</a>
+<ul class='toc-indentation'>
+<li><a href='#SSH-Retrieveinformation'>Retrieve information</a></li>
+</ul>
+</li>
+</ul>
+</div></p><h1 id="SSH-SSHServer">SSH Server</h1><p>RouterOS has built in SSH (SSH v2) server that is enabled by default and is listening for incoming connections on port TCP/22. It is possible to change the port and disable the server under <a href="Services_103841820.html">Services</a> menu.</p><h2 id="SSH-Properties">Properties</h2><p><strong>Sub-menu:</strong> <code>/ip ssh<br/></code></p><div class="table-wrap"><table class="wrapped confluenceTable"><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>allow-none-crypto</strong> (<em>yes|no</em>; Default: <strong>no</strong>)</td><td class="confluenceTd">Whether to allow connection if cryptographic algorithms are set to none.</td></tr><tr><td class="confluenceTd"><strong>always-allow-password-login</strong> (<em>yes | no</em>; Default: <strong>no</strong>)</td><td class="confluenceTd">Whether to allow password login at the same time when public key authorization is configured for a user.</td></tr><tr><td class="confluenceTd"><strong>ciphers</strong> (<em style="text-align: left;">3des-cbc <em>| aes-cbc | aes-ctr | aes-gcm | auto | null</em>; </em>Default: <strong>auto</strong>)</td><td class="confluenceTd"><p style="text-align: left;">Allow to configure SSH ciphers.</p></td></tr><tr><td class="confluenceTd"><strong>forwarding-enabled</strong> (<em>both | local | no | remote</em>; Default: <strong>no</strong>)</td><td class="confluenceTd">Allows to control which SSH forwarding method to allow:<ul><li>no - SSH forwarding is disabled;</li><li>local - Allow SSH clients to originate connections from the server(router), this setting controls also dynamic forwarding;</li><li>remote - Allow SSH clients to listen on the server(router) and forward incoming connections;</li><li>both - Allow both local and remote forwarding methods.</li></ul></td></tr><tr><td class="confluenceTd"><strong>host-key-size</strong> (<em>1024 | 1536 | 2048 | 4096 | 8192</em>; Default: <strong>2048</strong>)</td><td class="confluenceTd">RSA key size when host key is being regenerated.</td></tr><tr><td class="confluenceTd"><strong>host-key-type </strong>(<em>ed25519</em> | <em>rsa</em>; Default: <strong>rsa</strong>)</td><td class="confluenceTd">Select host key type</td></tr><tr><td class="confluenceTd"><strong>strong-crypto</strong> (<em>yes | no</em>; Default: <strong>no</strong>)</td><td class="confluenceTd">Use stronger encryption, HMAC algorithms, use bigger DH primes and disallow weaker ones:<ul><li>use 256 and 192 bit encryption instead of 128 bits;</li><li>disable null encryption;</li><li>use sha256 for hashing instead of sha1;</li><li>disable md5;</li><li>use 2048bit prime for Diffie-Hellman exchange instead of 1024bit.</li></ul></td></tr></tbody></table></div><p><strong>Commands</strong></p><div class="table-wrap"><table class="wrapped confluenceTable"><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>export-host-key</strong> (<em>key-file-prefix</em>)</td><td class="confluenceTd"><div class="content-wrapper"><p>Export public and private RSA/Ed25519 to files. Command takes two parameters:</p><ul><li><strong>key-file-prefix</strong> - used prefix for generated files, for example, prefix 'my' will generate files 'my_rsa', 'my_rsa.pub' etc.</li><li><strong>passphrase</strong><span> </span>- private key passphrase</li></ul><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body">Host keys are exported in <span style="color:var(--ds-text,#172B4D);">PKCS#8 format.</span></div></div></div></td></tr><tr><td class="confluenceTd"><strong>import-host-key</strong> (<em>private-key-file</em>)</td><td class="confluenceTd"><div class="content-wrapper">Import and replace private RSA/Ed25519 key from specified file. Command takes two parameters:<ul><li><strong>private-key-file</strong> - name of the private RSA/Ed25519 key file</li><li><strong>passphrase</strong><span> </span>- private key passphrase</li></ul><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p><span style="color:var(--ds-text,#172B4D);">Private key is supported in PEM or PKCS#8 format.</span></p></div></div></div></td></tr><tr><td class="confluenceTd"><strong>regenerate-host-key</strong> ()</td><td class="confluenceTd">Generated new and replace current set of private keys (RSA/Ed25519) on the router. Be aware that previously imported keys might stop working.</td></tr></tbody></table></div><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Exporting the SSH host key requires &quot;sensitive&quot; user policy.</p></div></div><h2 class="auto-cursor-target" id="SSH-EnablingPKIauthentication">Enabling PKI authentication</h2><p>Example of importing public key for user <em>admin</em></p><p><a href="https://help.mikrotik.com/docs/display/ROS/SSH#SSH-Log-inusingRSApublic/privatekey" rel="nofollow">Generate SSH keys on the client device</a> (the device you will connect from). Upload the public SSH key to the router and import it.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/user ssh-keys import public-key-file=id_rsa.pub user=admin</pre>
+</div></div><h1 class="auto-cursor-target" id="SSH-SSHClient">SSH Client</h1><p><strong>Sub-menu:</strong> <code>/system ssh</code></p><h2 id="SSH-Simplelog-intoremotehost"><strong><span class="mw-headline">Simple log-in to remote host</span></strong></h2><p>It is able to connect to remote host and initiate ssh session. IP address supports both IPv4 and IPv6.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/system ssh 192.168.88.1
+/system ssh 2001:db8:add:1337::beef</pre>
+</div></div><p>In this case user name provided to remote host is one that has logged into the router. If other value is required, then <em>user=&lt;username&gt;</em> has to be used.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/system ssh 192.168.88.1 user=lala
+/system ssh 2001:db8:add:1337::beef user=lala</pre>
+</div></div><h2 id="SSH-Log-infromcertainIPaddressoftherouter"><strong><span class="mw-headline">Log-in from certain IP address of the router</span></strong></h2><p>For testing or security reasons it may be required to log in to other host using certain source address of the connection. In this case <em>src-address=&lt;ip address&gt;</em> argument has to be used. Note that IP address in this case supports both, IPv4 and IPv6.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/system ssh 192.168.88.1 src-address=192.168.89.2
+/system ssh 2001:db8:add:1337::beef src-address=2001:db8:bad:1000::2</pre>
+</div></div><p>in this case, ssh client will try to bind to address specified and then initiate ssh connection to remote host.</p><h2 id="SSH-Log-inusingRSApublic/privatekey"><strong><span class="mw-headline">Log-in using RSA public/private key</span></strong></h2><p>Example of importing private key for user <em>admin</em></p><p>First, export currently generated SSH keys to a file:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip ssh export-host-key key-file-prefix=admin</pre>
+</div></div><p class="auto-cursor-target">Two files <em>admin_rsa</em> and <em>admin_rsa.pub</em> will be generated. The pub file needs to be trusted on the SSH server side (<a href="https://help.mikrotik.com/docs/display/ROS/SSH#SSH-EnablingPKIauthentication" rel="nofollow">how to enable SSH PKI on RouterOS</a>) The private key has to be added for the particular user.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/user ssh-keys private import user=admin private-key-file=admin_rsa</pre>
+</div></div><div role="region" aria-label="Warning" class="confluence-information-macro  confluence-information-macro-warning" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-error confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Only user with full rights on the router can change 'user' attribute value under <em>/user ssh-keys private</em></p></div></div><p class="auto-cursor-target">After the public key is installed and trusted on the SSH server, a PKI SSH session can be created.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/system ssh 192.168.1.1</pre>
+</div></div><p><span class="mw-headline">Watch how to:</span></p><p><span class="mw-headline">Log in wih an </span><span class="mw-headline"><a class="external-link" href="http://youtube.com/watch?v=8tt7fSvdFRM" rel="nofollow">RSA key.</a></span></p><p><span class="mw-headline">Log in with <a class="external-link" href="http://youtube.com/watch?v=be-pBwhjRWA" rel="nofollow">ed25519</a>.</span></p><h2 id="SSH-Executingremotecommands"><strong><span class="mw-headline">Executing remote commands</span></strong></h2><p>To execute remote command it has to be supplied at the end of log-in line</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/system ssh 192.168.88.1 &quot;/ip address print&quot;
+/system ssh 192.168.88.1 command=&quot;/ip address print&quot;
+/system ssh 2001:db8:add:1337::beef &quot;/ip address print&quot;
+/system ssh 2001:db8:add:1337::beef command=&quot;/ip address print&quot;</pre>
+</div></div><div role="region" aria-label="Warning" class="confluence-information-macro  confluence-information-macro-warning" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-error confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p><em>If the server does not support pseudo-tty (ssh -T or ssh host command), like MikroTik ssh server, then it is not possible to send multiline commands via SSH</em></p></div></div><p>For example, sending command <code>&quot;/ip address \n add address=1.1.1.1/24&quot;</code> to MikroTik router will fail.</p><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>If you wish to execute remote commands via <strong>scripts</strong> or <strong>scheduler</strong>, use command <strong>ssh-exec</strong>.</p></div></div><h1 id="SSH-SSHexec"><span class="mw-headline">SSH exec</span></h1><p><strong>Sub-menu:</strong> <code>/system ssh-exec</code></p><p>Command<em> ssh-exec</em> is a non-interactive ssh command, thus allowing to execute commands remotely on a device via scripts and scheduler.</p><h2 id="SSH-Retrieveinformation"><strong><span class="mw-headline">Retrieve information</span></strong></h2><p>The command will return two values:</p><ul><li><strong>exit-code</strong>: returns 0 if the command execution succeeded</li><li><strong>output</strong>: returns the output of remotely executed command</li></ul><p><br/><strong>Example:</strong> Code below will retrieve interface status of ether1 from device 10.10.10.1 and output the result to &quot;Log&quot;</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">:local Status ([/system ssh-exec address=10.10.10.1 user=remote command=&quot;:put ([/interface ethernet monitor [find where name=ether1] once as-value]-&gt;\&quot;status\&quot;)&quot; as-value]-&gt;&quot;output&quot;)
+:log info $Status</pre>
+</div></div><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>For security reasons you should not use plain text password with parameter &quot;password&quot; specified in the command line. To ensure safe execution of the command remotely, it is strongly recommended to use SSH PKI authentication for users on both sides.</p></div></div><p><br/></p><div role="region" aria-label="Warning" class="confluence-information-macro  confluence-information-macro-warning" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-error confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>The user group and script policy executing the command requires <strong>test</strong> permission</p></div></div><p class="auto-cursor-target">Watch how to <a class="external-link" href="http://youtube.com/watch?v=JfGfPSicTzs" rel="nofollow">execute commands through SSH</a>.</p>
+                    </div>
+
+                                        
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

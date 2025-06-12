@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : Clock</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="System-Information-and-Utilities_119144657.html">System Information and Utilities</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : Clock
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Unknown User (olga)</span>, last updated by <span class='editor'> Mārtiņš S.</span> on Feb 05, 2025
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <h1 id="Clock-Introduction"><span class="mw-headline">Introduction</span></h1><p>RouterOS uses data from the<span> </span>TZ database, Most of the time zones from this database are included, and have the same names. Because local time on the router is used mostly for timestamping and time-dependent configuration, and not for historical date calculations, time zone information about past years is not included. Currently, only information starting from 2005 is included.</p><p>Following settings are available in the<span> </span><strong>/system clock</strong><span> </span>console path and in the &quot;Time&quot; tab of the &quot;System &gt; Clock&quot; WinBox window.</p><p>Startup date and time is <strong>jan/02/1970 00:00:00 </strong>[+|-]gmt-offset. </p><h1 id="Clock-Properties">Properties</h1><div class="table-wrap"><table class="relative-table wrapped confluenceTable" style="width: 100.0%;"><colgroup><col style="width: 48.9714%;"/><col style="width: 51.0286%;"/></colgroup><tbody><tr><th style="text-align: center;" class="confluenceTh">Property</th><th style="text-align: center;" class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><p><strong>time</strong><span> </span>(<em>HH:MM:SS);</em></p></td><td class="confluenceTd"><p>where<span> </span><em>HH</em><span> </span>- hour 00..24,<span> </span><em>MM</em><span> </span>- minutes 00..59,<span> </span><em>SS</em><span> </span>- seconds 00..59).</p></td></tr><tr><td class="confluenceTd"><strong>date</strong><span> </span>(<em>mmm/DD/YYYY);</em></td><td class="confluenceTd">where<span> </span><em>mmm</em><span> </span>- month, one of<span> </span><em>jan</em>,<span> </span><em>feb</em>,<span> </span><em>mar</em>,<span> </span><em>apr</em>,<span> </span><em>may</em>,<span> </span><em>jun</em>,<span> </span><em>jul</em>,<span> </span><em>aug</em>,<span> </span><em>sep</em>,<span> </span><em>oct</em>,<span> </span><em>nov</em>,<span> </span><em>dec</em>,<span> </span><em>DD</em><span> </span>- date, 00..31,<span> </span><em>YYYY</em><span> </span>- year, 1970..2037):<span> </span><strong>date</strong><span> </span>and<span> </span><strong>time</strong><span> </span>show current local time on the router. These values can be adjusted using the<span> </span><strong>set</strong><span> </span>command. Local time cannot, however, be exported, and is not stored with the rest of the configuration.</td></tr><tr><td class="confluenceTd"><strong>time-zone-name</strong><span> </span>(<em>manual</em>, or name of time zone; default value:<span> </span><em>manual</em>);</td><td class="confluenceTd">Name of the time zone. As most of the text values in RouterOS, this value is case sensitive. Special value<span> </span><em>manual</em><span> </span>applies<span> </span><a class="external-link" href="https://wiki.mikrotik.com/wiki/Manual:System/Time#Manual_time_zone_configuration" rel="nofollow" style="text-decoration: none;">manually configured GMT offset</a>, which by default is<span> </span><em>00:00</em><span> </span>with no daylight saving time.</td></tr><tr><td class="confluenceTd"><strong>time-zone-autodetect</strong><span> </span>(<em>yes</em><span> </span>or<span> </span><em>no</em>; default: yes);</td><td class="confluenceTd">Feature available from v6.27. If enabled, the time zone will be set automatically.</td></tr></tbody></table></div><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p> Time-zone-autodetect by default is enabled on new RouterOS installation and after configuration reset. The time zone is detected depending on the router's public IP address and our Cloud servers database. Since RouterOS v6.43 your device will use <a class="external-link" href="http://cloud2.mikrotik.com" rel="nofollow">cloud2.mikrotik.com</a> to communicate with MikroTik's Cloud server. Older versions will use <a class="external-link" href="http://cloud.mikrotik.com" rel="nofollow">cloud.mikrotik.com</a> to communicate with the MikroTik's Cloud server.</p></div></div><div role="region" aria-label="Info" class="confluence-information-macro  has-no-icon confluence-information-macro-information" ><div class="confluence-information-macro-body"><p>Be aware that the router's internal CPU clock is not a reliable time source for precise timing operations, as its frequency may vary due to power management, thermal conditions, and hardware differences, even between identical models. This variation is expected and does not affect normal router performance. For accurate timekeeping, it is recommended to use network-based time synchronisation, such as NTP (Network Time Protocol).</p></div></div><p class="auto-cursor-target"><span style="font-size: 24.0px;font-weight: normal;letter-spacing: -0.01em;">Configuration</span></p><h2 id="Clock-Activetimezoneinformation"><span class="mw-headline">Active time zone information</span></h2><ul><li><strong>dst-active</strong><span> </span>(<em>yes</em><span> </span>or<span> </span><em>no</em>&gt;; read-only property): This property has the value<span> </span><em>yes</em><span> </span>while daylight saving time of the current time zone is active.</li><li><strong>gmt-offset</strong><span> </span>([<em>+</em>|<em>-</em>]<em>HH:MM</em><span> </span>- offset in hours and minutes; read-only property): This is the current value of GMT offset used by the system, after applying base time zone offset and active daylight saving time offset.</li></ul><h2 id="Clock-Manualtimezoneconfiguration"><span class="mw-headline">Manual time zone configuration</span></h2><p>These settings are available in<span> </span><strong>/system clock manual</strong><span> </span>console path and in the &quot;Manual Time Zone&quot; tab of the &quot;System &gt; Clock&quot; WinBox window. These settings have an effect only when<span> </span><strong>time-zone-name</strong>=<em>manual</em>. It is only possible to manually configure single daylight saving time period.</p><ul><li><strong>time-zone</strong>,<span> </span><strong>dst-delta</strong><span> </span>([<em>+</em>|<em>-</em>]<em>HH:MM</em><span> </span>- time offset in hours and minutes, leading plus sign is optional; default value:<span> </span><em>+00:00</em>) : While DST is not active use GMT offset<span> </span><strong>time-zone</strong>. While DST is active use GMT offset<span> </span><strong>time-zone</strong><span> </span>+<span> </span><strong>dst-delta</strong>.</li><li><strong>dst-start</strong>,<span> </span><strong>dst-end</strong><span> </span>(<em>mmm/DD/YYYY HH:MM: SS</em><span> </span>- date and time, either date or time can be omitted in the<span> </span><strong>set</strong><span> </span>command; default value:<span> </span><em>jan/01/1970 00:00:00</em>): Local time when DST starts and ends.</li></ul>
+                    </div>
+
+                                        
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

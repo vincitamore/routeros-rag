@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : Bonding Examples</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="High-Availability-Solutions_120324133.html">High Availability Solutions</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : Bonding Examples
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Artūrs C.</span>, last updated by <span class='editor'> Māris B.</span> on Apr 03, 2024
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742029142 {padding: 0px;}
+div.rbtoc1747742029142 ul {margin-left: 0px;}
+div.rbtoc1747742029142 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742029142'>
+<ul class='toc-indentation'>
+<li><a href='#BondingExamples-BondingEoIPtunnelsovertwowirelesslinks'>Bonding EoIP tunnels over two wireless links</a>
+<ul class='toc-indentation'>
+<li><a href='#BondingExamples-NetworkDiagram'>Network Diagram</a></li>
+<li><a href='#BondingExamples-Configuration'>Configuration</a></li>
+<li><a href='#BondingExamples-Testtheconfiguration'>Test the configuration</a></li>
+<li><a href='#BondingExamples-LinkMonitoring'>Link Monitoring</a></li>
+</ul>
+</li>
+</ul>
+</div></p><h1 id="BondingExamples-BondingEoIPtunnelsovertwowirelesslinks"><span class="mw-headline">Bonding EoIP tunnels over two wireless links</span></h1><p>This is an example of aggregating multiple network interfaces into a single pipe. In particular, it is shown how to aggregate multiple virtual (EoIP) interfaces to get maximum throughput (MT) with emphasis on availability.</p><h2 id="BondingExamples-NetworkDiagram"><span class="mw-headline">Network Diagram</span></h2><p>Two routers R1 and R2 are interconnected via wireless links. Wireless interfaces on both sides have assigned IP addresses.</p><p><br/></p><h2 id="BondingExamples-Configuration"><span class="confluence-embedded-file-wrapper image-center-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image image-center" draggable="false" width="900" src="attachments/132349985/236912699.png" data-image-src="attachments/132349985/236912699.png" data-unresolved-comment-count="0" data-linked-resource-id="236912699" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2024-2-20_11-17-21.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="132349985" data-linked-resource-container-version="7" tabindex="0" alt=""></span><span class="mw-headline">Configuration</span></h2><p>Bonding could be used only on OSI layer 2 (Ethernet level) connections. Thus we need to create EoIP interfaces on each of the wireless links. This is done as follows:</p><p class="auto-cursor-target">on router R1:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface eoip add remote-address=10.0.1.1/24 tunnel-id=1 
+/interface eoip add remote-address=10.2.2.1/24 tunnel-id=2</pre>
+</div></div><p>and on router R2:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface eoip add remote-address=10.0.1.2/24 tunnel-id=1 
+/interface eoip add remote-address=10.2.2.2/24 tunnel-id=2</pre>
+</div></div><p>The second step is to add a bonding interface and specify EoIP interfaces as slaves:</p><p>R1:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface bonding add slaves=eoip-tunnel1,eoip-tunnel2 mode=balance-rr</pre>
+</div></div><p>R2:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface bonding add slaves=eoip-tunnel1,eoip-tunnel2 mode=balance-rr</pre>
+</div></div><p>The last step is to add IP addresses to the bonding interfaces:</p><p>R1:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip address add address 192.168.0.1/24 interface=bonding1</pre>
+</div></div><p>R2:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip address add address 192.168.0.2/24 interface=bonding1</pre>
+</div></div><p style="margin-left: 20.0px;"><br/></p><h2 id="BondingExamples-Testtheconfiguration"><span class="mw-headline">Test the configuration</span></h2><p>Now two routers are able to reach each other using addresses from the 192.168.0.0/24 network. To verify bonding interface functionality, do the following:</p><p class="auto-cursor-target">R1:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface monitor-traffic eoip-tunnel1,eoip-tunnel2</pre>
+</div></div><p>R2:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/tool bandwidth-test 192.168.0.1 direction=transmit</pre>
+</div></div><p>You should see that traffic is distributed equally across both EoIP interfaces:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/int monitor-traffic eoip-tunnel1,eoip-tunnel2              
+    received-packets-per-second: 685      685                                  
+       received-bits-per-second: 8.0Mbps  8.0Mbps                              
+        sent-packets-per-second: 21       20                                   
+           sent-bits-per-second: 11.9kbps 11.0kbps                             
+    received-packets-per-second: 898      899                                  
+       received-bits-per-second: 10.6Mbps 10.6Mbps                             
+        sent-packets-per-second: 20       21                                   
+           sent-bits-per-second: 11.0kbps 11.9kbps                             
+    received-packets-per-second: 975      975                                  
+       received-bits-per-second: 11.5Mbps 11.5Mbps                             
+        sent-packets-per-second: 22       22                                   
+           sent-bits-per-second: 12.4kbps 12.3kbps                             
+    received-packets-per-second: 980      980                                  
+       received-bits-per-second: 11.6Mbps 11.6Mbps                             
+        sent-packets-per-second: 21       21                                   
+           sent-bits-per-second: 11.9kbps 11.8kbps                             
+    received-packets-per-second: 977      977                                  
+       received-bits-per-second: 11.6Mbps 11.5Mbps                             
+        sent-packets-per-second: 21       21                                   
+           sent-bits-per-second: 11.9kbps 11.8kbps                             
+-- [Q quit|D dump|C-z pause]</pre>
+</div></div><h2 id="BondingExamples-LinkMonitoring"><span class="mw-headline">Link Monitoring</span></h2><p>It is easy to notice that with the configuration above as soon as any individual link fails, the bonding interface throughput collapses. That's because no link monitoring is performed, consequently, the bonding driver is unaware of problems with the underlying links. Enabling link monitoring is a must in most bonding configurations. To enable ARP link monitoring, do the following:</p><p>R1:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface bonding set bonding1 link-monitoring=arp arp-ip-targets=192.168.0.2</pre>
+</div></div><p class="auto-cursor-target">R2:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface bonding set bonding1 link-monitoring=arp arp-ip-targets=192.168.0.1</pre>
+</div></div>
+                    </div>
+
+                                                            <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/132349985/132350022.jpg">Bonding_ARP_Monitoring_Exam.jpg</a> (image/jpeg)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/132349985/236912697.png">image-2024-2-20_11-16-30.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/132349985/236912699.png">image-2024-2-20_11-17-21.png</a> (image/png)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

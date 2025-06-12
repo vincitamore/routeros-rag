@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : NAT</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Firewall-and-Quality-of-Service_119144601.html">Firewall and Quality of Service</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Firewall_250708066.html">Firewall</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : NAT
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Artūrs C.</span>, last updated by <span class='editor'> Normunds R.</span> on Nov 29, 2024
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <h1 id="NAT-Introduction"><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742026395 {padding: 0px;}
+div.rbtoc1747742026395 ul {margin-left: 0px;}
+div.rbtoc1747742026395 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742026395'>
+<ul class='toc-indentation'>
+<li><a href='#NAT-Introduction'>Introduction</a></li>
+<li><a href='#NAT-TypesofNAT:'>Types of NAT:</a>
+<ul class='toc-indentation'>
+<li><a href='#NAT-DestinationNAT'>Destination NAT</a></li>
+<li><a href='#NAT-SourceNAT'>Source NAT</a>
+<ul class='toc-indentation'>
+<li><a href='#NAT-Masquerade'>Masquerade</a></li>
+<li><a href='#NAT-CGNAT(NAT444)'>CGNAT (NAT444)</a></li>
+<li><a href='#NAT-HairpinNAT'>Hairpin NAT</a></li>
+</ul>
+</li>
+<li><a href='#NAT-Endpoint-IndependentNAT'>Endpoint-Independent NAT</a></li>
+</ul>
+</li>
+<li><a href='#NAT-NATHelpers'>NAT Helpers</a></li>
+</ul>
+</div>Introduction</h1><p>Network Address Translation is an Internet standard that allows hosts on local area networks to use one set of IP addresses for internal communications and another set of IP addresses for external communications. A LAN that uses NAT is ascribed as a <em>natted</em> network. For NAT to function, there should be a NAT gateway in each <em>natted</em> network. The NAT gateway (NAT router) performs IP address rewriting on the way while packets travel from/to LAN. In RouterOS NAT is supported for IPv4. RouterOS does not support NAT64. </p><p>Nat matches only the first packet of the connection, connection tracking remembers the action and performs on all other packets belonging to the same connection.</p><div role="region" aria-label="Warning" class="confluence-information-macro  confluence-information-macro-warning" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-error confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Whenever NAT rules are changed or added, the connection tracking table should be cleared otherwise NAT rules may seem to be not functioning correctly until the connection entry expires.</p></div></div><h1 id="NAT-TypesofNAT:">Types of NAT:</h1><p><span class="confluence-embedded-file-wrapper image-center-wrapper"><img class="confluence-embedded-image image-center" draggable="false" src="attachments/3211299/48660579.png" data-image-src="attachments/3211299/48660579.png" data-unresolved-comment-count="0" data-linked-resource-id="48660579" data-linked-resource-version="2" data-linked-resource-type="attachment" data-linked-resource-default-alias="nats.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="3211299" data-linked-resource-container-version="53" tabindex="0" alt=""></span></p><p><span>There are two types of NAT:</span></p><ul><li><strong>source NAT or srcnat.</strong> This type of NAT is performed on <u>packets that are originated</u> from a natted network. A NAT router replaces the private source address of an IP packet with a new public IP address as it travels through the router. A reverse operation is applied to the reply packets traveling in the other direction.</li><li><strong>destination NAT or dstnat.</strong> This type of NAT is performed on <u>packets that are destined</u> for the natted network. It is most commonly used to make hosts on a private network to be accessible from the Internet. A NAT router performing dstnat replaces the destination IP address of an IP packet as it travels through the router toward a private network.</li></ul><p>Since RouterOS v7 the firewall NAT has two new <em>INPUT </em><span style="color:var(--ds-text,#333333);">and<span> </span></span><em>OUTPUT </em><span style="color:var(--ds-text,#333333);">chains which are traversed for packets delivered to and sent from applications running on the local machine</span>:</p><ul class="bullets"><li><strong>input</strong><span> </span>- used to process packets<span> </span><u><span style="color:var(--ds-text-accent-blue-bolder,#09326C);">entering the router</span></u><span> </span>through one of the interfaces with the destination IP address which is one of the router's addresses. Packets passing through the router are not processed against the rules of the input chain.</li><li><strong>output</strong><span> </span>- used to process packets<span> that </span><u><span style="color:var(--ds-text-accent-blue-bolder,#09326C);">originated from the router</span></u><span> </span>and leave it through one of the interfaces. Packets passing through the router are not processed against the rules of the output chain.</li></ul><p><br/></p><h2 id="NAT-DestinationNAT">Destination NAT</h2><p><span class="confluence-embedded-file-wrapper image-center-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image image-center" draggable="false" width="750" src="attachments/3211299/4390914.jpg" data-image-src="attachments/3211299/4390914.jpg" data-unresolved-comment-count="0" data-linked-resource-id="4390914" data-linked-resource-version="3" data-linked-resource-type="attachment" data-linked-resource-default-alias="NAT-setup.jpg" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/jpeg" data-linked-resource-container-id="3211299" data-linked-resource-container-version="53" tabindex="0" alt=""></span></p><p class="firstHeading" lang="en">Network address translation works by modifying network address information in the packet's IP header. Let`s take a look at the common setup where a network administrator wants to access an office server from the internet.</p><p class="firstHeading" lang="en">We want to allow connections from the internet to the office server whose local IP is 10.0.0.3. In this case, we have to configure a destination address translation rule on the office gateway router:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip firewall nat add chain=dstnat action=dst-nat dst-address=172.16.16.1 dst-port=22 to-addresses=10.0.0.3 protocol=tcp</pre>
+</div></div><p>The rule above translates: when an incoming connection requests TCP port 22 with destination address 172.16.16.1, use the <em>dst-nat</em> action and depart packets to the device with local IP address 10.0.0.3 and port 22.</p><div role="region" aria-label="Tip" class="confluence-information-macro  confluence-information-macro-tip" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-approve confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>To allow access only from the PC at home, we can improve our <em>dst-nat</em> rule with <em>&quot;src-address=192.168.88.1&quot;</em> which is a Home`s PC public (this example) IP address. It is also considered to be more secure!</p></div></div><h2 id="NAT-SourceNAT">Source NAT</h2><p class="auto-cursor-target">If you want to hide your local devices behind your public IP address received from the ISP, you should configure the source network address translation (masquerading) feature of the MikroTik router. <br/>Let`s assume you want to hide both the office computer and server behind the public IP 172.16.16.1, the rule will look like the following one:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip firewall nat add chain=srcnat src-address=10.0.0.0/24 action=src-nat to-addresses=172.16.16.1 out-interface=WAN</pre>
+</div></div><p class="auto-cursor-target">Now your ISP will see all the requests coming with IP 172.16.16.1 and they will not see your LAN network IP addresses.</p><h3 id="NAT-Masquerade">Masquerade</h3><p>Firewall NAT <span style="color:var(--ds-icon-success,#22A06B);"><code>action=masquerade</code></span><em> </em>is a unique subversion of<span style="color:var(--ds-icon-success,#22A06B);"> <code>action=srcnat</code></span><em>,</em> it was designed for specific use in situations when public IP can randomly change, for example, DHCP server changes assigned IP or PPPoE tunnel after disconnect gets a different IP, in short - <strong>when public IP is dynamic</strong>.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip firewall nat add chain=srcnat src-address=10.0.0.0/24 action=masquerade out-interface=WAN</pre>
+</div></div><p>Every time when interface disconnects and/or its IP address changes, the router will clear all masqueraded connection tracking entries related to the interface, this way improving system recovery time after public IP change. If <code><span style="color:var(--ds-icon-success,#22A06B);">srcnat</span></code><span style="color:var(--ds-icon-success,#22A06B);"> </span>is used instead of <code><span style="color:var(--ds-icon-success,#22A06B);">masquerade</span></code><em>,</em> connection tracking entries remain and connections can simply resume after a link failure.</p><p>Unfortunately, this can lead to some issues with unstable links when the connection gets routed over different links after the primary link goes down. In such a scenario following things can happen:</p><ul><li>on disconnect, all related connection tracking entries are purged;</li><li>next packet from every purged (previously masqueraded) connection will come into the firewall as <em>new</em>, and, if a primary interface is not back, a packet will be routed out via an alternative route (if you have any) thus creating a new masqueraded connection;</li><li>the primary link comes back, routing is restored over the primary link, so packets that belong to existing connections are sent over the primary interface without being masqueraded, that way leaking local IPs to a public network.</li></ul><p>To work around this situation <strong>blackhole</strong> route can be created as an alternative to the route that might disappear on disconnect.</p><p>Hosts behind a NAT-enabled router do not have true end-to-end connectivity. Therefore some Internet protocols might not work in scenarios with NAT. Services that require the initiation of TCP connection from outside the private network or stateless protocols such as UDP, can be disrupted. </p><p>To overcome these limitations RouterOS includes a number of so-called NAT helpers, that enable NAT traversal for various protocols. When <code><span style="color:var(--ds-icon-success,#22A06B);">action=srcnat</span></code> is used instead, connection tracking entries remain and connections can simply resume.</p><div role="region" aria-label="Tip" class="confluence-information-macro  confluence-information-macro-tip" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-approve confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p class="auto-cursor-target">Though Source NAT and masquerading perform the same fundamental function: mapping one address space into another one, the details differ slightly. Most noticeably, masquerading chooses the source IP address for the outbound packet from the IP bound to the interface through which the packet will exit.</p></div></div><h3 id="NAT-CGNAT(NAT444)">CGNAT (<span class="mw-headline">NAT444)</span></h3><p><span class="mw-headline"><span class="confluence-embedded-file-wrapper image-center-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image image-center" draggable="false" height="250" src="attachments/3211299/83755071.png" data-image-src="attachments/3211299/83755071.png" data-unresolved-comment-count="0" data-linked-resource-id="83755071" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="Cgnat.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="3211299" data-linked-resource-container-version="53" tabindex="0" alt=""></span></span></p><p>To combat IPv4 address exhaustion, a new RFC 6598 was deployed. The idea is to use shared 100.64.0.0/10 address space inside the carrier's network and perform NAT on the carrier's edge router to a single public IP or public IP range.</p><p>Because of the nature of such a setup, it is also called NAT444, as opposed to a NAT44 network for a 'normal' NAT environment, three different IPv4 address spaces are involved.</p><p><span style="color:var(--ds-text,#333333);">CGNAT configuration on RouterOS does not differ from any other regular source NAT configuration:</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip firewall nat 
+ add chain=src-nat action=srcnat src-address=100.64.0.0/10 to-address=2.2.2.2 out-interface=&lt;public_if&gt;</pre>
+</div></div><p>Where:</p><ul><li>2.2.2.2 - public IP address,</li><li>public_if - interface on provider's edge router connected to the internet</li></ul><p>The advantage of NAT444 is obvious, fewer public IPv4 addresses are used. But this technique comes with major drawbacks:</p><ul><li>The service provider router performing CGNAT needs to maintain a state table for all the address translations: this requires a lot of memory and CPU resources.</li><li>Console gaming problems. Some games fail when two subscribers using the same outside public IPv4 address try to connect to each other.</li><li>Tracking users for legal reasons means extra logging, as multiple households go behind one public address.</li><li>Anything requiring incoming connections is broken. While this already was the case with regular NAT, end-users could usually still set up port forwarding on their NAT router. CGNAT makes this impossible. This means no web servers can be hosted here, and IP Phones cannot receive incoming calls by default either.</li><li>Some web servers only allow a maximum number of connections from the same public IP address, as a means to counter DoS attacks like SYN floods. Using CGNAT this limit is reached more often and some services may be of poor quality.</li><li>6to4 requires globally reachable addresses and will not work in networks that employ addresses with a limited topological span.</li></ul><p><br/></p><p>Packets with Shared Address Space source or destination addresses MUST NOT be forwarded across Service Provider boundaries. Service Providers MUST filter such packets on ingress links. In RouterOS this can be easily done with firewall filters on edge routers:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip firewall filter
+ add chain=input src-address=100.64.0.0/10 action=drop in-interface=&lt;public_if&gt;
+ add chain=output dst-address=100.64.0.0/10 action=drop out-interface=&lt;public_if&gt;
+ add chain=forward src-address=100.64.0.0/10 action=drop in-interface=&lt;public_if&gt;
+ add chain=forward src-address=100.64.0.0/10 action=drop out-interface=&lt;public_if&gt;
+ add chain=forward dst-address=100.64.0.0/10 action=drop out-interface=&lt;public_if&gt;</pre>
+</div></div><p>Service providers may be required to log of MAPed addresses, in a large CGN deployed network which may be a problem. Fortunately, RFC 7422 suggests a way to manage CGN translations in such a way as to significantly reduce the amount of logging required while providing traceability for abuse response.</p><p>RFC states that instead of logging each connection, CGNs could deterministically map customer private addresses (received on the customer-facing interface of the CGN, a.k.a., internal side) to public addresses extended with port ranges.</p><p>That means that separate NAT rules have to be added to achieve individual mappings such as the ones seen in the below example:</p><div class="table-wrap"><table class="wrapped confluenceTable" style="text-align: left;"><colgroup><col/><col/></colgroup><tbody><tr><td class="confluenceTd"><strong>Inside IP</strong></td><td class="confluenceTd"><strong>Outside IP/Port range</strong></td></tr><tr><td class="confluenceTd">100.64.0.1</td><td class="confluenceTd">2.2.2.2:5000-5199</td></tr><tr><td class="confluenceTd">100.64.0.2</td><td class="confluenceTd">2.2.2.2:5200-5399</td></tr><tr><td class="confluenceTd">100.64.0.3</td><td class="confluenceTd">2.2.2.2:5400-5599</td></tr><tr><td class="confluenceTd">100.64.0.4</td><td class="confluenceTd">2.2.2.2:5600-5799</td></tr><tr><td class="confluenceTd">100.64.0.5</td><td class="confluenceTd">2.2.2.2:5800-5999</td></tr></tbody></table></div><p><span style="color:var(--ds-text,#333333);">Instead of writing the rules by hand, it is suggested to use a script instead. The following example could be adapted to any requirements of your setup.<br/></span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">{
+######## Adjustable values #########
+:local StartingAddress 100.64.0.1
+:local ClientCount 5
+:local AddressesPerClient 2
+:local PublicAddress 2.2.2.2
+:local StartingPort 5000
+:local PortsPerAddress 200
+####################################
+
+# All client chain jump
+/ip firewall nat add chain=srcnat action=jump jump-target=clients \
+    src-address=&quot;$StartingAddress-$($StartingAddress + ($ClientCount * $AddressesPerClient) - 1)&quot;
+
+:local currentPort $StartingPort
+
+:for c from=1 to=$ClientCount do={
+    # Specific client chain jumps
+    :if ($AddressesPerClient &gt; 1) do={
+      /ip firewall nat add chain=clients action=jump jump-target=&quot;client-$c&quot; \
+      src-address=&quot;$($StartingAddress + ($AddressesPerClient * ($c - 1)))-$($StartingAddress + ($AddressesPerClient * $c -1))&quot;
+    } else={
+      /ip firewall nat add chain=clients action=jump jump-target=&quot;client-$c&quot; \
+      src-address=&quot;$($StartingAddress + ($AddressesPerClient * ($c - 1)))&quot;
+    }
+  
+    # Translation rules
+    :for a from=1 to=$AddressesPerClient do={
+      /ip firewall nat add chain=&quot;client-$c&quot; action=src-nat protocol=tcp \
+      src-address=&quot;$($StartingAddress + (($c -1) * $AddressesPerClient) + $a - 1)&quot; to-address=$PublicAddress to-ports=&quot;$currentPort-$($currentPort + $PortsPerAddress - 1)&quot;
+      /ip firewall nat add chain=&quot;client-$c&quot; action=src-nat protocol=udp \
+      src-address=&quot;$($StartingAddress + (($c -1) * $AddressesPerClient) + $a - 1)&quot; to-address=$PublicAddress to-ports=&quot;$currentPort-$($currentPort + $PortsPerAddress - 1)&quot;
+      :set currentPort ($currentPort + $PortsPerAddress)
+    }
+}
+}</pre>
+</div></div><p>The six local values can be adjusted and the script can be either simply pasted in the terminal or it can be stored in the system script section, in case the configuration needs to be regenerated later.</p><p>After execution, you should get a set of rules:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; ip firewall nat print
+Flags: X - disabled, I - invalid; D - dynamic 
+ 0    chain=srcnat action=jump jump-target=clients 
+      src-address=100.64.0.1-100.64.0.10 
+
+ 1    chain=clients action=jump jump-target=client-1 
+      src-address=100.64.0.1-100.64.0.2 
+
+ 2    chain=client-1 action=src-nat to-addresses=2.2.2.2 to-ports=5000-5199 
+      protocol=tcp src-address=100.64.0.1 
+
+ 3    chain=client-1 action=src-nat to-addresses=2.2.2.2 to-ports=5000-5199 
+      protocol=udp src-address=100.64.0.1 
+
+ 4    chain=client-1 action=src-nat to-addresses=2.2.2.2 to-ports=5200-5399 
+      protocol=tcp src-address=100.64.0.2 
+
+ 5    chain=client-1 action=src-nat to-addresses=2.2.2.2 to-ports=5200-5399 
+      protocol=udp src-address=100.64.0.2 
+
+ 6    chain=clients action=jump jump-target=client-2 
+      src-address=100.64.0.3-100.64.0.4 
+
+ 7    chain=client-2 action=src-nat to-addresses=2.2.2.2 to-ports=5400-5599 
+      protocol=tcp src-address=100.64.0.3 
+
+ 8    chain=client-2 action=src-nat to-addresses=2.2.2.2 to-ports=5400-5599 
+      protocol=udp src-address=100.64.0.3 
+
+ 9    chain=client-2 action=src-nat to-addresses=2.2.2.2 to-ports=5600-5799 
+      protocol=tcp src-address=100.64.0.4 
+
+10    chain=client-2 action=src-nat to-addresses=2.2.2.2 to-ports=5600-5799 
+      protocol=udp src-address=100.64.0.4 
+
+11    chain=clients action=jump jump-target=client-3 
+      src-address=100.64.0.5-100.64.0.6 
+
+12    chain=client-3 action=src-nat to-addresses=2.2.2.2 to-ports=5800-5999 
+      protocol=tcp src-address=100.64.0.5 
+
+13    chain=client-3 action=src-nat to-addresses=2.2.2.2 to-ports=5800-5999 
+      protocol=udp src-address=100.64.0.5 
+
+14    chain=client-3 action=src-nat to-addresses=2.2.2.2 to-ports=6000-6199 
+      protocol=tcp src-address=100.64.0.6 
+
+15    chain=client-3 action=src-nat to-addresses=2.2.2.2 to-ports=6000-6199 
+      protocol=udp src-address=100.64.0.6 
+
+[...]</pre>
+</div></div><h3 id="NAT-HairpinNAT"><br/>Hairpin NAT</h3><p class="auto-cursor-target">Hairpin network address translation (<em>NAT Loopback</em>) is where the device on the LAN can access another machine on the LAN via the public IP address of the gateway router. </p><p><br/></p><p><span class="confluence-embedded-file-wrapper image-center-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image image-center" draggable="false" width="750" src="attachments/3211299/4390914.jpg" data-image-src="attachments/3211299/4390914.jpg" data-unresolved-comment-count="0" data-linked-resource-id="4390914" data-linked-resource-version="3" data-linked-resource-type="attachment" data-linked-resource-default-alias="NAT-setup.jpg" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/jpeg" data-linked-resource-container-id="3211299" data-linked-resource-container-version="53" tabindex="0" alt=""></span></p><p><br/></p><p>In the above example, the gateway router has the following <code><span style="color:var(--ds-icon-success,#22A06B);">dst-nat</span></code> configuration rule:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip firewall nat add chain=dstnat action=dst-nat dst-address=172.16.16.1 dst-port=443 to-addresses=10.0.0.3 to-ports=443 protocol=tcp</pre>
+</div></div><p>When a user from the PC at home establishes a connection to the web server, the router performs DST NAT as configured:</p><ol><li>the client sends a packet with a source IP address of 192.168.88.1 to a destination IP address of 172.16.16.1 on port 443 to request some web resources;</li><li>the router destination NAT`s the packet to 10.0.0.3 and replaces the destination IP address in the packet accordingly. The source IP address stays the same: 192.168.88.1;</li><li>the server replies to the client's request and the reply packet has a source IP address of 10.0.0.3 and a destination IP address of 192.168.88.1.</li><li>the router determines that the packet is part of a previous connection and undoes the destination NAT, and puts the original destination IP address into the source IP address field. The destination IP address is 192.168.88.1, and the source IP address is 172.16.16.1;</li><li>The client receives the reply packet it expects, and the connection is established;</li></ol><p><br/></p><p><span class="confluence-embedded-file-wrapper image-center-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image image-center" draggable="false" width="750" src="attachments/3211299/4390916.jpg" data-image-src="attachments/3211299/4390916.jpg" data-unresolved-comment-count="0" data-linked-resource-id="4390916" data-linked-resource-version="2" data-linked-resource-type="attachment" data-linked-resource-default-alias="Hairpin-NAT-setup.jpg" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/jpeg" data-linked-resource-container-id="3211299" data-linked-resource-container-version="53" tabindex="0" alt=""></span></p><p>But, there will be a <strong>problem</strong>, when a client on the same network as the web server requests a connection to the web server's <strong>public</strong> IP address: </p><ol><li>the client sends a packet with a source IP address of 10.0.0.2 to a destination IP address of 172.16.16.1 on port 443 to request some web resources;</li><li>the router destination NATs the packet to 10.0.0.3 and replaces the destination IP address in the packet accordingly. The source IP address stays the same: 10.0.0.2;</li><li>the server replies to the client's request. However, the source IP address of the request is on the same subnet as the web server. The web server does not send the reply back to the router but sends it back directly to 10.0.0.2 with a source IP address in the reply of 10.0.0.3;</li><li>The client receives the reply packet, but it discards it because it expects a packet back from 172.16.16.1, and not from 10.0.0.3;</li></ol><p>To resolve this issue, we will configure a new <em>src-nat</em> rule (the hairpin NAT rule) as follows:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip firewall nat
+add action=masquerade chain=srcnat dst-address=10.0.0.3 out-interface=LAN protocol=tcp src-address=10.0.0.0/24</pre>
+</div></div><p>After configuring the rule above:</p><ol><li>the client sends a packet with a source IP address of 10.0.0.2 to a destination IP address of 172.16.16.1 on port 443 to request some web resources;</li><li>the router destination NATs the packet to 10.0.0.3 and replaces the destination IP address in the packet accordingly. It also source NATs the packet and replaces the source IP address in the packet with the IP address on its LAN interface. The destination IP address is 10.0.0.3, and the source IP address is 10.0.0.1;</li><li>the web server replies to the request and sends the reply with a source IP address of 10.0.0.3 back to the router's LAN interface IP address of 10.0.0.1;</li><li>the router determines that the packet is part of a previous connection and undoes both the source and destination NAT, and puts the original destination IP address of 10.0.0.3 into the source IP address field, and the original source IP address of 172.16.16.1 into the destination IP address field</li></ol><h2 id="NAT-Endpoint-IndependentNAT">Endpoint-Independent NAT</h2><p>Endpoint-independent NAT creates mapping in the source NAT and uses the same mapping for all subsequent packets with the same source IP and port. This mapping is created with the following rule:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip firewall nat
+add action=endpoint-independent-nat chain=srcnat out-interface=WAN protocol=udp</pre>
+</div></div><p>This mapping allows running source-independent filtering, which allows forwarding packets from any source from WAN to mapped internal IP and port. The following rule enables filtering:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip firewall nat
+add action=endpoint-independent-nat chain=dstnat in-interface=WAN protocol=udp</pre>
+</div></div><p><br/></p><div role="region" aria-label="Warning" class="confluence-information-macro  confluence-information-macro-warning" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-error confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Endpoint-independent NAT works only with UDP protocol.</p></div></div><p><br/></p><p>Additionally, endpoint-independent-nat can take a few other parameters:</p><ul><li><code><span style="color:var(--ds-icon-success,#22A06B);"><strong>randomize-port</strong></span></code> - randomize to which public port connections will be mapped.</li></ul><p><br/></p><p>More info <a class="external-link" href="https://www.ietf.org/rfc/rfc5128.txt" rel="nofollow">https://www.ietf.org/rfc/rfc5128.txt</a> section 2.2.3 and 2.2.5</p><h1 id="NAT-NATHelpers"><span class="mw-headline">NAT Helpers</span></h1><p><span>Hosts behind a NAT-enabled router do not have true end-to-end connectivity. Therefore some Internet protocols might not work in scenarios with NAT. To overcome these limitations RouterOS includes a number of NAT helpers, that enable NAT traversal for various protocols.</span></p><p><span>Nat helpers can be managed from </span><code><span style="color:var(--ds-icon-success,#22A06B);">/ip firewall service-ports </span></code><span>menu.</span></p><p><span>List of available nat helpers:</span></p><div class="table-wrap"><table class="wrapped confluenceTable" style="margin-left: 10.2344px;"><tbody class=""><tr class=""><th class="confluenceTh">Helper</th><th class="confluenceTh">Description</th></tr><tr class=""><td class="confluenceTd"><strong>FTP</strong></td><td class="confluenceTd">FTP service helper</td></tr><tr class=""><td class="confluenceTd"><strong>H323</strong></td><td class="confluenceTd">H323 service helper</td></tr><tr class=""><td class="confluenceTd"><strong>IRC</strong></td><td class="confluenceTd">IRC service helper</td></tr><tr class=""><td class="confluenceTd"><strong>PPTP</strong></td><td class="confluenceTd">PPTP (GRE) tunneling helper</td></tr><tr class=""><td class="confluenceTd"><strong>UDPLITE</strong></td><td class="confluenceTd">UDP-Lite service helper</td></tr><tr class=""><td class="confluenceTd"><strong>DCCP</strong></td><td class="confluenceTd">DCCP service helper</td></tr><tr class=""><td class="confluenceTd"><strong>SCTP</strong></td><td class="confluenceTd">SCTP service helper</td></tr><tr class=""><td class="confluenceTd"><strong>SIP</strong></td><td class="confluenceTd">SIP helper. Additional options:<ul><li><strong>sip-direct-media</strong><span> </span>allows redirecting the RTP media stream to go directly from the caller to the callee. The default value is<span> </span><em>yes</em>.</li><li><strong>sip-timeout</strong><span> </span>allows adjusting TTL of SIP UDP connections. Default: 1 hour. In some setups, you have to reduce that.</li></ul></td></tr><tr class=""><td class="confluenceTd"><strong>TFTP</strong></td><td class="confluenceTd">TFTP service helper</td></tr><tr class=""><td class="confluenceTd"><strong>RSTP</strong></td><td class="confluenceTd">RTSP service helper</td></tr></tbody></table></div><p><br/></p><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>If connection tracking is not enabled then firewall service ports will be shown as inactive</p></div></div><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p><strong>udplite</strong>, <strong>dccp</strong>, and <strong>sctp </strong>are built-in services of the connection tracking. Since these are not separately loaded modules, they cannot be disabled separately, they got disabled together with the connection tracking.</p></div></div><p><br/></p><p><span style="font-size: x-large;"><span style="letter-spacing: -0.24px;">NAT Actions</span></span></p><p>Table lists NAT actions and their associated properties. Other actions are listed <a href="Common-Firewall-Matchers-and-Actions_250708064.html">here</a>.</p><div class="table-wrap"><table class="wrapped confluenceTable" style="margin-left: 23.1719px;"><colgroup><col/><col/></colgroup><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>action</strong><span> </span>(<em>action name</em>; Default:<span> </span><strong>accept</strong>)</td><td class="confluenceTd"><br/><ul class="bullets"><li><code><span style="color:var(--ds-icon-success,#22A06B);">dst-nat</span></code> - replaces the destination address and/or port of an IP packet with values specified by <span style="color:var(--ds-icon-success,#22A06B);"><code>to-addresses</code></span> and <span style="color:var(--ds-icon-success,#22A06B);"><code>to-ports</code></span> parameters</li><li><code><span style="color:var(--ds-icon-success,#22A06B);">masquerade</span></code> - replaces the source port of an IP packet with one specified by <span style="color:var(--ds-icon-success,#22A06B);"><code>to-ports</code> </span>parameter and replace the source address of an IP packet to the IP determined by the routing facility. </li><li><code><span style="color:var(--ds-icon-success,#22A06B);">netmap</span></code> - creates a static 1:1 mapping of one set of IP addresses to another one. Often used to distribute public IP addresses to hosts on private networks</li><li><code><span style="color:var(--ds-icon-success,#22A06B);">redirect</span></code> - replaces the destination port of an IP packet with one specified by <span style="color:var(--ds-icon-success,#22A06B);"><code>to-ports</code></span> parameter and destination address to one of the router's local addresses</li><li><code><span style="color:var(--ds-icon-success,#22A06B);">same</span></code> - gives a particular client the same source/destination IP address from a supplied range for each connection. This is most frequently used for services that expect the same client address for multiple connections from the same client. <strong>IPv4</strong> only</li><li><code><span style="color:var(--ds-icon-success,#22A06B);">src-nat </span></code>- replaces the source address of an IP packet with values specified by <span style="color:var(--ds-icon-success,#22A06B);"><code>to-addresses</code></span> and <span style="color:var(--ds-icon-success,#22A06B);"><code>to-ports</code></span> parameters</li><li><code><span style="color:var(--ds-icon-success,#22A06B);">endpoint-independent-nat</span></code> - uses endpoint-independent mapping and filtering. Works only with UDP protocol. <strong>IPv4</strong> only.</li></ul></td></tr><tr><td class="confluenceTd"><strong>same-not-by-dst</strong><span> </span>(<em>yes | no</em>; Default: )</td><td class="confluenceTd">Specifies whether to take into account or not the destination IP address when selecting a new source IP address. Applicable if<span> </span><span style="color:var(--ds-icon-success,#22A06B);"><code>action=same</code></span></td></tr><tr><td class="confluenceTd"><strong>to-addresses</strong><span> </span>(<em>IP address[-IP address]</em>; Default:<span> </span><strong>0.0.0.0</strong>)</td><td class="confluenceTd">Replace the original address with the specified one. Applicable if action is <code><span style="color:var(--ds-icon-success,#22A06B);">dst-nat</span></code>, <code><span style="color:var(--ds-icon-success,#22A06B);">netmap</span></code>, <code><span style="color:var(--ds-icon-success,#22A06B);">same</span></code>, <code><span style="color:var(--ds-icon-success,#22A06B);">src-nat</span></code></td></tr><tr><td class="confluenceTd"><strong>to-ports</strong><span> </span>(<em>integer[-integer]: 0..65535</em>; Default: )</td><td class="confluenceTd">Replace the original port with the specified one. Applicable if action is <code><span style="color:var(--ds-icon-success,#22A06B);">dst-nat</span></code>, <code><span style="color:var(--ds-icon-success,#22A06B);">redirect</span></code>, <code><span style="color:var(--ds-icon-success,#22A06B);">masquerade</span></code>, <code><span style="color:var(--ds-icon-success,#22A06B);">netmap</span></code>, <code><span style="color:var(--ds-icon-success,#22A06B);">same</span></code>, <code><span style="color:var(--ds-icon-success,#22A06B);">src-nat</span></code></td></tr></tbody></table></div>
+                    </div>
+
+                                                            <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/3211299/3211302.jpg">DST-nat-setup.jpg</a> (image/jpeg)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/3211299/3211303.jpg">DST-nat-setup.jpg</a> (image/jpeg)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/3211299/3702789.jpg">DST-nat-setup.jpg</a> (image/jpeg)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/3211299/3702786.jpg">Hairpin-NAT.jpg</a> (image/jpeg)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/3211299/3702788.jpg">hairping-nat.jpg</a> (image/jpeg)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/3211299/3702787.jpg">hairping-nat.jpg</a> (image/jpeg)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/3211299/3211301.jpg">DST-nat-setup.jpg</a> (image/jpeg)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/3211299/3702793.jpg">HairpinNAT-example.jpg</a> (image/jpeg)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/3211299/3702792.jpg">HairpinNAT-example.jpg</a> (image/jpeg)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/3211299/4390915.jpg">NAT-setup.jpg</a> (image/jpeg)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/3211299/4390917.jpg">NAT-setup.jpg</a> (image/jpeg)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/3211299/4390918.jpg">Hairpin-NAT-setup.jpg</a> (image/jpeg)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/3211299/4390914.jpg">NAT-setup.jpg</a> (image/jpeg)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/3211299/4390916.jpg">Hairpin-NAT-setup.jpg</a> (image/jpeg)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/3211299/108789764.png">nats.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/3211299/83755071.png">Cgnat.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/3211299/48660579.png">nats.png</a> (image/png)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

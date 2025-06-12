@@ -1,0 +1,151 @@
+/* packages/web/src/components/Navigation.module.css */
+
+.navList {
+  list-style: none;
+}
+
+.navItem {
+  margin-bottom: 0.125rem;
+}
+
+.itemContainer {
+  display: flex;
+  align-items: center;
+  padding: 0.125rem 0;
+  border-radius: 4px;
+  min-height: 32px; /* Smaller for desktop */
+}
+
+/* Mobile-optimized touch interactions */
+@media (max-width: 767px) {
+  .navItem {
+    margin-bottom: var(--space-xs, 0.5rem);
+  }
+  
+  .itemContainer {
+    padding: var(--space-sm, 0.5rem) var(--space-md, 1rem);
+    margin: 0 calc(-1 * var(--space-md, 1rem));
+    border-radius: 12px;
+    transition: background-color var(--transition-fast, 200ms ease);
+  }
+  
+  .itemContainer:active {
+    background: rgba(99, 179, 237, 0.1);
+  }
+}
+
+.toggleButton {
+  background: none;
+  border: none;
+  color: #a0aec0; /* Softer muted gray for the toggle */
+  cursor: pointer;
+  width: 1.25rem;
+  height: 1.25rem;
+  font-family: monospace;
+  font-size: 0.875rem;
+  margin-right: 0.5rem;
+  text-align: center;
+  flex-shrink: 0;
+  min-width: 28px; /* Smaller for desktop */
+  min-height: 28px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast, 200ms ease);
+}
+
+.toggleButton:hover {
+  color: #e2e8f0;
+  background: rgba(99, 179, 237, 0.1);
+}
+
+.toggleButton:active {
+  background: rgba(99, 179, 237, 0.2);
+  transform: scale(0.95);
+}
+
+/* Touch-optimized toggle button */
+@media (max-width: 767px) {
+  .toggleButton {
+    width: var(--touch-target, 44px);
+    height: var(--touch-target, 44px);
+    margin-right: var(--space-sm, 0.5rem);
+    font-size: 1.2rem;
+  }
+}
+
+.placeholder {
+  width: 1.25rem;
+  margin-right: 0.5rem;
+  flex-shrink: 0;
+}
+
+.link {
+  color: #e2e8f0; /* Softer light text */
+  text-decoration: none;
+  flex-grow: 1;
+  font-size: 0.9rem;
+  line-height: 1.3;
+}
+
+.link:hover {
+  text-decoration: underline;
+  color: #90cdf4; /* Softer blue on hover */
+}
+
+.childList {
+  list-style: none;
+  margin-top: 0.125rem;
+}
+
+.topLevelSection {
+  margin-bottom: 0.25rem;
+}
+
+.topLevelHeader {
+  display: flex;
+  align-items: center;
+  padding: 0.25rem 0;
+  border-radius: 6px;
+  min-height: 36px; /* Smaller than touch target for desktop */
+}
+
+.topLevelToggle {
+  background: none;
+  border: none;
+  color: #a0aec0;
+  cursor: pointer;
+  width: 1.5rem;
+  height: 1.5rem;
+  font-family: monospace;
+  font-size: 1rem;
+  margin-right: 0.5rem;
+  text-align: center;
+  flex-shrink: 0;
+  min-width: 32px; /* Smaller for desktop */
+  min-height: 32px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast, 200ms ease);
+}
+
+.topLevelToggle:hover {
+  color: #e2e8f0;
+  background: rgba(99, 179, 237, 0.1);
+}
+
+.topLevelToggle:active {
+  background: rgba(99, 179, 237, 0.2);
+  transform: scale(0.95);
+}
+
+.topLevelTitle {
+  font-weight: 600;
+  font-size: 1rem;
+  color: #f7fafc;
+  flex-grow: 1;
+  line-height: 1.3;
+} 

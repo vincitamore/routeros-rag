@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : TFTP</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="System-Information-and-Utilities_119144657.html">System Information and Utilities</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : TFTP
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Artūrs C.</span>, last updated by <span class='editor'> Unknown User (elvijsi)</span> on Feb 03, 2023
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742032912 {padding: 0px;}
+div.rbtoc1747742032912 ul {margin-left: 0px;}
+div.rbtoc1747742032912 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742032912'>
+<ul class='toc-indentation'>
+<li><a href='#TFTP-Introduction'>Introduction</a></li>
+<li><a href='#TFTP-Parameters'>Parameters</a>
+<ul class='toc-indentation'>
+<li><a href='#TFTP-Settings'>Settings</a></li>
+</ul>
+</li>
+<li><a href='#TFTP-Regexp'>Regexp</a></li>
+<li><a href='#TFTP-Examples'>Examples</a></li>
+</ul>
+</div></p><h1 id="TFTP-Introduction">Introduction</h1><p><span style="color:var(--ds-text-accent-lime-bolder,#37471f);">Trivial File Transfer Protocol or simply TFTP is a very simple protocol used to transfer files. Each nonterminal packet is acknowledged separately.</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">ip/tftp/</pre>
+</div></div><p>This menu contains all TFTP access rules. If in this menu are no rules, the TFTP server is not started when RouterOS boots. This menu only shows 1 additional attribute compared to what you can set when creating a rule.</p><h1 id="TFTP-Parameters">Parameters</h1><div class="table-wrap"><table class="relative-table wrapped confluenceTable" style="width: 99.3504%;"><colgroup><col style="width: 8.54455%;"/><col style="width: 91.4555%;"/></colgroup><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>ip-address</strong><span> </span><em>(required)</em></td><td class="confluenceTd">Range of IP addresses accepted as clients if empty<span> </span><em>0.0.0.0/0</em><span> </span>will be used</td></tr><tr><td class="confluenceTd"><strong>allow-rollover</strong><span> </span><em>(Default: No)</em></td><td class="confluenceTd">If set to <em>yes </em>TFTP server will allow the sequence number to roll over when the maximum value is reached. This is used to enable large downloads using the TFTP server.</td></tr><tr><td class="confluenceTd"><strong>req-filename</strong></td><td class="confluenceTd">Requested filename as<span> a </span><em>regular expression (regex)</em><span> </span>if a field is left empty it defaults to<span> </span><em>.*</em></td></tr><tr><td class="confluenceTd"><strong>real-filename</strong></td><td class="confluenceTd">If<span> </span><strong>req-filename</strong><span> </span>and<span> </span><strong>real-filename</strong><span> </span>values are set and valid, the requested filename will be replaced with matched file. This field has to be set. If multiple<span> </span><em>regex</em><span> </span>is specified in<span> </span><em>req-filename</em>, with this field you can set which ones should match, so this rule is validated.<span> The </span><em>real-filename</em><span> </span>format for using multiple<span> </span><em>regex</em><span> </span>is<span> </span><strong>filename\0\5\6</strong></td></tr><tr><td class="confluenceTd"><strong>allow</strong><span> </span>(<em>default: yes</em>)</td><td class="confluenceTd">To allow connection if the above fields are set. if<span> </span><em>no</em>, a connection will be interrupted</td></tr><tr><td class="confluenceTd"><strong>read-only</strong><span> </span>(<em>default: no</em>)</td><td class="confluenceTd">Sets if a file can be written to, if set to &quot;yes&quot; write attempt will fail with error</td></tr><tr><td class="confluenceTd"><strong>hits </strong><em>(read-only)</em></td><td class="confluenceTd">How many times this access rule entry has been used (read-only)</td></tr></tbody></table></div><h2 id="TFTP-Settings">Settings</h2><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip/tftp/settings</pre>
+</div></div><p>This menu contains all TFTP settings.</p><div class="table-wrap"><table class="relative-table wrapped confluenceTable" style="width: 99.2286%;"><colgroup><col style="width: 8.6013%;"/><col style="width: 91.4006%;"/></colgroup><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>max-block-size</strong><span> </span>(<em>default:4096</em>)</td><td class="confluenceTd">Maximum accepted block size value. During the transfer negotiation phase, the RouterOS device will not negotiate a larger value than this.</td></tr></tbody></table></div><h1 class="auto-cursor-target" id="TFTP-Regexp">Regexp</h1><p><span class="mw-headline">Req-filename field allowed regexp, a</span>llowed regexp in this field are:</p><p><strong>brackets ()</strong><span> </span>- marking subsection:</p><pre style="margin-left: 20.0px;">    example 1 <em>a(sd|fg)</em> will match asd or afg
+</pre><p><strong>asterisk &quot;*&quot;</strong><span> </span>- match zero or more times preceding symbol:</p><pre style="margin-left: 20.0px;">    example 1 <em>a*</em> will match any length name consisting purely of symbols <em>a</em> or no symbols at all
+    example 2 <em>.*</em> will match any length name, also, empty field
+    example 3 <em>as*df</em> will match adf, asdf, assdf, asssdf etc.
+</pre><p><strong>plus &quot;+&quot;</strong><span> </span>will match one or more times the preceding symbol:</p><pre style="margin-left: 20.0px;">    example: as+df will match asdf, assdf etc.
+</pre><p><strong>dot &quot;.&quot;</strong><span> </span>- matches any symbol:</p><pre style="margin-left: 20.0px;">    example <em>as.f</em> will match asdf, asbf ashf etc.
+</pre><p><strong>square brackets []</strong><span> </span>- variation between:</p><pre style="margin-left: 20.0px;">    example <em>as[df]</em> will match <em>asd</em> and <em>asf</em>
+</pre><p><strong>question mark &quot;?&quot;</strong><span> </span>will match one or no symbols:</p><pre style="margin-left: 20.0px;">    example <em>asd?f</em> will match <em>asdf</em> and <em>asf</em>
+</pre><p><strong>caret &quot;^&quot;</strong><span> </span>- used at the beginning of the line means that the line starts with;</p><p><strong>dollar &quot;$&quot;</strong><span> </span>- means at the end of the line.</p><h1 id="TFTP-Examples"><span class="mw-headline">Examples</span></h1><p>If a file is requested return the file from the store called sata1:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip tftp add req-filename=file.txt real-filename=/sata1/file.txt allow=yes read-only=yes</pre>
+</div></div><p>If we want to give out one specific<span> </span><em>file</em><span> </span>no matter what the user is requesting:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip tftp add req-filename=.* real-filename=/sata1/file.txt allow=yes read-only=yes</pre>
+</div></div><p><span> I</span>f the user requests<span> </span><em>aaa.bin</em><span> </span>or<span> </span><em>bbb.bin</em><span> </span>then give them<span> </span><em>ccc.bin</em>:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip tftp add req-filename=&quot;(aaa.bin)|(bbb.bin)&quot; real-filename=&quot;/sata1/ccc.bin\\0&quot; allow=yes read-only=yes</pre>
+</div></div><p><br/></p><div role="region" aria-label="Tip" class="confluence-information-macro  confluence-information-macro-tip" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-approve confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p><span class="mw-headline">RouterOS receives TFTP requests, but the client gets a transfer timeout?</span></p><p><span class="mw-headline">Some embedded clients request large block sizes and yet do not handle fragmented packets correctly. For these clients, it is recommended to set &quot;max-block-size&quot; on the RouterOS side or &quot;blksize&quot; on Client-side to the value of the smallest MTU on your network minus 32 bytes (20 bytes for IP, 8 for UDP, and 4 for TFTP) and more if you use IP options on your network.</span></p></div></div>
+                    </div>
+
+                                        
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

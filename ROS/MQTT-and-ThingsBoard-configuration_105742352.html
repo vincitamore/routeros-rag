@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : MQTT and ThingsBoard configuration</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Internet-of-Things_46759975.html">Internet of Things</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="MQTT_46759978.html">MQTT</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : MQTT and ThingsBoard configuration
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Deniss M.</span>, last updated on Feb 28, 2025
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742043120 {padding: 0px;}
+div.rbtoc1747742043120 ul {margin-left: 0px;}
+div.rbtoc1747742043120 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742043120'>
+<ul class='toc-indentation'>
+<li><a href='#MQTTandThingsBoardconfiguration-Introduction'>Introduction</a></li>
+<li><a href='#MQTTandThingsBoardconfiguration-Thingsboardconfiguration'>Thingsboard configuration</a>
+<ul class='toc-indentation'>
+<li><a href='#MQTTandThingsBoardconfiguration-Accesstokenscenario'>Access token scenario</a></li>
+<li><a href='#MQTTandThingsBoardconfiguration-MQTTBasicscenario'>MQTT Basic scenario</a></li>
+<li><a href='#MQTTandThingsBoardconfiguration-One-waySSLcommunicationscenario'>One-way SSL communication scenario</a></li>
+<li><a href='#MQTTandThingsBoardconfiguration-X.509(two-waySSLcommunication)scenario'>X.509 (two-way SSL communication) scenario</a></li>
+</ul>
+</li>
+<li><a href='#MQTTandThingsBoardconfiguration-RouterOSconfiguration'>RouterOS configuration</a>
+<ul class='toc-indentation'>
+<li><a href='#MQTTandThingsBoardconfiguration-MQTTBroker'>MQTT Broker</a>
+<ul class='toc-indentation'>
+<li><a href='#MQTTandThingsBoardconfiguration-Accesstokenscenario.1'>Access token scenario</a></li>
+<li><a href='#MQTTandThingsBoardconfiguration-MQTTBasicscenario.1'>MQTT Basic scenario</a></li>
+<li><a href='#MQTTandThingsBoardconfiguration-One-waySSLcommunicationscenario.1'>One-way SSL communication scenario</a></li>
+<li><a href='#MQTTandThingsBoardconfiguration-X.509(two-waySSLcommunication)scenario.1'>X.509 (two-way SSL communication) scenario</a></li>
+</ul>
+</li>
+<li><a href='#MQTTandThingsBoardconfiguration-MQTTPublish'>MQTT Publish</a></li>
+</ul>
+</li>
+<li><a href='#MQTTandThingsBoardconfiguration-Verification'>Verification</a></li>
+</ul>
+</div></p><h2 id="MQTTandThingsBoardconfiguration-Introduction">Introduction</h2><p>One of the many cloud services that you can use to monitor information that is sent by an MQTT publisher is <a class="external-link" href="https://thingsboard.io/" rel="nofollow">Thingsboard</a>. This article will demonstrate how to configure both Thingsboard and RouterOS to publish the data using the MQTT protocol. RouterOS, in this scenario, is going to act as a gateway and publish the data from the RouterBoard to the Thingsboard's server. Thingsboard, in this scenario, will act as an MQTT broker (server, where data will be posted).</p><p>Before we proceed with the settings, you need to either:</p><ul><li>a) Create an account in the Thingsboard's system. You can do so by following this <a class="external-link" href="https://thingsboard.cloud/signup" rel="nofollow">link</a>. This will allow you to use the ThingsBoard cloud solution for free for a limited/test time period.</li><li>b) Set up your own server by following the <a class="external-link" href="https://thingsboard.io/docs/user-guide/install/installation-options/" rel="nofollow">guide</a>. There is a community edition that can be installed and used free of charge.</li></ul><p><br/></p><div role="region" aria-label="Warning" class="confluence-information-macro  confluence-information-macro-warning" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-error confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Please consider using <strong>SSL MQTT (TCP port 8883 and certificates)</strong>, instead of non-SSL MQTT (TCP port 1883). If you use non-SSL MQTT, the communication between the client (MQTT publisher) and the server (MQTT broker) can be easily sniffed/packet captured, and that will compromise authentication data (such as client-ids, usernames and passwords).</p></div></div><h2 id="MQTTandThingsBoardconfiguration-Thingsboardconfiguration">Thingsboard configuration</h2><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>In this guide, we will showcase local instance/server installation configuration, but the same principles apply to the cloud option.</p></div></div><p>Access the login page via your browser and log in. Go to the &quot;<strong>Devices</strong>&quot; menu.</p><p>Create a new device by clicking on the add button &quot;+&quot; and &quot;Add new device&quot;:</p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/105742352/166920444.png" data-image-src="attachments/105742352/166920444.png" data-unresolved-comment-count="0" data-linked-resource-id="166920444" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2023-1-20_13-14-8.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="105742352" data-linked-resource-container-version="48" tabindex="0" alt=""></span></p><p>Enter the name of the device and click on &quot;Add&quot;:</p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/105742352/166920445.png" data-image-src="attachments/105742352/166920445.png" data-unresolved-comment-count="0" data-linked-resource-id="166920445" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2023-1-20_13-15-46.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="105742352" data-linked-resource-container-version="48" tabindex="0" alt=""></span></p><p>By default, access token authentication is selected for the newly created device.</p><h3 id="MQTTandThingsBoardconfiguration-Accesstokenscenario">Access token scenario</h3><p>You can change the token by clicking on the created device and entering the &quot;<strong>Manage Credentials</strong>&quot; settings (in the &quot;<strong>Details</strong>&quot; section):</p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/105742352/166920446.png" data-image-src="attachments/105742352/166920446.png" data-unresolved-comment-count="0" data-linked-resource-id="166920446" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2023-1-20_13-33-11.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="105742352" data-linked-resource-container-version="48" tabindex="0" alt=""></span></p><p>This token will be used as a &quot;username&quot; for the MQTT publisher (in RouterOS settings).</p><p>You can find more information by following the <a class="external-link" href="https://thingsboard.io/docs/reference/mqtt-api/" rel="nofollow">link</a>.</p><h3 id="MQTTandThingsBoardconfiguration-MQTTBasicscenario">MQTT Basic scenario</h3><p>You can change the credentials type in the &quot;<strong>Device Credentials</strong>&quot; section for the specific device:</p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/105742352/166920448.png" data-image-src="attachments/105742352/166920448.png" data-unresolved-comment-count="0" data-linked-resource-id="166920448" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2023-1-20_13-38-37.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="105742352" data-linked-resource-container-version="48" tabindex="0" alt=""></span></p><p>MQTT Basic scenario allows you to specify the Client ID, Username, and Password for the MQTT authentication.</p><p>You can find more information by following the <a class="external-link" href="https://thingsboard.io/docs/user-guide/basic-mqtt/" rel="nofollow">link</a>.</p><h3 id="MQTTandThingsBoardconfiguration-One-waySSLcommunicationscenario">One-way SSL communication scenario</h3><div role="region" aria-label="Warning" class="confluence-information-macro  confluence-information-macro-warning" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-error confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Recommended scenario to use!</p></div></div><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>This type of authentication requires you to use a server certificate for SSL communication. A server certificate must be generated and uploaded to the ThingsBoard instance.</p><p>To generate a server certificate, use <a class="external-link" href="https://thingsboard.io/docs/user-guide/mqtt-over-ssl/" rel="nofollow">this guide</a> as a reference → generate the certificate (for example, using OPENSSL tool), install/upload it into the correct folder, and enable MQTT SSL in the ThingsBoard configuration file.</p></div></div><p>The configuration will be the same as shown in the <strong>Access token </strong>and <strong>MQTT Basic scenarios </strong>shown above. So choose either one.</p><p>The only difference, in this case, is the communication between the device and the server (you will only have to slightly change MQTT broker configuration in RouterOS settings which will be shown later on).</p><p><strong>When using this scenario, the communication is going to be encrypted (using SSL)</strong>.</p><h3 id="MQTTandThingsBoardconfiguration-X.509(two-waySSLcommunication)scenario">X.509 (two-way SSL communication) scenario</h3><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>This type of authentication requires you to use a server certificate and a client certificate for SSL communication. A server certificate must be generated and uploaded to the ThingsBoard instance.</p><p>To generate a server certificate, use <a class="external-link" href="https://thingsboard.io/docs/user-guide/mqtt-over-ssl/" rel="nofollow">this guide</a> as a reference → generate the certificate (for example, using OPENSSL tool), install/upload it into the correct folder, and enable MQTT SSL in the ThingsBoard configuration file.</p><p>To generate a client certificate, use <a class="external-link" href="https://thingsboard.io/docs/user-guide/certificates/" rel="nofollow">this guide</a> as a reference.</p></div></div><p>You can change the credentials type in the &quot;<strong>Device Credentials</strong>&quot; section for the specific device:</p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/105742352/166920449.png" data-image-src="attachments/105742352/166920449.png" data-unresolved-comment-count="0" data-linked-resource-id="166920449" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2023-1-20_13-39-23.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="105742352" data-linked-resource-container-version="48" tabindex="0" alt=""></span></p><p>X.509 scenario uses a client certificate for authentication.</p><p>Once the certificate is generated (for example, using OPEN SSL), copy the RSA public key into the field and click on the &quot;Save&quot; button.</p><h2 id="MQTTandThingsBoardconfiguration-RouterOSconfiguration">RouterOS configuration</h2><p><em><strong>note</strong>: In order to configure MQTT, make sure that <strong>iot</strong> <a href="https://help.mikrotik.com/docs/display/ROS/Packages" rel="nofollow">package</a> is installed beforehand.</em></p><h3 id="MQTTandThingsBoardconfiguration-MQTTBroker">MQTT Broker</h3><h4 id="MQTTandThingsBoardconfiguration-Accesstokenscenario.1">Access token scenario</h4><p>Add an MQTT broker as shown below:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/iot/mqtt/brokers/add name=tb address=x.x.x.x port=1883 username=access_token</pre>
+</div></div><ul><li>Change the &quot;<code>address</code>&quot; to the actual IP/domain address of your ThingsBoard server;</li><li>Change the &quot;<code>username</code>&quot; to the access token that you've used in the ThingsBoard settings.</li></ul><h4 id="MQTTandThingsBoardconfiguration-MQTTBasicscenario.1">MQTT Basic scenario</h4><p>Add an MQTT broker as shown below:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/iot/mqtt/brokers/add name=tb address=x.x.x.x client-id=clientid password=password username=username</pre>
+</div></div><ul><li>Change &quot;<code>address</code>&quot; to the actual IP/domain address of your ThingsBoard server;</li><li>Change the &quot;<code>username</code>&quot;, &quot;<code>password</code>&quot; and &quot;<code>client-id</code>&quot; to the actual values that you've used in the ThingsBoard settings.</li></ul><h4 id="MQTTandThingsBoardconfiguration-One-waySSLcommunicationscenario.1">One-way SSL communication scenario</h4><div role="region" aria-label="Warning" class="confluence-information-macro  confluence-information-macro-warning" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-error confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Recommended scenario to use!</p></div></div><p>In this scenario, RouterOS needs to have a server certificate imported into its system.</p><p>Drag-and-drop server certificate, that was installed into the ThingsBoard, into the router's &quot;File List&quot; menu:</p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/105742352/167706727.png" data-image-src="attachments/105742352/167706727.png" data-unresolved-comment-count="0" data-linked-resource-id="167706727" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2023-1-24_14-47-41.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="105742352" data-linked-resource-container-version="48" tabindex="0" alt=""></span></p><p>Import server certificate:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/certificate/import file-name=mqttserver.pem passphrase=&quot;&quot;</pre>
+</div></div><p>When using <strong>SSL one-way communication</strong> and an <strong>access token scenario</strong>, add an MQTT broker as shown below:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/iot/mqtt/brokers/add name=tb address=x.x.x.x port=8883 username=access_token ssl=yes</pre>
+</div></div><ul><li>Change the &quot;<code>address</code>&quot; to the actual IP/domain address of your ThingsBoard server;</li><li>Change the &quot;<code>username</code>&quot; to the access token that you've used in the ThingsBoard settings;</li><li>Make sure to use &quot;<code>port=8883</code>&quot; (the MQTT SSL port that the server is listening to);</li><li>Make sure to enable &quot;<code>ssl=yes</code>&quot;.</li></ul><p>When using <strong>SSL one-way communication</strong> and an <strong>MQTT Basic scenario</strong>, add an MQTT broker as shown below:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/iot/mqtt/brokers/add name=tb address=x.x.x.x port=8883 client-id=clientid password=password username=username ssl=yes</pre>
+</div></div><ul><li>Change the &quot;<code>address</code>&quot; to the actual IP/domain address of your ThingsBoard server;</li><li>Change the &quot;<code>username</code>&quot;, &quot;<code>password</code>&quot; and &quot;<code>client-id</code>&quot; to the actual values that you've used in the ThingsBoard settings;</li><li>Make sure to use &quot;<code>port=8883</code>&quot; (the MQTT SSL port that the server is listening to);</li><li>Make sure to enable &quot;<code>ssl=yes</code>&quot;.</li></ul><h4 id="MQTTandThingsBoardconfiguration-X.509(two-waySSLcommunication)scenario.1">X.509 (two-way SSL communication) scenario</h4><p>Drag-and-drop the certificates into the router's &quot;Files/File List&quot; menu →  <em>server certificate, client certificate, and its private key.</em></p><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size">Import certificates one by one:<br/></span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/certificate/import file-name=mqttserver.pem passphrase=&quot;&quot;
+/certificate/import file-name=cert.pem passphrase=&quot;&quot;
+/certificate/import file-name=key.pem passphrase=&quot;&quot;</pre>
+</div></div><p>Add an MQTT broker as shown below:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/iot/mqtt/brokers/add name=tb address=x.x.x.x port=8883 certificate=cert.pem_0 ssl=yes</pre>
+</div></div><ul><li>Change the &quot;<code>address</code>&quot; to the actual IP/domain address of your ThingsBoard server;</li><li>Change the &quot;<code>certificate</code>&quot; selected to the actual client certificate name that you've imported;</li><li>Make sure to use &quot;<code>port=8883</code>&quot; (the MQTT SSL port that the server is listening to);</li><li>Make sure to enable &quot;<code>ssl=yes</code>&quot;.</li></ul><h3 id="MQTTandThingsBoardconfiguration-MQTTPublish">MQTT Publish</h3><p>a) A quick MQTT publish test with a static value:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/iot/mqtt/publish broker=&quot;tb&quot; topic=&quot;v1/devices/me/telemetry&quot; message=&quot;{\&quot;cpu\&quot;:\&quot;7\&quot;}&quot;</pre>
+</div></div><p>b) In order to publish relevant data from the RouterOS to the Thingsboard, you can use the script shown below as a reference. The script collects the data from the RouterOS device (model name, serial number, RouterOS version, current CPU, used memory, free memory, and uptime) and publishes the message (the data) to the broker in the JSON format:</p><blockquote><p># Required packages: iot</p><p>################################ Configuration ################################<br/># Name of an existing MQTT broker that should be used for publishing<br/>:local broker &quot;tb&quot;</p><p># MQTT topic where the message should be published<br/>:local topic &quot;v1/devices/me/telemetry&quot;</p><p>#################################### System ###################################<br/>:put (&quot;[*] Gathering system info...&quot;)<br/>:local cpuLoad [/system resource get cpu-load]<br/>:local freeMemory [/system resource get free-memory]<br/>:local usedMemory ([/system resource get total-memory] - $freeMemory)<br/>:local rosVersion [/system package get value-name=version \<br/>[/system package find where name ~ &quot;^routeros&quot;]]<br/>:local model [/system routerboard get value-name=model]<br/>:local serialNumber [/system routerboard get value-name=serial-number]<br/>:local upTime [/system resource get uptime]</p><p>#################################### MQTT #####################################<br/>:local message \<br/>&quot;{\&quot;model\&quot;:\&quot;$model\&quot;,\<br/>\&quot;sn\&quot;:\&quot;$serialNumber\&quot;,\<br/>\&quot;ros\&quot;:\&quot;$rosVersion\&quot;,\<br/>\&quot;cpu\&quot;:$cpuLoad,\<br/>\&quot;umem\&quot;:$usedMemory,\<br/>\&quot;fmem\&quot;:$freeMemory,\<br/>\&quot;uptime\&quot;:\&quot;$upTime\&quot;}&quot;</p><p>:log info &quot;$message&quot;;<br/>:put (&quot;[*] Total message size: $[:len $message] bytes&quot;)<br/>:put (&quot;[*] Sending message to MQTT broker...&quot;)<br/>/iot mqtt publish broker=$broker topic=$topic message=$message<br/>:put (&quot;[*] Done&quot;)</p></blockquote><p>2 script lines should be taken into account.</p><blockquote><p>:local broker &quot;tb&quot;</p></blockquote><p>line, where you should specify the broker's name within the quotation marks &quot;&quot;.</p><blockquote><p>:local topic &quot;v1/devices/me/telemetry&quot;</p></blockquote><p>line, where you should specify the correct topic within the quotation marks &quot;&quot; (check Thingsboard's <a class="external-link" href="https://thingsboard.io/docs/reference/mqtt-api/" rel="nofollow">documentation</a> for the exact topic that needs to be used).</p><p>The rest of the script configuration depends on the overall requirements.</p><p>Copy and paste the above script into a notepad, and re-copy it again. Navigate to System&gt;Scripts menu, add a new script there, and paste the script that is shown above. Name it, for example, script1.</p><p>To run the script, you can use the command line:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/system script run script1</pre>
+</div></div><h2 id="MQTTandThingsBoardconfiguration-Verification">Verification</h2><p>You can check the received/published data for the device under the &quot;Latest telemetry&quot; section:</p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/105742352/166920451.png" data-image-src="attachments/105742352/166920451.png" data-unresolved-comment-count="0" data-linked-resource-id="166920451" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2023-1-20_14-3-41.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="105742352" data-linked-resource-container-version="48" tabindex="0" alt=""></span></p>
+                    </div>
+
+                                                            <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/105742352/105742355.png">image2022-1-28_11-1-59.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/105742352/105742356.png">image2022-1-28_11-6-2.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/105742352/105742357.png">image2022-1-28_11-10-9.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/105742352/105742358.png">image2022-1-28_11-12-35.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/105742352/105742359.png">image2022-1-28_11-15-48.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/105742352/105742360.png">image2022-1-28_11-18-11.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/105742352/105742361.png">image2022-1-28_11-20-17.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/105742352/105742362.png">image2022-1-28_11-21-45.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/105742352/105742363.png">image2022-1-28_11-22-40.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/105742352/105742364.png">image2022-1-28_11-23-32.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/105742352/105742365.png">image2022-1-28_11-23-57.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/105742352/105742366.png">image2022-1-28_11-25-38.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/105742352/105742368.png">image2022-1-28_11-39-47.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/105742352/105742369.png">image2022-1-28_11-42-15.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/105742352/105742370.png">image2022-1-28_11-49-8.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/105742352/105742371.png">image2022-1-28_12-8-45.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/105742352/105742373.png">image2022-1-28_12-39-53.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/105742352/105742374.png">image2022-1-28_12-42-47.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/105742352/105742375.png">image2022-1-28_12-43-6.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/105742352/105742376.png">image2022-1-28_12-46-19.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/105742352/105742379.png">image2022-1-28_13-12-12.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/105742352/166920444.png">image-2023-1-20_13-14-8.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/105742352/166920445.png">image-2023-1-20_13-15-46.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/105742352/166920446.png">image-2023-1-20_13-33-11.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/105742352/166920447.png">image-2023-1-20_13-34-20.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/105742352/166920448.png">image-2023-1-20_13-38-37.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/105742352/166920449.png">image-2023-1-20_13-39-23.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/105742352/166920451.png">image-2023-1-20_14-3-41.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/105742352/167706721.png">image-2023-1-24_14-33-13.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/105742352/167706722.png">image-2023-1-24_14-34-2.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/105742352/167706723.png">image-2023-1-24_14-35-34.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/105742352/167706727.png">image-2023-1-24_14-47-41.png</a> (image/png)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:54</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : Configuration Management</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Getting-started_328119.html">Getting started</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : Configuration Management
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Māris B.</span>, last updated by <span class='editor'> Serhii T.</span> on Feb 28, 2025
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742018795 {padding: 0px;}
+div.rbtoc1747742018795 ul {margin-left: 0px;}
+div.rbtoc1747742018795 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742018795'>
+<ul class='toc-indentation'>
+<li><a href='#ConfigurationManagement-Overview'>Overview</a></li>
+<li><a href='#ConfigurationManagement-ConfigurationUndoandRedo'>Configuration Undo and Redo</a></li>
+<li><a href='#ConfigurationManagement-SafeMode'>Safe Mode</a></li>
+<li><a href='#ConfigurationManagement-SystemBackupandRestore'>System Backup and Restore</a></li>
+<li><a href='#ConfigurationManagement-ConfigurationExportandImport'>Configuration Export and Import</a>
+<ul class='toc-indentation'>
+<li><a href='#ConfigurationManagement-ConfigurationExport'>Configuration Export</a></li>
+<li><a href='#ConfigurationManagement-ConfigurationImport'>Configuration Import</a></li>
+<li><a href='#ConfigurationManagement-AutoImport'>Auto Import</a></li>
+<li><a href='#ConfigurationManagement-Importtroubleshooting'>Import troubleshooting</a>
+<ul class='toc-indentation'>
+<li><a href='#ConfigurationManagement-Configurationpartstowatchoutforinexported.rscfiles'>Configuration parts to watch out for in exported .rsc files</a></li>
+<li><a href='#ConfigurationManagement-Startupdelay'>Startup delay</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href='#ConfigurationManagement-ConfigurationReset'>Configuration Reset</a></li>
+</ul>
+</div></p><h1 id="ConfigurationManagement-Overview">Overview</h1><p>This article describes a set of commands used for configuration management.</p><h1 id="ConfigurationManagement-ConfigurationUndoandRedo">Configuration Undo and Redo</h1><p>Any action done in the GUI or any command executed from the CLI is recorded in <span style="color:var(--ds-text-accent-blue,#0055CC);"><code>/system history</code></span>.  You can undo or redo any action by running <span style="color:var(--ds-icon-success,#22A06B);">undo</span> or <span style="color:var(--ds-icon-success,#22A06B);">redo</span> commands from the CLI or by clicking on Undo, and Redo buttons from the GUI. </p><p>A simple example to demonstrate the addition of the firewall rule and how to undo and redo the action:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@v7_ccr_bgp] /ip/firewall/filter&gt; add chain=forward action=drop 
+
+[admin@v7_ccr_bgp] /ip/firewall/filter&gt; print 
+Flags: X - disabled, I - invalid; D - dynamic 
+0 X chain=input action=drop protocol=icmp src-address=10.155.101.1 log=no 
+log-prefix=&quot;&quot;
+
+1 chain=forward action=drop
+
+[admin@v7_ccr_bgp] /ip/firewall/filter&gt; /system/history/print 
+Flags: U - undoable, R - redoable, F - floating-undo
+Columns: ACTION, BY, POLICy
+ACTION BY POLIC
+F filter rule added admin write
+U --- write
+[admin@v7_ccr_bgp] /ip/firewall/filter&gt;</pre>
+</div></div><p>We have added a firewall rule and in<span style="color:var(--ds-text-accent-blue,#0055CC);"><code> /system history</code></span> we can see all that was done.</p><p>Let's undo everything:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@v7_ccr_bgp] /ip/firewall/filter&gt; /undo 
+[admin@v7_ccr_bgp] /ip/firewall/filter&gt; print 
+Flags: X - disabled, I - invalid; D - dynamic 
+0 X chain=input action=drop protocol=icmp src-address=10.155.101.1 log=no 
+log-prefix=&quot;&quot;
+
+[admin@v7_ccr_bgp] /ip/firewall/filter&gt;</pre>
+</div></div><p>As you can see firewall rule disappeared.<br/>Now redo the last change:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@v7_ccr_bgp] /ip/firewall/filter&gt; /redo 
+[admin@v7_ccr_bgp] /ip/firewall/filter&gt; print 
+Flags: X - disabled, I - invalid; D - dynamic 
+0 X chain=input action=drop protocol=icmp src-address=10.155.101.1 log=no 
+log-prefix=&quot;&quot;
+
+1 chain=forward action=drop 
+
+[admin@v7_ccr_bgp] /ip/firewall/filter&gt;</pre>
+</div></div><p>System history is capable of showing exact CLI commands that will be executed during &quot;Undo&quot; or &quot;Redo&quot; actions even if we perform the action from GUI, for example, detailed history output after adding TCP accept rule from WinBox:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@v7_ccr_bgp] /system/history&gt; print detail 
+Flags: U - undoable, R - redoable, F - floating-undo 
+ F redo=
+      /ip firewall filter add action=accept chain=forward disabled=no log=no \
+          log-prefix=&quot;&quot; protocol=tcp
+    undo=/ip firewall filter remove *4 action=&quot;filter rule added&quot; by=&quot;admin&quot; 
+    policy=write time=oct/10/2019 18:51:05 
+
+ F redo=/ip firewall filter add action=accept chain=forward 
+    undo=/ip firewall filter remove *3 action=&quot;filter rule added&quot; by=&quot;admin&quot; 
+    policy=write time=oct/10/2019 18:49:03 
+
+
+U redo=&quot;&quot; undo=&quot;&quot; action=&quot;---&quot; by=&quot;&quot; policy=write time=sep/27/2019 13:07:35 
+[admin@v7_ccr_bgp] /system/history&gt; </pre>
+</div></div><h1 id="ConfigurationManagement-SafeMode">Safe Mode</h1><p>It is sometimes possible to change router configuration in a way that will make the router inaccessible (except from the local console). Usually, this is done by accident, but there is no way to undo the last change when the connection to the router is already cut. Safe mode can be used to minimize such risk.</p><p>The <strong>&quot;Safe Mode&quot;</strong> button in the Winbox GUI allows you to enter Safe Mode, while in the CLI, you can access it by either using the keyboard shortcut <strong>F4</strong> or pressing <strong>[CTRL]+[X]</strong>. To exit without saving the made changes in CLI, hit<span> </span><strong>[CTRL]+[D].</strong></p><p><span class="confluence-embedded-file-wrapper image-left-wrapper"><img class="confluence-embedded-image image-left" draggable="false" src="attachments/328155/177406013.png" data-image-src="attachments/328155/177406013.png" data-unresolved-comment-count="0" data-linked-resource-id="177406013" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2023-3-8_13-44-21.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="328155" data-linked-resource-container-version="82" tabindex="0" alt=""></span></p><p><br/></p><p><br/></p><p><br/></p><p><br/></p><p><br/></p><p><br/></p><p><br/></p><p><br/></p><p><br/></p><p><br/></p><p><br/></p><p><br/></p><p><br/></p><p><br/></p><p><br/></p><p><br/></p><p><br/></p><p><br/></p><p><br/></p><p><br/></p><p><br/></p><p><br/></p><p><br/></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] ip route&gt;[CTRL]+[X] 
+[Safe Mode taken] 
+[admin@MikroTik] ip route&lt;SAFE&gt;</pre>
+</div></div><p>Message<span> </span><strong>Safe Mode taken</strong><span> </span>is displayed and prompt changes to reflect that session is now in safe mode. All configuration changes that are made (also from other login sessions), while the router is in safe mode, are automatically undone if the safe mode session terminates abnormally. You can see all such changes that will be automatically undone and tagged with an<span> </span><strong>F</strong><span> </span>flag in the system history:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] /ip/route&gt; 
+[Safe Mode taken] 
+[admin@MikroTik] /ip/route&lt;SAFE&gt; add 
+[admin@MikroTik] /ip/route&lt;SAFE&gt; /system/history/print 
+Flags: U, F - FLOATING-UNDO 
+Columns:
+ ACTION, BY, POLICY ACTION BY POLICY 
+F route 0.0.0.0/0 added admin write </pre>
+</div></div><p>Now, if the telnet connection (or WinBox terminal) is cut, then after a while (TCP timeout is<span> </span><strong>9</strong><span> </span>minutes) all changes that were made while in safe mode will be undone. Exiting session by<span> </span><strong>[Ctrl]+[D]</strong><span> </span>also undoes all safe mode changes, while<span> </span><strong>/quit</strong><span> </span>does not.</p><p>If another user tries to enter safe mode, he's given the following message:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt;
+Hijacking Safe Mode from someone - unroll/release/don&#39;t take it [u/r/d]:</pre>
+</div></div><ul><li>[u] - undoes all safe mode changes, and puts the current session in safe mode.</li><li>[r] - keeps all current safe mode changes, and puts the current session in a safe mode. The previous owner of safe mode is notified about this:</li></ul><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] ip firewall rule input
+[Safe mode released by another user]</pre>
+</div></div><ul><li>[d] - leaves everything as-is.</li></ul><p>If too many changes are made while in safe mode, and there's no room in history to hold them all (currently history keeps up to 100 most recent actions), then the session is automatically put out of the safe mode, and no changes are automatically undone. Thus, it is best to change the configuration in small steps, while in safe mode. Pressing <strong>[Ctrl]</strong>+<strong>[X]</strong> twice is an easy way to empty the safe mode action list.</p><h1 id="ConfigurationManagement-SystemBackupandRestore">System Backup and Restore</h1><p><a href="https://help.mikrotik.com/docs/display/ROS/Backup" rel="nofollow">System backup</a> is the way to completely clone router configuration in binary format.</p><p>More information about Backup and Restore is found <a href="https://help.mikrotik.com/docs/display/ROS/Backup" rel="nofollow">here</a>.</p><h1 id="ConfigurationManagement-ConfigurationExportandImport">Configuration Export and Import</h1><p>RouterOS allows exporting and importing parts of the configuration in plain text format. This method can be used to copy bits of configuration between different devices, for example, clone the whole firewall from one router to another.</p><p>An export command can be executed from each menu (resulting in configuration export only from this specific menu and all its sub-menus) or from the root menu for complete config export and is available for CLI only.</p><div role="region" aria-label="Warning" class="confluence-information-macro  confluence-information-macro-warning" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-error confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>The Export command does not export system user passwords, installed certificates, SSH keys, Dude, or a User-manager database.</p><p><a href="https://help.mikrotik.com/docs/display/ROS/Certificates#Certificates-ExportCertificate" rel="nofollow">Installed certificates</a>, <a class="external-link" href="https://wiki.mikrotik.com/Manual:The_Dude_v6/DB_import_export" rel="nofollow">Dude</a>, and<a href="https://help.mikrotik.com/docs/display/ROS/User+Manager#UserManager-Database" rel="nofollow"> User-manager </a>databases must be manually exported and imported into a new device.</p><p>System user passwords and user SSH keys can not be exported.</p></div></div><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>During config import, we suggest using the same RouterOS version used during config export to prevent cases when some of the commands do not exist in one or another RouterOS version. </p></div></div><h2 id="ConfigurationManagement-ConfigurationExport">Configuration Export</h2><p>The following command parameters are accepted:</p><div class="table-wrap"><table class="fixed-width wrapped confluenceTable"><colgroup><col style="width: 23.3134%;"/><col style="width: 76.6866%;"/></colgroup><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>compact</strong></td><td class="confluenceTd">Output only modified configuration, the default behavior</td></tr><tr><td class="confluenceTd"><strong>file</strong></td><td class="confluenceTd">Export configuration to a specified file. When the file is not specified export output will be printed to the terminal</td></tr><tr><td class="confluenceTd"><p><strong>show-sensitive<span style="color:var(--ds-text,#172B4D);"> </span></strong><em><span style="color:var(--ds-text,#172B4D);">(</span>yes|no<span style="color:var(--ds-text,#172B4D);">; Default: no</span><span style="color:var(--ds-text,#172B4D);">). </span></em><strong>RouterOS version 7 only</strong></p><p><strong>hide-sensitive </strong><em><span style="color:var(--ds-text,#172B4D);">(</span>yes|no<span style="color:var(--ds-text,#172B4D);">; Default:</span><span style="color:var(--ds-text,#172B4D);"> no</span></em><span style="color:var(--ds-text,#172B4D);">). </span><strong>RouterOS version 6 only</strong></p></td><td class="confluenceTd"><p>Show sensitive information, like passwords, keys, etc.</p><p>Hide sensitive information, like passwords, keys, etc.</p></td></tr><tr><td class="confluenceTd"><strong>terse</strong></td><td class="confluenceTd">With this parameter, the export command will output only configuration parameters, without defaults.</td></tr><tr><td class="confluenceTd"><strong>verbose</strong></td><td class="confluenceTd"><p>With this parameter, the export command will output whole configuration parameters and items including defaults.</p></td></tr></tbody></table></div><p>For example, export configuration from <span style="color:var(--ds-text-accent-blue,#0055CC);"><code>/ip address</code></span> the menu and save it to a file:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">    [admin@MikroTik] &gt; /ip address print
+    Flags: X - disabled, I - invalid, D - dynamic
+    #   ADDRESS            NETWORK         BROADCAST       INTERFACE
+    0   10.1.0.172/24      10.1.0.0        10.1.0.255      bridge1
+    1   10.5.1.1/24        10.5.1.0        10.5.1.255      ether1
+    [admin@MikroTik] &gt; /ip address export file=address
+    [admin@MikroTik] &gt; /file print
+    # NAME                            TYPE         SIZE       CREATION-TIME
+    0  address.rsc                     script       315        dec/23/2003 13:21:48
+    [admin@MikroTik] &gt;</pre>
+</div></div><p>By default, the export command writes only user-edited configuration, RouterOS defaults are omitted.</p><p>For example, the IPSec default policy will not be exported, and if we change one property then only our change will be exported:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">    [admin@rack1_b4] /ip ipsec policy&gt; print
+    Flags: T - template, X - disabled, D - dynamic, I - inactive, * - default
+    0 T * group=default src-address=::/0 dst-address=::/0 protocol=all
+          proposal=default template=yes
+    [admin@rack1_b4] /ip ipsec policy&gt; export
+    # apr/02/1970 17:59:14 by RouterOS 6.22
+    # software id = DB0D-LK67
+    #
+    [admin@rack1_b4] /ip ipsec policy&gt; set 0 protocol=gre
+    [admin@rack1_b4] /ip ipsec policy&gt; export
+    # apr/02/1970 17:59:30 by RouterOS 6.22
+    # software id = DB0D-LK67
+    #
+    /ip ipsec policy
+    set 0 protocol=gre</pre>
+</div></div><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><p class="title conf-macro-render">Note:</p><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>The <strong>*</strong> flag, indicates that the entry is system default and cannot be removed manually.</p></div></div><p>Here is the list of all menus containing default system entries</p><div class="table-wrap"><table class="fixed-table wrapped confluenceTable"><colgroup><col style="width: 261.0px;"/><col style="width: 612.0px;"/></colgroup><tbody><tr><th class="confluenceTh">Menu</th><th class="confluenceTh">Default Entry</th></tr><tr><td class="confluenceTd"><strong>/interface wireless security-profiles</strong></td><td class="confluenceTd">default</td></tr><tr><td class="confluenceTd"><strong>/ppp profile</strong></td><td class="confluenceTd">&quot;default&quot;, &quot;default-encryption&quot;</td></tr><tr><td class="confluenceTd"><strong>/ip hotspot profile </strong></td><td class="confluenceTd">default</td></tr><tr><td class="confluenceTd"><strong>/ip hotspot user profile </strong></td><td class="confluenceTd">default</td></tr><tr><td class="confluenceTd"><strong>/ip ipsec policy </strong></td><td class="confluenceTd">default</td></tr><tr><td class="confluenceTd"><strong>/ip ipsec policy group </strong></td><td class="confluenceTd">default</td></tr><tr><td class="confluenceTd"><strong>/ip ipsec proposal</strong></td><td class="confluenceTd">default</td></tr><tr><td class="confluenceTd"><strong>/ip ipsec mode-conf</strong></td><td class="confluenceTd">read-only</td></tr><tr><td class="confluenceTd"><strong>/ip smb shares </strong></td><td class="confluenceTd">pub</td></tr><tr><td class="confluenceTd"><strong>/ip smb users </strong></td><td class="confluenceTd">guest</td></tr><tr><td class="confluenceTd"><strong>/ipv6 nd </strong></td><td class="confluenceTd">any</td></tr><tr><td class="confluenceTd"><strong>/mpls interface</strong></td><td class="confluenceTd">all</td></tr><tr><td class="confluenceTd"><strong>/routing bfd interface</strong></td><td class="confluenceTd">all</td></tr><tr><td class="confluenceTd"><strong>/routing bgp instance</strong></td><td class="confluenceTd">default</td></tr><tr><td class="confluenceTd"><strong>/routing ospf instance</strong></td><td class="confluenceTd">default</td></tr><tr><td class="confluenceTd"><strong>/routing ospf area</strong></td><td class="confluenceTd">backbone</td></tr><tr><td class="confluenceTd"><strong>/routing ospf-v3 instance</strong></td><td class="confluenceTd">defailt</td></tr><tr><td class="confluenceTd"><strong>/routing ospf-v3 area</strong></td><td class="confluenceTd">backbone</td></tr><tr><td class="confluenceTd"><strong>/snmp community</strong></td><td class="confluenceTd">public</td></tr><tr><td class="confluenceTd"><strong>/tool mac-server mac-winbox</strong></td><td class="confluenceTd">all</td></tr><tr><td class="confluenceTd"><strong>/tool mac-server</strong></td><td class="confluenceTd">all</td></tr><tr><td class="confluenceTd"><strong>/system logging</strong></td><td class="confluenceTd">&quot;info&quot;, &quot;error&quot;, &quot;warning&quot;, &quot;critical&quot;</td></tr><tr><td class="confluenceTd"><strong>/system logging action</strong></td><td class="confluenceTd">&quot;memory&quot;, &quot;disk&quot;, &quot;echo&quot;, &quot;remote&quot;</td></tr><tr><td class="confluenceTd"><strong>/queue type</strong></td><td class="confluenceTd">&quot;default&quot;, &quot;ethernet-default&quot;, &quot;wireless-default&quot;, &quot;synchronous-default&quot;, &quot;hotspot-default&quot;, &quot;only-hardware-queue&quot;, &quot;multi-queue-ethernet-default&quot;, &quot;default-small&quot;</td></tr></tbody></table></div><div role="region" aria-label="Warning" class="confluence-information-macro  confluence-information-macro-warning" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-error confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>If some specific menu will not be able to respond to the export command, starting from the RouterOS v7.11, an error message will be printed out in the export command output after a timeout (&quot;#error exporting &quot;/xxx&quot; (timeout)&quot;) and the process will move on to the next menu.</p></div></div><p class="auto-cursor-target">Starting from RouterOS 7.13, you can export parts of a specific menu. For instance, it is possible to export a specific address-list among multiple address-lists on your router.</p><pre>[admin@MikroTik] &gt; ip firewall address-list export where list=mylist
+</pre><h2 id="ConfigurationManagement-ConfigurationImport">Configuration Import</h2><p>Root menu command import allows running configuration script from the specified file. Script file (with extension &quot;.rsc&quot;) can contain any console command including complex scripts.</p><p>For example, load saved configuration file</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; import address.rsc
+Opening script file address.rsc
+
+Script file loaded and executed successfully
+[admin@MikroTik] &gt;</pre>
+</div></div><p>Import command allows to specify the following parameters:</p><div class="table-wrap"><table class="wrapped fixed-width confluenceTable" style="width: 37.3122%;"><colgroup><col style="width: 13.505%;"/><col style="width: 86.495%;"/></colgroup><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>from-line</strong></td><td class="confluenceTd">Start executing the script from the specified line number. This option is only available in verbose mode.</td></tr><tr><td class="confluenceTd"><strong>file-name</strong></td><td class="confluenceTd">Name of the script (.rsc) file to be executed.</td></tr><tr><td class="confluenceTd"><strong>verbose</strong></td><td class="confluenceTd">Reads each line from the file and executes individually, allowing to debug syntax or other errors more easily.</td></tr><tr><td class="confluenceTd"><strong>dry-run</strong></td><td class="confluenceTd">Simulates the import without making any configuration changes. This helps in catching syntax errors. This option is only available in verbose mode.</td></tr></tbody></table></div><div role="region" aria-label="Tip" class="confluence-information-macro  confluence-information-macro-tip" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-approve confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>If the device has a default or existing configuration that requires replacement, it is necessary to initiate a configuration reset.</p><p>This involves applying a clean, empty configuration using the command /system/reset-configuration no-defaults=yes, followed by a device reboot.</p></div></div><h2 id="ConfigurationManagement-AutoImport">Auto Import</h2><p>It is also possible to <strong>automatically </strong>execute scripts after uploading to the router with FTP or SFTP. The script file must be named with the extension *.auto.rsc. Once the commands in the file are executed, a new *.auto.log file is created which contains import success or failure information.</p><div role="region" aria-label="Tip" class="confluence-information-macro  confluence-information-macro-tip" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-approve confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>&quot;.auto.rsc&quot; in the filename is mandatory for a file to be automatically executed.</p></div></div><h2 id="ConfigurationManagement-Importtroubleshooting"><span class="mw-headline">Import troubleshooting</span></h2><h3 id="ConfigurationManagement-Configurationpartstowatchoutforinexported.rscfiles"><span class="mw-headline">Configuration parts to watch out for in exported .rsc files</span></h3><p>Things that should be removed from export files that were created with &quot;/export&quot;, before attempting import on a new device.</p><ul><li>Interface renaming conflicts with the default ethernet naming scheme.</li></ul><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface ethernet
+set [ find default-name=ether5 ] auto-negotiation=no name=ether1-gateway
+set [ find default-name=ether6 ] name=ether2
+set [ find default-name=ether7 ] name=ether3
+set [ find default-name=ether8 ] name=ether4
+set [ find default-name=ether1 ] name=ether5
+set [ find default-name=ether2 ] name=ether6
+set [ find default-name=ether3 ] name=ether7
+set [ find default-name=ether4 ] name=ether8</pre>
+</div></div><p><br/></p><ul><li>In older versions &quot;export&quot; default entries might show with &quot;add&quot; instead of the &quot;set&quot; command. That should be edited before import to avoid errors.</li><li>Check if the total number of physical interfaces count matches the new and old devices. If there are some missing that will end up in error during .rsc import.</li></ul><p>In case of problematic import, attempt the following:</p><ul><li>Use the <strong>dry-run</strong> parameter to simulate the import without making any configuration changes. This helps in catching syntax errors. This option is only available in verbose mode.</li><li>Reset the configuration on that device.</li><li>Run the import command again with the &quot;verbose=yes&quot; argument. It will also stop the import process on a problem that you already encountered, but will also show the place where the export failed. This way shows you the place where things need to be edited in the .rsc import file.</li></ul><h3 id="ConfigurationManagement-Startupdelay"><span class="mw-headline">Startup delay</span></h3><p><span class="mw-headline"><span style="color:var(--ds-text,#333333);">If your configuration relies on interfaces that might not yet have started up upon command execution, it is suggested to introduce delays or to monitor until all needed interfaces are available. This example script allows you to set how many interfaces you are expecting, and how long to wait until they become available:</span></span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">{
+:local i 0
+#Number of interfaces. It is necessary to reconfigure this number for each device (/interface print count-only)
+:local x 10
+#Max time to wait
+:local t 30
+while ($i &lt; $t &amp;&amp; [:len [/interface find]] &lt; $x) do={
+:put $i
+:set $i ($i + 1)
+:delay 1
+}
+if ($i = $t) do={
+:log warning message=&quot;Could not load all physical interfaces&quot;
+} else={
+#Rest of your script
+}
+}</pre>
+</div></div><p><span class="mw-headline"><span style="color:var(--ds-text,#333333);">The above script will wait until there are 10 interfaces visible, or 30 seconds. If there are no 10 interfaces at this time, it will put a message in the log. Modify the variables according to your needs.</span></span></p><h1 id="ConfigurationManagement-ConfigurationReset">Configuration Reset</h1><p>RouterOS allows resetting configuration with <code><span style="color:var(--ds-text-accent-blue,#0055CC);">/system</span> <span style="color:var(--ds-text-accent-green-bolder,#164B35);">reset-configuration</span></code> command</p><p>This command clears all configuration of the router and sets it to the factory defaults including the login name and password ('admin' with an empty password <span style="color:var(--ds-text,#333333);">or, for some models, check user and wireless passwords on the sticker</span>). For more details on the default configuration <a href="https://help.mikrotik.com/docs/display/ROS/Default+configurations" rel="nofollow">see the list</a>.</p><p>After executing the configuration reset command, the router will reboot and load the default configuration. Starting from version 7.13, following the reset, a license prompt will be displayed with the option to view the end-user license agreement.</p><p><br/></p><div role="region" aria-label="Tip" class="confluence-information-macro  confluence-information-macro-tip" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-approve confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>The backup file of the existing configuration is stored before reset. That way you can easily restore any previous configuration if the reset is done by mistake.</p></div></div><div role="region" aria-label="Warning" class="confluence-information-macro  confluence-information-macro-warning" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-error confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>If the router was installed using <a href="https://help.mikrotik.com/docs/display/ROS/Netinstall" rel="nofollow">Netinstall</a> and had a script specified as the initial configuration, the reset command executes this script after purging the configuration. To stop it from doing so, you will have to reinstall the router.</p></div></div><p>It is possible to override the default reset behavior with the parameters below:</p><div class="table-wrap"><table class="fixed-table wrapped confluenceTable"><colgroup><col style="width: 122.0px;"/><col style="width: 755.0px;"/></colgroup><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>keep-users</strong></td><td class="confluenceTd">Do not remove existing users from the configuration</td></tr><tr><td class="confluenceTd"><strong>no-defaults</strong></td><td class="confluenceTd">Do not load the default configuration, just clear the configuration</td></tr><tr><td class="confluenceTd"><strong>skip-backup</strong></td><td class="confluenceTd">Skip automatic backup file generation before reset</td></tr><tr><td class="confluenceTd"><strong>run-after-reset</strong></td><td class="confluenceTd"><div class="content-wrapper"><p>Run specified .rsc file after reset. That way you can load your custom configuration.</p><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>If a specific .rsc file execution takes more than 2 minutes, a script will fail, and LOG will contain <em>&quot;runtime limit exceeded&quot; </em>or in rare cases <em>&quot;std failure: timeout&quot;</em> error.</p></div></div></div></td></tr></tbody></table></div><p><br/></p><p>For example hard reset configuration without loading default config and skipping backup file:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; /system reset-configuration no-defaults=yes skip-backup=yes
+Dangerous! Reset anyway? [y/N]: y</pre>
+</div></div><p>And the same using Winbox:</p><p class="auto-cursor-target"><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/328155/194543693.png" data-image-src="attachments/328155/194543693.png" data-unresolved-comment-count="0" data-linked-resource-id="194543693" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2023-6-7_12-34-8.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="328155" data-linked-resource-container-version="82" tabindex="0" alt=""></span></p>
+                    </div>
+
+                                                            <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328155/328158.png">reset_config.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328155/1409106.png">winbox-safe-mode.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328155/1409099.png">winbox-safe-mode.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328155/177406008.png">image-2023-3-8_13-33-36.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328155/177406013.png">image-2023-3-8_13-44-21.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328155/194543692.png">image-2023-6-7_12-32-43.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328155/194543693.png">image-2023-6-7_12-34-8.png</a> (image/png)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

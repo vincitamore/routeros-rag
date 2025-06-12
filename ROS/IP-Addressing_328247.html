@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : IP Addressing</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="IPv4-and-IPv6-Fundamentals_119144661.html">IPv4 and IPv6 Fundamentals</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : IP Addressing
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Māris B.</span>, last updated by <span class='editor'> Mārtiņš S.</span> on Jan 22, 2025
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742020896 {padding: 0px;}
+div.rbtoc1747742020896 ul {margin-left: 0px;}
+div.rbtoc1747742020896 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742020896'>
+<ul class='toc-indentation'>
+<li><a href='#IPAddressing-Overview'>Overview</a></li>
+<li><a href='#IPAddressing-IPv4Addressing'>IPv4 Addressing</a>
+<ul class='toc-indentation'>
+<li><a href='#IPAddressing-PrivateAddressRange'>Private Address Range</a></li>
+<li><a href='#IPAddressing-OtherReservedAddressRanges'>Other Reserved Address Ranges</a></li>
+<li><a href='#IPAddressing-AddingIPAddress'>Adding IP Address</a></li>
+</ul>
+</li>
+<li><a href='#IPAddressing-IPv6Addressing'>IPv6 Addressing</a>
+<ul class='toc-indentation'>
+<li><a href='#IPAddressing-AddressTypes'>Address Types</a>
+<ul class='toc-indentation'>
+<li><a href='#IPAddressing-UnicastAddresses'>Unicast Addresses</a>
+<ul class='toc-indentation'>
+<li><a href='#IPAddressing-Link-localAddress'>Link-local Address</a></li>
+<li><a href='#IPAddressing-UniqueLocalAddress'>Unique Local Address</a></li>
+<li><a href='#IPAddressing-SpecialPurposeAddress'>Special Purpose Address</a></li>
+<li><a href='#IPAddressing-CompatibilityAddress'>Compatibility Address</a></li>
+</ul>
+</li>
+<li><a href='#IPAddressing-MulticastAddress'>Multicast Address</a></li>
+<li><a href='#IPAddressing-AnycastAddress'>Anycast Address</a></li>
+</ul>
+</li>
+<li><a href='#IPAddressing-InterfaceIdentifier'>Interface Identifier</a>
+<ul class='toc-indentation'>
+<li><a href='#IPAddressing-EUI-64'>EUI-64</a></li>
+</ul>
+</li>
+<li><a href='#IPAddressing-ConfiguringIPv6Address'>Configuring IPv6 Address</a></li>
+<li><a href='#IPAddressing-SLAACIPv6Address'>SLAAC IPv6 Address</a></li>
+<li><a href='#IPAddressing-Properties'>Properties</a></li>
+<li><a href='#IPAddressing-Read-onlyproperties'>Read-only properties</a></li>
+<li><a href='#IPAddressing-Frequentlyaskedquestions'>Frequently asked questions</a></li>
+</ul>
+</li>
+</ul>
+</div></p><h1 id="IPAddressing-Overview">Overview</h1><p>IP addresses serve for general host identification purposes in IP networks (<a class="external-link" href="https://tools.ietf.org/html/rfc791" rel="nofollow">RFC 791</a>). A typical (IPv4) address consists of four octets. For proper addressing the router also needs the network mask value, id est which bits of the complete IP address refer to the address of the host, and which - to the address of the network. The network address value is calculated by binary AND operation from a network mask and IP address values. It's also possible to specify an IP address followed by a slash &quot;/&quot; and the number of bits that form the network address.</p><p>In most cases, it is enough to specify the address, the netmask, and the interface arguments. The network prefix and the broadcast address are calculated automatically.</p><p>It is possible to add multiple IP addresses to an interface or to leave the interface without any addresses assigned to it. In the case of bridging or PPPoE connection, the physical interface may not have any address assigned, yet be perfectly usable. Configuring an IP address to a physical interface included in a bridge would mean actually setting it on the bridge interface itself.</p><p>You can use <em>/ip address print detail</em> to see which interface the address belongs to.</p><h1 id="IPAddressing-IPv4Addressing">IPv4 Addressing</h1><p>IPv4 uses 4-byte addresses which are segmented in four 8-bit fields called octets. Each octet is converted to a decimal format and separated by a dot. For example:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">11000000 10101000 00000011 00011000 =&gt; 192.168.3.24</pre>
+</div></div><p>The IPv4 network consists of three addresses:</p><ul><li><strong>network address</strong> - a standard way to refer to an IPv4 address assigned to a network. For example, we could refer to the network 192.168.1.0 or 172.16.0.0 as a “Network Address.”</li><li><strong>broadcast address</strong> - a special address for each network that allows communication to all the hosts in that network. The broadcast address uses the highest address in the network range. for example, broadcast address if 192.168.1.0/24 network will be 192.168.1.255</li><li><strong>host address</strong> - any other address that is not a network address and broadcast address can be used as a host address. For example, 192.168.1.2 - 254 host addresses can be used from 192.168.1.0/24 address range</li></ul><p>There are several types of IP addressing</p><ul><li><strong>unicast</strong> - normally refers to a single sender or a single receiver, and can be used for both sending and receiving. Usually, a unicast address is associated with a single device or host, but it is not a one-to-one correspondence.</li><li><strong>broadcast</strong> - address to send data to all possible destinations (&quot;all-hosts broadcast&quot;), which permits the sender to send the data only once, and all receivers receive a copy of it. In the IPv4 protocol, the address <em>255.255.255.255</em> is used for local broadcast. In addition, a directed (limited) broadcast can be made by combining the network prefix with a host suffix composed entirely of binary 1s. For example, the destination address used for directed broadcast to devices on the 192.0.2.0/24 network is 192.0.2.255</li><li><strong>multicast</strong> - address associated with a group of interested receivers. In IPv4, addresses 224.0.0.0 through 239.255.255.255 are designated as multicast addresses. The sender sends a single datagram from its unicast address to the multicast group address and the intermediary routers take care of making copies and sending them to all receivers that have joined the corresponding multicast group.</li></ul><h2 id="IPAddressing-PrivateAddressRange">Private Address Range</h2><p>The following IP address ranges are reserved (<a class="external-link" href="https://tools.ietf.org/html/rfc6890" rel="nofollow">RFC 6890</a>) for private addressing. These addresses are not routed in the global routing table and should be translated to global addresses with network address translation (NAT):</p><ul><li>10.0.0.0/8 - start: 10.0.0.0; end: 10.255.255.255</li><li>172.16.0.0/12 - start: 172.16.0.0; end:172.31.255.255</li><li>192.168.0.0/16 - start: 192.168.0.0; end: 192.168.255.255</li></ul><h2 id="IPAddressing-OtherReservedAddressRanges">Other Reserved Address Ranges</h2><ul><li>198.18.0.0/15 - benchmarking</li><li>192.88.99.0/24 - 6to4 relay anycast address range</li><li>192.0.2.0/24, 198.51.100.0/24, 203.0.113.0/24 - documentation</li><li>169.254.0.0/16 - auto-configuration address range</li></ul><h2 id="IPAddressing-AddingIPAddress">Adding IP Address</h2><p>Consider a setup where two routers are directly connected with the cable and we do not want to waste address space:</p><p>R1 configuration:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip address
+add address=10.1.1.1/32 interface=ether1 network=172.16.1.1</pre>
+</div></div><p>R2 configuration:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip address
+add address=172.16.1.1/32 interface=ether1 network=10.1.1.1</pre>
+</div></div><h1 id="IPAddressing-IPv6Addressing">IPv6 Addressing</h1><p>Internet Protocol version 6 (IPv6) is the newer version of the Internet Protocol (IP). It was initially expected to replace IPv4 in a short enough time, but for now, it seems that these two versions will coexist on the Internet in foreseeable future. Nevertheless, IPv6 becomes more important, as the date of the unallocated IPv4 address pool's exhaustion approaches.</p><p>The two main benefits of IPv6 over IPv4 are:</p><ul><li>much larger address space;</li><li>support of stateless and stateful address auto-configuration;</li><li>built-in security;</li><li>new header format (faster forwarding).</li></ul><p>IPv6 uses 16 bytes addresses compared to 4-byte addresses in IPv4. IPv6 address syntax and types are described in <a class="external-link" href="https://tools.ietf.org/html/rfc4291" rel="nofollow">RFC 4291</a>.</p><p>There are multiple IPv6 address types, that can be recognized by their prefix. RouterOS distinguishes the following:</p><ul><li>multicast (with prefix ff00::/8)</li><li>link-local (with prefix fe80::/10)</li><li>unique local addresses (with prefix fc00::/7)</li><li>loopback (the address::1/128)</li><li>unspecified (the address::/128)</li><li>other (all other addresses, including the obsoleted site-local addresses, and <a class="external-link" href="https://tools.ietf.org/html/rfc4193" rel="nofollow">RFC 4193</a> unique local addresses; they all are treated as global unicast).</li></ul><p><br/></p><p>One difference between IPv6 and IPv4 addresses is that IPv6 automatically generates a <strong>link-local</strong> IPv6 address for each active interface that has IPv6 support.</p><p>IPv6 addresses are represented a little bit differently than IPv4 addresses. For IPv6, the 128-bit address is divided into eight 16-bit blocks, and each 16-bit block is converted to a 4-digit hexadecimal number and separated by colons. The resulting representation is called colon-hexadecimal.</p><p>In the example below IPv6 address in binary format is converted to a colon-hexadecimal representation</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: text; gutter: false">0010000000000001 0000010001110000 0001111100001001 0000000100110001
+0000000000000000 0000000000000000 0000000000000000 0000000000001001</pre>
+</div></div><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: text; gutter: false">2001:0470:1f09:0131:0000:0000:0000:0009</pre>
+</div></div><p>The IPv6 address can be further simplified by removing leading zeros in each block:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: text; gutter: false">2001:470:1f09:131:0:0:0:9</pre>
+</div></div><p>As you can see IPv6 addresses can have long sequences of zeros. This contiguous sequence can be compressed to <strong>::</strong></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: text; gutter: false">2001:470:1f09:131::9</pre>
+</div></div><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Zero compression can only be used once. Otherwise, you could not determine the number of 0 bits represented by each instance of a double-colon</p></div></div><p><br/>IPv6 prefix is written in <strong>address/prefix-length</strong> format. Compared to IPv4 decimal representation of a network mask cannot be used. Prefix examples:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: text; gutter: false">2001:470:1f09:131::/64
+2001:db8:1234::/48
+2607:f580::/32
+2000::/3</pre>
+</div></div><h2 id="IPAddressing-AddressTypes">Address Types</h2><p>Several IPv6 address types exist:</p><ul><li>Unicast</li><li>Anycast</li><li>Multicast</li></ul><p>As you can see there are no Broadcast addresses in the IPv6 network, compared to the IPv4 broadcast functionality was completely replaced with multicast.</p><h3 id="IPAddressing-UnicastAddresses">Unicast Addresses</h3><p>Packets addressed to a unicast address are delivered only to a single interface. To this group belong:</p><ul><li>globally unique addresses and can be used to connect to addresses with global scope anywhere;</li><li>link-local addresses;</li><li>unique local addresses (ULA RFC4193)</li><li>site-local addresses (FEC0::/48) - deprecated;</li><li>special-purpose addresses;</li><li>compatibility addresses;</li></ul><p>A global unicast address can be automatically assigned to the node by <strong>Stateless Address auto-configuration.</strong></p><h4 id="IPAddressing-Link-localAddress">Link-local Address</h4><p>A link-local address is required on every IPv6-enabled interface, applications may rely on the existence of a link-local address even when there is no IPv6 routing, that is why the link-local address is generated automatically for every active interface using its interface identifier (calculated EUI-64 from MAC address if present). The address prefix is always <strong>FE80::/64</strong> and IPv6 router never forwards link-local traffic beyond the link.</p><p>These addresses are comparable to the auto-configuration addresses 169.254.0.0/16 of IPv4.</p><p>A link-local address is also required for IPv6 Neighbor Discovery processes.</p><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>If the interface is set as a bridge port, an interface-specific link-local address is removed leaving only the bridge link-local address</p></div></div><h4 id="IPAddressing-UniqueLocalAddress">Unique Local Address</h4><p>Unique Local Address (ULA) is reserved for local use in the home and enterprise environments not routed in public address space and is equivalent to IPv4 private address ranges.</p><p>The reserved address range is <strong>fc00::/7</strong></p><p><br/></p><h4 id="IPAddressing-SpecialPurposeAddress">Special Purpose Address</h4><div class="table-wrap"><table class="fixed-table wrapped confluenceTable"><colgroup><col style="width: 219.0px;"/><col style="width: 482.0px;"/></colgroup><tbody><tr><th class="confluenceTh">Address</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>Unspecified address (::/128)</strong></td><td class="confluenceTd">Never assigned to an interface or used as a destination address, used only to indicate the absence of an address. Equivalent to IPv4 0.0.0.0 address.</td></tr><tr><td class="confluenceTd"><strong>loopback address (::1/128)</strong></td><td class="confluenceTd">Used to identify a loopback interface, enabling a node to send packets to itself. It is equivalent to the IPv4 loopback address of 127.0.0.1.</td></tr><tr><td colspan="1" class="confluenceTd"><strong>2002::/16</strong></td><td colspan="1" class="confluenceTd">This prefix is used for 6to4 addressing. Here, an address from the IPv4 network 192.88.99.0/24 is also used.</td></tr><tr><td colspan="1" class="confluenceTd"><strong>2001:db8::/32</strong></td><td colspan="1" class="confluenceTd">Address range reserved for documentation. These should never be seen as the source or destination.</td></tr><tr><td colspan="1" class="confluenceTd"><strong>2001:0010::/28</strong></td><td colspan="1" class="confluenceTd">Orchid fixed term experiment. Should not be seen as a source or destination</td></tr><tr><td colspan="1" class="confluenceTd"><strong>2001:0002::/48</strong></td><td colspan="1" class="confluenceTd">Used for benchmarking, should not be seen as source or destination</td></tr><tr><td colspan="1" class="confluenceTd"><strong>2001:0000::/32</strong></td><td colspan="1" class="confluenceTd">Teredo</td></tr></tbody></table></div><h4 id="IPAddressing-CompatibilityAddress">Compatibility Address</h4><div class="table-wrap"><table class="fixed-table wrapped confluenceTable"><colgroup><col style="width: 217.0px;"/><col style="width: 482.0px;"/></colgroup><tbody><tr><th class="confluenceTh">Address</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>IPv4 compatible address</strong></td><td class="confluenceTd">used by dual-stack nodes that are communicating with IPv6 over an IPv4 infrastructure. When the IPv4-compatible address is used as an IPv6 destination, IPv6 traffic is automatically encapsulated with an IPv4 header and sent to the destination by using the IPv4 infrastructure. The address is written in the following format <span style="color:var(--ds-text-accent-orange,#a54800);"><code>::w.x.y.z</code></span>, where w.x.y.z is the dotted decimal representation of a public IPv4 address.</td></tr><tr><td class="confluenceTd"><strong>IPv4 mapped address</strong></td><td class="confluenceTd">used to represent an IPv4-only node to an IPv6 node. It is used only for internal representation. The IPv4-mapped address is never used as a source or destination address for an IPv6 packet. The IPv6 protocol does not support the use of IPv4-mapped addresses. The address is written in the following format: <span style="color:var(--ds-text-accent-orange,#a54800);"><code>::ffff:w.x.y.z</code></span>, where <code>w.x.y.z</code> is the dotted-decimal representation of a public IPv4 address.</td></tr></tbody></table></div><h3 id="IPAddressing-MulticastAddress">Multicast Address</h3><p>The most important multicast aspects are:</p><ul><li>traffic is sent to a single address but is processed by multiple hosts;</li><li>group membership is dynamic, allowing hosts to join and leave the group at any time;</li><li>in IPv6, Multicast Listener Discovery (MLD) messages are used to determine group membership on a network segment, also known as a link or subnet;</li><li>a host can send traffic to the group's address without belonging to the corresponding group.</li></ul><p><br/></p><p>A single IPv6 multicast address identifies each multicast group. Each group's reserved IPv6 address is shared by all host members of the group who listen and receive any IPv6 messages sent to the group's address.</p><p>The multicast address consists of the following parts:</p><ul><li>The first 8 bits in the multicast address are always 1111 1111 (which is FF in hexadecimal format).</li><li>The flag uses the 9th to 12th bit and shows if this multicast address is predefined (well-known) or not. If it is well-known, all bits are 0s.</li><li>Scope ID indicates to which scope multicast address belongs, for example, Scope ID=2 is link-local scope.</li><li>The group ID is used to specify a multicast group. There are predefined group IDs, such as Group ID=1 - all nodes. Therefore, if the multicast address is ff02::1, that means Scope ID=2 and Group ID=1, indicating all nodes in link-local scope. This is analogous to broadcast on IPv4.</li></ul><p><br/></p><p>Here is the table of reserved IPV6 addresses for multicast:</p><div class="table-wrap"><table class="fixed-table wrapped confluenceTable"><colgroup><col style="width: 215.0px;"/><col style="width: 482.0px;"/></colgroup><tbody><tr><th class="confluenceTh">Address</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>FF02::1</strong></td><td class="confluenceTd">The all-nodes address is used to reach all nodes on the same link.</td></tr><tr><td class="confluenceTd"><strong>FF02::2</strong></td><td class="confluenceTd">The all-routers address is used to reach all routers on the same link.</td></tr><tr><td class="confluenceTd"><strong>FF02::5</strong></td><td class="confluenceTd">The all-Open Shortest Path First (OSPF) router address is used to reach all OSPF routers on the same link.</td></tr><tr><td class="confluenceTd"><strong>FF02::6</strong></td><td class="confluenceTd">The all-OSPF-designated router's address is used to reach all OSPF-designated routers on the same link.</td></tr><tr><td class="confluenceTd"><strong>FF02::1:FFXX:XXXX</strong></td><td class="confluenceTd">The solicited-node address is used in the address resolution process to resolve the IPv6 address of a link-local node to its link-layer address. The last 24 bits (XX:XXXX) of the solicited-node address are the last 24 bits of an IPv6 unicast address.</td></tr></tbody></table></div><p><br/><br/></p><p>The following table is a partial list of IPv6 multicast addresses that are reserved for IPv6 multicasting and registered with the Internet Assigned Numbers Authority (IANA). For a complete list of assigned addresses read <a class="external-link" href="https://www.iana.org/assignments/ipv6-multicast-addresses/ipv6-multicast-addresses.xhtml" rel="nofollow">IANA document.</a></p><p>Multicast addresses can be used to discover nodes in a network. For example, discover all nodes</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: text; gutter: false">mrz@bumba:/media/aaa/ver$ ping6 ff02::1%eth0
+PING ff02::1%eth0(ff02::1) 56 data bytes
+64 bytes from fe80::21a:4dff:fe5d:8e56: icmp_seq=1 ttl=64 time=0.037 ms
+64 bytes from fe80::20c:42ff:fe0d:2c38: icmp_seq=1 ttl=64 time=4.03 ms (DUP!)
+64 bytes from fe80::20c:42ff:fe28:7945: icmp_seq=1 ttl=64 time=5.59 ms (DUP!)
+64 bytes from fe80::20c:42ff:fe49:fce5: icmp_seq=1 ttl=64 time=5.60 ms (DUP!)
+64 bytes from fe80::20c:42ff:fe21:f1ec: icmp_seq=1 ttl=64 time=5.88 ms (DUP!)
+64 bytes from fe80::20c:42ff:fe72:a1b0: icmp_seq=1 ttl=64 time=6.70 ms (DUP!)</pre>
+</div></div><p>discover all routers</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: text; gutter: false">mrz@bumba:/media/aaa/ver$ ping6 ff02::2%eth0
+PING ff02::2%eth0(ff02::2) 56 data bytes
+64 bytes from fe80::20c:42ff:fe28:7945: icmp_seq=1 ttl=64 time=0.672 ms
+64 bytes from fe80::20c:42ff:fe0d:2c38: icmp_seq=1 ttl=64 time=1.44 ms (DUP!)</pre>
+</div></div><h3 id="IPAddressing-AnycastAddress"><br/>Anycast Address</h3><p>An anycast address is a new type of address incorporated in IPv6.</p><p>Anycasting is a new networking paradigm supporting service-oriented Addresses where an identical address can be assigned to multiple nodes providing a specific service. An anycast packet (i.e., one with an anycast destination address) is delivered to one of these nodes with the same anycast address.</p><p>An anycast address is not assigned a specific address range. It is assigned from the unicast address range.</p><h2 id="IPAddressing-InterfaceIdentifier">Interface Identifier</h2><p>The last 64 bits of an IPv6 address are the interface identifier that is unique to the 64-bit prefix of the IPv6 address. There are several ways how to determine interface identifier:</p><ul><li>EUI-64;</li><li>randomly generated to provide a level of anonymity;</li><li>manually configured.</li></ul><h3 id="IPAddressing-EUI-64">EUI-64</h3><p>Traditional interface identifiers for network adapters are 48-bit MAC addresses. This address consists of a 24-bit manufacturer ID and a 24-bit board ID.</p><p>IEEE EUI-64 is a new standard for network interface addresses. The company ID is still 24 bits in length, but the extension ID is 40 bits, creating a much larger address space for network adapters.</p><p>To create a EUI-64 address from the interface MAC address:</p><ul><li>0xFFFE is inserted into the MAC address between the manufacturer ID and the board ID.</li><li>The seventh bit of the first byte is reversed.</li></ul><p><br/></p><p>Let's make an example with the following MAC address 00:0C:42:28:79:45.</p><p><span class="confluence-embedded-file-wrapper image-center-wrapper"><img class="confluence-embedded-image image-center" draggable="false" src="attachments/328247/328256.png" data-image-src="attachments/328247/328256.png" data-unresolved-comment-count="0" data-linked-resource-id="328256" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="ipv6eui64.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="328247" data-linked-resource-container-version="44" tabindex="0" alt=""></span></p><p>The image above illustrates the conversion process. When the result is converted to colon-hexadecimal notation, we get the interface identifier <span style="color:var(--ds-text-accent-orange,#a54800);"><code>20C:42FF:FE28:7945</code></span>. As a result, the corresponding link-local address is</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: text; gutter: false">FE80::20C:42FF:FE28:7945/64</pre>
+</div></div><p>In RouterOS, if the EUI-64 parameter of an address is configured, the last 64 bits of that address will be automatically generated and updated using interface identifier. The last bits must be configured to be zero for this case. Example:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: text; gutter: false">[admin@MikroTik] &gt; ipv6 address add address=fc00:3::/64 interface=ether3 eui-64=yes
+[admin@MikroTik] &gt; ipv6 address print
+Flags: X - disabled, I - invalid, D - dynamic, G - global, L - link-local
+#    ADDRESS                                     INTERFACE                  ADVERTISE
+...
+5  G fc00:3::20c:42ff:fe1d:3d4/64                ether3                     yes
+[admin@MikroTik] &gt; interface ethernet set ether3 mac-address=10:00:00:00:00:01
+[admin@MikroTik] &gt; ipv6 address print
+Flags: X - disabled, I - invalid, D - dynamic, G - global, L - link-local
+#    ADDRESS                                     INTERFACE                  ADVERTISE
+...
+5  G fc00:3::1200:ff:fe00:1/64                   ether3                     yes</pre>
+</div></div><h2 id="IPAddressing-ConfiguringIPv6Address">Configuring IPv6 Address</h2><p>This example shows how to set up simple addressing with global IPv6 addresses between two routers.</p><p>R1 configuration:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ipv6 address
+add address=2001:DB8::1/64 interface=ether1 advertise=no</pre>
+</div></div><p>R2 configuration:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ipv6 address
+add address=2001:DB8::2/64 interface=ether1 advertise=no</pre>
+</div></div><p>Check the address list:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: text; gutter: false">[admin@R1] /ipv6 address&gt; print
+Flags: X - disabled, I - invalid, D - dynamic, G - global, L - link-local
+#    ADDRESS                                     FROM-POOL INTERFACE     ADVERTISE
+0  G 2001:db8::1/64                                        ether1        no
+3 DL fe80::219:d1ff:fe39:3535/64                           ether1        no</pre>
+</div></div><p><br/></p><p>Notice that our added address has a G flag indicating that this address can be globally routed. We also have a link-local address on the interface which is created automatically for every IPv6-capable interface.</p><p>Test connectivity:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: text; gutter: false">[admin@R1] /ipv6 address&gt; /ping 2001:DB8::2
+HOST                                     SIZE TTL TIME  STATUS
+2001:db8::2                 56  64 12ms  echo reply
+2001:db8::2                 56  64 0ms   echo reply
+    sent=2 received=2 packet-loss=0% min-rtt=0ms avg-rtt=6ms max-rtt=12ms</pre>
+</div></div><h2 id="IPAddressing-SLAACIPv6Address">SLAAC IPv6 Address</h2><p>If under IPv6/Settings menu &quot;accept-router-advertisements&quot; option is enabled and the router receives a Router Advertisement packet, then the SLAAC IPv6 address will be automatically assigned to the interface on which the advertisements were received. This address will have DG flags meaning that the address is dynamic and global. Such addresses will show valid and lifetime parameters.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: text; gutter: false">[admin@R1] /ipv6/address/print detail where dynamic &amp;&amp; global 
+Flags: X - disabled, I - invalid, D - dynamic; G - global, L - link-local 
+ 0 DG address=2001:db8::::ba69:f4ff:fe84:545/64 from-pool=&quot;&quot; interface=ether1 
+      actual-interface=test_fp eui-64=no advertise=no no-dad=no valid=4w2d 
+      preferred=1w </pre>
+</div></div><p class="auto-cursor-target">If SLAAC addresses are accepted, then also dynamic route toward the Internet will be generated. It will also contain a few limitations if specified on the advertisement packet. For example, hop-limit and MTU. If multiple addresses are received on the same interface, then the lowest of the MTU values per interface will be used.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: text; gutter: false">[admin@R1] /routing/route/print detail where slaac 
+Flags: X - disabled, F - filtered, U - unreachable, A - active; 
+c - connect, s - static, r - rip, b - bgp, o - ospf, d - dhcp, v - vpn, m - modem, a - ldp-address, l - ldp-mapping, g - slaac, y - bgp-mpls-vpn; 
+H - hw-offloaded; + - ecmp, B - blackhole 
+ Ag + afi=ip6 contribution=active dst-address=::/0 routing-table=main 
+       pref-src=&quot;&quot; gateway=fe80::ba69:f4ff:fe84:7b2%ether1
+       immediate-gw=fe80::ba69:f4ff:fe84:7b2%ether1 distance=1 scope=30 
+       target-scope=10 belongs-to=&quot;slaac&quot; mtu=1400 hoplimit=10 
+       debug.fwp-ptr=0x201C2C00 </pre>
+</div></div><h2 id="IPAddressing-Properties">Properties</h2><div class="table-wrap"><table class="relative-table wrapped confluenceTable" style="width: 100.093%;"><colgroup class=""><col class="" style="width: 17.2208%;"/><col class="" style="width: 82.7924%;"/></colgroup><tbody class=""><tr class=""><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr class=""><td class="confluenceTd"><strong>address </strong>(<em>Address/Netmask</em>; Default: )</td><td class="confluenceTd">Ipv6 address. Allowed netmask range is 0..128. Address can also be constructed from the pool if <strong>from-pool</strong> property is specified.<br/>For example if address is set to ::1/64 then address will be constructed as follows &lt;prefix_from_pool&gt;::1/64</td></tr><tr class=""><td class="confluenceTd"><strong>advertise </strong>(<em>yes | no</em>; Default:<strong> no</strong>)</td><td class="confluenceTd">Whether to enable stateless address configuration. The prefix of that address is automatically advertised three times to hosts using ICMPv6 protocol. The option is set by default for addresses with prefix length 64. If address is removed or changed, then old prefix will be deprecated by automatically advertising the old prefix with lifetime set to &quot;0s&quot; three times to hosts using ICMPv6 protocol</td></tr><tr class=""><td class="confluenceTd"><strong>comment </strong>comment<strong> (<em>string</em>; Default: )</strong></td><td class="confluenceTd">Descriptive name of an item</td></tr><tr class=""><td class="confluenceTd"><strong>disabled </strong>(<em>yes | no</em>; Default:<strong> no</strong>)</td><td class="confluenceTd">Whether address is disabled or not. By default it is not disabled</td></tr><tr class=""><td class="confluenceTd"><strong>eui-64 </strong>(<em>yes | no</em>; Default:<strong> no</strong>)</td><td class="confluenceTd">Whether to calculate EUI-64 address and use it as last 64 bits of the IPv6 address. </td></tr><tr class=""><td class="confluenceTd"><strong>from-pool </strong>(<em>string</em>; Default: )</td><td class="confluenceTd">Name of the pool from which prefix will be taken to construct IPv6 address taking last part of the address from <strong>address</strong> property.</td></tr><tr class=""><td class="confluenceTd"><strong>no-dad </strong>(<em>yes | no</em>; Default: <strong>no</strong>)</td><td class="confluenceTd">If enabled (yes) - disables Duplicate Address Detection (DAD) for IPv6 addresses on an interface. This can be useful in scenarios where you want to assign static IPv6 addresses to devices and avoid the delay caused by DAD.</td></tr><tr class=""><td class="confluenceTd"><strong>interface</strong> (<em>string</em>; Default: )</td><td class="confluenceTd">Name of an interface on which Ipv6 address is set.</td></tr><tr><td class="confluenceTd"><strong>auto-link-local (<em>yes | no</em>; Default: yes)</strong></td><td class="confluenceTd">If newly created address is manual link-local address this setting allows to override dynamically created IPv6 link-local address.</td></tr></tbody></table></div><h2 id="IPAddressing-Read-onlyproperties">Read-only properties</h2><div class="table-wrap"><table class="wrapped confluenceTable"><colgroup class=""><col class=""/><col class=""/></colgroup><tbody class=""><tr class=""><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr class=""><td class="confluenceTd"><strong>actual-interface</strong> (<em>string</em>)</td><td class="confluenceTd">Actual interface on which address is set up. For example, if address was configured on ethernet interface and ethernet interface was added to bridge, then actual interface is bridge not ethernet.</td></tr><tr class=""><td class="confluenceTd"><strong>dynamic</strong> (<em>yes | no</em>)</td><td class="confluenceTd">Whether address is dynamically created</td></tr><tr class=""><td class="confluenceTd"><strong>global</strong> (<em>yes | no</em>)</td><td class="confluenceTd">Whether address is global</td></tr><tr class=""><td class="confluenceTd"><strong>invalid</strong> (<em>yes | no</em>)</td><td class="confluenceTd">Whether address is invalid</td></tr><tr class=""><td class="confluenceTd"><strong>link-local </strong>(<em>yes | no</em>)</td><td class="confluenceTd">Whether address is link local</td></tr><tr class=""><td class="confluenceTd"><strong>deprecated </strong>(<em>yes | no</em>)</td><td class="confluenceTd">Whether address is deprecated</td></tr><tr class=""><td class="confluenceTd"><strong>slave </strong>(<em>yes | no</em>)</td><td class="confluenceTd">Whether address belongs to an interface which is a slave port to some other master interface</td></tr></tbody></table></div><h2 id="IPAddressing-Frequentlyaskedquestions">Frequently asked questions</h2><p>Q: Does RouterOS support NAT64?<br/>A: No, currently NAT64 is not implemented in RouterOS</p><p><br/></p>
+                    </div>
+
+                                                            <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328247/328256.png">ipv6eui64.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328247/328258.png">ipv6-simple-address-example.png</a> (image/png)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

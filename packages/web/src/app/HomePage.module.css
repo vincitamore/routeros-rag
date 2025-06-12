@@ -1,0 +1,131 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  
+  /* Mobile-first padding */
+  padding: var(--space-sm, 1rem);
+}
+
+/* Desktop: restore original padding */
+@media (min-width: 768px) {
+  .container {
+  padding: 2rem;
+  }
+}
+
+.hero {
+  text-align: center;
+  
+  /* Mobile-first hero spacing */
+  margin-bottom: var(--space-lg, 2rem);
+}
+
+/* Desktop: restore original hero spacing */
+@media (min-width: 768px) {
+  .hero {
+  margin-bottom: 3rem;
+  }
+}
+
+.title {
+  font-weight: 800;
+  color: #f7fafc;
+  margin-bottom: 1rem;
+  background: linear-gradient(135deg, #63b3ed 0%, #90cdf4 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  
+  /* Mobile-first title sizing */
+  font-size: var(--text-xl, 1.5rem);
+}
+
+/* Desktop: restore original title size */
+@media (min-width: 768px) {
+  .title {
+    font-size: 3rem;
+  }
+}
+
+.subtitle {
+  color: #a0aec0;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  
+  /* Mobile-first subtitle sizing */
+  font-size: var(--text-base, 1rem);
+  margin-bottom: var(--space-md, 1.5rem);
+}
+
+/* Desktop: restore original subtitle */
+@media (min-width: 768px) {
+  .subtitle {
+    font-size: 1.25rem;
+    margin-bottom: 2rem;
+  }
+}
+
+.features {
+  /* Hide on mobile - chat should be primary focus */
+  display: none;
+}
+
+/* Desktop: show feature cards */
+@media (min-width: 768px) {
+.features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-bottom: 3rem;
+  }
+}
+
+.feature {
+  background: rgba(45, 55, 72, 0.6);
+  padding: 1.5rem;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+}
+
+.featureHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.featureIcon {
+  color: #63b3ed;
+  flex-shrink: 0;
+}
+
+.feature h3 {
+  color: #f7fafc;
+  font-size: 1.25rem;
+  margin: 0;
+}
+
+.feature p {
+  color: #e2e8f0;
+  line-height: 1.6;
+}
+
+.chatSection {
+  flex: 1;
+  
+  /* Mobile-first: make chat fill available space */
+  min-height: calc(100vh - 200px);
+  height: 100%;
+}
+
+/* Desktop: restore original chat section */
+@media (min-width: 768px) {
+  .chatSection {
+  min-height: 500px;
+  }
+} 

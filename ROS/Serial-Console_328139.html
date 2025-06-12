@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : Serial Console</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Management-tools_328121.html">Management tools</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : Serial Console
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Normunds R.</span>, last updated by <span class='editor'> Guntis G.</span> on Mar 06, 2024
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p class="auto-cursor-target"><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742021765 {padding: 0px;}
+div.rbtoc1747742021765 ul {margin-left: 0px;}
+div.rbtoc1747742021765 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742021765'>
+<ul class='toc-indentation'>
+<li><a href='#SerialConsole-Overview'>Overview</a></li>
+<li><a href='#SerialConsole-SerialConsoleConnections'>Serial Console Connections</a>
+<ul class='toc-indentation'>
+<li><a href='#SerialConsole-NullModemWithoutHandshake'>Null Modem Without Handshake</a></li>
+<li><a href='#SerialConsole-NullModemWithLoopbackHandshake'>Null Modem With Loopback Handshake</a></li>
+<li><a href='#SerialConsole-NullModemWithPartialHandshake'>Null Modem With Partial Handshake</a></li>
+<li><a href='#SerialConsole-NullModemWithFullHandshake'>Null Modem With Full Handshake</a></li>
+<li><a href='#SerialConsole-NullModemCompatibility'>Null Modem Compatibility</a></li>
+<li><a href='#SerialConsole-RJ45TypeSerialPort'>RJ45 Type Serial Port</a></li>
+<li><a href='#SerialConsole-RBM33GAdditionalSerialHeader'>RB M33G Additional Serial Header</a></li>
+<li><a href='#SerialConsole-CCRSerialHeader'>CCR Serial Header</a></li>
+</ul>
+</li>
+<li><a href='#SerialConsole-SerialTerminalUsage'>Serial Terminal Usage</a></li>
+<li><a href='#SerialConsole-SpecialLogin'>Special Login</a></li>
+</ul>
+</div></p><h1 class="auto-cursor-target" id="SerialConsole-Overview">Overview</h1><p>The Serial Console and Serial Terminal are tools, used to communicate with devices and other systems that are interconnected via the serial port. The serial terminal may be used to monitor and configure many devices - including modems, network devices (including MikroTik routers), and any device that can be connected to a serial (asynchronous) port.</p><p>The Serial Console feature is for configuring direct-access configuration facilities (monitor/keyboard and serial port) that are mostly used for initial or recovery configuration. A special null-modem cable is needed to connect two hosts (like two PCs, or two routers; not modems). Note that a terminal emulation program (e.g., HyperTerminal on Windows or minicom on Linux) is required to access the serial console from another computer. Default settings of the router's serial port are 115200 bits/s (for x86 default is 9600 bits/s), 8 data bits, 1 stop bit, no parity, hardware (RTS/CTS) flow control. </p><p>Several customers have described situations where the Serial Terminal (managing side) feature would be useful:</p><ul><li>on a mountaintop, where a MikroTik wireless installation sits next to equipment (including switches and Cisco routers) that can not be managed in-band (by telnet through an IP network)</li><li>monitoring weather-reporting equipment through a serial port</li><li>connection to a high-speed microwave modem that needed to be monitored and managed by a serial connection</li></ul><p>With the serial-terminal feature of the MikroTik, up to 132 (and, maybe, even more) devices can be monitored and controlled.</p><h1 id="SerialConsole-SerialConsoleConnections"><span class="mw-headline">Serial Console Connections</span></h1><p>Serial communications between devices are done with RS232, it is one of the oldest and most widely spread communication methods in the computer world. It was used for communication with the modems or other peripheral devices DTE/DCE. In the modern world, the main use of serial communication is DTE/DTE communication (Data Terminal Equipment) e.g. using a null-modem cable. There are several types of null modem cables and some of them may not work with RouterBoards at all.</p><h2 id="SerialConsole-NullModemWithoutHandshake">Null Modem Without Handshake</h2><p>This cable does not utilize handshake pins at all:</p><div class="table-wrap"><table class="fixed-table wrapped confluenceTable"><colgroup><col style="width: 128.0px;"/><col style="width: 128.0px;"/><col style="width: 165.0px;"/></colgroup><tbody><tr><th class="confluenceTh">Side1 (DB9f)</th><th class="confluenceTh">Side2 (DB9f)</th><th class="confluenceTh">Function</th></tr><tr><td class="confluenceTd">2</td><td class="confluenceTd">3</td><td class="confluenceTd"><p>Rx ← Tx</p></td></tr><tr><td class="confluenceTd">3</td><td class="confluenceTd">2</td><td class="confluenceTd">Tx → Rx</td></tr><tr><td class="confluenceTd">5</td><td class="confluenceTd">5</td><td class="confluenceTd">GND</td></tr></tbody></table></div><p>It allows data-only traffic on the cross-connected Rx/Tx lines. Hardware flow control is not possible with this type of cable. The only way to perform flow control is with software flow control using the XOFF and XON characters.</p><h2 id="SerialConsole-NullModemWithLoopbackHandshake">Null Modem With Loopback Handshake</h2><p>The problem with the first cable is when connected to a device on which hardware flow control is enabled software may hang when checking modem signal lines. </p><p>Null modem cable with loop back handshake fixes the problem, its main purpose is to fool well-defined software into thinking there is handshaking available:</p><div class="table-wrap"><table class="fixed-table wrapped confluenceTable"><colgroup><col style="width: 130.0px;"/><col style="width: 131.0px;"/><col style="width: 162.0px;"/></colgroup><tbody><tr><th class="confluenceTh">Side1 (DB9f)</th><th class="confluenceTh">Side2 (DB9f)</th><th class="confluenceTh">Function</th></tr><tr><td class="confluenceTd">2</td><td class="confluenceTd">3</td><td class="confluenceTd"><p>Rx ← Tx</p></td></tr><tr><td class="confluenceTd">3</td><td class="confluenceTd">2</td><td class="confluenceTd">Tx → Rx</td></tr><tr><td class="confluenceTd">5</td><td class="confluenceTd">5</td><td class="confluenceTd"><p>GND</p></td></tr><tr><td colspan="1" class="confluenceTd">1+4+6</td><td colspan="1" class="confluenceTd">-</td><td colspan="1" class="confluenceTd">DTR → CD + DSR</td></tr><tr><td colspan="1" class="confluenceTd">-</td><td colspan="1" class="confluenceTd">1+4+6</td><td colspan="1" class="confluenceTd">DTR → CD + DSR</td></tr><tr><td colspan="1" class="confluenceTd">7+8</td><td colspan="1" class="confluenceTd">-</td><td colspan="1" class="confluenceTd">RTS → CTS</td></tr><tr><td colspan="1" class="confluenceTd">-</td><td colspan="1" class="confluenceTd">7+8</td><td colspan="1" class="confluenceTd">RTS → CTS</td></tr></tbody></table></div><p>Hardware flow control is not possible with this cable. Also if remote software does not send its own ready signal to DTR output communication will hang.</p><h2 id="SerialConsole-NullModemWithPartialHandshake">Null Modem With Partial Handshake</h2><p>This cable can be used when flow control enabled without being incompatible with the original way flow control was used with DTE/DCE communication.</p><p>This type of cable is not recommended for use with RouterOS.</p><div class="table-wrap"><table class="fixed-table wrapped confluenceTable"><colgroup><col style="width: 128.0px;"/><col style="width: 131.0px;"/><col style="width: 166.0px;"/></colgroup><tbody><tr><th class="confluenceTh">Side1 (DB9f)</th><th class="confluenceTh">Side2 (DB9f)</th><th class="confluenceTh">Function</th></tr><tr><td class="confluenceTd">1</td><td class="confluenceTd">7+8</td><td class="confluenceTd"><p>RTS2 → CTS2 + CD1</p></td></tr><tr><td class="confluenceTd">2</td><td class="confluenceTd">3</td><td class="confluenceTd">Rx ← Tx</td></tr><tr><td class="confluenceTd">3</td><td class="confluenceTd">2</td><td class="confluenceTd"><p>Tx → Rx</p></td></tr><tr><td colspan="1" class="confluenceTd">4</td><td colspan="1" class="confluenceTd">6</td><td colspan="1" class="confluenceTd">DTR → DSR</td></tr><tr><td colspan="1" class="confluenceTd">5</td><td colspan="1" class="confluenceTd">5</td><td colspan="1" class="confluenceTd">GND</td></tr><tr><td colspan="1" class="confluenceTd">6</td><td colspan="1" class="confluenceTd">4</td><td colspan="1" class="confluenceTd">DSR ← DTR</td></tr><tr><td colspan="1" class="confluenceTd">7+8</td><td colspan="1" class="confluenceTd">1</td><td colspan="1" class="confluenceTd">RTS1 → CTS1 + CD2</td></tr></tbody></table></div><h2 id="SerialConsole-NullModemWithFullHandshake">Null Modem With Full Handshake</h2><p>Used with special software and should not be used with RouterOS.</p><div class="table-wrap"><table class="fixed-table wrapped confluenceTable"><colgroup><col style="width: 126.0px;"/><col style="width: 131.0px;"/><col style="width: 166.0px;"/></colgroup><tbody><tr><th class="confluenceTh">Side1 (DB9f)</th><th class="confluenceTh">Side2 (DB9f)</th><th class="confluenceTh">Function</th></tr><tr><td class="confluenceTd">2</td><td class="confluenceTd">3</td><td class="confluenceTd">Rx ← Tx</td></tr><tr><td class="confluenceTd">3</td><td class="confluenceTd">2</td><td class="confluenceTd"><p>Tx → Rx</p></td></tr><tr><td colspan="1" class="confluenceTd">4</td><td colspan="1" class="confluenceTd">6</td><td colspan="1" class="confluenceTd">DTR → DSR</td></tr><tr><td colspan="1" class="confluenceTd">5</td><td colspan="1" class="confluenceTd">5</td><td colspan="1" class="confluenceTd">GND</td></tr><tr><td colspan="1" class="confluenceTd">6</td><td colspan="1" class="confluenceTd">4</td><td colspan="1" class="confluenceTd">DSR ← DTR</td></tr><tr><td colspan="1" class="confluenceTd">7</td><td colspan="1" class="confluenceTd">8</td><td colspan="1" class="confluenceTd">RTS → CTS</td></tr><tr><td colspan="1" class="confluenceTd">8</td><td colspan="1" class="confluenceTd">7</td><td colspan="1" class="confluenceTd">CTS ← RTS</td></tr></tbody></table></div><h2 class="auto-cursor-target" id="SerialConsole-NullModemCompatibility">Null Modem Compatibility</h2><p>Summary tables below will allow you to choose the proper cable for your application.</p><div class="table-wrap"><table class="fixed-table wrapped confluenceTable"><colgroup><col style="width: 236.0px;"/><col style="width: 119.0px;"/><col style="width: 114.0px;"/><col style="width: 108.0px;"/><col style="width: 107.0px;"/></colgroup><tbody><tr><th class="confluenceTh"><br/></th><th class="confluenceTh">No handshake</th><th class="confluenceTh"><p>Loopback <br/>handshake</p></th><th class="confluenceTh"><p>Partial<br/>handshake</p></th><th class="confluenceTh">Full<br/>handshake</th></tr><tr><td class="confluenceTd">RouterBoards<br/>with limited port functionality</td><td class="highlight-green confluenceTd" data-highlight-colour="green">Y</td><td class="highlight-green confluenceTd" data-highlight-colour="green">Y</td><td class="highlight-yellow confluenceTd" data-highlight-colour="yellow">N*</td><td class="highlight-red confluenceTd" data-highlight-colour="red">N</td></tr><tr><td colspan="1" class="confluenceTd">RouterBoards <br/>with full functionality</td><td class="highlight-green confluenceTd" colspan="1" data-highlight-colour="green">Y</td><td class="highlight-green confluenceTd" colspan="1" data-highlight-colour="green">Y</td><td class="highlight-green confluenceTd" colspan="1" data-highlight-colour="green">Y</td><td class="highlight-red confluenceTd" colspan="1" data-highlight-colour="red">N</td></tr></tbody></table></div><p>* - may work only when hardware flow control is disabled</p><div class="table-wrap"><table class="fixed-table wrapped confluenceTable"><colgroup><col style="width: 238.0px;"/><col style="width: 119.0px;"/><col style="width: 110.0px;"/><col style="width: 108.0px;"/><col style="width: 108.0px;"/></colgroup><tbody><tr><th class="confluenceTh"><br/></th><th class="confluenceTh">No handshake</th><th class="confluenceTh"><p>Loopback <br/>handshake</p></th><th class="confluenceTh"><p>Partial<br/>handshake</p></th><th class="confluenceTh">Full<br/>handshake</th></tr><tr><td class="confluenceTd">Software flow<br/>control only</td><td class="highlight-green confluenceTd" data-highlight-colour="green">Y</td><td class="highlight-green confluenceTd" data-highlight-colour="green">Y*</td><td class="highlight-yellow confluenceTd" data-highlight-colour="yellow">Y**</td><td class="highlight-yellow confluenceTd" data-highlight-colour="yellow">Y**</td></tr><tr><td class="confluenceTd">Low-speed DTE/DCE compatible<br/>hardware flow control</td><td class="highlight-red confluenceTd" data-highlight-colour="red">N</td><td class="highlight-green confluenceTd" data-highlight-colour="green">Y</td><td class="highlight-green confluenceTd" data-highlight-colour="green">Y*</td><td class="highlight-red confluenceTd" data-highlight-colour="red">N</td></tr><tr><td class="confluenceTd">High-speed DTE/DCE compatible<br/>hardware flow control</td><td class="highlight-red confluenceTd" data-highlight-colour="red">N</td><td class="highlight-green confluenceTd" data-highlight-colour="green">Y</td><td class="highlight-yellow confluenceTd" data-highlight-colour="yellow">Y**</td><td class="highlight-red confluenceTd" data-highlight-colour="red">N</td></tr><tr><td class="confluenceTd">High speed<br/>communication<br/>using special software</td><td class="highlight-red confluenceTd" data-highlight-colour="red">N</td><td class="highlight-red confluenceTd" data-highlight-colour="red">N</td><td class="highlight-green confluenceTd" data-highlight-colour="green">Y*</td><td class="highlight-green confluenceTd" data-highlight-colour="green">Y</td></tr></tbody></table></div><p>* - will work as an alternative</p><p>** - will work but not recommended</p><h2 id="SerialConsole-RJ45TypeSerialPort"><span class="mw-headline">RJ45 Type Serial Port</span></h2><p>This type of port is used on RouterBOARD 2011, 3011, 4011, CCR1072, CCR1036 r2, CCR2xxx and CRS series devices, sometimes called &quot;Cisco style&quot; serial port.</p><p>RJ45 to DB9 Cable Pinout:</p><p class="auto-cursor-target"><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/328139/1409057.png" data-image-src="attachments/328139/1409057.png" data-unresolved-comment-count="0" data-linked-resource-id="1409057" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="Rj45-pinout.gif.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="328139" data-linked-resource-container-version="26" tabindex="0" alt=""></span><br/><br/></p><div class="table-wrap"><table class="wrapped confluenceTable"><colgroup><col/><col/><col/><col/><col/><col/></colgroup><tbody><tr><th class="confluenceTh">Signal</th><th class="confluenceTh">Console Port (DTE)<br/>RJ-45</th><th class="confluenceTh">RJ-45 Rolled Cable<br/>RJ-45 Pin</th><th class="confluenceTh">Adapter DB-9 Pin</th><th class="confluenceTh">Adapter DB-25 Pin</th><th class="confluenceTh">Signal</th></tr><tr><td class="confluenceTd">RTS</td><td class="confluenceTd">1</td><td class="confluenceTd">8</td><td class="confluenceTd">8</td><td class="confluenceTd">5</td><td class="confluenceTd">CTS</td></tr><tr><td class="confluenceTd">DTR</td><td class="confluenceTd">2</td><td class="confluenceTd">7</td><td class="confluenceTd">6</td><td class="confluenceTd">6</td><td class="confluenceTd">DSR</td></tr><tr><td class="confluenceTd">TxD</td><td class="confluenceTd">3</td><td class="confluenceTd">6</td><td class="confluenceTd">2</td><td class="confluenceTd">3</td><td class="confluenceTd">RxD</td></tr><tr><td class="confluenceTd">Ground</td><td class="confluenceTd">4</td><td class="confluenceTd">5</td><td class="confluenceTd">5</td><td class="confluenceTd">7</td><td class="confluenceTd">Ground</td></tr><tr><td class="confluenceTd">Ground</td><td class="confluenceTd">5</td><td class="confluenceTd">4</td><td class="confluenceTd">5</td><td class="confluenceTd">7</td><td class="confluenceTd">Ground</td></tr><tr><td class="confluenceTd">RxD</td><td class="confluenceTd">6</td><td class="confluenceTd">3</td><td class="confluenceTd">3</td><td class="confluenceTd">2</td><td class="confluenceTd">TxD</td></tr><tr><td class="confluenceTd">DSR</td><td class="confluenceTd">7</td><td class="confluenceTd">2</td><td class="confluenceTd">4</td><td class="confluenceTd">20</td><td class="confluenceTd">DTR</td></tr><tr><td class="confluenceTd">CTS</td><td class="confluenceTd">8</td><td class="confluenceTd">1</td><td class="confluenceTd">7</td><td class="confluenceTd">4</td><td class="confluenceTd">RTS</td></tr></tbody></table></div><h2 id="SerialConsole-RBM33GAdditionalSerialHeader"><span class="mw-headline">RB M33G Additional Serial Header</span></h2><p>For RBM33G additional serial header can be attached on GPIO pins U3_RXD, GND, U3_TXD, and 3V3</p><h2 id="SerialConsole-CCRSerialHeader"><span class="mw-headline">CCR Serial Header</span></h2><p>The Cloud Core Router series devices have a serial header on the PCB board, called J402 or 100</p><p>Here is the pin-out of that connector:</p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/328139/1409058.png" data-image-src="attachments/328139/1409058.png" data-unresolved-comment-count="0" data-linked-resource-id="1409058" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="J402.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="328139" data-linked-resource-container-version="26" tabindex="0" alt=""></span></p><h1 id="SerialConsole-SerialTerminalUsage">Serial Terminal Usage</h1><p>RouterOS allows to communicate with devices and other systems that are connected to the router via the serial port using a <code>/system serial-terminal </code> command. All keyboard input will be forwarded to the serial port and all data from the port is output to the connected device.</p><p>First, you have to have a free serial port, if the device has only one serial port (like all RouterBoards, WRAP/ALIX boards, etc.) you will have to disable the system console on this serial port to be able to use it as <strong>Serial Terminal</strong> for connection to other equipment (switches, modems, etc):</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/system console disable 0</pre>
+</div></div><p>Be sure to just disable the console rather than removing it, as RouterOS will recreate the console after the next reboot when you really remove it.</p><div role="region" aria-label="Warning" class="confluence-information-macro  confluence-information-macro-warning" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-error confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p><strong>Note that there are some caveats you should be aware of! Take your time understanding those limits to avoid strange things to happen when connecting a device to a serial port on a RouterBoard:</strong></p><ul><li>By re-configuring port Serial0 on a RouterBoard as seen above, you will lose your serial console access to RouterOS. This means, that if you cannot access your RouterBoard over the network anymore, you might even have to reset the whole configuration of it to gain access again.</li><li><p>When rebooting a RouterBoard the boot loader (RouterBOOT) will always use the serial console (Serial0 on RouterBoards) to send out some startup messages and offer access to the RouterBOOT menu.</p><p>Having text coming out of the serial port to the connected device might confuse your attached device. Furthermore, in the standard config, you can enter the RouterBOOT menu by pressing <strong>ANY</strong> key. So if your serial device sends any character to the serial port of your RouterBoard during boot time, the RouterBoard will enter the RouterBOOT menu and will <strong>NOT</strong> boot RouterOS unless you manually intervene!</p><p>You can reconfigure RouterBOOT to enter the RouterBOOT menu only when a <strong>DEL</strong> character is received - use this to reduce the chance to get a router that's stuck when rebooting!</p><p>Or if newer versions are used <a class="external-link" href="https://wiki.mikrotik.com/wiki/Silent_boot" rel="nofollow" title="Silent boot"> &quot;Silent boot&quot;</a> feature can be used to suppress any output on the serial interface, including removal of booting sounds.</p></li></ul></div></div><p>Next, you will have to configure your serial port according to the serial port settings of the connected device. Using the following command you will set your serial port to 19200 Baud 8N1. What settings you need to use depends on the device you connect:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/port set serial0 baud-rate=19200 data-bits=8 parity=none stop-bits=1</pre>
+</div></div><p>You can also try to let RouterOS guess the needed baud rate by setting</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/port set serial0 baud-rate=auto</pre>
+</div></div><p>Now's the time to connect your device if not already done. Usually, you will have to use a <a href="#SerialConsole-NullModemWithoutHandshake">null modem cable</a> (the same thing as a cross-over-cable for Ethernet). Now we're ready to go:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/system serial-terminal serial0</pre>
+</div></div><p>This will give you access to the device you connected to port Serial0. <strong><em>Ctrl-A</em> </strong>is the prefix key, which means that you will enter a small &quot;menu&quot;. If you need to send the <strong><em>Ctrl-A</em> </strong>character to a remote device, press <strong><em>Ctrl-A</em> </strong>twice.</p><p>If you want to exit the connection to the serial device type <strong><em>Ctrl-A</em></strong>, then <strong><em>Q</em></strong>. This will return you to your RouterOS console.</p><div role="region" aria-label="Warning" class="confluence-information-macro  confluence-information-macro-warning" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-error confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Do not connect to devices at an incorrect speed and avoid dumping binary data.</p></div></div><h1 class="auto-cursor-target" id="SerialConsole-SpecialLogin">Special Login</h1><p class="auto-cursor-target">Special login can be used to access another device (like a switch, for example) that is connected through a serial cable by opening a telnet/ssh session that will get you directly on this device (without having to login to RouterOS first). </p><p class="auto-cursor-target">For demonstration we will use two RouterBoards and one PC. </p><p class="auto-cursor-target"><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/328139/135856342.jpg" data-image-src="attachments/328139/135856342.jpg" data-unresolved-comment-count="0" data-linked-resource-id="135856342" data-linked-resource-version="2" data-linked-resource-type="attachment" data-linked-resource-default-alias="Special-login-setup.jpg" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/jpeg" data-linked-resource-container-id="328139" data-linked-resource-container-version="26" tabindex="0" alt=""></span></p><p>Routers R1 and R2 are connected with serial cable and PC is connected to R1 via ethernet. Lets say we want to access router R2 via serial cable from our PC. To do this you have to set up serial interface proxy on R1. It can be done by feature called <strong>special-login</strong>.</p><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>By default console is bound to serial port. </p></div></div><p>First task is to unbind console from serial simply by disabling entry in /system console menu:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] /system console&gt; print
+Flags: X - disabled, U - used, F - free
+ #   PORT                                                                    TERM
+ 0 X serial0                                                                 vt102</pre>
+</div></div><p>Next step is to add new user, in this case <em>serial</em>, and bind it to the serial port</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; /user add name=serial group=full
+[admin@MikroTik] &gt; /special-login add user=serial port=serial0 disabled=no
+[admin@MikroTik] &gt; /special-login print
+Flags: X - disabled
+ #   USER                                                                    PORT
+ 0   serial                                                                  serial0</pre>
+</div></div><p>Now we are ready to access R2 from our PC.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">maris@bumba:/$ ssh serial@10.1.101.146
+
+[Ctrl-A is the prefix key]
+R2 4.0beta4
+R2 Login:
+
+[admin@R2] &gt;</pre>
+</div></div><p>To exit special login mode press Ctrl+A and Q</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt;
+[Q - quit connection]      [B - send break]
+[A - send Ctrl-A prefix]   [R - autoconfigure rate]
+
+
+Connection to 10.1.101.146 closed.</pre>
+</div></div><p><br/></p><div role="region" aria-label="Warning" class="confluence-information-macro  confluence-information-macro-warning" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-error confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>After router reboot and serial cable attached router may stuck at Bootloader main menu</p></div></div><p>To fix this problem you need to allow access bootloader main menu from &lt;any&gt; key to &lt;delete&gt;:</p><ul><li>enter bootloader menu</li><li>press 'k' for boot key options</li><li>press '2' to change key to &lt;delete&gt;</li></ul><pre>What do you want to configure?                                                   
+d - boot delay                                                                
+k - boot key                                                                  
+s - serial console                                                            
+n - silent boot                                                              
+o - boot device                                                               
+u - cpu mode                                                                 
+f - cpu frequency                                                             
+r - reset booter configuration                                                 
+e - format nand                                                               
+g - upgrade firmware                                                         
+i - board info                                                                
+p - boot protocol                                                            
+b - booter options                                                            
+t - call debug code                                                           
+l - erase license                                                             
+x - exit setup                         
+your choice: k - boot key
+
+Select key which will enter setup on boot:
+ * 1 - any key
+   2 - &lt;Delete&gt; key only
+
+your choice: 2
+</pre>
+                    </div>
+
+                                                            <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328139/1409057.png">Rj45-pinout.gif.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328139/1409058.png">J402.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328139/130220145.png">Special-login-setup.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328139/135856345.jpg">Special-login-setup.jpg</a> (image/jpeg)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328139/135856342.jpg">Special-login-setup.jpg</a> (image/jpeg)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

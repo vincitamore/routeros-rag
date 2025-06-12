@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : RouterBOOT</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Getting-started_328119.html">Getting started</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : RouterBOOT
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Oskars K.</span>, last updated by <span class='editor'> Guntis G.</span> on Feb 08, 2024
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p class="firstHeading"><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742020690 {padding: 0px;}
+div.rbtoc1747742020690 ul {margin-left: 0px;}
+div.rbtoc1747742020690 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742020690'>
+<ul class='toc-indentation'>
+<li><a href='#RouterBOOT-MainandBackuploaders'>Main and Backup loaders</a></li>
+<li><a href='#RouterBOOT-RouterBOARDresetbutton'>RouterBOARD reset button</a></li>
+<li><a href='#RouterBOOT-ConfigurationResetForWirelessWirekits'>Configuration Reset For Wireless Wire kits</a></li>
+<li><a href='#RouterBOOT-Configuration'>Configuration</a></li>
+<li><a href='#RouterBOOT-SimpleUpgrade'>Simple Upgrade</a></li>
+<li><a href='#RouterBOOT-CheckingRouterBOOTversion'>Checking RouterBOOT version</a></li>
+</ul>
+</div></p><p class="firstHeading">RouterBOOT is responsible for starting RouterOS in RouterBOARD devices.</p><h2 class="auto-cursor-target" id="RouterBOOT-MainandBackuploaders"><span style="font-size: 20.0px;letter-spacing: -0.008em;">Main and Backup loaders</span></h2><p>By default, the main (regular) loader is used, but RouterBOARD devices also have a secondary (backup) bootloader, which can be used in case the main doesn't work. It is possible to call the backup loader with a configuration setting in RouterOS:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">system/routerboard/settings/set force-backup-booter=yes</pre>
+</div></div><p>It is also possible to use the backup booter by turning on the device, with the RESET button pushed. It is only possible to upgrade the main RouterBOOT, so in case of failure, you can use the backup booter to start the device and downgrade the main loader. For upgrade instructions, follow the separate instructions in<span> <a href="RouterBOARD_40992878.html#RouterBOARD-UpgradingRouterBOOT">RouterBOARD#UpgradingRouterBOOT</a></span></p><h2 id="RouterBOOT-RouterBOARDresetbutton"><span class="mw-headline">RouterBOARD reset button</span></h2><p>RouterBOOT reset button has three functions:</p><ul><li>Hold this button during boot time until the LED light starts flashing, and release the button to reset the RouterOS configuration (total 5 seconds)</li><li>Keep holding for 5 more seconds, LED turns solid, release now to turn on CAPs mode (total 10 seconds)</li><li>Or Keep holding the button for 5 more seconds until the LED turns off, then release it to make the RouterBOARD look for Netinstall servers</li></ul><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>If you hold the button before applying power, backup RouterBOOT will be used in addition to all the above actions. To do the above actions without loading the backup loader, push the button right after applying power to the device.</p></div></div><p><a href="https://help.mikrotik.com/docs/spaces/RKB/pages/328274/Reset+the+password">Reset the password</a></p><p><a class="external-link" href="https://www.youtube.com/watch?v=6Unz92rABs8" rel="nofollow">https://www.youtube.com/watch?v=6Unz92rABs8</a> </p><h2 id="RouterBOOT-ConfigurationResetForWirelessWirekits">Configuration Reset For <strong>Wireless Wire</strong> kits</h2><p>The reset button has the same functionality as on other devices, explained in detail <a href="https://help.mikrotik.com/docs/display/ROS/Reset+Button" rel="nofollow">https://help.mikrotik.com/docs/display/ROS/Reset+Button</a></p><p>5-second button hold on startup (USR LED light starts flashing) - resets to password-protected state.</p><p>10-second button hold on startup (USR LED turns solid after flashing) - completely removes configuration.</p><h2 id="RouterBOOT-Configuration"><span class="mw-headline">Configuration</span></h2><p>For RouterBOARD devices that feature a serial console connector, it is possible to access the RouterBOOT loader configuration menu. The required cable is described in the<span> <a href="Serial-Console_328139.html">Serial Console</a></span><span> </span>manual. RouterBOARD serial port is configured to <strong>115200bit/s</strong>, <strong>8 data bits</strong>, <strong>1 stop bit</strong>, and <strong>no parity</strong>. We suggest disabling the hardware flow control. </p><p>This example shows the menu which is available in RouterBOOT 7.4beta4:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">RouterBOOT booter 7.4beta4
+
+CRS328-24P-4S+
+
+built by build at Jun/15/2022 11:34:09 from revision 73B4521C
+
+CPU frequency: 800 MHz
+  Memory size: 512 MiB
+ Storage size:  16 MiB
+
+Press Ctrl+E to enter etherboot mode
+Press any key within 2 seconds to enter setup
+
+
+RouterBOOT-7.4beta4
+What do you want to configure?
+   d - boot delay
+   k - boot key
+   s - serial console
+   n - silent boot
+   o - boot device
+   z - extra kernel parameters
+   r - reset booter configuration
+   e - format storage
+   w - repartition nand
+   g - upgrade firmware
+   i - board info
+   p - boot protocol
+   b - booter options
+   j - boot os
+   t - hardware tests
+   l - erase license
+   x - exit setup
+your choice: </pre>
+</div></div><p>The options are self-explanatory.</p><div class="table-wrap"><table class="wrapped relative-table confluenceTable" style="width: 99.8139%;"><colgroup><col style="width: 2.65984%;"/><col style="width: 10.4994%;"/><col style="width: 86.8408%;"/></colgroup><tbody><tr><th class="confluenceTh">letter</th><th class="confluenceTh">description</th><th class="confluenceTh">explanation</th></tr><tr><td class="confluenceTd">d</td><td class="confluenceTd">boot delay</td><td class="confluenceTd">Delays starting of RouterOS to allow an interface to initialize</td></tr><tr><td class="confluenceTd">k</td><td class="confluenceTd">boot key</td><td class="confluenceTd">The button that will open the configuration menu</td></tr><tr><td class="confluenceTd">s</td><td class="confluenceTd">serial console</td><td class="confluenceTd">Sets the baud rate of the serial port</td></tr><tr><td class="confluenceTd">n</td><td class="confluenceTd">silent boot</td><td class="confluenceTd">Suppresses all output on the serial port, in case some device is connected to it (like a GPS device or a temperature monitor)</td></tr><tr><td class="confluenceTd">o</td><td class="confluenceTd">boot device</td><td class="confluenceTd">Allows to enable Netinstall booting</td></tr><tr><td class="confluenceTd">z</td><td class="confluenceTd">extra kernel parameters</td><td class="confluenceTd"><br/></td></tr><tr><td class="confluenceTd">r</td><td class="confluenceTd">reset booter configuration</td><td class="confluenceTd">Resets the settings in this menu.<span> </span><strong>Warning, no confirmation!</strong></td></tr><tr><td class="confluenceTd">e</td><td class="confluenceTd">format storage</td><td class="confluenceTd">Destroys all data on the NAND, including RouterOS configuration and license</td></tr><tr><td class="confluenceTd">w</td><td class="confluenceTd">repartition nand</td><td class="confluenceTd">Refer to the<span> <a href="Partitions_328103.html">Partitions</a></span><span> </span>document for more info</td></tr><tr><td class="confluenceTd">y</td><td class="confluenceTd">active partition</td><td class="confluenceTd">Choose an active partition from which to try to load RouterOS</td></tr><tr><td class="confluenceTd">g</td><td class="confluenceTd">upgrade firmware</td><td class="confluenceTd">Allows upgrading RouterBOOT version through the network, or the XModem protocol</td></tr><tr><td class="confluenceTd">i</td><td class="confluenceTd">board info</td><td class="confluenceTd"><br/></td></tr><tr><td class="confluenceTd">p</td><td class="confluenceTd">boot protocol</td><td class="confluenceTd"><br/></td></tr><tr><td class="confluenceTd">b</td><td class="confluenceTd">booter options</td><td class="confluenceTd">Select which bootloader to use by default</td></tr><tr><td class="confluenceTd">t</td><td class="confluenceTd">do memory testing</td><td class="confluenceTd">booter options</td></tr><tr><td class="confluenceTd">j</td><td class="confluenceTd">boot os</td><td class="confluenceTd">do memory testing</td></tr><tr><td class="confluenceTd">t</td><td class="confluenceTd">hardware tests</td><td class="confluenceTd"><br/></td></tr><tr><td class="confluenceTd">l</td><td class="confluenceTd">erase license</td><td class="confluenceTd"><br/></td></tr><tr><td class="confluenceTd">x</td><td class="confluenceTd"><p>exit setup</p></td><td class="confluenceTd"><br/></td></tr></tbody></table></div><p>Hitting the appropriate keyboard letter will give you a list of further options, they are shown below:</p><pre style="margin-left: 20.0px;"># d - boot delay:
+
+Select boot delay:
+   1 - 1s
+ * 2 - 2s
+   3 - 3s
+   4 - 4s
+   5 - 5s
+   6 - 6s
+   7 - 7s
+   8 - 8s
+   9 - 9s
+
+# k - boot key:
+
+Select key which will enter setup on boot:
+ * 1 - any key
+   2 - &lt;Delete&gt; key only
+
+# s - serial console:
+
+Select baud rate for serial console:
+ * 1 - 115200
+   2 - 57600
+   3 - 38400
+   4 - 19200
+   5 - 9600
+   6 - 4800
+   7 - 2400
+   8 - 1200
+   9 - off
+
+# n - silent boot:
+
+Silent boot:
+   0 - off
+ * 1 - on
+
+# o - boot device:
+
+Select boot device:
+   e - boot over Ethernet
+ * n - boot from NAND, if fail then Ethernet
+   1 - boot Ethernet once, then NAND
+   o - boot from NAND only
+   b - boot chosen device
+   f - boot Flash Configure Mode
+   3 - boot Flash Configure Mode once, then NAND
+
+
+# f - cpu frequency:
+
+Select CPU frequency:
+   a -  200MHz
+   b -  400MHz
+   c -  600MHz
+   d -  800MHz
+   e - 1000MHz
+ * f - 1200MHz
+
+# r - reset booter configuration:
+
+# e - format nand:
+
+Do you realy want to format your storage device?
+that would result in losing all your data
+type &quot;yes&quot; to confirm: 
+
+# w - repartition nand:
+
+Select parititon count:
+   1 - partition
+ * 2 - partitions
+   3 - partitions
+   4 - partitions
+
+# y - active partition:
+
+Select active partiton:
+ * 0 - partition
+   1 - partition
+
+# g - upgrade firmware:
+
+Upgrade firmware options:
+   e - upgrade firmware over ethernet
+   s - upgrade firmware over serial port
+
+# i - board info:
+
+Board Info:
+
+        Board type: CCR1009-8G-1S-1S+
+     Serial number: 48FF01DDE6FD
+  Firmware version: 3.19
+     CPU frequency: 1200 MHz
+       Memory size: 2048 MiB
+         NAND size: 128 MiB
+        Build time: 2014-09-23 15:02:34
+  eth1 MAC address: 00:0C:42:00:BE:4A
+  eth2 MAC address: 00:0C:42:00:BE:4B
+  eth3 MAC address: 00:0C:42:00:BE:4C
+  eth4 MAC address: 00:0C:42:00:BE:4D
+  eth5 MAC address: 00:0C:42:00:BE:4E
+  eth6 MAC address: 00:0C:42:00:BE:4F
+  eth7 MAC address: 00:0C:42:00:BE:50
+  eth8 MAC address: 00:0C:42:00:BE:51
+  eth9 MAC address: 00:0C:42:00:BE:52
+ eth10 MAC address: 00:0C:42:00:BE:53
+
+# p - boot protocol:
+
+Choose which boot protocol to use:
+ * 1 - bootp protocol
+   2 - dhcp protocol
+
+# b - booter options:
+
+Select which booter you want to load:
+ * 1 - load regular booter
+   2 - force backup-booter loading
+
+#t - do memory testing:
+
+launches built in memory test!
+
+# x - exit setup:
+
+Exit bios configuration menu and continues with system startup.
+</pre><p><br/></p><h2 id="RouterBOOT-SimpleUpgrade"><span class="mw-headline">Simple Upgrade</span></h2><p>RouterBOOT can be upgraded from RouterOS by:</p><ul><li>Run command<span> </span><em>/system routerboard upgrade</em></li><li>Reboot your router to apply the upgrade (<em>/system reboot</em>)]</li></ul><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@admin] &gt; system/routerboard/upgrade 
+Do you really want to upgrade firmware? [y/n] 
+
+</pre>
+</div></div><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p class="auto-cursor-target">Every ROS version has a new RouterBoot version included in it, once you perform a ROS upgrade we always recommend upgrading RouterBoot also.</p></div></div><h2 id="RouterBOOT-CheckingRouterBOOTversion"><span class="mw-headline">Checking RouterBOOT version</span></h2><p>This command shows the current RouterBOOT version of your device and the available upgrade which is<em> </em>included in<em> routeros-x.yy.npk </em>package, or if you uploaded a<em> *.FWF </em>file<span> </span>corresponding to the device model:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@admin] &gt;  system/routerboard/print 
+                ;;; Firmware upgraded successfully, please reboot for changes 
+                    to take effect!
+       routerboard: yes
+        board-name: hAP ac
+             model: RouterBOARD 962UiGS-5HacT2HnT
+     serial-number: 6737057562DD
+     firmware-type: qca9550L
+  factory-firmware: 3.29
+  current-firmware: 6.49.5
+  upgrade-firmware: 7.4beta5 
+</pre>
+</div></div><p>In this case, you see, there is<span> </span><strong>a newer version</strong><span> </span>of the Bootloader firmware available already inside your current RouterOS version and it has been updated and requires a reboot.</p><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>A downgrade is also possible by uploading *.FWF file with an older version may be required for troubleshooting purposes when contacting MikroTik support.</p></div></div>
+                    </div>
+
+                                                            <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/136839241/136839245.png">image2022-7-13_15-49-22.png</a> (image/png)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

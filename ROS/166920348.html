@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : Container - ThingsBoard MQTT/HTTP server</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Extended-features_120324125.html">Extended features</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Container_84901929.html">Container</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : Container - ThingsBoard MQTT/HTTP server
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Deniss M.</span>, last updated on Mar 06, 2025
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742047534 {padding: 0px;}
+div.rbtoc1747742047534 ul {margin-left: 0px;}
+div.rbtoc1747742047534 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742047534'>
+<ul class='toc-indentation'>
+<li><a href='#ContainerThingsBoardMQTT/HTTPserver-Introduction'>Introduction</a></li>
+<li><a href='#ContainerThingsBoardMQTT/HTTPserver-Summary'>Summary</a></li>
+<li><a href='#ContainerThingsBoardMQTT/HTTPserver-Configuration'>Configuration</a>
+<ul class='toc-indentation'>
+<li><a href='#ContainerThingsBoardMQTT/HTTPserver-Containermode'>Container mode</a></li>
+<li><a href='#ContainerThingsBoardMQTT/HTTPserver-Networking'>Networking</a></li>
+<li><a href='#ContainerThingsBoardMQTT/HTTPserver-Environmentvariablesandmounts'>Environment variables and mounts</a></li>
+<li><a href='#ContainerThingsBoardMQTT/HTTPserver-Gettingimage'>Getting image</a></li>
+<li><a href='#ContainerThingsBoardMQTT/HTTPserver-Startingthecontainer'>Starting the container</a></li>
+</ul>
+</li>
+<li><a href='#ContainerThingsBoardMQTT/HTTPserver-Verification'>Verification</a>
+<ul class='toc-indentation'>
+<li><a href='#ContainerThingsBoardMQTT/HTTPserver-Managementaccess'>Management access</a></li>
+<li><a href='#ContainerThingsBoardMQTT/HTTPserver-MQTTtest'>MQTT test</a></li>
+</ul>
+</li>
+<li><a href='#ContainerThingsBoardMQTT/HTTPserver-EnablingHTTPSandSSLMQTT'>Enabling HTTPS and SSL MQTT</a>
+<ul class='toc-indentation'>
+<li><a href='#ContainerThingsBoardMQTT/HTTPserver-Createcertificates'>Create certificates</a></li>
+<li><a href='#ContainerThingsBoardMQTT/HTTPserver-DownloadtheThingsBoard&#39;sconfigurationfile'>Download the ThingsBoard&#39;s configuration file</a></li>
+<li><a href='#ContainerThingsBoardMQTT/HTTPserver-AltertheThingsBoard&#39;ssettings'>Alter the ThingsBoard&#39;s settings</a></li>
+<li><a href='#ContainerThingsBoardMQTT/HTTPserver-UploadalteredThingsBoardconfigurationfile'>Upload altered ThingsBoard configuration file</a></li>
+<li><a href='#ContainerThingsBoardMQTT/HTTPserver-ConfirmHTTPSaccess'>Confirm HTTPS access</a></li>
+<li><a href='#ContainerThingsBoardMQTT/HTTPserver-ConfirmSSLMQTTconnection'>Confirm SSL MQTT connection</a>
+<ul class='toc-indentation'>
+<li><a href='#ContainerThingsBoardMQTT/HTTPserver-Testingwiththedevicethatisrunningthecontainer'>Testing with the device that is running the container</a></li>
+<li><a href='#ContainerThingsBoardMQTT/HTTPserver-Testingwithanotherdevice'>Testing with another device</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div></p><h1 id="ContainerThingsBoardMQTT/HTTPserver-Introduction">Introduction</h1><p>The introduction of the container feature into the RouterOS made it possible to run all kinds of servers for all sorts of tasks inside the router. This is especially relevant for people, who want to reduce the number of devices in their network. Instead of running a server on a separate device/machine, why not run it inside the router?</p><p>A lot of users need a server that is able to gather the data, store it and display it in a way it is easy to understand. This is where a platform like <a class="external-link" href="https://thingsboard.io/" rel="nofollow">ThingsBoard</a> can come into play.</p><p>It is primarily positioned as an IoT platform and you can find all sorts of use cases for it that they demonstrate in the <a class="external-link" href="https://thingsboard.io/iot-use-cases/" rel="nofollow">link</a>.</p><p>The most appealing part, from the RouterOS user standpoint, is that it can be used as an MQTT server (MQTT broker) or an HTTP server. Meaning, you can use <a href="https://help.mikrotik.com/docs/display/ROS/MQTT" rel="nofollow">MQTT publish</a> or <a href="https://help.mikrotik.com/docs/display/ROS/Fetch" rel="nofollow">HTTP post</a> to post the data. You can find ThingsBoard MQTT API guide by using the link <a class="external-link" href="https://thingsboard.io/docs/reference/mqtt-api/" rel="nofollow">here</a> and HTTP API by using the link <a class="external-link" href="https://thingsboard.io/docs/reference/http-api/" rel="nofollow">here</a>.</p><p>In short, you can utilize <a href="https://help.mikrotik.com/docs/display/ROS/Scripting" rel="nofollow">scripting</a> to collect RouterOS statistics (like uptime, GPS coordinates, packet statistics, and almost anything else that you print into the terminal), then store this information into variables and structure a JSON message out of those. You can, then send this message using MQTT or HTTP post to the ThingsBoard via a <a href="https://help.mikrotik.com/docs/display/ROS/Scheduler" rel="nofollow">scheduler</a> (that will run this script whenever you need it). You can find an example of a basic script that does it in <a href="https://help.mikrotik.com/docs/display/ROS/MQTT+and+ThingsBoard+configuration" rel="nofollow">this guide</a>.</p><p>ThingsBoard will store and display the data with the help of <a class="external-link" href="https://thingsboard.io/docs/user-guide/ui/widget-library/" rel="nofollow">widgets</a>, which can be used to help you set up dashboards that visualize the data in graphs, tables, maps, and other ways.</p><p>For example, there are 2 below mentioned options of the ThingsBoard instances available and each of them uses a different database:</p><ul><li><a class="external-link" href="https://hub.docker.com/r/thingsboard/tb-postgres/" rel="nofollow">thingsboard/tb-postgres</a> </li><li><a class="external-link" href="https://hub.docker.com/r/thingsboard/tb-cassandra/" rel="nofollow">thingsboard/tb-cassandra</a></li></ul><p>You can find more information in the ThingsBoard/docker documentation.</p><p>In our example, we will showcase <strong>tb-postgres</strong> - a single instance of ThingsBoard with PostgreSQL database for testing purposes.</p><p>The guide will showcase &quot;in-memory&quot; queue type service, but for production environment, consider using other service types. You can find more information <a class="external-link" href="https://thingsboard.io/docs/user-guide/install/docker/" rel="nofollow">here</a>.</p><h1 id="ContainerThingsBoardMQTT/HTTPserver-Summary">Summary</h1><p><strong>Sub-menu:</strong><span> </span><code>/container</code></p><p><em><strong>note</strong>: </em><strong>container</strong> package is required.</p><p>RouterOS versions that are older than v7.8 will not be able to run this scenario.</p><p>Make sure to study our <a href="https://help.mikrotik.com/docs/display/ROS/Container" rel="nofollow">container</a> guide before proceeding with the configuration. Make sure to check the <a href="https://help.mikrotik.com/docs/display/ROS/Container#Container-Disclaimer" rel="nofollow">disclaimer</a> and <a href="https://help.mikrotik.com/docs/display/ROS/Container#Container-Requirements" rel="nofollow">requirements</a> sections to understand all the risks and necessary steps you might be required to do.</p><p>In this example, we will run it on a <a href="18350234.html">Cloud Hosted Router, CHR</a> device. To help you set it up in a <a class="external-link" href="https://www.virtualbox.org/" rel="nofollow">Virtual Box</a>, please check our <a class="external-link" href="https://www.youtube.com/watch?v=oHXkaHkSVVo" rel="nofollow">youtube tutorial</a>.</p><p>At the time, when the guide was published, <strong>thingsboard/tb-postgres</strong> image was available for linux/<strong>arm64</strong> and linux/<strong>amd64</strong> OS/architectures <strong>only</strong>. Meaning, you are not able to run this scenario on our arm32-bit architecture RouterOS devices.</p><p>There are a couple of parameters to keep in mind:</p><ul><li>You need to understand that it is a <strong>server</strong> and that you will need to have additional space for the data that is stored there and the image itself. In our tests, 8 GB of disk space was plenty enough but! you might want to consider adding more for real-life applications, especially if you are planning on running more containers. Just remember → it might be better to have a reserve.</li><li>Same as with disk space, RAM memory is also important. Per the ThingsBoard documentation, when using a single instance of ThingsBoard with a PostgreSQL database, it is recommended to allocate at least 1GB of RAM and use a minimum load (a few messages per second). 2-4GB RAM is recommended. In other words, if you want to run it on a RouterBoard device, please understand, that you might not be able to achieve it on devices that have less than 1 GB RAM. That is why → consider having a device with more RAM memory to spare.</li></ul><p>Go to the <a href="https://help.mikrotik.com/docs/display/ROS/Container#Container-Tipsandtricks" rel="nofollow">tips and tricks</a> section to understand how to limit RAM.</p><h1 id="ContainerThingsBoardMQTT/HTTPserver-Configuration">Configuration</h1><h2 id="ContainerThingsBoardMQTT/HTTPserver-Containermode">Container mode</h2><p>Enable container mode:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/system/device-mode/update container=yes</pre>
+</div></div><p>You will need to confirm the device-mode with a press of the reset button, or a cold reboot, if using container on X86.</p><h2 class="auto-cursor-target" id="ContainerThingsBoardMQTT/HTTPserver-Networking">Networking</h2><p>Add veth interface for the container:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface/veth/add name=veth1 address=172.18.0.2/24 gateway=172.18.0.1</pre>
+</div></div><p>Create a bridge for the container, assign an IP network to it, and add veth to the bridge:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface/bridge/add name=dockertb
+/ip/address/add address=172.18.0.1/24 interface=dockertb
+/interface/bridge/port add bridge=dockertb interface=veth1</pre>
+</div></div><p>Setup NAT for outgoing traffic:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip/firewall/nat/add chain=srcnat action=masquerade src-address=172.18.0.0/24</pre>
+</div></div><p>Forward TCP 9090 for HTTP management (the default HTTP port per ThingsBoard documentation):</p><div role="region" aria-label="Warning" class="confluence-information-macro  confluence-information-macro-warning" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-error confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>We suggest using HTTP access only when testing locally or through a VPN (when you are certain that the local network is safe).</p><p>When you want to access container WEB management from the internet (from the public network/WAN), please, instead, consider using <strong>HTTPS</strong>.</p></div></div><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip firewall nat add action=dst-nat chain=dstnat dst-address=192.168.88.1 dst-port=9090 protocol=tcp to-addresses=172.18.0.2 to-ports=9090</pre>
+</div></div><p class="auto-cursor-target">In the <code>dst-address</code> field shown in DNAT (dst-nat) rule above, we use the device's local IP address. First, <strong>use local IPs</strong> (local access)<strong> to</strong> <strong>set everything up</strong> <strong>and</strong> <strong>confirm that everything is working</strong>.</p><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p class="auto-cursor-target">After going through the rest of the steps shown in this guide and verifying that the ThingsBoard management portal works locally →  <strong>further secure the setup</strong>:</p><ul><li class="auto-cursor-target">(a) make sure that all default ThingsBoard user credentials were changed/removed and strong passwords were implemented (reference ThingsBoard documentation);</li><li class="auto-cursor-target">(b) <strong>enable</strong> <strong>HTTPS</strong> (the steps will be explained later on in the guide);</li><li class="auto-cursor-target">(c) preferably change HTTPS port to a non-standard one (reference ThingsBoard documentation).</li></ul><p class="auto-cursor-target">Only when you increase the security and only then →  you can consider enabling remote access from WAN (by using your public IP address in the <code>dst-address</code> field instead of the local IP used in the example above). Additionally, to further increase security, use <code class="ros value">src-address</code> or <code>src-address-list</code> parameter, where you can input your trusted public source IP addresses (a list of known/trusted addresses that, for example, belong to your branch office from where you also want to have access to the server). Please understand that only you are responsible for the security. If you leave a door open, someone may exploit it. You need to have networking knowledge and understand the risks when setting up such scenarios.</p></div></div><p>Forward TCP 1883 for non-SSL MQTT (the default MQTT port used per ThingsBoard documentation):</p><div role="region" aria-label="Warning" class="confluence-information-macro  confluence-information-macro-warning" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-error confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>We suggest using non-SSL MQTT (TCP 1883) communication only when testing locally or through a VPN (when you are certain that the local network is safe).</p><p>Please consider using <strong>SSL MQTT (TCP port 8883)</strong>, instead of non-SSL MQTT (TCP port 1883), for real-life applications, when it comes down to access from the internet (from the public network). If you use non-SSL MQTT, the communication between the client (MQTT publisher) and the server (MQTT broker) can be easily sniffed/packet captured, and that will compromise authentication data (such as client-ids, usernames and passwords).</p></div></div><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip firewall nat add action=dst-nat chain=dstnat dst-address=192.168.88.1 dst-port=1883 protocol=tcp to-addresses=172.18.0.2 to-ports=1883</pre>
+</div></div><p class="auto-cursor-target">Same as with HTTP access, in the <code>dst-address</code> field shown in DNAT (dst-nat) rule above, we use the device's local IP address. First, <strong>use local IPs</strong> (local access)<strong> to</strong> <strong>set everything up</strong> <strong>and</strong> <strong>confirm that everything is working</strong>.</p><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>After going through the rest of the steps shown in this guide and verifying that the ThingsBoard non-SSL MQTT communication works locally →  <strong>further secure the setup</strong>:</p><ul><li>(a) consider removing template devices from the ThingsBoard installation;</li><li>(b) <strong>enable SSL MQTT </strong>(the steps will be explained later on in the guide);</li><li>(c) preferably change MQTT port to a non-standard one (reference ThingsBoard documentation).</li></ul><p>When you enable SSL MQTT, you can consider opening TCP 8883 (which is the default SSL MQTT port) from WAN (by using your public IP address in the <code>dst-address</code> field instead of the local IP, and changing <code>dst-port</code> and <code>to-ports</code> from 1883 to 8883). Additionally, to further increase security, use <code class="ros value">src-address</code> or <code>src-address-list</code> parameters, where you can set up your trusted public IP address list. As a result, only configured trusted IPs will be able to establish an MQTT connection with the ThingsBoard broker.</p></div></div><h2 class="auto-cursor-target" id="ContainerThingsBoardMQTT/HTTPserver-Environmentvariablesandmounts">Environment variables and mounts</h2><p>Check <a class="external-link" href="https://hub.docker.com/r/thingsboard/tb-postgres" rel="nofollow">docker-thingsboard</a> documentation for exact mounts and variables that need to be added.</p><p>Environment variables:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/container/envs/add name=tb_envs key=TB_QUEUE_TYPE value=&quot;in-memory&quot;</pre>
+</div></div><p>Mounts:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/container/mounts/add name=mytb-data src=tb/mytb-data dst=/data
+/container/mounts/add name=mytb-logs src=tb/mytb-logs dst=/var/log/thingsboard</pre>
+</div></div><h2 class="auto-cursor-target" id="ContainerThingsBoardMQTT/HTTPserver-Gettingimage">Getting image</h2><p>To simplify the configuration, we will get the image from an external library but you can also import it via the <a href="https://help.mikrotik.com/docs/display/ROS/Container#Container-b)importimagefromPC" rel="nofollow">.tar</a> file.</p><p>Make sure that you have &quot;Registry URL&quot; set accordingly, limit RAM usage (if necessary), and set up a directory for the image.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/container/config/set registry-url=https://registry-1.docker.io tmpdir=pull ram-high=2048.0MiB</pre>
+</div></div><p>Pull image:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/container/add remote-image=thingsboard/tb-postgres:latest interface=veth1 root-dir=ThingsBoard mounts=mytb-data,mytb-logs envlist=tb_envs logging=yes</pre>
+</div></div><p class="auto-cursor-target">After running the command, RouterOS should start &quot;extracting&quot; the package. Check &quot;File System&quot; for newly created folders and monitor container status with the command <code>/container/print</code>.</p><h2 class="auto-cursor-target" id="ContainerThingsBoardMQTT/HTTPserver-Startingthecontainer">Starting the container</h2><p>After you make sure that the container has been added and the status changed to <code>status=stopped</code> after using <code>/container/print</code> → you can initiate it:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/container/start 0</pre>
+</div></div><p class="auto-cursor-target">Wait for a couple of minutes for the container to fully load.</p><h1 class="auto-cursor-target" id="ContainerThingsBoardMQTT/HTTPserver-Verification">Verification</h1><h2 id="ContainerThingsBoardMQTT/HTTPserver-Managementaccess">Management access</h2><p>After the container is started and installed, access it using any browser, by going to → <a class="external-link" href="http://192.168.88.1:9090" rel="nofollow">http://192.168.88.1:9090</a> (where the IP address is the address used in the DNAT rule):</p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/166920348/166920378.png" data-image-src="attachments/166920348/166920378.png" data-unresolved-comment-count="0" data-linked-resource-id="166920378" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2023-1-19_14-18-55.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="166920348" data-linked-resource-container-version="165" tabindex="0" alt=""></span></p><p>By default, credentials are (Username/Password):</p><ul><li><strong>Systen Administrator</strong>: sysadmin@thingsboard.org / sysadmin</li><li><strong>Tenant Administrator</strong>: tenant@thingsboard.org / tenant</li></ul><p>The login prompt should confirm that the server is running.</p><h2 id="ContainerThingsBoardMQTT/HTTPserver-MQTTtest">MQTT test</h2><p>Log in with the <strong>tenant </strong>and create a new device. Go to the &quot;<strong>Devices</strong>&quot; menu, click on the &quot;<strong>+</strong>&quot; (Add Device) button and choose the &quot;<strong>Add new device</strong>&quot; option:</p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/166920348/166920430.png" data-image-src="attachments/166920348/166920430.png" data-unresolved-comment-count="0" data-linked-resource-id="166920430" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2023-1-20_11-21-14.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="166920348" data-linked-resource-container-version="165" tabindex="0" alt=""></span></p><p> Name it, however, you like, and click on &quot;<strong>Add</strong>&quot;:</p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/166920348/166920431.png" data-image-src="attachments/166920348/166920431.png" data-unresolved-comment-count="0" data-linked-resource-id="166920431" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2023-1-20_11-22-22.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="166920348" data-linked-resource-container-version="165" tabindex="0" alt=""></span></p><p>Check your device access token by clicking on the device you've just created and selecting the &quot;<strong>Manage credentials</strong>&quot; setting (copy the access token generated or type in your own →  &quot;YOUR_TOKEN&quot;):</p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/166920348/166920432.png" data-image-src="attachments/166920348/166920432.png" data-unresolved-comment-count="0" data-linked-resource-id="166920432" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2023-1-20_11-24-15.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="166920348" data-linked-resource-container-version="165" tabindex="0" alt=""></span></p><p>After these steps, go to the RouterOS settings (back to CHR settings) and create a new <a href="https://help.mikrotik.com/docs/display/ROS/MQTT" rel="nofollow">MQTT broker</a> (<strong>make sure that you have IoT package installed </strong>because otherwise, you will not have this menu):</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/iot/mqtt/brokers/add name=tb address=172.18.0.2 port=1883 username=YOUR_TOKEN</pre>
+</div></div><p>Publish a static test MQTT message in the JSON format:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/iot/mqtt/publish broker=&quot;tb&quot; topic=&quot;v1/devices/me/telemetry&quot; message=&quot;{\&quot;test\&quot;:\&quot;123\&quot;}&quot;</pre>
+</div></div><p class="auto-cursor-target">Confirm that the message was posted:</p><p class="auto-cursor-target"><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/166920348/166920434.png" data-image-src="attachments/166920348/166920434.png" data-unresolved-comment-count="0" data-linked-resource-id="166920434" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2023-1-20_12-16-42.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="166920348" data-linked-resource-container-version="165" tabindex="0" alt=""></span></p><h1 class="auto-cursor-target" id="ContainerThingsBoardMQTT/HTTPserver-EnablingHTTPSandSSLMQTT">Enabling HTTPS and SSL MQTT</h1><p>By default, HTTP and MQTT protocols are used. As mentioned previously in the &quot;Networking&quot; section, working with non-SSL HTTP and non-SSL MQTT is not very safe (unless they are used within heavily protected networks with a well-configured firewall/restricted access) and <strong>we advise enabling HTTPS </strong>and<strong> SSL MQTT</strong>.</p><p>Please check ThingsBoard documentation for more information → <a class="external-link" href="https://thingsboard.io/docs/user-guide/ssl/http-over-ssl/" rel="nofollow">HTTP over SSL</a> and <a class="external-link" href="https://thingsboard.io/docs/user-guide/mqtt-over-ssl/" rel="nofollow">MQTT over SSL</a> guides.</p><p>First of all, there is no SSL without a certificate and one needs to be made (or purchased).</p><p>In short, this section will demonstrate how to generate self-signed certificates for HTTPS and SSL MQTT. Then, you will need to upload them to the correct folder within the ThingsBoard installation and alter the ThingsBoard configuration file accordingly.</p><p>In our guide, we will use RouterOS to generate both <a href="https://help.mikrotik.com/docs/display/ROS/Certificates" rel="nofollow">certificates</a> (but you can also use OpenSSL or other tools you want).</p><h2 id="ContainerThingsBoardMQTT/HTTPserver-Createcertificates">Create certificates</h2><p>Create a certificate for HTTPS:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/certificate add name=TBhttps common-name=172.18.0.2
+/certificate sign TBhttps</pre>
+</div></div><p class="auto-cursor-target">Create a certificate for MQTT:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/certificate add name=TBmqtt common-name=172.18.0.2
+/certificate sign TBmqtt</pre>
+</div></div><p>Confirm that they were added with the help of <code>/certificate/print</code> command:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; /certificate/print
+Flags: K - PRIVATE-KEY; A - AUTHORITY; T - TRUSTED
+Columns: NAME, COMMON-NAME, FINGERPRINT
+#     NAME     COMMON-NAME  FINGERPRINT                                                     
+0 KAT TBhttps  172.18.0.2   863f4547c74ce3ec70c3e82172502711517b52bbc055d18c24ba4aafec46152c
+1 KAT TBmqtt   172.18.0.2   ebf3ff5d03ed4cc73546e058da9bc414cdaf24ce45da29b203348045fbbd21ae</pre>
+</div></div><p>Export the certificates using PKCS12 format and set up a password/passphrase for them:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/certificate/export-certificate file-name=keystore export-passphrase=thingsboard_cert_password type=pkcs12 numbers=0
+/certificate/export-certificate file-name=mqttserver export-passphrase=thingsboard_mqttcert_password type=pkcs12 numbers=1</pre>
+</div></div><p>Use your own <code>export-passphrase</code> and remember them.</p><p>The output from the command above will create certificate <strong>keystore.p12</strong> and <strong>mqttserver.p12</strong> files that you can download from the &quot;<a href="https://help.mikrotik.com/docs/pages/viewpage.action?pageId=2555971" rel="nofollow">File List</a>&quot; menu:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; /file/print 
+Columns: NAME, TYPE, SIZE, CREATION-TIME
+ #  NAME                 TYPE             SIZE       CREATION-TIME       
+ 0  tb/mytb-data         container store             jan/19/2023 13:43:16
+ 1  container-log.0.txt  .txt file        2240.5KiB  jan/27/2023 15:37:41
+ 2  skins                directory                   jan/18/2023 15:12:22
+ 3  tb/mytb-logs         container store             jan/27/2023 12:24:30
+ 4  pull                 directory                   jan/19/2023 13:41:01
+ 5  pub                  directory                   jan/18/2023 16:15:29
+ 6  tb                   directory                   jan/23/2023 15:46:39
+ 7  tb/data              container store             jan/18/2023 16:50:08
+ 8  tb/logs              container store             jan/18/2023 16:50:08
+ 9  mqttserver.p12       .p12 file        2438       jan/27/2023 15:36:26
+10  keystore.p12         .p12 file        2448       jan/27/2023 15:08:07
+11  ThingsBoard          container store             jan/19/2023 13:40:50</pre>
+</div></div><p>Download both files from the router into any directory on your PC. For example, we've downloaded it into <code>C:\Users\Admin\Desktop\ThingsBoard</code> folder.</p><h2 id="ContainerThingsBoardMQTT/HTTPserver-DownloadtheThingsBoard&#39;sconfigurationfile">Download the ThingsBoard's configuration file</h2><p>Open your command terminal (&quot;CMD&quot;, as Administrator, for Windows users, or &quot;Linux Shell or Command Terminal&quot; for Linux users) and navigate it to the directory where the certificates are:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: powershell; gutter: false">C:\Windows\System32&gt;cd c:\Users\Admin\Desktop\ThingsBoard
+C:\Users\Admin\Desktop\ThingsBoard&gt;dir
+Directory of C:\Users\Admin\Desktop\ThingsBoard
+
+27.01.2023  15:36    &lt;DIR&gt;          .
+27.01.2023  15:36    &lt;DIR&gt;          ..
+27.01.2023  15:09             2 448 keystore.p12
+27.01.2023  15:36             2 434 mqttserver.p12
+               2 File(s)          4 882 bytes
+               2 Dir(s)  51 380 154 368 bytes free</pre>
+</div></div><p>From this directory, you will need to connect to the router's IP via the SFTP (which allows you to file transfer using SSH protocol, so you need to make sure that <a href="https://help.mikrotik.com/docs/display/ROS/Services" rel="nofollow">SSH service</a> is enabled beforehand):</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: powershell; gutter: false">c:\Users\Admin\Desktop\ThingsBoard&gt;sftp admin@192.168.88.1
+The authenticity of host &#39;192.168.88.1 (192.168.88.1)&#39; can&#39;t be established.
+RSA key fingerprint is SHA256:/WmmZErqWL51SOlS4EaGvSQ0i4HPnSIHCEjnc8AmP2c.
+Are you sure you want to continue connecting (yes/no/[fingerprint])?yes
+admin@192.168.88.1&#39;s password:
+Connected to 192.168.88.1.
+sftp&gt;</pre>
+</div></div><p>While the container is running, go to the ThingsBoard configuration file folder (use <code>dir</code> or <code>ls</code> command to see the content of the folder you are in and <code>cd</code> command to go to the folder of our choice). By default, it should be the folder with the &quot;<strong>thingsboard.yml</strong>&quot; configuration file in it. In our example, we could locate it under:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: powershell; gutter: false">sftp&gt; cd ThingsBoard\usr\share\thingsboard\conf
+
+sftp&gt; dir
+
+banner.txt          i18n                logback.xml         templates           thingsboard.conf    thingsboard.yml     </pre>
+</div></div><p>Download the &quot;<strong>thingsboard.yml</strong>&quot; configuration using <code>get</code> command. This will download the default ThingsBoard configuration file to your machine (to the directory from where you initiated SFTP):</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: powershell; gutter: false">sftp&gt; get thingsboard.yml
+Fetching /ThingsBoard/usr/share/thingsboard/conf/thingsboard.yml to thingsboard.yml
+/ThingsBoard/usr/share/thingsboard/conf/thingsboard.yml                               100%   67KB   2.0MB/s   00:00
+sftp&gt; quit
+
+c:\Users\Admin\Desktop\ThingsBoard&gt;dir
+ Directory of c:\Users\Admin\Desktop\ThingsBoard
+
+30.01.2023  10:59    &lt;DIR&gt;          .
+30.01.2023  10:59    &lt;DIR&gt;          ..
+27.01.2023  15:09             2 448 keystore.p12
+27.01.2023  15:36             2 434 mqttserver.p12
+30.01.2023  10:59            68 846 thingsboard.yml
+               3 File(s)         73 728 bytes
+               2 Dir(s)  50 901 626 880 bytes free</pre>
+</div></div><h2 id="ContainerThingsBoardMQTT/HTTPserver-AltertheThingsBoard&#39;ssettings">Alter the ThingsBoard's settings</h2><p>Open &quot;<strong>thingsboard.yml</strong>&quot; via your preferred text editor (notepad or any other), and alter a few lines. You can backup this file and save it with a different name to have a copy of the default settings, in case, of misconfiguration.</p><p>HTTPS-related settings:</p><ol><li>Enable SSL →  Change &quot;SSL_ENABLED:<strong>false</strong>&quot; to &quot;SSL_ENABLED:<strong>true</strong>&quot;;</li><li>Change credentials type → from &quot;SSL_CREDENTIALS_TYPE:<strong>PEM</strong>&quot; to &quot;SSL_CREDENTIALS_TYPE:<strong>KEYSTORE</strong>&quot;;</li><li>Change the path → from &quot;SSL_KEY_STORE:<strong>classpath:keystore/keystore.p12</strong>&quot; to &quot;SSL_KEY_STORE:<strong>keystore.p12</strong>&quot; (optional);</li><li>Disable key alias setting → comment it → just put the &quot;<strong>#</strong>&quot; symbol in front of the <strong>key_alias: &quot;${SSL_KEY_ALIAS:tomcat}&quot;</strong> line;</li><li>Input your own certificate password that was used in RouterOS → from &quot;SSL_KEY_STORE_PASSWORD:<strong>thingsboard</strong>&quot; to &quot;SSL_KEY_STORE_PASSWORD:<strong>thingsboard_cert_password</strong>&quot; and from &quot;SSL_KEY_PASSWORD:<strong>thingsboard</strong>&quot; to &quot;SSL_KEY_PASSWORD:<strong>thingsboard_cert_password</strong>&quot;.</li></ol><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: js; gutter: false">  ssl:
+    # Enable/disable SSL support
+    enabled: &quot;${SSL_ENABLED:true}&quot;
+    # Server SSL credentials
+    credentials:
+      # Server credentials type (PEM - pem certificate file; KEYSTORE - java keystore)
+      type: &quot;${SSL_CREDENTIALS_TYPE:KEYSTORE}&quot;
+      # Keystore server credentials
+      keystore:
+        # Type of the key store (JKS or PKCS12)
+        type: &quot;${SSL_KEY_STORE_TYPE:PKCS12}&quot;
+        # Path to the key store that holds the SSL certificate
+        store_file: &quot;${SSL_KEY_STORE:keystore.p12}&quot;
+        # Password used to access the key store
+        store_password: &quot;${SSL_KEY_STORE_PASSWORD:thingsboard_cert_password}&quot;
+        # Key alias
+        #key_alias: &quot;${SSL_KEY_ALIAS:tomcat}&quot;
+        # Password used to access the key
+        key_password: &quot;${SSL_KEY_PASSWORD:thingsboard_cert_password}&quot;</pre>
+</div></div><p>MQTT-related settings:</p><ol><li>Enable SSL →  Change &quot;MQTT_SSL_ENABLED:<strong>false</strong>&quot; to &quot;MQTT_SSL_ENABLED:<strong>true</strong>&quot;;</li><li>Change credentials type → from &quot;MQTT_SSL_CREDENTIALS_TYPE:<strong>PEM</strong>&quot; to &quot;MQTT_SSL_CREDENTIALS_TYPE:<strong>KEYSTORE</strong>&quot;;</li><li>Change type of key → from &quot;MQTT_SSL_KEY_STORE_TYPE:<strong>JKS</strong>&quot; to &quot;MQTT_SSL_KEY_STORE_TYPE:<strong>PKCS12</strong>&quot;;</li><li>Change the path (extension) → from &quot;MQTT_SSL_KEY_STORE:mqttserver<strong>.jks</strong>&quot; to &quot;MQTT_SSL_KEY_STORE:mqttserver<strong>.p12</strong>&quot;;</li><li>Disable key alias setting → comment it → just put the &quot;<strong>#</strong>&quot; symbol in front of the <strong>key_alias: &quot;${MQTT_SSL_KEY_ALIAS:}&quot;</strong> line;</li><li>Input your own certificate password that was used in RouterOS → from &quot;MQTT_SSL_KEY_STORE_PASSWORD:<strong>server_ks_password</strong>&quot; to &quot;MQTT_SSL_KEY_STORE_PASSWORD:<strong>thingsboard_mqttcert_password</strong>&quot; and from &quot;MQTT_SSL_KEY_PASSWORD:<strong>server_key_password</strong>&quot; to &quot;MQTT_SSL_KEY_PASSWORD:<strong>thingsboard_mqttcert_password</strong>&quot;.</li></ol><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: js; gutter: false">    ssl:
+      # Enable/disable SSL support
+      enabled: &quot;${MQTT_SSL_ENABLED:true}&quot;
+      # Server SSL credentials
+      credentials:
+        # Server credentials type (PEM - pem certificate file; KEYSTORE - java keystore)
+        type: &quot;${MQTT_SSL_CREDENTIALS_TYPE:KEYSTORE}&quot;
+        # Keystore server credentials
+        keystore:
+          # Type of the key store (JKS or PKCS12)
+          type: &quot;${MQTT_SSL_KEY_STORE_TYPE:PKCS12}&quot;
+          # Path to the key store that holds the SSL certificate
+          store_file: &quot;${MQTT_SSL_KEY_STORE:mqttserver.p12}&quot;
+          # Password used to access the key store
+          store_password: &quot;${MQTT_SSL_KEY_STORE_PASSWORD:thingsboard_mqttcert_password}&quot;
+          # Optional alias of the private key; If not set, the platform will load the first private key from the keystore;
+          #key_alias: &quot;${MQTT_SSL_KEY_ALIAS:}&quot;
+          # Optional password to access the private key. If not set, the platform will attempt to load the private keys that are not protected with the password;
+          key_password: &quot;${MQTT_SSL_KEY_PASSWORD:thingsboard_mqttcert_password}&quot;</pre>
+</div></div><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body">Leave the rest of the settings at default values. Do not delete/change lines that are not shown in the examples above unless you know what you are doing.</div></div><p>Apply the changes to the &quot;<strong>thingsboard.yml</strong>&quot; file (re-save it after editing).</p><h2 id="ContainerThingsBoardMQTT/HTTPserver-UploadalteredThingsBoardconfigurationfile">Upload altered ThingsBoard configuration file</h2><p>All that is left is to overwrite the current configuration file with an altered file and upload both certificates.</p><p>Once again, make sure your terminal is pointing to the right folder (where 3 files are located → both certificates and an altered &quot;thingsboard.yml&quot; file), and, from there, SFTP into the container's configuration file directory:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: powershell; gutter: false">c:\Users\Admin\Desktop\ThingsBoard&gt;dir
+ Directory of c:\Users\Admin\Desktop\ThingsBoard
+
+30.01.2023  10:59    &lt;DIR&gt;          .
+30.01.2023  10:59    &lt;DIR&gt;          ..
+27.01.2023  15:09             2 448 keystore.p12
+27.01.2023  15:36             2 434 mqttserver.p12
+30.01.2023  10:59            68 846 thingsboard.yml
+               3 File(s)         73 728 bytes
+               2 Dir(s)  50 901 626 880 bytes free
+c:\Users\Admin\Desktop\ThingsBoard&gt;sftp admin@192.168.88.1
+admin@192.168.88.1&#39;s password:
+Connected to 192.168.88.1.
+sftp&gt; cd ThingsBoard\usr\share\thingsboard\conf
+sftp&gt; dir
+banner.txt          i18n                logback.xml         templates           thingsboard.conf    thingsboard.yml     </pre>
+</div></div><p>Upload these files with the help of <code>put</code> command:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: powershell; gutter: false">sftp&gt; put thingsboard.yml
+Uploading thingsboard.yml to /ThingsBoard/usr/share/thingsboard/conf/thingsboard.yml
+thingsboard.yml                                                                       100%   67KB   2.2MB/s   00:00
+sftp&gt; put keystore.p12
+Uploading keystore.p12 to /ThingsBoard/usr/share/thingsboard/conf/keystore.p12
+keystore.p12                                                                          100% 2448     1.2MB/s   00:00
+sftp&gt; put mqttserver.p12
+Uploading mqttserver.p12 to /ThingsBoard/usr/share/thingsboard/conf/mqttserver.p12
+mqttserver.p12                                                                        100% 2434   608.5KB/s   00:00
+sftp&gt; dir
+banner.txt          i18n                keystore.p12        logback.xml         mqttserver.p12      templates           
+thingsboard.conf    thingsboard.yml</pre>
+</div></div><p>Restart the container:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; /container/stop 0
+[admin@MikroTik] &gt; /container/start 0</pre>
+</div></div><p>Make sure to wait for the container to stop (<code>status=stopped</code> should be shown after using <code>/container/print</code> command) before initiating it again.</p><h2 id="ContainerThingsBoardMQTT/HTTPserver-ConfirmHTTPSaccess">Confirm HTTPS access</h2><p>Now, you should be able to access <a class="external-link" href="https://192.168.88.1" rel="nofollow">https://your_IP:9090</a> (where the IP address is the address used in the DNAT rule):</p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/166920348/169017364.png" data-image-src="attachments/166920348/169017364.png" data-unresolved-comment-count="0" data-linked-resource-id="169017364" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2023-1-30_13-10-45.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="166920348" data-linked-resource-container-version="165" tabindex="0" alt=""></span></p><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Since we are using a self-signed certificate that was not issued by a trusted authority →  an error indicating that the connection is not secure might appear but you can view the certificate through the browser (confirm it is the one), accept the risk, and continue.</p></div></div><h2 id="ContainerThingsBoardMQTT/HTTPserver-ConfirmSSLMQTTconnection">Confirm SSL MQTT connection</h2><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p><strong>Do not forget to alter the port forwarding rule</strong> that is shown in the &quot;Networking&quot; section by changing <strong><code>dst-port</code></strong> and <strong><code>to-ports</code></strong> from 1883 (standard non-SSL MQTT port) <strong>to 8883</strong> (<strong>SSL MQTT port</strong>).</p></div></div><p>In this example, we will test a <a href="https://help.mikrotik.com/docs/display/ROS/MQTT+and+ThingsBoard+configuration#MQTTandThingsBoardconfiguration-One-waySSLcommunicationscenario.1" rel="nofollow">one-way SSL communication access token scenario</a>.</p><h3 id="ContainerThingsBoardMQTT/HTTPserver-Testingwiththedevicethatisrunningthecontainer">Testing with the device that is running the container</h3><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>MQTT certificate should already be installed into the device's system (because it is the device that generated it).</p></div></div><p>Add MQTT broker:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/iot/mqtt/brokers/add name=tbssl address=172.18.0.2 port=8883 username=YOUR_TOKEN ssl=yes</pre>
+</div></div><p>Publish a static test MQTT message in the JSON format:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/iot/mqtt/publish broker=&quot;tbssl&quot; topic=&quot;v1/devices/me/telemetry&quot; message=&quot;{\&quot;test\&quot;:\&quot;123\&quot;}&quot;</pre>
+</div></div><p>Confirm that it was received by the MQTT broker:</p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/166920348/169017368.png" data-image-src="attachments/166920348/169017368.png" data-unresolved-comment-count="0" data-linked-resource-id="169017368" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2023-1-30_13-55-53.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="166920348" data-linked-resource-container-version="165" tabindex="0" alt=""></span></p><h3 id="ContainerThingsBoardMQTT/HTTPserver-Testingwithanotherdevice">Testing with another device</h3><p>When you have two RouterOS devices, one that is running the container (and, in our example, is the same device that generated the certificate) and the other one that you wish to test the MQTT connection from (let's say, an <a class="external-link" href="https://mikrotik.com/product/ltap" rel="nofollow">LTAP</a> or any other RouterOS device with IoT package installed) → you will need to import the certificate to the second device.</p><p>Drag and drop the exported certificate (<strong>mqttserver.p12</strong>) into the device's &quot;File List&quot;:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@LTAP] &gt; /file/print
+Columns: NAME, TYPE, SIZE, CREATION-TIME
+#  NAME            TYPE       SIZE  CREATION-TIME       
+0  mqttserver.p12  .p12 file  2438  jan/30/2023 13:28:11
+1  flash           disk             jul/06/2021 14:51:53
+2  flash/pub       directory        jul/06/2021 14:51:53
+3  flash/skins     directory        jan/01/1970 02:00:07
+[admin@LTAP] &gt; </pre>
+</div></div><p>Import the certificate:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@LTAP] &gt; /certificate/import file-name=mqttserver.p12 passphrase=thingsboard_mqttcert_password</pre>
+</div></div><p>Add MQTT broker, where the address is the IP address &quot;<code>dst-address</code>&quot; that is used in the TCP 8883 port-forwarding rule on the ThingsBoard-container router:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/iot/mqtt/brokers/add name=tbssl address=192.168.88.1 port=8883 username=YOUR_TOKEN ssl=yes</pre>
+</div></div><p>Publish a static test MQTT message in the JSON format:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/iot/mqtt/publish broker=&quot;tbssl&quot; topic=&quot;v1/devices/me/telemetry&quot; message=&quot;{\&quot;test\&quot;:\&quot;123\&quot;}&quot;</pre>
+</div></div><p class="auto-cursor-target">And confirm that the broker received it → under the &quot;Latest Telemetry&quot; section on the ThingsBoard.</p>
+                    </div>
+
+                                                            <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/166920348/166920378.png">image-2023-1-19_14-18-55.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/166920348/166920430.png">image-2023-1-20_11-21-14.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/166920348/166920431.png">image-2023-1-20_11-22-22.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/166920348/166920432.png">image-2023-1-20_11-24-15.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/166920348/166920434.png">image-2023-1-20_12-16-42.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/166920348/169017362.png">image-2023-1-30_13-7-4.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/166920348/169017363.png">image-2023-1-30_13-9-26.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/166920348/169017364.png">image-2023-1-30_13-10-45.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/166920348/169017365.png">image-2023-1-30_13-12-57.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/166920348/169017368.png">image-2023-1-30_13-55-53.png</a> (image/png)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:54</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

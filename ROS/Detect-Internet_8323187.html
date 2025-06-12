@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : Detect Internet</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="119144606.html">Diagnostics, monitoring and troubleshooting</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : Detect Internet
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Māris B.</span>, last updated by <span class='editor'> Guntis G.</span> on Jul 15, 2024
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <h1 id="DetectInternet-Introduction">Introduction</h1><p>Detect Internet is a tool that categorizes monitored interfaces into the following states - <strong>Internet</strong>, <strong>WAN</strong>, <strong>LAN</strong>, <strong>unknown</strong>, and <strong>no-link</strong>.</p><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Note that Detect Internet can install DHCP clients, default routes, DNS servers and affect other facilities. <br/>Use with precaution, and after enabling the service, check how it interferes with your other configuration.</p></div></div><h2 id="DetectInternet-State"><span class="mw-headline">State</span></h2><p><span class="mw-headline">This submenu displays status of all monitored interfaces defined by the <em>detect-interface-list</em> parameter:</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">interface/detect-internet/state/print</pre>
+</div></div><h2 style="text-decoration: none;" id="DetectInternet-LAN"><span class="mw-headline">LAN</span></h2><p>All layer 2 interfaces initially have this state.</p><h2 id="DetectInternet-WAN"><span class="mw-headline">WAN</span></h2><p>Any L3 tunnel and LTE interfaces will initially have this state. Layer 2 interfaces can obtain this state if the following conditions are met:</p><ul style="text-decoration: none;"><li>an interface has an active route to 8.8.8.8 in main routing table.</li><li>an interface can obtain (dynamic DHCP client is created) or has obtained an address from DHCP (does not apply if DHCP server is also running Detect Internet on the DHCP server interface).</li></ul><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>WAN interface can fall back to LAN state only when link status changes. LAN interfaces get locked to LAN after 1h and then change only when link status changes.</p></div></div><p><br/></p><h2 id="DetectInternet-Internet">Internet</h2><p><em>WAN </em>interfaces that can reach cloud.mikrotik.com using UDP protocol port 30000 can obtain this state. Reachability is checked every minute. If a cloud is not reached for 3 minutes, the state falls back to <strong>WAN</strong>.</p><h1 id="DetectInternet-Configuration"><span style="font-size: 24.0px;letter-spacing: -0.01em;">Configuration</span></h1><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface detect-internet</pre>
+</div></div><div class="table-wrap"><table class="wrapped relative-table confluenceTable" style="text-decoration: none;margin-left: 10.5px;width: 98.9247%;"><colgroup><col style="width: 46.4024%;"/><col style="width: 53.5729%;"/></colgroup><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>detect-interface-list</strong> (<em>interface list</em>; Default: <strong>none</strong>)</td><td class="confluenceTd">All interfaces in the list will be monitored by Detect Internet</td></tr><tr><td class="confluenceTd"><strong>internet-interface-list</strong> (<em>interface list</em>; Default: <strong>none</strong>)</td><td class="confluenceTd">Interfaces with state Internet will be dynamically added to this list</td></tr><tr><td class="confluenceTd"><strong>lan-interface-list</strong> (<em>interface list</em>; Default: <strong>none</strong>)</td><td class="confluenceTd">Interfaces with state Lan will be dynamically added to this list</td></tr><tr><td class="confluenceTd"><strong>wan-interface-list</strong> (<em>interface list</em>; Default: <strong>none</strong>)</td><td class="confluenceTd">Interfaces with state Wan will be dynamically added to this list</td></tr></tbody></table></div><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; interface/detect-internet/print 
+detect-interface-list: none
+lan-interface-list: none
+wan-interface-list: none
+internet-interface-list: none
+[admin@MikroTik] &gt; interface/detect-internet/set internet-interface-list=all wan-interface-list=all lan-interface-list=all detect-interface-list=all 
+[admin@MikroTik] &gt; interface/detect-internet/state/print 
+Columns: NAME, STATE, STATE-CHANGE-TIME, CLOUD-RTT
+# NAME STATE STATE-CHANGE-TIME CLO
+0 ether1 internet dec/22/2020 13:46:18 5ms</pre>
+</div></div>
+                    </div>
+
+                                        
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:54</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

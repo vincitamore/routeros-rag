@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : LAC and LNS setup with Cisco as LAC</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Virtual-Private-Networks_119144597.html">Virtual Private Networks</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="L2TP_2031631.html">L2TP</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : LAC and LNS setup with Cisco as LAC
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Māris B.</span>, last updated by <span class='editor'> Unknown User (emils)</span> on Jun 14, 2022
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742033835 {padding: 0px;}
+div.rbtoc1747742033835 ul {margin-left: 0px;}
+div.rbtoc1747742033835 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742033835'>
+<ul class='toc-indentation'>
+<li><a href='#LACandLNSsetupwithCiscoasLAC-Overview'>Overview</a></li>
+<li><a href='#LACandLNSsetupwithCiscoasLAC-Configuration'>Configuration</a>
+<ul class='toc-indentation'>
+<li><a href='#LACandLNSsetupwithCiscoasLAC-Client'>Client</a></li>
+<li><a href='#LACandLNSsetupwithCiscoasLAC-LAC'>LAC</a></li>
+<li><a href='#LACandLNSsetupwithCiscoasLAC-LNS'>LNS</a></li>
+</ul>
+</li>
+<li><a href='#LACandLNSsetupwithCiscoasLAC-StatusCheck'>Status Check</a></li>
+<li><a href='#LACandLNSsetupwithCiscoasLAC-SessionEstablishment'>Session Establishment</a></li>
+</ul>
+</div></p><h1 id="LACandLNSsetupwithCiscoasLAC-Overview">Overview</h1><p>LAC/LNS setup or otherwise known as Virtual Private DialUp Network (VPDN) allows long-distance point-to-point connection between remote dial-up users and private networks.</p><p>Dial-up client uses PPPOE to connect to a L2TP access concentrator (LAC), LAC determines that session should be forwarded through a IP network to the L2TP Network Server (LNS), creates L2TP tunnel and forwards PPP frames to the server where client is authenticated and session established (see diagram below).</p><p><br/></p><p style="text-align: center;"><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" confluence-query-params="effects=drop-shadow" src="attachments/9863181/19136790.svg?effects=drop-shadow" data-image-src="attachments/9863181/19136790.svg" data-unresolved-comment-count="0" data-linked-resource-id="19136790" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="LNS_LAC_CISCO.svg" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/svg+xml" data-linked-resource-container-id="9863181" data-linked-resource-container-version="22" tabindex="0" alt=""></span></p><p style="text-align: left;"><br/></p><p>At the time of writing this article RouterOS cannot be used in LAC role. For this reason article will demonstrate how to set up very basic network with RouterOS as LNS and Cisco router as LAC.</p><h1 id="LACandLNSsetupwithCiscoasLAC-Configuration">Configuration</h1><p>We will be using simple configuration to demonstrate very basics of VPDN setup. Lets assume that LAC will forward to the LNS clients with FQDN name containing <a class="external-link" href="https://mt.lv" rel="nofollow">mt.lv</a> domain.</p><h2 id="LACandLNSsetupwithCiscoasLAC-Client">Client</h2><p>For the sake of simplicity lets assume that client is RouterOS router:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface pppoe-client add interface=ether1 user=good_worker@mt.lv password=strongpass</pre>
+</div></div><h2 id="LACandLNSsetupwithCiscoasLAC-LAC">LAC</h2><p>Lets assume that client is connected to the GigabitEthernet1 port and IP address of the LNS server is 10.155.101.231</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: text; gutter: false">aaa new-model
+!
+aaa authentication ppp default local
+!
+vpdn enable
+vpdn aaa attribute nas-ip-address vpdn-nas
+vpdn search-order domain dnis 
+!
+vpdn-group LAC
+ request-dialin
+  protocol l2tp
+  domain mt.lv
+ initiate-to ip 10.155.101.231
+ source-ip 10.155.101.216
+ local name LAC
+ l2tp tunnel password 0 tunnelpass
+!
+bba-group pppoe MAIN-BBA
+ virtual-template 1
+!
+interface GigabitEthernet1
+ pppoe enable group MAIN-BBA
+!
+interface Virtual-Template1
+ description pppoe MAIN-BBA
+ no ip address
+ no peer default ip address
+ ppp mtu adaptive
+ ppp authentication chap
+!
+
+</pre>
+</div></div><p>Note that this setup does not authenticate client nor locally nor via RADIUS, does not actually check domain name, does not control L2 access for the sake of simplicity. If you want to use those features refer to Cisco configuration manuals.</p><h2 id="LACandLNSsetupwithCiscoasLAC-LNS">LNS</h2><p>On the LNS we need to enable L2TP server and set up method to authenticate the L2TP connection from the LAC.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface l2tp-server server
+set enabled=yes
+/ppp l2tp-secret
+add address=10.155.101.216/32 secret=tunnelpass</pre>
+</div></div><p>Now the actual user authentication. In this case we will be using local authentication method for the sake of simplicity.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip pool
+add name=pool0 ranges=192.168.99.2-192.168.99.99
+/ppp profile
+set default local-address=192.168.99.1 remote-address=pool0
+/ppp secret
+add name=good_worker@mt.lv password=strongpass</pre>
+</div></div><h1 class="auto-cursor-target" id="LACandLNSsetupwithCiscoasLAC-StatusCheck">Status Check</h1><p class="auto-cursor-target">On the LNS you can see all successfully connected clients by checking l2tp server interfaces or checking active ppp connections:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: text; gutter: false">[admin@CHR_v6_bgp] /interface l2tp-server&gt; print
+Flags: X - disabled, D - dynamic, R - running
+# NAME USER MTU CLIENT-ADDRESS UPTIME ENCODING
+0 DR &lt;l2tp-... good_worker@mt.lv 1450 10.155.101.216 6h13m49s
+
+[admin@CHR_v6_bgp] /ppp active&gt; print
+Flags: R - radius
+# NAME SERVICE CALLER-ID ADDRESS UPTIME ENCODING
+0 good_worker@mt.lv l2tp 10.155.101.216 192.168.99.2 6h15m57s 
+
+</pre>
+</div></div><p class="auto-cursor-target">On the LAC we can also see active client sessions and active L2TP tunnel between LAC and LNS:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: text; gutter: false">csrLAC#show vpdn
+
+L2TP Tunnel and Session Information Total tunnels 1 sessions 1
+
+LocTunID RemTunID Remote Name State Remote Address Sessn L2TP Class/
+Count VPDN Group
+26090 11 CHR_v6_bgp est 10.155.101.231 50 LAC
+
+LocID RemID TunID Username, Intf/ State Last Chg Uniq ID
+Vcid, Circuit
+18521 16 26090 good_worker@mt.lv, Gi1 est 06:17:07 571
+
+</pre>
+</div></div><h1 class="auto-cursor-target" id="LACandLNSsetupwithCiscoasLAC-SessionEstablishment">Session Establishment</h1><p class="auto-cursor-target">Lets look closely on how clients sessions gets authenticated and established over the LAC.</p><p class="auto-cursor-target" style="text-align: center;"><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" confluence-query-params="effects=drop-shadow" src="attachments/9863181/19136785.svg?effects=drop-shadow" data-image-src="attachments/9863181/19136785.svg" data-unresolved-comment-count="0" data-linked-resource-id="19136785" data-linked-resource-version="2" data-linked-resource-type="attachment" data-linked-resource-default-alias="LNS_LAC_Establishment.svg" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/svg+xml" data-linked-resource-container-id="9863181" data-linked-resource-container-version="22" tabindex="0" alt=""></span></p><ul><li class="auto-cursor-target">Client initiates PPPoE call</li><li class="auto-cursor-target">LAC and Client begins LCP negotiation</li><li class="auto-cursor-target">after CHAP has been negotiated, LAC sends CHAP challenge</li><li class="auto-cursor-target">Client sends CHAP response</li><li class="auto-cursor-target">LAC checks whether client session should be forwarded to the LNS based on received domain name. Check can be done locally or using RADIUS server. Client also can be authenticated here before forwarding session.</li><li class="auto-cursor-target">LAC brings up an L2TP tunnel</li><li class="auto-cursor-target">LNS checks if the LAC is allowed to open a tunnel and run the authentication process. The Tunnel is up and ready to forward VPDN sessions.</li><li class="auto-cursor-target">LAC forwards negotiated with the client LCP options, username and password to the LNS</li><li class="auto-cursor-target">LNS authenticates the client locally or using RADIUS and sends CHAP response</li><li class="auto-cursor-target">IP Control Protocol (IPCP) phase is performed, IP addresses and routes are installed. At this point sessions is considered established.</li></ul>
+                    </div>
+
+                                                            <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/9863181/9863189">LNS_LAC_CISCO</a> (application/vnd.jgraph.mxfile)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/9863181/9863190.png">LNS_LAC_CISCO.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/9863181/9863192">LNS_LAC_CISCO</a> (application/vnd.jgraph.mxfile)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/9863181/9863193.png">LNS_LAC_CISCO.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/9863181/9863203">LNS_LAC_CISCO</a> (application/vnd.jgraph.mxfile)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/9863181/9863204.png">LNS_LAC_CISCO.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/9863181/9863206">LNS_LAC_CISCO</a> (application/vnd.jgraph.mxfile)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/9863181/9863207.png">LNS_LAC_CISCO.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/9863181/9863225">LNS_LAC_CISCO</a> (application/vnd.jgraph.mxfile)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/9863181/9863226.png">LNS_LAC_CISCO.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/9863181/9863208">Copy of LNS_LAC_CISCO</a> (application/vnd.jgraph.mxfile)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/9863181/9863209.png">Copy of LNS_LAC_CISCO.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/9863181/9863212">LNS_LAC_Establishment</a> (application/vnd.jgraph.mxfile)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/9863181/9863213.png">LNS_LAC_Establishment.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/9863181/9863214">LNS_LAC_Establishment</a> (application/vnd.jgraph.mxfile)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/9863181/9863215.png">LNS_LAC_Establishment.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/9863181/9863216">LNS_LAC_Establishment</a> (application/vnd.jgraph.mxfile)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/9863181/9863217.png">LNS_LAC_Establishment.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/9863181/9863219">LNS_LAC_Establishment</a> (application/vnd.jgraph.mxfile)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/9863181/9863220.png">LNS_LAC_Establishment.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/9863181/9863221">LNS_LAC_Establishment</a> (application/vnd.jgraph.mxfile)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/9863181/9863222.png">LNS_LAC_Establishment.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/9863181/9863210">LNS_LAC_Establishment</a> (application/vnd.jgraph.mxfile)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/9863181/9863211.png">LNS_LAC_Establishment.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/9863181/9863183">LNS_LAC_CISCO</a> (application/vnd.jgraph.mxfile)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/9863181/9863184.png">LNS_LAC_CISCO.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/9863181/19136787.svg">LNS_LAC_Establishment.svg</a> (image/svg+xml)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/9863181/19136785.svg">LNS_LAC_Establishment.svg</a> (image/svg+xml)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/9863181/19136790.svg">LNS_LAC_CISCO.svg</a> (image/svg+xml)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

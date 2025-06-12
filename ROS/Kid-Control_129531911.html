@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : Kid Control</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Firewall-and-Quality-of-Service_119144601.html">Firewall and Quality of Service</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : Kid Control
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Unknown User (emils)</span>, last updated by <span class='editor'> Guntis G.</span> on May 03, 2024
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><span class="mw-headline"><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742028427 {padding: 0px;}
+div.rbtoc1747742028427 ul {margin-left: 0px;}
+div.rbtoc1747742028427 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742028427'>
+<ul class='toc-indentation'>
+<li><a href='#KidControl-Summary'>Summary</a></li>
+<li><a href='#KidControl-PropertyDescription'>Property Description</a></li>
+<li><a href='#KidControl-Devices'>Devices</a></li>
+<li><a href='#KidControl-Applicationexample'>Application example</a></li>
+</ul>
+</div></span></p><h1 id="KidControl-Summary"><span class="mw-headline">Summary</span></h1><p><strong>Sub-menu:</strong> <code>/ip kid-control</code></p><p>&quot;Kid control&quot; is a parental control feature to limit internet connectivity for LAN devices.</p><h1 id="KidControl-PropertyDescription"><span class="mw-headline">Property Description</span></h1><p>In this menu, it is possible to create a profile for each Kid and restrict internet accessibility.</p><div class="table-wrap"><table class="wrapped confluenceTable"><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>name</strong> (<em>string</em>)</td><td class="confluenceTd">Name of the Kid's profile</td></tr><tr><td class="confluenceTd"><strong>mon,tue,wed,thu,fri,sat,sun</strong> (<em>time</em>)</td><td class="confluenceTd">Each day of the week. Time of day, when internet access should be allowed</td></tr><tr><td class="confluenceTd"><strong>disabled</strong> (<em>yes | no</em>)</td><td class="confluenceTd">Whether restrictions are enabled</td></tr><tr><td class="confluenceTd"><strong>rate-limit</strong> (<em>string</em>)</td><td class="confluenceTd">The maximum available data rate for flow</td></tr><tr><td class="confluenceTd"><strong>tur-mon,tur-tue,tur-wed,tur-thu,tur-fri,tur-sat,tur-sun</strong> (<em>time</em>)</td><td class="confluenceTd">Time unlimited rate. Time of day, when internet access should be unlimited</td></tr></tbody></table></div><p>Time unlimited rate parameters have higher priority than rate-limit parameter.</p><h1 id="KidControl-Devices"><span class="mw-headline">Devices</span></h1><p><strong>Sub-menu:</strong> <code>/ip kid-control device</code></p><p>This sub-menu contains information if there are multiple connected devices to the internet (phone, tablet, gaming console, tv etc.). The device is identified by the MAC address that is retrieved from the ARP table. The appropriate IP address is taken from there.</p><div class="table-wrap"><table class="wrapped confluenceTable"><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>name</strong> (<em>string</em>)</td><td class="confluenceTd">Name of the device</td></tr><tr><td class="confluenceTd"><strong>mac-address</strong> (<em>string</em>)</td><td class="confluenceTd">Devices mac-address</td></tr><tr><td class="confluenceTd"><strong>user</strong> (<em>string</em>)</td><td class="confluenceTd">To which profile append the device</td></tr><tr><td class="confluenceTd"><strong>reset-counters</strong> (<em>[id, name]</em>)</td><td class="confluenceTd">Reset bytes-up and bytes-down counters.</td></tr></tbody></table></div><h1 id="KidControl-Applicationexample"><span class="mw-headline">Application example</span></h1><p>With the following example we will restrict access for Peter's mobile phone:</p><ul><li>Disabled internet access on Monday, Wednesday and Friday</li><li>Allowed unlimited internet access on:<ul><li>Tuesday</li><li>Thursday from 11:00-22:00</li><li>Sunday 15:00-22:00</li></ul></li><li>Limited bandwidth to 3Mbps for Peter's mobile phone on Saturday from 18:30-21:00</li></ul><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; /ip kid-control add name=Peter mon=&quot;&quot; tur-tue=&quot;00:00-24h&quot; wed=&quot;&quot; tur-thu=&quot;11:00-22:00&quot; fri=&quot;&quot; sat=&quot;18:30-22:00&quot; tur-sun=&quot;15h-21h&quot; rate-limit=3M
+[admin@MikroTik] &gt; /ip kid-control device add name=Mobile-phone user=Peter mac-address=FF:FF:FF:ED:83:63</pre>
+</div></div><p>Internet access limitation is implemented by adding dynamic firewall filter rules or simple queue rules. Here are example firewall filter rules:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; /ip firewall filter print
+
+1  D ;;; Mobile-phone, kid-control
+      chain=forward action=reject src-address=192.168.88.254 
+
+2  D ;;; Mobile-phone, kid-control
+      chain=forward action=reject dst-address=192.168.88.254</pre>
+</div></div><p>Dynamically created simple queue:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; /queue simple print
+Flags: X - disabled, I - invalid, D - dynamic 
+
+ 1  D ;;; Mobile-phone, kid-control
+      name=&quot;queue1&quot; target=192.168.88.254/32 parent=none packet-marks=&quot;&quot; priority=8/8 queue=default-small/default-small limit-at=3M/3M max-limit=3M/3M burst-limit=0/0 
+      burst-threshold=0/0 burst-time=0s/0s bucket-size=0.1/0.1  </pre>
+</div></div><p>It is possible to monitor how much data is used by the specific device:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; /ip kid-control device print stats
+
+Flags: X - disabled, D - dynamic, B - blocked, L - limited, I - inactive 
+ #    NAME                                                                                                                 IDLE-TIME    RATE-DOWN   RATE-UP   BYTES-DOWN     BYTES-UP
+ 1 BI Mobile-phone                                                                                                               30s         0bps      0bps    3438.1KiB       8.9KiB</pre>
+</div></div><p><span style="color:var(--ds-text,#172b4d);">It is also possible to<span> </span></span><strong style="text-align: left;"><span style="color: purple;">pause</span></strong><span style="color:var(--ds-text,#172b4d);"><span> </span>Internet access for the created kids, it will restrict all access until<span> </span></span><strong style="text-align: left;"><span style="color: purple;">resume</span></strong><span style="color:var(--ds-text,#172b4d);"><span> </span>is used, which will continue with configured settings:</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; /ip kid-control pause Peter 
+[admin@MikroTik] &gt; /ip kid-control print
+Flags: X - disabled, P - paused, B - blocked, L - rate-limited 
+ #   NAME                                                                                                                    SUN      MON      TUE      WED      THU      FRI      SAT     
+ 0 PB Peter                                                                                                                 15h-21h                             11h-22h          18:30h-22h  </pre>
+</div></div>
+                    </div>
+
+                                        
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

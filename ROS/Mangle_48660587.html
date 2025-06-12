@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : Mangle</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Firewall-and-Quality-of-Service_119144601.html">Firewall and Quality of Service</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Firewall_250708066.html">Firewall</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : Mangle
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Artūrs C.</span>, last updated by <span class='editor'> Unknown User (elvijsi)</span> on Jan 20, 2025
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742026201 {padding: 0px;}
+div.rbtoc1747742026201 ul {margin-left: 0px;}
+div.rbtoc1747742026201 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742026201'>
+<ul class='toc-indentation'>
+<li><a href='#Mangle-Introduction'>Introduction</a></li>
+<li><a href='#Mangle-Configurationexample'>Configuration example</a>
+<ul class='toc-indentation'>
+<li><a href='#Mangle-ChangeMSS'>Change MSS</a></li>
+<li><a href='#Mangle-MarkingConnections'>Marking Connections</a></li>
+</ul>
+</li>
+<li><a href='#Mangle-MangleActions'>Mangle Actions</a></li>
+</ul>
+</div></p><h1 id="Mangle-Introduction">Introduction</h1><p>Mangle is a kind of 'marker' that marks packets for future processing with special marks. Many other facilities in RouterOS make use of these marks, e.g. queue trees, NAT, routing. They identify a packet based on its mark and process it accordingly. The mangle marks exist only within the router, they are not transmitted across the network.</p><p>Additionally, the mangle facility is used to modify some fields in the IP header, like TOS (DSCP) and TTL fields.</p><p>Firewall mangle rules consist of five predefined chains that cannot be deleted:</p><p><br/></p><p><span class="confluence-embedded-file-wrapper image-center-wrapper"><img class="confluence-embedded-image image-center" draggable="false" src="attachments/48660587/48660604.png" data-image-src="attachments/48660587/48660604.png" data-unresolved-comment-count="0" data-linked-resource-id="48660604" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="mangle.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="48660587" data-linked-resource-container-version="24" tabindex="0" alt=""></span></p><ul><li>The <strong>PREROUTING</strong> chain: Rules in this chain apply to packets as they just arrive on the network interface;</li><li>The <strong>INPUT</strong> chain: Rules in this chain apply to packets just before they’re given to a local process;</li><li>The <strong>OUTPUT</strong> chain: The rules here apply to packets just after they’ve been produced by a process;</li><li>The <strong>FORWARD</strong> chain: The rules here apply to any packets that are routed through the current host;</li><li>The <strong>POSTROUTING</strong> chain: The rules in this chain apply to packets as they just leave the network interface;</li></ul><h1 id="Mangle-Configurationexample">Configuration example</h1><h2 id="Mangle-ChangeMSS">Change MSS</h2><p>It is a known fact that VPN links have a smaller packet size due to encapsulation overhead. A large packet with MSS that exceeds the MSS of the VPN link should be fragmented before sending it via that kind of connection. However, if the packet has a <em>Don't Fragment</em> flag set, it cannot be fragmented and should be discarded. On links that have broken path MTU discovery (PMTUD), it may lead to a number of problems, including problems with FTP and HTTP data transfer and e-mail services.</p><p>In the case of a link with broken PMTUD, a decrease of the MSS of the packets coming through the VPN link resolves the problem. The following example demonstrates how to decrease the MSS value via mangle:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip firewall mangle add out-interface=pppoe-out protocol=tcp tcp-flags=syn action=change-mss new-mss=1300 chain=forward tcp-mss=1301-65535</pre>
+</div></div><h2 class="auto-cursor-target" id="Mangle-MarkingConnections">Marking Connections</h2><p class="auto-cursor-target">Sometimes it is necessary to perform some actions on the packets belonging to specific connection (for example, to mark packets from/to specific host for queues), but inspecting each packets IP header is quite expensive task. We can use connection marks to optimize the setup a bit.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip firewall mangle 
+add chain=forward in-interface=local src-address=192.168.88.123 connection-state=new action=mark-connection new-connection-mark=client_conn
+add chain=forward connection-mark=client_conn action=mark-packet new-packet-mark=client_p</pre>
+</div></div><div role="region" aria-label="Warning" class="confluence-information-macro  confluence-information-macro-warning" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-error confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Warning: Packet marks are limited to a maximum of 4096 unique entries. Exceeding this limit will cause an error &quot;bad new packet mark&quot;</p></div></div><h1 id="Mangle-MangleActions"><span class="mw-headline">Mangle Actions</span></h1><p><span class="mw-headline">Table list mangle actions and associated properties. <span>Other actions are listed <a href="Common-Firewall-Matchers-and-Actions_250708064.html">here</a>.</span></span></p><div class="table-wrap"><table class="wrapped relative-table confluenceTable" style="margin-left: 23.1719px;width: 97.6961%;"><colgroup><col style="width: 32.36%;"/><col style="width: 67.64%;"/></colgroup><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>action</strong><span> </span>(<em>action name</em>; Default:<span> </span><strong>accept</strong>)</td><td class="confluenceTd"><br/><ul class="bullets"><li><code><span style="color:var(--ds-icon-success,#22a06b);">change-dscp</span></code><span> </span>- change the Differentiated Services Code Point (DSCP) field value specified by the <code><span style="color:var(--ds-icon-success,#22a06b);">new-dscp</span></code> parameter</li><li><code><span style="color:var(--ds-icon-success,#22a06b);">change-mss</span></code><span> </span>- change the Maximum Segment Size field value of the packet to a value specified by <code><span style="color:var(--ds-icon-success,#22a06b);">the new-mss</span></code> parameter</li><li><code><span style="color:var(--ds-icon-success,#22a06b);">change-ttl </span></code>- change the Time to Live field value of the packet to a value specified by the <code><span style="color:var(--ds-icon-success,#22a06b);">new-ttl</span></code> parameter</li><li><code><span style="color:var(--ds-icon-success,#22a06b);">clear-df</span></code><span> </span>- clear 'Do Not Fragment' Flag</li><li><code><span style="color:var(--ds-icon-success,#22a06b);">fasttrack-connection</span></code><span> </span>- shows fasttrack counters, useful for statistics</li><li><code><span style="color:var(--ds-icon-success,#22a06b);">mark-connection</span></code><span> </span>- place a mark specified by the new-connection-mark parameter on the entire connection that matches the rule</li><li><code><span style="color:var(--ds-icon-success,#22a06b);">mark-packet</span></code><span> </span>- place a mark specified by the new-packet-mark parameter on a packet that matches the rule</li><li><code><span style="color:var(--ds-icon-success,#22a06b);">mark-routing</span></code><span> </span>- place a mark specified by the new-routing-mark parameter on a packet. This kind of mark is used for policy routing purposes only. Do not apply any other routing marks besides &quot;main&quot; for the packets processed by FastTrack, since FastTrack can only work in the main routing table.</li><li><code><span style="color:var(--ds-icon-success,#22a06b);">route </span></code>- forces packets to a specific gateway IP by ignoring normal routing decisions (prerouting chain only)</li><li><code><span style="color:var(--ds-icon-success,#22a06b);">set-priority</span></code><span> </span>- set priority specified by the new-priority parameter on the packets sent out through a link that is capable of transporting priority (VLAN or WMM-enabled wireless interface).<span> </span><a href="https://help.mikrotik.com/docs/display/ROS/WMM+and+VLAN+priority" rel="nofollow">Read more</a></li><li><code><span style="color:var(--ds-icon-success,#22a06b);">sniff-pc</span></code><span> </span>- send a packet to a remote<span> </span>RouterOS CALEA<span> </span>server.</li><li><code><span style="color:var(--ds-icon-success,#22a06b);">sniff-tzsp</span></code><span> </span>- send a packet to a remote TZSP compatible system (such as Wireshark). Set remote target with<span> </span><span style="color:var(--ds-icon-success,#22a06b);"><code>sniff-target</code></span><span> </span>and<span> </span><span style="color:var(--ds-icon-success,#22a06b);"><code>sniff-target-port</code></span><span> </span>parameters (Wireshark recommends port 37008)</li><li><code><span style="color:var(--ds-icon-success,#22a06b);">strip-ipv4-options</span></code><span> </span>- strip IPv4 option fields from IP header, the action does not actually remove IPv4 options but rather replaces all option octets with NOP, further matcher with <code><span style="color:var(--ds-icon-success,#22a06b);">ipv4-options=any</span></code> will still match the packet.</li></ul></td></tr><tr><td class="confluenceTd"><strong>new-dscp</strong><span> </span>(<em>integer: 0..63</em>; Default: )</td><td class="confluenceTd">Sets a new DSCP value for a packet</td></tr><tr><td class="confluenceTd"><strong>new-mss</strong><span> </span>(<em>integer</em>; Default: )</td><td class="confluenceTd"><div class="content-wrapper"><p>Sets a new MSS for a packet.</p><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><pre class="newpage">Clamp-to-pmtu feature sets (DF) bit in the IP header to dynamically discover the PMTU of a path. Host sends all datagrams on that path with the DF bit set until receives ICMP
+Destination Unreachable messages with a code meaning &quot;fragmentation needed and DF set&quot;.  Upon receipt of such a message, the source host reduces its assumed PMTU for the path.</pre></div></div></div></td></tr><tr><td class="confluenceTd"><strong>new-packet-mark</strong><span> </span>(<em>string</em>; Default: )</td><td class="confluenceTd">Sets a new <code><span style="color:var(--ds-icon-success,#22a06b);">packet-mark</span></code> value</td></tr><tr><td class="confluenceTd"><strong>new-priority</strong><span> </span>(<em>integer | from-dscp | from-dscp-high-3-bits | from-ingress</em>; Default: )</td><td class="confluenceTd">Sets a new priority for a packet. This can be the VLAN, WMM, DSCP or MPLS EXP priority<span> </span><a href="https://help.mikrotik.com/docs/display/ROS/WMM+and+VLAN+priority" rel="nofollow">Read more</a>. This property can also be used to set an internal priority.</td></tr><tr><td class="confluenceTd"><strong>new-routing-mark</strong><span> </span>(<em>string</em>; Default: )</td><td class="confluenceTd">Sets a new <code><span style="color:var(--ds-icon-success,#22a06b);">routing-mark</span></code> value (in RouterOS v7 routing mark must be created before as a new <a href="Policy-Routing_59965508.html">Routing table</a>)</td></tr><tr><td class="confluenceTd"><strong>new-ttl</strong><span> </span>(<em>decrement | increment | set:integer</em>; Default: )</td><td class="confluenceTd">Sets a new Time to live value </td></tr><tr><td class="confluenceTd"><strong>route-dst </strong>(<em>IP, Default:</em>)</td><td class="confluenceTd">Matches packets with a specific gateway</td></tr></tbody></table></div>
+                    </div>
+
+                                                            <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/48660587/48660604.png">mangle.png</a> (image/png)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

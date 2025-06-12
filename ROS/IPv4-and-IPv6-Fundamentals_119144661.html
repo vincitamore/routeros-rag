@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : IPv4 and IPv6 Fundamentals</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : IPv4 and IPv6 Fundamentals
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Unknown User (emils)</span>, last updated by <span class='editor'> Guntis G.</span> on Feb 09, 2024
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <div class="contentLayout2">
+<div class="columnLayout two-left-sidebar" data-layout="two-left-sidebar">
+<div class="cell aside" data-type="aside">
+<div class="innerCell">
+<div class="panel" style="border-width: 1px;"><div class="panelHeader" style="border-bottom-width: 1px;"><b>In This Section:</b></div><div class="panelContent">
+<p>
+
+
+<div class="plugin_pagetree">
+
+        
+        
+    <ul role="list" aria-busy="true" class="plugin_pagetree_children_list plugin_pagetree_children_list_noleftspace">
+        <div class="plugin_pagetree_children">
+        </div>
+    </ul>
+
+    <fieldset class="hidden">
+        <input type="hidden" name="treeId" value="">
+        <input type="hidden" name="treeRequestId" value="/docs/plugins/pagetree/naturalchildren.action?decorator=none&amp;excerpt=false&amp;sort=position&amp;reverse=false&amp;disableLinks=false&amp;expandCurrent=false&amp;placement=">
+        <input type="hidden" name="treePageId" value="119144661">
+
+        <input type="hidden" name="noRoot" value="false">
+        <input type="hidden" name="rootPageId" value="119144661">
+
+        <input type="hidden" name="rootPage" value="">
+        <input type="hidden" name="startDepth" value="0">
+        <input type="hidden" name="spaceKey" value="ROS" >
+
+        <input type="hidden" name="i18n-pagetree.loading" value="Loading...">
+        <input type="hidden" name="i18n-pagetree.error.permission" value="Unable to load page tree. It seems that you do not have permission to view the root page.">
+        <input type="hidden" name="i18n-pagetree.eeror.general" value="There was a problem retrieving the page tree. Please check the server log file for more information.">
+        <input type="hidden" name="loginUrl" value="">
+        <input type="hidden" name="mobile" value="false">
+        <input type="hidden" name="placement" value="">
+
+                <fieldset class="hidden">
+                            <input type="hidden" name="ancestorId" value="119144661">
+                    </fieldset>
+    </fieldset>
+</div>
+
+</p>
+</div></div></div>
+</div>
+<div class="cell normal" data-type="normal">
+<div class="innerCell">
+<p><br/></p></div>
+</div>
+</div>
+<div class="columnLayout single" data-layout="single">
+<div class="cell normal" data-type="normal">
+<div class="innerCell">
+<p><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742020794 {padding: 0px;}
+div.rbtoc1747742020794 ul {margin-left: 0px;}
+div.rbtoc1747742020794 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742020794'>
+<ul class='toc-indentation'>
+<li><a href='#IPv4andIPv6Fundamentals-NetworkingModels'>Networking Models</a>
+<ul class='toc-indentation'>
+<li><a href='#IPv4andIPv6Fundamentals-OSIModel'>OSI Model</a></li>
+<li><a href='#IPv4andIPv6Fundamentals-TCP/IPModel'>TCP/IP Model</a></li>
+</ul>
+</li>
+<li><a href='#IPv4andIPv6Fundamentals-Ethernet'>Ethernet</a></li>
+<li><a href='#IPv4andIPv6Fundamentals-IPNetworking'>IP Networking</a></li>
+<li><a href='#IPv4andIPv6Fundamentals-ARPandTyingItAllTogether'>ARP and Tying It All Together</a>
+<ul class='toc-indentation'>
+<li><a href='#IPv4andIPv6Fundamentals-ARPModes'>ARP Modes</a>
+<ul class='toc-indentation'>
+<li><a href='#IPv4andIPv6Fundamentals-Enabled'>Enabled</a></li>
+<li><a href='#IPv4andIPv6Fundamentals-Disabled'>Disabled</a></li>
+<li><a href='#IPv4andIPv6Fundamentals-ReplyOnly'>Reply Only</a></li>
+<li><a href='#IPv4andIPv6Fundamentals-ProxyARP'>Proxy ARP</a>
+<ul class='toc-indentation'>
+<li><a href='#IPv4andIPv6Fundamentals-LocalProxyARP'>Local Proxy ARP</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href='#IPv4andIPv6Fundamentals-TCP/IP'>TCP/IP</a>
+<ul class='toc-indentation'>
+<li><a href='#IPv4andIPv6Fundamentals-TCPSessionEstablishmentandTermination'>TCP Session Establishment and Termination</a>
+<ul class='toc-indentation'>
+<li><a href='#IPv4andIPv6Fundamentals-Connectionestablishmentprocess'>Connection establishment process</a></li>
+<li><a href='#IPv4andIPv6Fundamentals-Connectiontermination'>Connection termination</a></li>
+</ul>
+</li>
+<li><a href='#IPv4andIPv6Fundamentals-TCPSegmentstransmission(windowing)'>TCP Segments transmission (windowing)</a></li>
+</ul>
+</li>
+</ul>
+</div></p><h1 id="IPv4andIPv6Fundamentals-NetworkingModels">Networking Models</h1><p>Computer networks consist of many different components and protocols working together. To understand the concept of how node to node communication happens, let's get familiar to the OSI model and TCP/IP model. Both models help to visualize how communication between nodes is happening.</p><h2 id="IPv4andIPv6Fundamentals-OSIModel">OSI Model</h2><p>The Open Systems Interconnection (OSI) model is a 7-layer model that today is used as a teaching tool. The OSI model was originally conceived as a standard architecture for building network systems, but in real-world networks are much less defined than the OSI model suggests.</p><p><br/></p><ul><li><strong>Layer 7 (Application)</strong> - a protocol that defines the communication between the server and the client, for example, HTTP protocol. If the web browser wants to download an image, the protocol will organize and execute the request;</li><li><strong>Layer 6 (Presentation)</strong> - ensures data is received in a usable format. Encryption is done here (but in reality it may not be true, for example, IPSec);</li><li><strong>Layer 5 (Session)</strong> - responsible for setting up, managing and closing sessions between client and server;</li><li><strong>Layer 4 (Transport)</strong> - transport layers primary responsibility is assembly and reassembly, a data stream is divided into chunks (segments), assigned sequence numbers and encapsulated into protocol header (TCP, UDP, etc.);</li><li><strong>Layer 3 (Network)</strong> - responsible for logical device addressing, data is encapsulated within an IP header and now called &quot;packet&quot;;</li><li><strong>Layer 2 (Data link)</strong> - Data is encapsulated within a custom header, either 802.3 (Ethernet) or 802.11 (wireless) and is called &quot;frame&quot;, handles flow control;</li><li><strong>Layer 1 (Physical)</strong> - Communication media that sends and receives bits, electric signaling, and hardware interface;</li></ul><h2 id="IPv4andIPv6Fundamentals-TCP/IPModel">TCP/IP Model</h2><p>This model has the same purpose as the OSI model but fits better into modern network troubleshooting. Comparing to the OSI model, TCP/IP is a 4-layer model:</p><ul><li><strong>Application layer (4)</strong> - includes application, presentation and session layers of the OSI model, which significantly simplifies network troubleshooting;</li><li><strong>Transport layer (3)</strong> - same as a transport layer in the OSI model (TCP, UDP protocols);</li><li><strong>Internet layer (2)</strong> - does the same as Network layer in the OSI model (include ARP, IP protocols);</li><li><strong>Link layer (1)</strong> - also called the Network Access layer. Includes both Layer1 and 2 of the OSI model, therefore its primary concern is physical data exchange between network nodes;</li></ul><p><br/></p><div class="sectionColumnWrapper"><div class="sectionMacro"><div class="sectionMacroRow"><div class="columnMacro" style="width:50%;min-width:50%;max-width:50%;"><p><br/></p></div><div class="table-wrap"><table class="wrapped fixed-table confluenceTable"><colgroup><col style="width: 159.0px;"/><col style="width: 158.0px;"/><col style="width: 213.0px;"/></colgroup><thead><tr><th style="text-align: center;" class="confluenceTh">TCP/IP</th><th style="text-align: center;" class="confluenceTh">OSI Model</th><th style="text-align: center;" class="confluenceTh">Protocols</th></tr></thead><tbody><tr><td style="text-align: center;" rowspan="3" class="confluenceTd">Application Layer</td><td style="text-align: center;" class="confluenceTd">Application Layer</td><td style="text-align: center;" class="confluenceTd">DNS, DHCP,HTTP,SSH etc.</td></tr><tr><td style="text-align: center;" class="confluenceTd">Presentation Layer</td><td style="text-align: center;" class="confluenceTd">JPEG,MPEG,PICT etc.</td></tr><tr><td style="text-align: center;" class="confluenceTd">Session Layer</td><td style="text-align: center;" class="confluenceTd">PAP, SCP, ZIP etc.</td></tr><tr><td style="text-align: center;" class="confluenceTd">Transport Layer</td><td style="text-align: center;" class="confluenceTd">Transport Layer</td><td style="text-align: center;" class="confluenceTd">TCP, UDP</td></tr><tr><td style="text-align: center;" class="confluenceTd">Internet Layer</td><td style="text-align: center;" class="confluenceTd">Network Layer</td><td style="text-align: center;" class="confluenceTd">ICMP, IGMP, IPv4, IPv6, IPSec</td></tr><tr><td style="text-align: center;" rowspan="2" class="confluenceTd">Link Layer</td><td style="text-align: center;" class="confluenceTd">Data Link Layer</td><td style="text-align: center;" class="confluenceTd">ARP, CDP, MPLS, PPP etc.</td></tr><tr><td style="text-align: center;" class="confluenceTd">Physical Layer</td><td style="text-align: center;" class="confluenceTd">Bluetooth, Ethernet, Wi-Fi etc.</td></tr></tbody></table></div><div class="columnMacro" style="width:50%;min-width:50%;max-width:50%;"><p><br/></p></div></div></div></div><p style="text-align: left;"><br/></p><h1 style="text-align: left;" id="IPv4andIPv6Fundamentals-Ethernet"><br/>Ethernet</h1><p style="text-align: left;">The most commonly used link layer protocol (OSI Layer2) in computer networks is the Ethernet protocol. In order to communicate, each node has a unique assigned address, called MAC (Media Access Control address) sometimes it is also called an Ethernet address.</p><p style="text-align: left;">It is 48-bit long and typically fixed by the manufacturer (cannot be changed), but in recent years customization of MAC addresses is widely used, RouterOS also allows to set custom MAC address.</p><p style="text-align: left;">Most commonly used MAC format is 6 hexadecimal numbers separated by colons (<span style="color:var(--ds-background-accent-red-bolder,#c9372c);"><code>D4:CA:6D:01:22:96</code></span>)</p><p style="text-align: left;">RouterOS shows MAC address in a configuration for all Ethernet-like interfaces (Wireless, 60G, VPLS, etc.)</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: text; gutter: false">[admin@rack1_b32_CCR1036] /interface ethernet&gt; print 
+Flags: X - disabled, R - running, S - slave 
+ #    NAME                  MTU MAC-ADDRESS       ARP             SWITCH               
+ 0 R  ether1               1500 D4:CA:6D:01:22:96 enabled        
+ 1 R  ether2               1500 D4:CA:6D:01:22:97 enabled        
+ 2 R  ether3               1500 D4:CA:6D:01:22:98 enabled        
+ 3    ether4               1500 D4:CA:6D:01:22:99 enabled        
+ 4    ether5               1500 D4:CA:6D:01:22:9A enabled        
+ 5    ether6               1500 D4:CA:6D:01:22:9B enabled        
+ 6    ether7               1500 D4:CA:6D:01:22:9C enabled        
+ 7 R  ether8               1500 D4:CA:6D:01:22:9D enabled        
+ 8    sfp-sfpplus1         1500 D4:CA:6D:01:22:94 enabled        
+ 9    sfp-sfpplus2         1500 D4:CA:6D:01:22:95 enabled </pre>
+</div></div><p style="text-align: left;"><br/></p><p style="text-align: left;">There are three types of addresses:</p><p style="text-align: left;"><span class="confluence-embedded-file-wrapper image-center-wrapper"><img class="confluence-embedded-image image-center" draggable="false" src="attachments/119144661/129531954.png" data-image-src="attachments/119144661/129531954.png" data-unresolved-comment-count="0" data-linked-resource-id="129531954" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="ucast_bcast_mcast_diff_eth.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="119144661" data-linked-resource-container-version="6" tabindex="0" alt=""></span></p><ul style="text-align: left;"><li><p><strong>Unicast</strong> address is sent to all nodes within the collision domain, which typically is Ethernet cable between two nodes or in case of wireless all receivers that can detect wireless signals. Only remote node with matching MAC address will accept the frame (unless the promiscuous mode is enabled)</p></li><li><p>One of the special addresses is <strong>broadcast</strong> address (<span style="color:var(--ds-background-accent-red-bolder,#c9372c);"><code>FF:FF:FF:FF:FF:FF</code></span>), a broadcast frame is accepted and forwarded over Layer2 network by all nodes</p></li><li><p>Another special address is <strong>multicast</strong>. Frames with multicast addresses are received by all nodes configured to receive frames with this address.</p></li></ul><p style="text-align: left;"><br/></p><h1 style="text-align: left;" id="IPv4andIPv6Fundamentals-IPNetworking">IP Networking</h1><p style="text-align: left;">Ethernet protocol is sufficient to get data between two nodes on an Ethernet network, but it is not used on its own. For Internet/Networking layer (OSI Layer 3) IP (Internet Protocol) is used to identify hosts with unique logical addresses.</p><p style="text-align: left;">Most of the current networks use IPv4 addresses, which are 32bit address written in dotted-decimal notation (<code>192.168.88.1</code>)</p><p style="text-align: left;">There can be multiple logical networks and to identify which network IP address belongs to, the netmask is used. Netmask typically is specified as a number of bits used to identify a logical network. The format can also be in decimal notation, for example, the 24-bit netmask can be written as <code>255.255.255.0</code></p><p style="text-align: left;">Let's take a closer look at 192.168.3.24/24:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: text; gutter: false">11000000 10101000 00000011 00011000 =&gt; 192.168.3.24
+11111111 11111111 11111111 00000000 =&gt; /24 or 255.255.255.0</pre>
+</div></div><p style="text-align: left;"><br/></p><p style="text-align: left;">As can be seen from the illustration above high 24 bits are masked, leaving us with a range of 0-255.</p><p style="text-align: left;">From this range, the first address is used to identify the network (in our example network address would be 192.168.3.0) and the last one is used for network broadcast (192.168.3.255). That leaves us with a range from 1 to 254 for host identification which is called <strong>unicast</strong> addresses.</p><p style="text-align: left;">The same as in Ethernet protocol there can be also special addresses:</p><ul style="text-align: left;"><li><strong>broadcast</strong> - address to send data to all possible destinations (&quot;all-hosts broadcast&quot;), which permits the sender to send the data only once, and all receivers receive a copy of it. In the IPv4 protocol, the address 255.255.255.255 is used for local broadcast. In addition, a directed (limited) broadcast can be made to network broadcast address;</li><li><strong>multicast</strong> - address associated with a group of interested receivers. In IPv4, addresses <code>224.0.0.0</code> through <code>239.255.255.255</code> are designated as multicast addresses. The sender sends a single datagram from its unicast address to the multicast group address and the intermediary routers take care of making copies and sending them to all receivers that have joined the corresponding multicast group;</li></ul><p style="text-align: left;">In case of logical IP network, unicast, broadcast and multicast visualization would look a bit different</p><p style="text-align: left;"><span class="confluence-embedded-file-wrapper image-center-wrapper"><img class="confluence-embedded-image image-center" draggable="false" src="attachments/119144661/129531955.png" data-image-src="attachments/119144661/129531955.png" data-unresolved-comment-count="0" data-linked-resource-id="129531955" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="ucast_bcast_mcast_diff.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="119144661" data-linked-resource-container-version="6" tabindex="0" alt=""></span></p><p style="text-align: left;">There are also address ranges reserved for a special purpose, for example, <a class="external-link" href="https://tools.ietf.org/html/rfc1918" rel="nofollow">private address range</a>, that should be used only in local networks and typically are dropped when forwarded to the internet:</p><ul style="text-align: left;"><li>10.0.0.0/8 - start: 10.0.0.0; end: 10.255.255.255</li><li>172.16.0.0/12 - start: 172.16.0.0; end:172.31.255.255</li><li>192.168.0.0/16 - start: 192.168.0.0; end: 192.168.255.255</li></ul><h1 style="text-align: left;" id="IPv4andIPv6Fundamentals-ARPandTyingItAllTogether">ARP and Tying It All Together</h1><p style="text-align: left;">Even though IP packets are addressed using IP addresses, hardware addresses must be used to actually transport data from one host to another.</p><p style="text-align: left;">This brings us to Address Resolution Protocol (ARP) which is used for mapping the IP address of the host to the hardware address (MAC). ARP protocol is referenced in <a class="external-link" href="https://tools.ietf.org/html/rfc826" rel="nofollow">RFC 826</a>.</p><p style="text-align: left;">Each network device has a table of currently used ARP entries. Normally the table is built dynamically, but to increase network security, it can be partially or completely built statically by means of adding static entries.</p><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Address Resolution Protocol is a thing of the past. IPv6 completely eliminates use of the ARP.</p></div></div><p style="text-align: left;"><br/></p><p style="text-align: left;">When a host on the local area network wants to send an IP packet to another host in this network, it must look for the Ethernet MAC address of destination host in its ARP cache. If the destination host’s MAC address is not in the ARP table, then the ARP request is sent to find the device with a corresponding IP address. ARP sends a broadcast request message to all devices on the LAN by asking the devices with the specified IP address to reply with its MAC address. A device that recognizes the IP address as its own returns ARP response with its own MAC address:</p><p style="text-align: left;"><span class="confluence-embedded-file-wrapper image-center-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image image-center" draggable="false" width="600" src="attachments/119144661/129531956.jpg" data-image-src="attachments/119144661/129531956.jpg" data-unresolved-comment-count="0" data-linked-resource-id="129531956" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="arp.jpg" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/jpeg" data-linked-resource-container-id="119144661" data-linked-resource-container-version="6" tabindex="0" alt=""></span></p><p style="text-align: left;">Let's make a simple configuration and take a closer look at processes when Host A tries to ping Host C.</p><p style="text-align: left;">At first, we add IP addresses on Host A:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip address add address=10.155.101.225 interface=ether1</pre>
+</div></div><p style="text-align: left;"><span>Host B:</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip address add address=10.155.101.221 interface=ether1</pre>
+</div></div><p style="text-align: left;">Host C:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip address add address=10.155.101.217 interface=ether1</pre>
+</div></div><p style="text-align: left;"><span>Now, let's run a packet sniffer that saves packet dump to the file and run the ping command on Host A:</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/tool sniffer
+  set file-name=arp.pcap filter-interface=ether1
+  start 
+/ping 10.155.101.217 count=1
+  stop</pre>
+</div></div><p style="text-align: left;"><span>Now you can download arp.pcap file from the router and open it in Wireshark for analyzing:</span></p><p style="text-align: left;"><span class="confluence-embedded-file-wrapper image-center-wrapper"><img class="confluence-embedded-image image-center" draggable="false" src="attachments/119144661/129531957.png" data-image-src="attachments/119144661/129531957.png" data-unresolved-comment-count="0" data-linked-resource-id="129531957" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="arp_wireshark.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="119144661" data-linked-resource-container-version="6" tabindex="0" alt=""></span></p><p style="text-align: left;"><br/></p><ul style="text-align: left;"><li>Host A sends ARP message asking who has &quot;10.155.101.217&quot;</li><li>Host C responds that 10.155.101.217 can be reached at <span style="color:var(--ds-background-accent-red-bolder,#c9372c);">08:00:27:3C:79:3A</span> MAC address</li><li>Both Host A and Host C now have updated their ARP tables and now ICMP (ping) packets can be sent</li></ul><p style="text-align: left;">If we look at ARP tables of both host we can see relevant entries, in RouterOS ARP table can be viewed by running command: <code><span style="color:var(--ds-text-accent-blue,#0055cc);">/ip arp</span> <span style="color:var(--ds-text-accent-green,#216e4e);">print</span></code></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: text; gutter: false">[admin@host_a] /ip arp&gt; print 
+Flags: X - disabled, I - invalid, H - DHCP, D - dynamic, P - published, 
+C - complete 
+ #    ADDRESS         MAC-ADDRESS       INTERFACE                          
+ 0 DC 10.155.101.217  08:00:27:3C:79:3A ether1  
+
+ [admin@host_b] /ip arp&gt; print 
+Flags: X - disabled, I - invalid, H - DHCP, D - dynamic, P - published, 
+C - complete 
+ #    ADDRESS         MAC-ADDRESS       INTERFACE                     
+ 0 DC 10.155.101.225  08:00:27:85:69:B5 ether1  </pre>
+</div></div><h2 style="text-align: left;" id="IPv4andIPv6Fundamentals-ARPModes">ARP Modes</h2><p style="text-align: left;">Now the example above demonstrated default behavior, where ARP is enabled on interfaces, but there might be scenarios where different ARP behavior is necessary. RouterOS allows configuring different ARP modes for interfaces that support ARP.</p><h3 style="text-align: left;" id="IPv4andIPv6Fundamentals-Enabled">Enabled</h3><p style="text-align: left;">ARPs will be discovered automatically and new dynamic entries will be added to the ARP table. This is a default mode for interfaces in RouterOS and illustrated in the example above.</p><h3 style="text-align: left;" id="IPv4andIPv6Fundamentals-Disabled">Disabled</h3><p style="text-align: left;">If the ARP feature is turned off on the interface, i.e., <em>arp=disabled</em> is used, ARP requests from clients are not answered by the router. Therefore, static ARP entry should be added to the clients as well. For example, the router's IP and MAC addresses should be added:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@host_a] &gt; /ip arp add mac-address=08:00:27:3C:79:3A address=10.155.101.217 interface=ether1</pre>
+</div></div><h3 style="text-align: left;" id="IPv4andIPv6Fundamentals-ReplyOnly"><span>Reply Only</span></h3><p class="auto-cursor-target"><span>If the ARP property is set to <em>reply-only</em> on the interface, then the router only replies to ARP requests. Neighbour MAC addresses will be resolved using </span><em>/ip arp</em><span> statically, but there will be no need to add the router's MAC address to other hosts' ARP tables like in cases where ARP is disabled.</span></p><h3 style="text-align: left;" id="IPv4andIPv6Fundamentals-ProxyARP">Proxy ARP</h3><p style="text-align: left;">A router with properly configured proxy ARP feature acts as a transparent ARP proxy between directly connected networks. This behavior can be useful, for example, if you want to assign dial-in (PPP, PPPoE, PPTP) clients IP addresses from the same address space as used on the connected LAN.</p><p><span class="confluence-embedded-file-wrapper image-center-wrapper"><img class="confluence-embedded-image image-center" draggable="false" src="attachments/119144661/129531958.jpg" data-image-src="attachments/119144661/129531958.jpg" data-unresolved-comment-count="0" data-linked-resource-id="129531958" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="Proxy-ARP.jpg" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/jpeg" data-linked-resource-container-id="119144661" data-linked-resource-container-version="6" tabindex="0" alt=""></span></p><p style="text-align: left;">Let's look at the example setup from the image above. Host A (172.16.1.2) on Subnet A wants to send packets to Host D (172.16.2.3) on Subnet B. Host A has a /16 subnet mask which means that Host A believes that it is directly connected to all 172.16.0.0/16 network (the same LAN). Since the Host A believes that is directly connected it sends an ARP request to the destination to clarify the MAC address of Host D. (in the case when Host A finds that destination IP address is not from the same subnet it sends a packet to the default gateway.). Host A broadcasts an ARP request on Subnet A.</p><p style="text-align: left;">Info from packet analyzer software:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: text; gutter: false"> No.     Time   Source             Destination       Protocol  Info
+
+ 12   5.133205  00:1b:38:24:fc:13  ff:ff:ff:ff:ff:ff  ARP      Who has 173.16.2.3?  Tell 173.16.1.2
+
+
+Packet details:
+
+Ethernet II, Src: (00:1b:38:24:fc:13), Dst: (ff:ff:ff:ff:ff:ff)
+    Destination: Broadcast (ff:ff:ff:ff:ff:ff)
+    Source: (00:1b:38:24:fc:13)
+    Type: ARP (0x0806)
+Address Resolution Protocol (request)
+    Hardware type: Ethernet (0x0001)
+    Protocol type: IP (0x0800)
+    Hardware size: 6
+    Protocol size: 4
+    Opcode: request (0x0001)
+    [Is gratuitous: False]
+    Sender MAC address: 00:1b:38:24:fc:13
+    Sender IP address: 173.16.1.2
+    Target MAC address: 00:00:00:00:00:00
+    Target IP address: 173.16.2.3</pre>
+</div></div><p style="text-align: left;"><br/></p><p style="text-align: left;">With this ARP request, Host A (172.16.1.2) is asking Host D (172.16.2.3) to send its MAC address. The ARP request packet is then encapsulated in an Ethernet frame with the MAC address of Host A as the source address and a broadcast (<span style="color:var(--ds-background-accent-red-bolder,#c9372c);">FF:FF:FF:FF:FF:FF</span>) as the destination address. Layer 2 broadcast means that frame will be sent to all hosts in the same layer 2 broadcast domain which includes the ether0 interface of the router, but does not reach Host D, because router by default does not forward layer 2 broadcasts.</p><p style="text-align: left;">Since the router knows that the target address (172.16.2.3) is on another subnet but it can reach Host D, it replies with its own MAC address to Host A.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: text; gutter: false">No.     Time   Source            Destination         Protocol   Info
+
+13   5.133378  00:0c:42:52:2e:cf  00:1b:38:24:fc:13   ARP        172.16.2.3 is at 00:0c:42:52:2e:cf
+
+Packet details:
+
+Ethernet II, Src: 00:0c:42:52:2e:cf, Dst: 00:1b:38:24:fc:13
+   Destination: 00:1b:38:24:fc:13
+   Source: 00:0c:42:52:2e:cf
+   Type: ARP (0x0806)
+Address Resolution Protocol (reply)
+   Hardware type: Ethernet (0x0001)
+   Protocol type: IP (0x0800)
+   Hardware size: 6
+   Protocol size: 4
+   Opcode: reply (0x0002)
+   [Is gratuitous: False]
+   Sender MAC address: 00:0c:42:52:2e:cf
+   Sender IP address: 172.16.1.254
+   Target MAC address: 00:1b:38:24:fc:13
+   Target IP address: 172.16.1.2</pre>
+</div></div><p style="text-align: left;"><br/></p><p style="text-align: left;">This is the Proxy ARP reply that the router sends to Host A. Router sends back unicast proxy ARP reply with its own MAC address as the source address and the MAC address of Host A as the destination address, by saying &quot;send these packets to me, and I'll get it to where it needs to go.&quot;</p><p style="text-align: left;">When Host A receives ARP response it updates its ARP table, as shown:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: text; gutter: false">C:\Users\And&gt;arp -a
+Interface: 173.16.2.1 --- 0x8
+  Internet Address      Physical Address      Type
+  173.16.1.254          00-0c-42-52-2e-cf    dynamic
+  173.16.2.3            00-0c-42-52-2e-cf    dynamic
+  173.16.2.2            00-0c-42-52-2e-cf    dynamic</pre>
+</div></div><p style="text-align: left;"><br/></p><p style="text-align: left;">After MAC table update, Host A forwards all the packets intended for Host D (172.16.2.3) directly to router interface ether0 (<span style="color:var(--ds-background-accent-red-bolder,#c9372c);">00:0c:42:52:2e:cf</span>) and the router forwards packets to Host D. The ARP cache on the hosts in Subnet A is populated with the MAC address of the router for all the hosts on Subnet B. Hence, all packets destined to Subnet B are sent to the router. The router forwards those packets to the hosts in Subnet B.</p><p style="text-align: left;">Multiple IP addresses by the host are mapped to a single MAC address (the MAC address of this router) when proxy ARP is used.</p><p style="text-align: left;">Proxy ARP can be enabled on each interface individually with command <em>arp=proxy-arp</em>:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: text; gutter: false"> [admin@MikroTik] /interface ethernet&gt; set 1 arp=proxy-arp
+ [admin@MikroTik] /interface ethernet&gt; print
+ Flags: X - disabled, R - running
+   #    NAME                 MTU   MAC-ADDRESS         ARP
+   0  R ether1              1500  00:30:4F:0B:7B:C1 enabled
+   1  R ether2              1500  00:30:4F:06:62:12 proxy-arp
+ [admin@MikroTik] interface ethernet&gt;</pre>
+</div></div><p style="text-align: left;"><br/></p><h4 style="text-align: left;" id="IPv4andIPv6Fundamentals-LocalProxyARP">Local Proxy ARP</h4><p style="text-align: left;">if the arp property is set to <em>local-proxy-arp </em>on an interface, then the router performs proxy ARP to/from this interface only. I.e. for traffic that comes in and goes out of the same interface. In a normal LAN, the default behavior is for two network hosts to communicate directly with each other, without involving the router.</p><p style="text-align: left;">This is done to support (Ethernet) switch features, like<a class="external-link" href="https://tools.ietf.org/html/rfc3069" rel="nofollow"> RFC 3069</a>, where the individual ports are <strong>NOT</strong> allowed to communicate with each other, but they are allowed to talk to the upstream router. As described in <a class="external-link" href="https://tools.ietf.org/html/rfc3069" rel="nofollow">RFC 3069</a>, it is possible to allow these hosts to communicate through the upstream router by proxy_arp'ing. Don't need to be used together with proxy_arp. This technology is known by different names:</p><ul><li>In RFC 3069 it is called VLAN Aggregation;</li><li>Cisco and Allied Telesis call it Private VLAN;</li><li>Hewlett-Packard calls it Source-Port filtering or port-isolation;</li><li>Ericsson calls it MAC-Forced Forwarding (RFC Draft).</li></ul><h1 style="text-align: left;" id="IPv4andIPv6Fundamentals-TCP/IP">TCP/IP</h1><h2 style="text-align: left;" id="IPv4andIPv6Fundamentals-TCPSessionEstablishmentandTermination">TCP Session Establishment and Termination</h2><p style="text-align: left;">TCP is a connection-oriented protocol. The difference between a connection-oriented protocol and a connection-less protocol is that a connection-oriented protocol does not send any data until a proper connection is established.</p><p style="text-align: left;">TCP uses <strong>a three-way handshake</strong> whenever the transmitting device tries to establish a connection to the remote node. As a result end-to-end virtual (logical) circuit is created where flow control and acknowledgment for reliable delivery are used. TCP has several message types used in connection establishment and termination process.</p><h3 style="text-align: left;" id="IPv4andIPv6Fundamentals-Connectionestablishmentprocess">Connection establishment process</h3><p style="text-align: left;"><span class="confluence-embedded-file-wrapper image-center-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image image-center" draggable="false" width="700" src="attachments/119144661/129531959.jpg" data-image-src="attachments/119144661/129531959.jpg" data-unresolved-comment-count="0" data-linked-resource-id="129531959" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="tcp-connection-establishment.jpg" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/jpeg" data-linked-resource-container-id="119144661" data-linked-resource-container-version="6" tabindex="0" alt=""></span></p><ol style="text-align: left;"><li>The host A who needs to initialize a connection sends out an <strong>SYN</strong> (Synchronize) packet with a proposed initial sequence number to the destination &quot;host B&quot;;</li><li>When the host B receives an <strong>SYN</strong> message, it returns a packet with both <strong>SYN</strong> and <strong>ACK</strong> flags set in the TCP header (SYN-ACK);</li><li>When the host A receives the SYN-ACK, it sends back the <strong>ACK</strong> (Acknowledgment) packet;</li><li>Host B receives <strong>ACK</strong> and at this stage, the connection is <strong>ESTABLISHED;</strong></li></ol><p style="text-align: left;">Connection-oriented protocol services are often sending acknowledgments (ACKs) after successful delivery. After the packet with data is transmitted, the sender waits for acknowledgment from the receiver. If time expires and the sender did not receive ACK, a packet is retransmitted.</p><h3 style="text-align: left;" id="IPv4andIPv6Fundamentals-Connectiontermination">Connection termination</h3><p><span class="confluence-embedded-file-wrapper image-center-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image image-center" draggable="false" width="700" src="attachments/119144661/129531960.jpg" data-image-src="attachments/119144661/129531960.jpg" data-unresolved-comment-count="0" data-linked-resource-id="129531960" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="tcp-connection-termination.jpg" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/jpeg" data-linked-resource-container-id="119144661" data-linked-resource-container-version="6" tabindex="0" alt=""></span></p><p style="text-align: left;">When the data transmission is complete and the host wants to terminate the connection, the termination process is initiated. Unlike TCP Connection establishment, which uses a three-way handshake, connection termination uses four-way massages. A connection is terminated when both sides have finished the shutdown procedure by sending a FIN (finish) and receiving an ACK (Acknowledgment).</p><ol style="text-align: left;"><li>The host A, who needs to terminate the connection, sends a special message with the <strong>FIN</strong> flag, indicating that it has finished sending the data;</li><li>The host B, who receives the <strong>FIN</strong> segment, does not terminate the connection but enters into a &quot;passive close&quot; (CLOSE_WAIT) state and sends the <strong>ACK</strong> for the <strong>FIN</strong> back to the host A. If host B does not have any data to transmit to the host A it will also send the <strong>FIN</strong> message. Now the host B enters into LAST_ACK state. At this point host B will no longer accept data from host A, but can continue to transmit data to host A.</li><li>When the host A receives the last <strong>FIN</strong> from the host B, it enters into a (TIME_WAIT) state, and sends an <strong>ACK</strong> back to the host B;</li><li>Host B gets the <strong>ACK</strong> from the host A and connection is terminated;</li></ol><h2 style="text-align: left;" id="IPv4andIPv6Fundamentals-TCPSegmentstransmission(windowing)">TCP Segments transmission (windowing)</h2><p style="text-align: left;">Now that we know how the TCP connection is established we need to understand how data transmission is managed and maintained. In TCP/IP networks transmission between hosts is handled by TCP protocol.</p><p style="text-align: left;">Let’s think about what happens when data-grams are sent out faster than the receiving device can process. The receiver stores them in memory called a buffer. But since buffer space is not unlimited, when its capacity is exceeded receiver starts to drop the frames. All dropped frames must be re-transmitted again which is the reason for low transmission performance.</p><p style="text-align: left;">To address this problem, TCP uses a flow control protocol. The window mechanism is used to control the flow of the data. When a connection is established, the receiver specifies the window field in each TCP frame. Window size represents the amount of received data that the receiver is willing to store in the buffer. Window size (in bytes) is sent together with acknowledgments to the sender. So the size of the window controls how much information can be transmitted from one host to another without receiving an acknowledgment. The sender will send only the amount of bytes specified in window size and then will wait for acknowledgments with updated window size.</p><p style="text-align: left;">If the receiving application can process data as quickly as it arrives from the sender, then the receiver will send a positive window advertisement (increase the size of the window) with each acknowledgment. It works until the sender becomes faster than the receiver and incoming data will eventually fill the receiver's buffer, causing the receiver to advertise acknowledgment with a zero window. A sender that receives a zero window advertisement must stop transmit until it receives a positive window.  Let's take a look at the illustrated windowing process:</p><p style="text-align: left;"><br/></p><p style="text-align: left;"><br/></p><p><span class="confluence-embedded-file-wrapper image-center-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image image-center" draggable="false" width="700" src="attachments/119144661/129531961.jpg" data-image-src="attachments/119144661/129531961.jpg" data-unresolved-comment-count="0" data-linked-resource-id="129531961" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="tcp-flow-control-using-windowing.jpg" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/jpeg" data-linked-resource-container-id="119144661" data-linked-resource-container-version="6" tabindex="0" alt=""></span></p><p><br/></p><p style="text-align: left;"><br/></p><ol><li>The &quot;host A&quot; starts to transmit with a window size of 1000, one 1000byte frame is transmitted;</li><li>Receiver &quot;host B&quot; returns ACK with window size to increase to 2000;</li><li>The host A receives ACK and transmits two frames (1000 bytes each);</li><li>After that, the receiver advertises an initial window size to 3000. Now sender transmits three frames and waits for an acknowledgement;</li><li>The first three segments fill the receiver's buffer faster than the receiving application can process the data, so the advertised window size reaches zero indicating that it is necessary to wait before further transmission is possible;</li><li>The size of the window and how fast to increase or decrease the window size is available in various TCP congestion avoidance algorithms such as Reno, Vegas, Tahoe, etc;</li></ol></div>
+</div>
+</div>
+</div>
+                    </div>
+
+                                                            <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/119144661/129531954.png">ucast_bcast_mcast_diff_eth.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/119144661/129531955.png">ucast_bcast_mcast_diff.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/119144661/129531956.jpg">arp.jpg</a> (image/jpeg)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/119144661/129531957.png">arp_wireshark.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/119144661/129531958.jpg">Proxy-ARP.jpg</a> (image/jpeg)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/119144661/129531959.jpg">tcp-connection-establishment.jpg</a> (image/jpeg)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/119144661/129531960.jpg">tcp-connection-termination.jpg</a> (image/jpeg)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/119144661/129531961.jpg">tcp-flow-control-using-windowing.jpg</a> (image/jpeg)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

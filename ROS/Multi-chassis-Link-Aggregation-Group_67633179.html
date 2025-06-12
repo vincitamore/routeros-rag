@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : Multi-chassis Link Aggregation Group</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="High-Availability-Solutions_120324133.html">High Availability Solutions</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : Multi-chassis Link Aggregation Group
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Edgars P.</span>, last updated on Apr 16, 2025
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742029257 {padding: 0px;}
+div.rbtoc1747742029257 ul {margin-left: 0px;}
+div.rbtoc1747742029257 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742029257'>
+<ul class='toc-indentation'>
+<li><a href='#MultichassisLinkAggregationGroup-Introduction'>Introduction</a></li>
+<li><a href='#MultichassisLinkAggregationGroup-Quicksetup'>Quick setup</a></li>
+<li><a href='#MultichassisLinkAggregationGroup-MLAGsettingsandmonitoring'>MLAG settings and monitoring</a></li>
+</ul>
+</div></p><h1 id="MultichassisLinkAggregationGroup-Introduction">Introduction</h1><p>MLAG (Multi-chassis Link Aggregation Group) implementation in RouterOS allows configuring LACP bonds on two separate devices, while the client device believes to be connected to the same machine. This provides a physical redundancy in case of switch failure. All CRS3xx, CRS5xx series switches, and CCR2116, CCR2216 devices can be configured with MLAG using RouterOS version 7.</p><p>Both peers establish the MLAG interfaces and update the bridge host table over <code><span style="color:var(--ds-icon-success,#22a06b);">peer-port</span></code> using ICCP (Inter Chassis Control Protocol). RouterOS ICCP does not require an IP configuration, it sends untagged Layer2 packets marked with EtherType 0x88B5 and a destination MAC address of 01:80:C2:00:00:0E. ICCP packets are link-local, meaning they are always received and handled by the MLAG devices themselves and never forwarded to other parts of the network. The peer-ports on each MLAG device must be directly connected to each other. It is also recommended to keep the untagged VLAN used by the peer ports separate from the rest of your network, either by assigning a dedicated untagged VLAN (using <code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">pvid</span></code>), or by setting the peer port to only allow VLAN tagged frames (using <code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">frame-types=admit-only-vlan-tagged</span></code>). Peer ports can be configured as single Ethernet interfaces or bonding interfaces. However, using a bonding interface is recommended, as it helps prevent a single interface failure from affecting connectivity, especially when both MLAG nodes are still up and running.</p><p>When <code><span style="color:var(--ds-icon-success,#22a06b);">peer-port</span></code> is running and ICCP is established, the primary device election happens and <code><span style="color:var(--ds-icon-success,#22a06b);">system-id</span></code> will be selected. The peer with the lowest <code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">priority</span></code> will act as the primary device. If the priorities are the same, the peer with the lowest bridge MAC address will become the primary. This <code><span style="color:var(--ds-icon-success,#22a06b);">system-id</span></code> is used for STP BPDU bridge identifier and <span style="color:var(--ds-text,#172b4d);">LACP system ID. The MLAG supports STP, RSTP or MSTP protocols. Use the same STP priority and the same STP configuration on dual-connected bridge ports on both nodes. When MLAG bridges are elected as STP root, then both devices will show as root bridges under the bridge monitor. </span></p><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>The MLAG is not compatible with <a href="https://help.mikrotik.com/docs/display/ROS/L3+Hardware+Offloading" rel="nofollow">L3 hardware offloading</a>. When using MLAG, the L3 hardware offloading must be disabled.</p><p>The MLAG is not compatible with <a href="https://help.mikrotik.com/docs/spaces/ROS/pages/328068/Bridging+and+Switching#BridgingandSwitching-MVRP" rel="nofollow">Multiple VLAN Registration protocol (MVRP)</a>. Registered VLANs on dual-connected bonds does not get synchronized to other MLAG node.</p></div></div><p><br/></p><p><span class="confluence-embedded-file-wrapper image-center-wrapper"><img class="confluence-embedded-image image-center" draggable="false" src="attachments/67633179/67633243.png" data-image-src="attachments/67633179/67633243.png" data-unresolved-comment-count="0" data-linked-resource-id="67633243" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="1.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="67633179" data-linked-resource-container-version="41" tabindex="0" alt=""></span></p><h1 id="MultichassisLinkAggregationGroup-Quicksetup"><span style="color:var(--ds-text,#172b4d);">Quick setup</span></h1><p>in this example, CRS317 and CRS309 devices are used as MLAG peers and any device with two SFP+ interfaces can be used as an LACP client. The SFP+1 interface is used on both peer nodes to create <code><span style="color:var(--ds-icon-success,#22a06b);">peer-port</span></code>, and it is used for ICCP, s<span style="color:var(--ds-text,#172b4d);">ee a network scheme below.</span></p><p><span style="color:var(--ds-text,#172b4d);"><span class="confluence-embedded-file-wrapper image-center-wrapper"><img class="confluence-embedded-image image-center" draggable="false" src="attachments/67633179/67633244.png" data-image-src="attachments/67633179/67633244.png" data-unresolved-comment-count="0" data-linked-resource-id="67633244" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="2.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="67633179" data-linked-resource-container-version="41" tabindex="0" alt=""></span></span>Below are configuration commands to create a regular <a href="https://help.mikrotik.com/docs/display/ROS/Bonding#Bonding-802.3ad" rel="nofollow">LACP bonding</a> in RouterOS for the Client device. To speed up LACP link establishment, use a 1-second LACPDU transmission rate:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface bonding
+add mode=802.3ad name=bond1 slaves=sfp-sfpplus1,sfp-sfpplus2 lacp-rate=1sec </pre>
+</div></div><p>Next, configure bonding interfaces for MLAG on Peer1 and Peer2 devices, use a matching <span style="color:var(--ds-icon-success,#22a06b);"><code>mlag-id</code></span> setting on both peer devices, and set the 1-second LACPDU transmission rate:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false"># Peer1
+/interface bonding
+add mlag-id=10 mode=802.3ad name=client-bond slaves=sfp-sfpplus2 lacp-rate=1sec
+
+# Peer2
+/interface bonding
+add mlag-id=10 mode=802.3ad name=client-bond slaves=sfp-sfpplus2 lacp-rate=1sec</pre>
+</div></div><p>Set up the bridge interface with <code><span style="color:var(--ds-icon-success,#22a06b);">vlan-filtering</span></code> enabled. In this example, we want both MLAG nodes to act as the root bridge, so we assign a better (lower) bridge priority using <code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">priority=0x1000</span></code>. Make sure both MLAG nodes use the same priority value.</p><p>Optionally, you can set <code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">frame-types=admit-only-vlan-tagged</span></code> on the bridge interface to disables the default untagged VLAN 1 (<code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">pvid=1</span></code>).</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false"># Peer1
+/interface bridge
+add name=bridge1 vlan-filtering=yes priority=0x1000 frame-types=admit-only-vlan-tagged
+
+# Peer2
+/interface bridge
+add name=bridge1 vlan-filtering=yes priority=0x1000 frame-types=admit-only-vlan-tagged</pre>
+</div></div><p>Next, add the necessary interfaces to the bridge. In this example, only the peer port (sfp-sfpplus1) and the client-bond interface need to be added.</p><p>For the peer port, we disable the default untagged VLAN 1 (<code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">pvid=1</span></code>) by configuring it to accept only VLAN-tagged traffic (<code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">frame-types=admit-only-vlan-tagged</span></code>).</p><p>For the client-bond interface, we want untagged traffic to belong to VLAN 10, so we set <code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">pvid=10</span></code> on that interface.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false"># Peer1
+/interface bridge port
+add bridge=bridge1 interface=sfp-sfpplus1 frame-types=admit-only-vlan-tagged
+add bridge=bridge1 interface=client-bond pvid=10
+
+# Peer2
+/interface bridge port
+add bridge=bridge1 interface=sfp-sfpplus1 frame-types=admit-only-vlan-tagged
+add bridge=bridge1 interface=client-bond pvid=10</pre>
+</div></div><p><br/></p><div role="region" aria-label="Warning" class="confluence-information-macro  confluence-information-macro-warning" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-error confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p><span style="color:var(--ds-text,#172b4d);">The MLAG supports STP, RSTP or MSTP protocol</span><span>. </span><span>Use the same STP priority and the same STP configuration (e.g. path-cost, priority, edge) on dual-connected bridge ports on both nodes.</span></p></div></div><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>If the dual-connected bond interface is not connected to any other RSTP/MSTP bridges or switches, you can set <code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">edge=yes</span></code> on that interface on both MLAG nodes.</p><p>This setting allows the bond port to quickly enter the forwarding state, which helps reduce packet loss when one side of the MLAG becomes available again.</p></div></div><p>In this example, client-bond interfaces uses VLAN 10 for untagged traffic (set with <code><span style="color:var(--ds-icon-success,#22a06b);">pvid=10</span></code>), and we also want to allow tagged VLAN 20. To make sure traffic for both VLANs can pass between the MLAG devices, we need to add the peer ports as tagged members of VLANs 10 and 20 on both MLAG nodes. It is important to include the peer ports in all VLANs that are used on other bridge ports, this includes the untagged and tagged VLANs. Below are configuration commands for both peer devices:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false"># Peer1
+/interface bridge vlan
+add bridge=bridge1 tagged=sfp-sfpplus1 vlan-ids=10
+add bridge=bridge1 tagged=sfp-sfpplus1,client-bond vlan-ids=20
+
+# Peer2
+/interface bridge vlan
+add bridge=bridge1 tagged=sfp-sfpplus1 vlan-ids=10
+add bridge=bridge1 tagged=sfp-sfpplus1,client-bond vlan-ids=20</pre>
+</div></div><p><br/></p><div role="region" aria-label="Warning" class="confluence-information-macro  confluence-information-macro-warning" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-error confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p class="auto-cursor-target"><span style="color:var(--ds-text,#333333);">All VLANs used for </span>bridge<span style="color:var(--ds-text,#333333);"> slave ports must be also configured as tagged VLANs for peer-port, <span style="color:var(--ds-text-accent-purple-bolder,#352c63);">so that peer-port is a member of those VLANs and can forward data.</span></span></p></div></div><p>Last, specify <code><span style="color:var(--ds-icon-success,#22a06b);">bridge</span></code> and <code><span style="color:var(--ds-icon-success,#22a06b);">peer-port</span></code> to enable MLAG. To control which device becomes the primary MLAG node, set a lower <code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">priority</span></code> value on the preferred device. In this example, we want Peer1 to be the primary, so we set its <code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">priority=50</span></code>. Peer2 keeps the default priority of 128, making it the secondary. Below are configuration commands for both peer devices:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false"># Peer1
+/interface bridge mlag
+set bridge=bridge1 peer-port=sfp-sfpplus1 priority=50
+
+# Peer2
+/interface bridge mlag
+set bridge=bridge1 peer-port=sfp-sfpplus1</pre>
+</div></div><p>Additionally, check MLAG status on peer devices and make sure that Client LACP has both interfaces active.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false"># Peer1
+[admin@Peer1] &gt; /interface/bridge/mlag/monitor    
+       status: connected
+    system-id: 74:4D:28:11:70:6B
+  active-role: primary
+
+# Peer2
+[admin@Peer2] &gt; /interface/bridge/mlag/monitor           
+       status: connected
+    system-id: 74:4D:28:11:70:6B
+  active-role: secondary
+
+# Client
+[admin@Client] &gt; /interface bonding monitor bond1 
+                    mode: 802.3ad
+            active-ports: sfp-sfpplus1,sfp-sfpplus2
+          inactive-ports: 
+          lacp-system-id: 74:4D:28:7B:7F:96
+    lacp-system-priority: 65535
+  lacp-partner-system-id: 74:4D:28:11:70:6C
+
+</pre>
+</div></div><h1 class="auto-cursor-target" id="MultichassisLinkAggregationGroup-MLAGsettingsandmonitoring"><span style="color:var(--ds-text,#172b4d);">MLAG settings and monitoring</span></h1><p><span style="color:var(--ds-text,#172b4d);">This section describes the available MLAG settings and monitoring options.</span></p><p><strong>Sub-menu:</strong><span> </span><code>/interface bridge mlag</code></p><div class="table-wrap"><table class="wrapped confluenceTable"><colgroup><col/><col/></colgroup><thead><tr><th style="text-align: left;" class="confluenceTh"><p>Property</p></th><th style="text-align: left;" class="confluenceTh"><p>Description</p></th></tr></thead><tbody><tr><td style="text-align: left;" class="confluenceTd"><strong>bridge</strong><span> </span>(<em>interface; </em><span style="color:var(--ds-text,#333333);">Default:<span> </span></span><strong>none</strong>)</td><td style="text-align: left;" class="confluenceTd">The bridge interface where MLAG is being created.</td></tr><tr><td style="text-align: left;" class="confluenceTd"><strong>heartbeat</strong><span> </span>(<em style="text-align: left;">time: 1s..10s | none</em><span style="color:var(--ds-text,#172b4d);">; Default:</span><span style="color:var(--ds-text,#172b4d);"> </span><strong style="text-align: left;">00:00:05</strong>)</td><td style="text-align: left;" class="confluenceTd">This setting controls how often heartbeat messages are sent to check the connection between peers. If no heartbeat message is received for three intervals in a row, the peer logs a warning about potential communication problems. If set to <code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">none</span></code>, heartbeat messages are not sent at all.</td></tr><tr><td style="text-align: left;" class="confluenceTd"><p><strong>peer-port</strong><span> <span style="color:var(--ds-text,#172b4d);"> (</span><em style="text-align: left;">interface; </em><span style="color:var(--ds-text,#172b4d);">Default: </span><strong style="text-align: left;">none</strong><span style="color:var(--ds-text,#172b4d);">)</span></span></p></td><td style="text-align: left;" class="confluenceTd"><p><span style="color:var(--ds-text,#172b4d);">An interface that will be used as a peer port. Both peer devices are using inter-chassis communication over these peer ports to establish MLAG and update the host table. Peer port should be isolated on a different untagged VLAN using a <span style="color:var(--ds-icon-success,#22a06b);"><code>pvid</code></span> setting. Peer port can be configured as a bonding interface.</span></p></td></tr><tr><td style="text-align: left;" class="confluenceTd"><strong>priority</strong><span> </span>(<em>integer: 0..128; </em><span style="color:var(--ds-text,#333333);">Default:<span> </span></span><strong>128</strong>)</td><td style="text-align: left;" class="confluenceTd">This setting changes the priority for selecting the primary MLAG node. A lower number means higher priority. If both MLAG nodes have the same priority, the one with the lowest bridge MAC address will become the primary device.</td></tr></tbody></table></div><p>Use the <span style="color:var(--ds-text-accent-magenta,#943d73);"><code>monitor</code></span><span> </span>commands to see the current MLAG status.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@Peer1] &gt; /interface/bridge/mlag/monitor    
+       status: connected
+    system-id: 74:4D:28:11:70:6B
+  active-role: primary</pre>
+</div></div><div class="table-wrap"><table class="wrapped confluenceTable"><colgroup><col/><col/></colgroup><thead><tr><th style="text-align: left;" class="confluenceTh"><p>Property</p></th><th style="text-align: left;" class="confluenceTh"><p>Description</p></th></tr></thead><tbody><tr><td style="text-align: left;" class="confluenceTd"><strong>status</strong><span> </span>(<em>connected | connecting | disabled</em>)</td><td style="text-align: left;" class="confluenceTd">The MLAG status.</td></tr><tr><td style="text-align: left;" class="confluenceTd"><p><strong>system-id</strong> (<em>MAC address</em>)</p></td><td style="text-align: left;" class="confluenceTd">The lowest MAC address between both peer bridges will be used as the <code><span style="color:var(--ds-icon-success,#22a06b);">system-id</span></code>. This <code><span style="color:var(--ds-icon-success,#22a06b);">system-id</span></code> is used for (R/M)STP BPDU bridge identifier and <span style="color:var(--ds-text,#172b4d);">LACP system ID.</span></td></tr><tr><td style="text-align: left;" class="confluenceTd"><p><strong>active-role</strong><span><span style="color:var(--ds-text,#172b4d);"> (<em>primary | secondary</em></span><span style="color:var(--ds-text,#172b4d);">)</span></span></p></td><td style="text-align: left;" class="confluenceTd"><p><span style="color:var(--ds-text,#172b4d);">The peer with the lowest <code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">priority</span></code> will act as the primary device. If the priorities are the same, the peer with the lowest bridge MAC address will become the primary. The <code><span style="color:var(--ds-icon-success,#22a06b);">system-id</span></code> of the primary device is used for sending the (R/M)STP BPDU bridge identifier and LACP system ID.</span></p></td></tr></tbody></table></div><p class="auto-cursor-target"><strong>Sub-menu:</strong><span> </span><code>/interface bonding</code></p><div class="table-wrap"><table class="wrapped confluenceTable"><colgroup><col/><col/></colgroup><thead><tr><th style="text-align: left;" class="confluenceTh"><p>Property</p></th><th style="text-align: left;" class="confluenceTh"><p>Description</p></th></tr></thead><tbody><tr><td style="text-align: left;" class="confluenceTd"><strong>mlag-id</strong><span> </span>(<em><em style="text-align: left;">integer: 0..4294967295</em><span style="color:var(--ds-text,#172b4d);">; </span></em><span style="color:var(--ds-text,#172b4d);">Default:</span>)</td><td style="text-align: left;" class="confluenceTd">Changes MLAG ID for bonding interface. The same MLAG ID should be used on both peer devices to successfully create a single LAG for the client device. The <span style="color:var(--ds-icon-success,#22a06b);"><code>peer-port</code></span><strong> </strong>should not be configured with the MLAG ID.<strong> </strong></td></tr></tbody></table></div><p class="auto-cursor-target">LACP bonding interface and bonding slave ports can be monitored with <code><span style="color:var(--ds-text-accent-magenta,#943d73);">monitor</span></code> and <code><span style="color:var(--ds-text-accent-magenta,#943d73);">monitor-slaves</span></code> commands. See more details on <a href="https://help.mikrotik.com/docs/display/ROS/Bonding#Bonding-Bondingmonitoring" rel="nofollow">Bonding monitoring</a>.</p><div role="region" aria-label="Warning" class="confluence-information-macro  confluence-information-macro-warning" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-error confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>The &quot;<strong>not hw offloaded</strong>&quot; : error will occur, if the bridge or bridge/port does not utilize Layer 2 hardware offloading. MLAG setup must be done using single bridge as well as bridge port hw=yes</p></div></div>
+                    </div>
+
+                                                            <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/67633179/67633243.png">1.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/67633179/67633244.png">2.png</a> (image/png)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

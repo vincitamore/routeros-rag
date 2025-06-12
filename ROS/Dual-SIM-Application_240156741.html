@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : Dual SIM Application</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Mobile-Networking_119144655.html">Mobile Networking</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : Dual SIM Application
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Artis Bernāts</span>, last updated by <span class='editor'> Guntis G.</span> on Apr 26, 2024
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <h2 id="DualSIMApplication-/*&lt;![CDATA[*/div.rbtoc1747742029821{padding:0px;}div.rbtoc1747742029821ul{margin-left:0px;}div.rbtoc1747742029821li{margin-left:0px;padding-left:0px;}/*]]&gt;*/#DualSIMApplication-Summary#DualSIMApplication-SummaryInitialsettings#DualSIMAp"><span class="mw-headline"><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742029821 {padding: 0px;}
+div.rbtoc1747742029821 ul {margin-left: 0px;}
+div.rbtoc1747742029821 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742029821'>
+<ul class='toc-indentation'>
+<li><a href='#DualSIMApplication-'></a></li>
+<li><a href='#DualSIMApplication-Summary'>Summary</a></li>
+<li><a href='#DualSIMApplication-Initialsettings'>Initial settings</a></li>
+<li><a href='#DualSIMApplication-Roamingscriptexample'>Roaming script example</a></li>
+<li><a href='#DualSIMApplication-Failoverscriptexample'>Failover script example</a></li>
+<li><a href='#DualSIMApplication-Settingupscheduler'>Setting up scheduler</a></li>
+</ul>
+</div></span></h2><h2 id="DualSIMApplication-Summary"><span class="mw-headline">Summary</span></h2><p>The first script example shows how to switch between SIM slots in case mobile roaming is detected for LtAP mini devices. This could be useful for mobile vehicle applications, where cars, buses or trains could drive abroad and should use two SIM cards (one for a home network, other for a roaming network). Since RouterOS has a roaming status in the LTE monitor (displayed only when roaming) we can use this in RouterOS scripts to change SIM cards accordingly.</p><p>The second script example shows how to switch between the SIM cards in case a mobile connection is lost on the currently selected one.</p><p><strong>Note:</strong> Keep in mind that these are just examples of how to utilize dual SIM slots. For real-life production environments, proper testing should be carried out, so try to optimize them and add new features according to your needs.</p><h2 id="DualSIMApplication-Initialsettings"><span class="mw-headline">Initial settings</span></h2><p>First, make sure you have correctly set up LTE network parameters (provided by the mobile network operator) for each SIM card. You can use the default APN profile or create two separate ones, follow this link -  <a href="LTE_30146563.html#LTE-Quicksetupexample">LTE#Quicksetupexample</a>. This example uses the default APN profile.</p><p>After that, enable data roaming for connecting to other countries data-providers with the following command. This allows us to keep track of roaming status.</p><pre>/interface lte set [find name=lte1] allow-roaming=yes
+</pre><p>Then, choose which SIM slots will be used for home and roaming networks. In this example, we use slot &quot;down&quot; for home and slot &quot;up&quot; for roaming network. Use the following command to switch between active slots. <br/><strong>Note:</strong> command for sim slot selection changes in v6.45.1. And some device models like SXT, have SIM slots named &quot;a&quot; and &quot;b&quot; instead of &quot;up&quot; and down&quot;</p><p><br/>Command for pre 6.45.1:</p><pre>/system routerboard sim set sim-slot=down
+</pre><p>Command after 6.45.1:</p><pre>/system routerboard modem set sim-slot=down
+</pre><p>Command in RouterOS v7 version:</p><pre>/interface lte settings set sim-slot=down
+</pre><p>After changing SIM slots, LTE modem will be restarted. It can take some time (depending on the modem and board around 30 seconds) to fully initialize it, so make sure you test your modem.</p><h2 id="DualSIMApplication-Roamingscriptexample"><span class="mw-headline">Roaming script example</span></h2><p>Now create a script that will run with a scheduler. This script will go through a few key points:</p><ul><li>Check if the LTE interface is initialized (shown in <span style="color:var(--ds-background-accent-green-bolder,#1f845A);"><code>/interface lte</code></span> ), otherwise, try a power reset</li><li>Check if an LTE connection is established (the interface is in a &quot;running&quot; state), otherwise create a log entry and simply wait for the next scheduler</li><li>Read the currently used LTE slot and decide whether to change SIM slots based on roaming status</li></ul><p>Let's call this script &quot;roamingScript&quot;, and see below the source:</p><pre>{
+# Setup and read current values, &quot;up&quot; SIM slot will be used for roaming, &quot;down&quot; for home network
+:global simSlot [/system routerboard sim get sim-slot]
+:global timeoutLTE 60
+:global timeoutConnect 60
+
+# Wait for LTE to initialize for maximum &quot;timeoutLTE&quot; seconds
+:local i 0
+:local isLTEinit false
+:while ($i&lt;$timeoutLTE) do={
+    :foreach n in=[/interface lte find] do={:set $isLTEinit true}
+    :if ($isLTEinit=true) do={
+        :set $i $timeoutLTE
+    }
+    :set $i ($i+1)
+    :delay 1s
+}
+
+# Check if LTE is initialized, or try power-reset the modem
+:if ($isLTEinit=true) do={
+    # Wait for LTE interface to connect to mobile network for maximum &quot;timeoutConnet&quot; seconds
+    :local isConnected false
+    :set $i 0
+    :while ($i&lt;$timeoutConnect) do={
+        :if ([/interface lte get [find name=&quot;lte1&quot;] running]=true) do={
+            :set $isConnected true
+            :set $i $timeoutConnect
+        }
+        :set $i ($i+1)
+        :delay 1s
+    }
+    # Check if LTE is connected
+    if ($isConnected=true) do={
+        :local Info [/interface lte monitor lte1 once as-value]
+        :local isRoaming ($Info-&gt;&quot;roaming&quot;)
+        # Check which SIM slot is used
+        :if ($simSlot=&quot;down&quot;) do={
+            # If &quot;down&quot; (home) slot, check roaming status
+            :if ($isRoaming=true) do={
+                :log info message=&quot;Roaming detected, switching to SIM UP (Roaming)&quot;
+                /system routerboard sim set sim-slot=up
+            }
+        } else={
+            # Else &quot;up&quot; (roaming) slot, check roaming status
+            :if (!$isRoaming=true) do={
+                :log info message=&quot;Not roaming, switching to SIM DOWN (Home)&quot;
+                /interface lte settings set sim-slot=down
+            }
+        }
+    } else={
+        :log info message=&quot;LTE interface did not connect to network, wait for next scheduler&quot;
+    }
+} else={
+    :log info message=&quot;LTE modem did not appear, trying power-reset&quot;
+    /system routerboard usb power-reset duration=5s
+}
+}
+</pre><p><br/></p><h2 id="DualSIMApplication-Failoverscriptexample"><span class="mw-headline">Failover script example</span></h2><p>Now create a script that will run with a scheduler. This script will go through a few key points:</p><ul><li>Check if the LTE interface is initialized (shown in <span style="color:var(--ds-background-accent-green-bolder,#1f845A);"><code>/interface lte</code></span>), otherwise, try a power reset</li><li>Check if an LTE connection is established (the interface is in a &quot;running&quot; state), otherwise, create a log entry and simply wait for the next scheduler</li><li>Read the currently used LTE slot and make a decision whether to change SIM slots based on interface status</li></ul><p><strong>Note:</strong> Keep in mind that the SIM slot will only be changed if the current one is not able to connect to the network if you need to switch back to the main SIM card you need to schedule another action that does it at a certain time. It is not possible to know if the other SIM card is in service without switching back to it.</p><p>Let's call this script &quot;failoverScript&quot;, and see below the source:</p><pre><code>{
+# Setup and read current values
+:global simSlot [/system routerboard modem get sim-slot]
+:global timeoutLTE 60
+:global timeoutConnect 60
+
+# Wait for LTE to initialize for maximum &quot;timeoutLTE&quot; seconds
+:local i 0
+:local isLTEinit false
+:while ($i&lt;$timeoutLTE) do={
+    :foreach n in=[/interface lte find] do={:set $isLTEinit true}
+    :if ($isLTEinit=true) do={
+        :set $i $timeoutLTE
+    }
+    :set $i ($i+1)
+    :delay 1s
+}
+
+# Check if LTE is initialized, or try power-reset the modem
+:if ($isLTEinit=true) do={
+    # Wait for LTE interface to connect to mobile network for maximum &quot;timeoutConnet&quot; seconds
+    :local isConnected false
+    :set $i 0
+    :while ($i&lt;$timeoutConnect) do={
+        :if ([/interface lte get [find name=&quot;lte1&quot;] running]=true) do={
+            :set $isConnected true
+            :set $i $timeoutConnect
+        }
+        :set $i ($i+1)
+        :delay 1s
+    }
+    # Check if LTE is connected
+    if ($isConnected=false) do={
+    # Check which SIM slot is used
+        :if ($simSlot=&quot;down&quot;) do={
+            # If &quot;down&quot; slot, switch to up
+        :log info message=&quot;LTE down, switching slot to UP&quot;
+            /interface lte settings set sim-slot=up
+    }
+        :if ($simSlot=&quot;up&quot;) do={
+            # If &quot;up&quot; slot, switch to down
+        :log info message=&quot;LTE down, switching slot to DOWN&quot;
+            /interface lte settings set sim-slot=down
+            }
+        } else={
+            # Else &quot;running&quot;
+            :if ($isConnected=true) do={
+                :log info message=&quot;LTE UP&quot;
+            } else={
+        :log info message=&quot;LTE interface did not connect to network, wait for next scheduler&quot;
+        }
+    } 
+    } else={
+    :log info message=&quot;LTE modem did not appear, trying power-reset&quot;
+    /system routerboard usb power-reset duration=5s
+}
+}</code></pre><h2 id="DualSIMApplication-Settingupscheduler"><span class="mw-headline">Setting up scheduler</span></h2><p>Last, create your scheduler that will run the previously created script. Choose a proper scheduler interval, so two or more events do not overlap with each other. For this example above, 3 minutes will be enough.</p><pre>/system scheduler add interval=3m on-event=roamingScript name=Roaming
+</pre><pre>/system scheduler add interval=3m on-event=failoverScript name=Failover
+</pre><p>Keep in mind that a &quot;home&quot; SIM card will consume some roaming data because changing SIM slots does not happen instantly.</p>
+                    </div>
+
+                                        
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

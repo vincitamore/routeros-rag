@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : Dot1X</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="119144604.html">Authentication, Authorization, Accounting</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : Dot1X
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Normunds R.</span>, last updated by <span class='editor'> Guntis G.</span> on Mar 06, 2024
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <div class="contentLayout2">
+<div class="columnLayout single" data-layout="single">
+<div class="cell normal" data-type="normal">
+<div class="innerCell">
+<h1 id="Dot1X-Summary"><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742022601 {padding: 0px;}
+div.rbtoc1747742022601 ul {margin-left: 0px;}
+div.rbtoc1747742022601 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742022601'>
+<ul class='toc-indentation'>
+<li><a href='#Dot1X-Summary'>Summary</a></li>
+<li><a href='#Dot1X-Client'>Client</a></li>
+<li><a href='#Dot1X-Server'>Server</a></li>
+<li><a href='#Dot1X-Examples'>Examples</a>
+<ul class='toc-indentation'>
+<li><a href='#Dot1X-RouterOSAuthenticatorconfiguration'>RouterOS Authenticator configuration</a>
+<ul class='toc-indentation'>
+<li><a href='#Dot1X-PortbasedVLANIDassignment'>Port based VLAN ID assignment</a></li>
+<li><a href='#Dot1X-Dynamicswitchruleconfiguration'>Dynamic switch rule configuration</a></li>
+</ul>
+</li>
+<li><a href='#Dot1X-RouterOSSupplicantconfiguration'>RouterOS Supplicant configuration</a></li>
+</ul>
+</li>
+</ul>
+</div><br/>Summary</h1><hr/><p>Dot1X is implementation of IEEE 802.1X standard in RouterOS. Main purpose is to provide port-based network access control using EAP over LAN also known as EAPOL. 802.1X consists of a supplicant (client), an authenticator (server) and an authentication server (RADIUS server). Both authenticator and supplicant sides are supported in RouterOS, as well as authentication server when <a href="https://help.mikrotik.com/docs/display/ROS/User+Manager" rel="nofollow">User Manager</a> package is installed. Supported EAP methods for supplicant are EAP-TLS, EAP-TTLS, EAP-MSCHAPv2 and PEAPv0/EAP-MSCHAPv2.</p><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Feature is not supported on SMIPS devices (hAP lite, hAP lite TC and hAP mini).</p></div></div></div>
+</div>
+</div>
+<div class="columnLayout single" data-layout="single">
+<div class="cell normal" data-type="normal">
+<div class="innerCell">
+<h1 id="Dot1X-Client">Client</h1><hr/><p><span style="letter-spacing: 0.0px;">Supplicant configuration settings.</span></p><p><strong>Sub-menu:</strong> <code>/interface dot1x client</code></p><div class="table-wrap"><table class="wrapped confluenceTable" style="letter-spacing: 0.0px;margin-left: 15.0568px;"><colgroup><col/><col/></colgroup><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>anon-identity</strong> (<em>string</em>; Default: )</td><td class="confluenceTd">Identity for outer layer EAP authentication. Used only with <span style="color:var(--ds-background-accent-green-bolder,#1f845a);"><code>eap-ttls</code></span> and <span style="color:var(--ds-background-accent-green-bolder,#1f845a);"><code>eap-peap</code></span> methods. If not set, value from <span style="color:var(--ds-background-accent-green-bolder,#1f845a);"><code>identity</code></span> parameter will be used for outer layer EAP authentication.</td></tr><tr><td class="confluenceTd"><strong>client-certificate</strong> (<em>string</em>; Default: )</td><td class="confluenceTd">Name of a certificate listed in <a href="https://help.mikrotik.com/docs/display/ROS/Certificates" rel="nofollow">System/Certificates</a>. Necessary when<code> eap-tls</code> method is used.</td></tr><tr><td class="confluenceTd"><strong>comment</strong> (<em>string</em>; Default: )</td><td class="confluenceTd">Short description of the entry.</td></tr><tr><td class="confluenceTd"><strong>disabled</strong> (<em>yes | no</em>; Default: <strong>no</strong>)</td><td class="confluenceTd">Whether client is enabled or not.</td></tr><tr><td class="confluenceTd"><strong>eap-methods</strong> (<em>eap-tls | eap-ttls | eap-peap | eap-mschapv2</em>; Default: )</td><td class="confluenceTd">Ordered list of EAP methods used for authentication.</td></tr><tr><td class="confluenceTd"><strong>identity</strong> (<em>string</em>; Default: )</td><td class="confluenceTd">Supplicant identity used for EAP authentication.</td></tr><tr><td class="confluenceTd"><strong>interface</strong> (<em>string</em>; Default: )</td><td class="confluenceTd">Name of the interface the client will run on.</td></tr><tr><td class="confluenceTd"><strong>password</strong> (<em>string</em>; Default: )</td><td class="confluenceTd">Cleartext password for supplicant.</td></tr></tbody></table></div><p class="auto-cursor-target"><strong><br/>Read only properties</strong></p><div class="table-wrap"><table class="wrapped confluenceTable" style="margin-left: 15.0568px;"><colgroup><col/><col/></colgroup><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>status</strong><span> </span>(<em>authenticated | authenticating | disabled</em>)</td><td class="confluenceTd">Possible statuses:<ul><li>authenticated<span> </span>- the client has successfully authenticated;</li><li>authenticated without server<span> </span>- access to the port is granted without communication with server;</li><li>authenticating<span> </span>- the server is reached and authentication process is ongoing;</li><li>connecting<span> </span>- initial stage of the authentication process;</li><li>disabled<span> </span>- the client is disabled;</li><li>error<span> </span>- an internal error has occurred;</li><li>interface is down<span> </span>- the parent interface is not running;</li><li>rejected<span> </span>- the server denied the authentication.</li></ul></td></tr></tbody></table></div></div>
+</div>
+</div>
+<div class="columnLayout single" data-layout="single">
+<div class="cell normal" data-type="normal">
+<div class="innerCell">
+<h1 id="Dot1X-Server"><span>Server</span></h1><hr/><p><span>A RouterOS dot1x server acts as an authenticator. An interface where dot1x server is enabled will block all traffic except for EAPOL packets which is used for the authentication. After client is successfully authenticated, the interface will accept all received traffic on the port. If the interface is connected to a shared medium with multiple hosts, the traffic will be accepted from all hosts when at least one client is successfully authenticated. However, it is possible to <a href="https://help.mikrotik.com/docs/display/ROS/Dot1X#Dot1X-Dynamicswitchruleconfiguration" rel="nofollow">configure dynamic switch rules</a> to accept only the authenticated user source MAC address and drop all other source MAC addresses. In case of failed authentication, it is possible to accept the traffic with a dedicated port VLAN ID. </span></p><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>When a dot1x server is created on a bridge port, the bridge should be running (R/M)STP, otherwise EAP packets from the client will not be correctly accepted. Bridge interface is created with <code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">protocol-mode</span>=rstp</code> by default. If the bridge port should not send any BPDUs or any received BPDUs should be ignored, use <code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">edge</span>=yes</code> configuration on bridge ports. </p></div></div><p><strong>Sub-menu:</strong> <code>/interface dot1x server</code></p><div class="table-wrap"><table class="wrapped confluenceTable" style="margin-left: 7.4858px;"><colgroup><col/><col/></colgroup><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>accounting</strong><span> </span>(<em>yes | no</em>; Default:<span> </span><strong>yes</strong>)</td><td class="confluenceTd">Whether to send RADIUS accounting requests to authentication server.</td></tr><tr><td class="confluenceTd"><strong>auth-timeout</strong><span> </span>(<em>time</em>; Default:<span> </span><strong>1m</strong>)</td><td class="confluenceTd">Total time available for EAP authentication.</td></tr><tr><td class="confluenceTd"><strong>auth-types</strong><span> </span>(<em>dot1x | mac-auth</em>; Default:<span> </span><strong>dot1x</strong>)</td><td class="confluenceTd">Used authentication type on a server interface. When both options are selected at the same time, the server will prefer <span style="color:var(--ds-text,#172b4d);"><code>dot1x</code></span> authentication type and only after 3 <span style="color:var(--ds-background-accent-green-bolder,#1f845a);"><code>retrans-timeout</code></span> periods, the authentication type will fall back to <span style="color:var(--ds-text,#172b4d);"><code>mac-auth</code>.</span> In order for<code> <span style="color:var(--ds-text,#172b4d);">mac-auth</span></code> authentication type to work, the server interface should receive at least one frame containing a client's device source MAC address.</td></tr><tr><td class="confluenceTd"><strong>comment</strong><span> </span>(<em>string</em>; Default: )</td><td class="confluenceTd">Short description of the entry.</td></tr><tr><td class="confluenceTd"><strong>disabled</strong><span> </span>(<em>yes | no</em>; Default:<span> </span><strong>no</strong>)</td><td class="confluenceTd">Whether server config is enabled or not.</td></tr><tr><td class="confluenceTd"><strong>guest-vlan-id</strong><span> </span>(i<em>nteger: 1..4094</em>; Default:<span> </span><strong>!guest-vlan-id</strong>)</td><td class="confluenceTd">Assigned VLAN when end devices does not support <span style="color:var(--ds-text,#172b4d);"><code>dot1x</code></span> authentication and no <span style="color:var(--ds-text,#172b4d);"><code>mac-auth</code></span> fall back is configured. The setting will apply after 3 <span style="color:var(--ds-background-accent-green-bolder,#1f845a);"><code>retrans-timeout</code></span> periods. Once dot1x enabled client is created and successful re-authentication happened, the port is removed from the guest VLAN. This setting is available since RouterOS 7.2 version and has an effect when bridge<span> </span><span style="color:var(--ds-background-accent-green-bolder,#1f845a);"><code>vlan-filtering</code></span><span> </span>is enabled. By default, guest VLAN is disabled.</td></tr><tr><td class="confluenceTd"><strong>interface</strong><span> </span>(<em>string</em>; Default: )</td><td class="confluenceTd">Name of the interface or<span> </span>interface list<span> </span>the server will run on.</td></tr><tr><td class="confluenceTd"><strong>interim-update</strong><span> </span>(<em>time</em>; Default:<span> </span><strong>0s</strong>)</td><td class="confluenceTd">Interval between scheduled RADIUS Interim-Update messages.</td></tr><tr><td class="confluenceTd"><strong>mac-auth-mode</strong><span> </span>(<em>mac-as-username | mac-as-username-and-password</em>; Default:<span> </span><strong>mac-as-username</strong>)</td><td class="confluenceTd">Allows to control User-Name and User-Password RADIUS attributes when using MAC authentication.</td></tr><tr><td class="confluenceTd"><strong>radius-mac-format</strong><span> </span>(<em>XX-XX-XX-XX-XX-XX | XX:XX:XX:XX:XX:XX | XXXXXXXXXXXX | xx-xx-xx-xx-xx-xx | xx:xx:xx:xx:xx:xx | xxxxxxxxxxxx</em>; Default:<span> </span><strong>XX:XX:XX:XX:XX:XX</strong>)</td><td class="confluenceTd">Controls how the MAC address of the client is encoded in the User-Name and User-Password attributes when using MAC authentication.</td></tr><tr><td class="confluenceTd"><strong>reauth-timeout<span> </span></strong>(<em>time</em>; Default: <strong>!reauth-timeout</strong>)</td><td class="confluenceTd">Enables server port re-authentication. When enabled with <span style="color:var(--ds-text,#172b4d);"><code>dot1x</code></span> authentication type, server will try to re-authenticate a client by sending EAP-Request Identity to the client. When enabled with <span style="color:var(--ds-text,#172b4d);"><code>mac-auth</code></span> authentication type, server will try to re-authenticate client with RADIUS server by using the last seen MAC address. This setting is available since RouterOS 7.2 version. By default, re-authentication is disabled.  </td></tr><tr><td class="confluenceTd"><strong>reject-vlan-id</strong><span> </span>(i<em>nteger: 1..4094</em>; Default:<span> </span><strong>!reject-vlan-id</strong>)</td><td class="confluenceTd">Assigned VLAN when authentication failed and a RADIUS server responded with an Access-Reject message. This property will not apply if the RADIUS server is not responding at all, the client authentication will simply timeout and the service will be unavailable. This property only has an effect when bridge<span> </span><span style="color:var(--ds-background-accent-green-bolder,#1f845a);"><code>vlan-filtering</code></span><span> </span>is enabled. By default, reject VLAN is disabled.</td></tr><tr><td class="confluenceTd"><strong>retrans-timeout</strong><span> </span>(<em>time</em>; Default:<span> </span><strong>30s</strong>)</td><td class="confluenceTd">Time interval between message re-transmissions if no response is received from supplicant.</td></tr><tr><td class="confluenceTd"><strong>server-fail-vlan-id</strong><span> </span>(i<em>nteger: 1..4094</em>; Default:<span> </span><strong>!server-fail-vlan-id</strong>)</td><td class="confluenceTd">Assigned VLAN when RADIUS server is not responding and request timeout has elapsed. This setting is available since RouterOS 7.2 version and has an effect when bridge<span> </span><span style="color:var(--ds-background-accent-green-bolder,#1f845a);"><code>vlan-filtering</code></span><span> </span>is enabled. By default, server-fail VLAN is disabled.</td></tr></tbody></table></div><p class="auto-cursor-target"><span style="letter-spacing: 0.0px;color:var(--ds-text-accent-lime-bolder,#37471f);"><br/>Currently authenticated clients are listed in the active menu (read only properties).</span></p><p><strong>Sub-menu:</strong> <code>/interface dot1x server active</code></p><div class="table-wrap"><table class="wrapped confluenceTable" style="margin-left: 7.4858px;"><colgroup><col/><col/></colgroup><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>auth-info</strong> (<em>string</em>)</td><td class="confluenceTd"><p>Authentication information:</p><ul><li>dot1x</li><li>dot1x (guest vlan)</li><li>dot1x (reject vlan)</li><li>dot1x (server fail vlan)</li><li>mac-auth</li><li>mac-auth (reject vlan)</li><li>mac-auth (server fail vlan)</li></ul></td></tr><tr><td class="confluenceTd"><strong>client-mac</strong><span> </span>(<em>mac-address</em>)</td><td class="confluenceTd">MAC Address of the supplicant.</td></tr><tr><td class="confluenceTd"><strong>interface</strong><span> </span>(<em>string</em>)</td><td class="confluenceTd">Name of the interface.</td></tr><tr><td class="confluenceTd"><strong>session-id</strong><span> </span>(<em>string</em>)</td><td class="confluenceTd">Unique session identifier.</td></tr><tr><td class="confluenceTd"><strong>username</strong><span> </span>(<em>string</em>)</td><td class="confluenceTd">Identity of the supplicant.</td></tr><tr><td class="confluenceTd"><strong>vlan-id</strong><span> </span>(<em>string</em>)</td><td class="confluenceTd">Untagged VLAN ID that is assigned to the interface. VLAN ID filtering must be enabled on bridge.</td></tr></tbody></table></div><p><span style="color:var(--ds-text-accent-lime-bolder,#37471f);"><br/>Statuses of all active dot1x server interfaces are listed in the state menu (read only properties).</span></p><p><strong>Sub-menu:</strong> <code>/interface dot1x server state</code></p><div class="table-wrap"><table class="wrapped confluenceTable" style="margin-left: 7.4858px;"><colgroup><col/><col/></colgroup><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>interface</strong><span> </span>(<em>string</em>)</td><td class="confluenceTd">Name of the interface.</td></tr><tr><td class="confluenceTd"><strong>status</strong><span> </span>(<em>string</em>)</td><td class="confluenceTd">Possible interface statuses:<ul><li>authorized<span> </span>- access to interface is granted;</li><li>iface-down<span> </span>- interface is not running;</li><li>rejected-holding<span> </span>- access was rejected by the RADIUS server;</li><li>un-authorized<span> </span>- access to interface is not granted.</li></ul></td></tr></tbody></table></div><h1 id="Dot1X-Examples"><span>Examples</span></h1><hr/><p><span style="color:var(--ds-text,#172b4d);">Below are described the most common configuration examples for dot1x server and client.</span></p><h2 id="Dot1X-RouterOSAuthenticatorconfiguration">RouterOS Authenticator configuration</h2><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/328090/54165510.jpg" data-image-src="attachments/328090/54165510.jpg" data-unresolved-comment-count="0" data-linked-resource-id="54165510" data-linked-resource-version="2" data-linked-resource-type="attachment" data-linked-resource-default-alias="Dot1x-setup.jpg" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/jpeg" data-linked-resource-container-id="328090" data-linked-resource-container-version="43" tabindex="0" alt=""></span></p><p><span class="mw-headline"><span style="color:var(--ds-text-accent-lime-bolder,#37471f);">Start off by adding a new RADIUS client. The authentication server (RADIUS) does not necessary have to be in the same LAN as authenticator, but it must be reachable from the authenticator, so any firewall limitations must be considered.</span></span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/radius 
+add address=10.1.2.3 secret=radiussecret service=dot1x</pre>
+</div></div><br/><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p><span style="color:var(--ds-text-accent-lime-bolder,#37471f);"><span> I</span>f RADIUS communication is done over public network, it is advised to use RadSec for RADIUS communication. More information:<span> </span></span><a href="https://help.mikrotik.com/docs/display/ROS/RADIUS" rel="nofollow">RADIUS</a></p></div></div><p><span class="mw-headline"><span style="color:var(--ds-text-accent-lime-bolder,#37471f);">Add new dot1x server instances.</span><br/></span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface dot1x server
+add interface=ether2 interim-update=30s comment=accounted
+add interface=ether12 accounting=no comment=notaccounted</pre>
+</div></div><h3 id="Dot1X-PortbasedVLANIDassignment"><span>Port based VLAN ID assignment</span></h3><p>It is possible to assign an authenticated interface to a specific VLAN ID using bridge VLAN filtering. This can be done using RADIUS Tunnel-Type, Tunnel-Medium-Type and Tunnel-Private-Group-ID attributes. Note that only devices with hardware offloaded VLAN filtering will be able to do this in switch chip. </p><p>First of all, make sure the interface is added to a bridge which has VLAN filtering enabled.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface bridge
+add name=bridge1 vlan-filtering=yes
+/interface bridge port
+add bridge=bridge1 interface=ether1
+add bridge=bridge1 interface=ether2
+add bridge=bridge1 interface=ether12</pre>
+</div></div><p class="auto-cursor-target"><span style="color:var(--ds-text-accent-lime-bolder,#37471f);">It is necessary to add static VLAN configuration for tagged VLAN traffic to be sent over ether1 interface.</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface bridge vlan
+add bridge=bridge1 tagged=ether1 vlan-ids=2
+add bridge=bridge1 tagged=ether1 vlan-ids=12</pre>
+</div></div><p class="auto-cursor-target"><span style="color:var(--ds-text-accent-lime-bolder,#37471f);">With enabled RADIUS debug logs it is possible to see complete RADIUS message packets with all attributes. In our example, Tunnel attributes are received in Access-Accept message from RADIUS server:</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: text; gutter: false">09:51:45 radius,debug,packet received Access-Accept with id 64 from 10.1.2.3:1812
+09:51:45 radius,debug,packet     Tunnel-Type = 13 
+09:51:45 radius,debug,packet     Tunnel-Medium-Type = 6 
+09:51:45 radius,debug,packet     Tunnel-Private-Group-ID = &quot;12&quot; 
+(..)
+09:51:45 radius,debug,packet     User-Name = &quot;dot1x-user&quot; </pre>
+</div></div><p class="auto-cursor-target"><span style="color:var(--ds-text-accent-lime-bolder,#37471f);">The VLAN ID is now present in active session list and untagged ports are added to previously created static VLAN configuration.</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface dot1x server active print 
+ 0 interface=ether12 username=&quot;dot1x-user&quot; user-mac=00:0C:42:EB:71:F6 session-id=&quot;86b00006&quot; vlan=12 </pre>
+</div></div><br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface bridge vlan print detail 
+Flags: X - disabled, D - dynamic 
+ 0 D bridge=bridge1 vlan-ids=1 tagged=&quot;&quot; untagged=&quot;&quot; current-tagged=&quot;&quot; current-untagged=bridge1,ether3 
+
+ 1   bridge=bridge1 vlan-ids=2 tagged=ether1 untagged=&quot;&quot; current-tagged=ether1 current-untagged=ether2 
+
+ 2   bridge=bridge1 vlan-ids=12 tagged=ether1 untagged=&quot;&quot; current-tagged=ether1 current-untagged=ether12 </pre>
+</div></div><h3 id="Dot1X-Dynamicswitchruleconfiguration"><span class="mw-headline">Dynamic switch rule configuration</span></h3><p>In some network configurations, additional access rules are needed for a particular supplicant to restrict or allow certain network services. This can be done using a Mikrotik-Switching-Filter attribute, please see the<span> </span><a class="external-link" href="https://wiki.mikrotik.com/wiki/Manual:RADIUS_Client/vendor_dictionary" rel="nofollow" style="text-decoration: none;" title="Manual:RADIUS Client/vendor dictionary">RADIUS vendor dictionary</a>. When a client is successfully authenticated by an authentication server, the server can pass back the Mikrotik-Switching-Filter attribute. Based on the received information, the authenticator will create dynamic access rules on a switch port where the client resides. These rules will be active as long as the client session is active and the interface is running. There are certain order and restrictions regarding correct switch rule implementation:</p><ul><li>The<span> </span><span style="color:var(--ds-background-accent-green-bolder,#1f845a);"><code>mac-protocol</code></span>, <code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">src-mac-address </span></code>(<span>available only since RouterOS 7.2 version</span>), <code style="letter-spacing: 0.0px;"><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">src-address</span></code><span style="letter-spacing: 0.0px;"> (IPv4/mask, available only since RouterOS 7.2 version), </span><code style="letter-spacing: 0.0px;"><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">dst-address</span></code><span style="letter-spacing: 0.0px;"> (IPv4/mask), <span style="color:var(--ds-background-accent-green-bolder,#1f845a);"><code>protocol</code></span> (IPv4) <code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">src-port</span></code> (L4, available only since RouterOS 7.2 version), </span><span style="letter-spacing: 0.0px;"><code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">dst-port</span></code> (L4)</span><span style="letter-spacing: 0.0px;"> </span><span style="letter-spacing: 0.0px;">conditional parameters are supported</span></li><li><span style="letter-spacing: 0.0px;">Hexadecimal or decimal representation can be used for</span><span style="letter-spacing: 0.0px;"> </span><span style="color:var(--ds-background-accent-green-bolder,#1f845a);"><code style="letter-spacing: 0.0px;">mac-protocol</code></span><span style="letter-spacing: 0.0px;"> </span><span style="letter-spacing: 0.0px;">and</span><span style="letter-spacing: 0.0px;"> </span><span style="color:var(--ds-background-accent-green-bolder,#1f845a);"><code style="letter-spacing: 0.0px;">protocol</code></span><span style="letter-spacing: 0.0px;"> </span><span style="letter-spacing: 0.0px;">parameters (e.g. <span style="color:var(--ds-background-accent-green-bolder,#1f845a);"><code>protocol 17</code></span> or <span><span style="color:var(--ds-background-accent-green-bolder,#1f845a);"><code>protocol 0x11</code></span></span>)</span></li><li><span style="letter-spacing: 0.0px;">The <span><code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">src-port</span></code> and <code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">dst-port</span></code> </span>support single or range values (e.g. <span><code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">src-port 10</span></code> </span>or <span><code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">src-port 10-20</span></code></span>)</span></li><li><span style="letter-spacing: 0.0px;">The <code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">src-mac-address</span></code> support &quot;xx:xx:xx:xx:xx:xx&quot; or &quot;xxxxxxxxxxxx&quot; formats, and switch rule without any source MAC address can be set with &quot;none&quot; keyword (e.g.<span><span style="color:var(--ds-background-accent-green-bolder,#1f845a);"><code> src-mac-address none</code></span></span>)</span></li><li>The <span><code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">src-mac-address</span></code> (if not already set by the attribute)</span><code style="letter-spacing: 0.0px;">, <span style="color:var(--ds-background-accent-green-bolder,#1f845a);">switch</span></code><span style="letter-spacing: 0.0px;"> </span><span style="letter-spacing: 0.0px;">and</span><span style="letter-spacing: 0.0px;"> </span><span style="color:var(--ds-background-accent-green-bolder,#1f845a);"><code style="letter-spacing: 0.0px;">ports</code></span><span style="letter-spacing: 0.0px;"> </span><span style="letter-spacing: 0.0px;">conditional parametrs are automatically set for each rule</span></li><li>Each rule should end with an<span> </span>action<span> </span>property, supported values are either<span> </span><strong>drop</strong><span> </span>or<span> </span><strong>allow</strong>. If no action property is set, the default <strong>allow</strong> value will be used.</li><li>Multiple rules are supported for a single supplicant and they must be separated by a comma &quot;,&quot;</li></ul><p>Below are some examples of Mikrotik-Switching-Filter attributes and dynamic switch rules they create:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false"># Drop ARP frames (EtherType: 0x0806 or 2054)
+Mikrotik-Switching-Filter = &quot;mac-protocol 2054 action drop&quot;
+
+/interface ethernet switch rule print
+Flags: X - disabled, I - invalid, D - dynamic 
+ 0  D ;;; dot1x dynamic
+      switch=switch1 ports=ether1 src-mac-address=CC:2D:E0:11:22:33/FF:FF:FF:FF:FF:FF mac-protocol=arp copy-to-cpu=no redirect-to-cpu=no mirror=no new-dst-ports=&quot;&quot;
+
+# Allow UDP (IP protocol: 0x11 or 17) destination port 100 and drop all other packets
+Mikrotik-Switching-Filter = &quot;protocol 17 dst-port 100 action allow, action drop&quot;
+
+/interface ethernet switch rule print
+Flags: X - disabled, I - invalid, D - dynamic 
+ 0  D ;;; dot1x dynamic
+      switch=switch1 ports=ether1 src-mac-address=CC:2D:E0:11:22:33/FF:FF:FF:FF:FF:FF protocol=udp dst-port=100 copy-to-cpu=no redirect-to-cpu=no mirror=no 
+
+ 1  D ;;; dot1x dynamic
+      switch=switch1 ports=ether1 src-mac-address=CC:2D:E0:11:22:33/FF:FF:FF:FF:FF:FF copy-to-cpu=no redirect-to-cpu=no mirror=no new-dst-ports=&quot;&quot;
+
+# Allow only authenticated source MAC address, drop all other packets
+Mikrotik-Switching-Filter = &quot;action allow, src-mac-address none action drop&quot;
+
+/interface ethernet switch rule print 
+Flags: X - disabled, I - invalid; D - dynamic 
+ 0  D ;;; dot1x dynamic
+      switch=switch1 ports=ether1 src-mac-address=CC:2D:E0:01:6D:EB/FF:FF:FF:FF:FF:FF copy-to-cpu=no redirect-to-cpu=no mirror=no 
+
+ 1  D ;;; dot1x dynamic
+      switch=switch1 ports=ether1 copy-to-cpu=no redirect-to-cpu=no mirror=no new-dst-ports=&quot;&quot; 
+
+</pre>
+</div></div><p><br/></p><p>In our example, Supplicant2 on ether2 is only allowed to access the 192.168.50.0/24 network with UDP destination port 50, all other traffic should be dropped. First, make sure that hardware offloading is working on bridge ports, otherwise switch rules might not work properly.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface bridge port print
+Flags: X - disabled, I - inactive, D - dynamic, H - hw-offload 
+ #     INTERFACE                   BRIDGE                   HW  PVID PRIORITY  PATH-COST INTERNAL-PATH-COST    HORIZON
+ 0   H ether1                      bridge1                  yes    1     0x80         10                 10       none
+ 1   H ether2                      bridge1                  yes    1     0x80         10                 10       none
+ 2   H ether12                     bridge1                  yes    1     0x80         10                 10       none</pre>
+</div></div><p><br/>With enabled RADIUS debug logs it is possible to see complete RADIUS message packets with all attributes. In our example, Mikrotik-Switching-Filter attribute is received in Access-Accept message from Radius server:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: text; gutter: false">02:35:38 radius,debug,packet received Access-Accept with id 121 from 10.1.2.3:1812 
+(..)
+02:35:38 radius,debug,packet     MT-Switching-Filter = &quot;mac-protocol 2048 dst-address 192.168.50.0/24 dst-port 50 protocol 17 action allow,action drop&quot;</pre>
+</div></div><p><br/>The dynamic switch rules are now present under the switch menu:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface ethernet switch rule print
+Flags: X - disabled, I - invalid, D - dynamic 
+ 0  D ;;; dot1x dynamic
+      switch=switch1 ports=ether2 src-mac-address=CC:2D:E0:11:22:33/FF:FF:FF:FF:FF:FF mac-protocol=ip dst-address=192.168.50.0/24 protocol=udp dst-port=50 copy-to-cpu=no redirect-to-cpu=no mirror=no 
+
+ 1  D ;;; dot1x dynamic
+      switch=switch1 ports=ether2 src-mac-address=CC:2D:E0:11:22:33/FF:FF:FF:FF:FF:FF copy-to-cpu=no redirect-to-cpu=no mirror=no new-dst-ports=&quot;&quot; </pre>
+</div></div><br/><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p><span style="color:var(--ds-text-accent-lime-bolder,#37471f);">Dynamic switch rules will only apply to RouterBoards with switch rule support - CRS3xx, CRS5xx series switches, CCR2116, CCR2216, and devices with QCA8337, Atheros8327 and Atheros8316 switch chips. CRS1xx/2xx series switches do no support this functionality. Take into consideration the maximum number of rules for each device, see<span> </span></span><a href="https://help.mikrotik.com/docs/display/ROS/CRS3xx%2C+CRS5xx%2C+CCR2116%2C+CCR2216+switch+chip+features#CRS3xx,CRS5xx,CCR2116,CCR2216switchchipfeatures-Models" rel="nofollow">CRS3xx, CRS5xx, CCR2116, CCR2216 table</a><span style="color:var(--ds-text-accent-lime-bolder,#37471f);"><span> </span>and<span> </span></span><a href="https://help.mikrotik.com/docs/display/ROS/Switch+Chip+Features#heading-Introduction" rel="nofollow">basic switch chip table</a></p></div></div><h2 class="auto-cursor-target" id="Dot1X-RouterOSSupplicantconfiguration"><span style="font-size: 20.0px;letter-spacing: -0.008em;">RouterOS Supplicant configuration</span></h2><p><span style="color:var(--ds-text-accent-lime-bolder,#37471f);">CA certificates are required for<span> </span></span><code>eap-tls<span style="color:var(--ds-text-accent-lime-bolder,#37471f);">,<span> </span></span>eap-ttls</code><span style="color:var(--ds-text-accent-lime-bolder,#37471f);"><span> </span>and<span> </span></span><code>eap-peap</code><span style="color:var(--ds-text-accent-lime-bolder,#37471f);"><span> </span>authentication methods. Additionally a client certificate is required for<span> </span></span><code>eap-tls</code><span style="color:var(--ds-text-accent-lime-bolder,#37471f);"><span> </span>method. For this example we have already imported a P12 certificate bundle with self signed client and CA certificates. For more information how to import certificates in RouterOS, please visit<span> </span></span><a href="https://help.mikrotik.com/docs/display/ROS/Certificates" rel="nofollow">System/Certificates</a><span style="color:var(--ds-text-accent-lime-bolder,#37471f);">.</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/certificate print 
+Flags: K - private-key, L - crl, C - smart-card-key, A - authority, I - issued, R - revoked, E - expired, T - trusted 
+ #         NAME                                            COMMON-NAME                                         SUBJECT-ALT-NAME                             FINGERPRINT                                        
+ 0 K  A  T dot1x-client                                    ez_dot1x-client                                     IP:10.1.2.34
+ 1  L A  T dot1x CA                                        ca            </pre>
+</div></div><p class="auto-cursor-target"><span style="color:var(--ds-text-accent-lime-bolder,#37471f);">Simply add a new dot1x client instance that will initiate authentication process.</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface dot1x client
+add anon-identity=anonymous client-certificate=dot1x-client eap-methods=eap-tls identity=dot1x-user interface=ether1 password=dot1xtest</pre>
+</div></div><p class="auto-cursor-target"><span style="color:var(--ds-text-accent-lime-bolder,#37471f);">If authentication was successful, the interface should have status<span> </span></span>authenticated<span style="color:var(--ds-text-accent-lime-bolder,#37471f);">.</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface dot1x client print 
+Flags: I - inactive, X - disabled 
+ 0   interface=ether1 eap-methods=eap-peap identity=&quot;dot1x-user&quot; password=&quot;dot1xtest&quot; anon-identity=&quot;anonymous&quot; client-certificate=dot1x-client status=&quot;authenticated&quot; </pre>
+</div></div></div>
+</div>
+</div>
+</div>
+                    </div>
+
+                                                            <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328090/33325065.png">Dot1x-setup.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328090/54165516.jpg">Dot1x-setup.jpg</a> (image/jpeg)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328090/54165510.jpg">Dot1x-setup.jpg</a> (image/jpeg)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

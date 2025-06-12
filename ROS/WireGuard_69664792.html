@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : WireGuard</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Virtual-Private-Networks_119144597.html">Virtual Private Networks</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : WireGuard
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Unknown User (emils)</span>, last updated by <span class='editor'> Oskars K.</span> on Jan 07, 2025
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <h1 id="WireGuard-Introduction">Introduction</h1><p><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742034560 {padding: 0px;}
+div.rbtoc1747742034560 ul {margin-left: 0px;}
+div.rbtoc1747742034560 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742034560'>
+<ul class='toc-indentation'>
+<li><a href='#WireGuard-Introduction'>Introduction</a></li>
+<li><a href='#WireGuard-Properties'>Properties</a>
+<ul class='toc-indentation'>
+<li><a href='#WireGuard-Read-onlyproperties'>Read-only properties</a></li>
+</ul>
+</li>
+<li><a href='#WireGuard-Peers'>Peers</a>
+<ul class='toc-indentation'>
+<li><a href='#WireGuard-Read-onlyproperties.1'>Read-only properties</a></li>
+</ul>
+</li>
+<li><a href='#WireGuard-Applicationexamples'>Application examples</a>
+<ul class='toc-indentation'>
+<li><a href='#WireGuard-SitetoSiteWireGuardtunnel'>Site to Site WireGuard tunnel</a>
+<ul class='toc-indentation'>
+<li><a href='#WireGuard-WireGuardinterfaceconfiguration'>WireGuard interface configuration</a></li>
+<li><a href='#WireGuard-Peerconfiguration'>Peer configuration</a></li>
+<li><a href='#WireGuard-IPandroutingconfiguration'>IP and routing configuration</a></li>
+<li><a href='#WireGuard-Firewallconsiderations'>Firewall considerations</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href='#WireGuard-RoadWarriorWireGuardtunnel'>RoadWarrior WireGuard tunnel</a>
+<ul class='toc-indentation'>
+<li><a href='#WireGuard-RouterOSconfiguration'>RouterOS configuration</a></li>
+<li><a href='#WireGuard-iOSconfiguration'>iOS configuration</a></li>
+<li><a href='#WireGuard-Windows10configuration'>Windows 10 configuration</a></li>
+</ul>
+</li>
+</ul>
+</div></p><p>WireGuard<sup>®</sup> is an extremely simple yet fast and modern VPN that utilizes state-of-the-art cryptography. It aims to be faster, simpler, leaner, and more useful than IPsec while avoiding massive headaches. It intends to be considerably more performant than OpenVPN. WireGuard is designed as a general-purpose VPN for running on embedded interfaces and super computers alike, fit for many different circumstances. Initially released for the Linux kernel, it is now cross-platform (Windows, macOS, BSD, iOS, Android) and widely deployable.</p><h1 id="WireGuard-Properties"><span class="mw-headline">Properties</span></h1><div class="table-wrap"><table class="wrapped relative-table confluenceTable" style="width: 99.6822%;"><colgroup><col style="width: 17.9951%;"/><col style="width: 81.9806%;"/></colgroup><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>comment</strong> (<em>string</em>; Default: )</td><td class="confluenceTd">Short description of the tunnel.</td></tr><tr><td colspan="1" class="confluenceTd"><strong>disabled</strong> (<em>yes | no</em>; Default: <strong>no</strong>)</td><td colspan="1" class="confluenceTd">Enables/disables the tunnel.</td></tr><tr><td colspan="1" class="confluenceTd"><strong>listen-port</strong> (<em>integer; Default: 13231</em>)</td><td colspan="1" class="confluenceTd">Port for WireGuard service to listen on for incoming sessions.</td></tr><tr><td colspan="1" class="confluenceTd"><strong>mtu</strong> (<em>integer [0..65536]</em>; Default: <strong>1420</strong>)</td><td colspan="1" class="confluenceTd">Layer3 Maximum transmission unit.</td></tr><tr><td colspan="1" class="confluenceTd"><strong>name</strong> (<em>string</em>; Default: )</td><td colspan="1" class="confluenceTd">Name of the tunnel.</td></tr><tr><td colspan="1" class="confluenceTd"><strong>private-key</strong> (<em>string</em>; Default: )</td><td colspan="1" class="confluenceTd">A base64 private key. If not specified, it will be automatically generated upon interface creation. <span style="color:var(--ds-text-accent-teal-bolder,#164555);">Each network interface has a private key and a list of peers. </span></td></tr></tbody></table></div><h2 class="auto-cursor-target" id="WireGuard-Read-onlyproperties">Read-only properties</h2><div class="table-wrap"><table class="relative-table wrapped confluenceTable" style="width: 99.5597%;"><colgroup><col style="width: 18.1526%;"/><col style="width: 81.7989%;"/></colgroup><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>public-key</strong> (<em>string</em>)</td><td class="confluenceTd">A base64 public key is calculated from the private key. <span style="color:var(--ds-text-accent-teal-bolder,#164555);">Each peer has a public key. Public keys are used by peers to authenticate each other. They can be passed around for use in configuration files.</span></td></tr><tr><td colspan="1" class="confluenceTd"><strong>running</strong> (<em>yes | no</em>)</td><td colspan="1" class="confluenceTd"><p><span class="aCOpRe">Whether the interface is running. </span></p></td></tr></tbody></table></div><h1 class="auto-cursor-target" id="WireGuard-Peers">Peers</h1><div class="table-wrap"><table class="relative-table wrapped confluenceTable" style="width: 100.0%;"><colgroup><col style="width: 18.073%;"/><col style="width: 81.927%;"/></colgroup><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>allowed-address</strong> (<em>IP/IPv6 prefix</em>; <em>Default</em>: )</td><td class="confluenceTd">List of IP (v4 or v6) addresses with CIDR masks from which incoming traffic for this peer is allowed and to which outgoing traffic for this peer is directed. This IP address has to be in the same subnet as WireGuard interface set on ROS. If WireGuard interface is at 192.168.99.1/24, You have to input 192.168.99.2 to the client. By adding this IP under 'Allowed Address', you are saying that only this specific client (phone for example) is permitted to connect to this peer configuration. <span style="color:var(--ds-text,#172b4d);">Allowed-address range cannot overlap on one interface, so you need to set own range for each peer.</span></td></tr><tr><td class="confluenceTd"><strong>comment</strong> <em>(string; Default: )</em></td><td class="confluenceTd">Short description of the peer.</td></tr><tr><td class="confluenceTd"><strong>disabled</strong> <em>(yes | no; Default: <strong>no</strong>)</em></td><td class="confluenceTd">Enables/disables the peer.</td></tr><tr><td class="confluenceTd"><strong>endpoint-address</strong> <em>(IP/Hostname; Default: )</em></td><td class="confluenceTd">The IP address or hostname. It is used by WireGuard to establish a secure connection between two peers.</td></tr><tr><td class="confluenceTd"><strong>endpoint-port</strong> (<em>integer:0..65535</em><em>; Default: </em>)</td><td class="confluenceTd">The Endpoint port is the UDP port on which a WireGuard peer listens for incoming traffic.</td></tr><tr><td class="confluenceTd"><strong>interface</strong> (<em>string; Default: </em>)</td><td class="confluenceTd">Name of the WireGuard interface the peer belongs to.</td></tr><tr><td class="confluenceTd"><strong>persistent-keepalive</strong> (<em>integer:0..65535; Default: 0</em>)</td><td class="confluenceTd">A seconds interval, between 1 and 65535 inclusive, of how often to send an authenticated empty packet to the peer for the purpose of keeping a stateful firewall or NAT mapping valid persistently. For example, if the interface very rarely sends traffic, but it might at anytime receive traffic from a peer, and it is behind NAT, the interface might benefit from having a persistent keepalive interval of 25 seconds.</td></tr><tr><td class="confluenceTd"><strong>preshared-key </strong>(<em>string; Default: </em>)</td><td class="confluenceTd">A base64 preshared key. Optional, and may be omitted. This option adds an additional layer of symmetric-key cryptography to be mixed into the already existing public-key cryptography, for post-quantum resistance. <span style="color:var(--ds-text,#172b4d);">Also can be generated automatically or entered manually, when the key is provided by the system administrator.</span></td></tr><tr><td class="confluenceTd"><strong>private-key</strong> <em>(auto/none; Default: <strong>none</strong>)</em></td><td class="confluenceTd">A base64 private key.</td></tr><tr><td class="confluenceTd"><p><strong>public-key </strong>(<em>string; Default: </em>)</p></td><td class="confluenceTd"><p><span style="color:var(--ds-text,#172b4d);">A base64 public key is calculated from the private key. <span style="color:var(--ds-text-accent-teal-bolder,#164555);">Each peer has a public key. Public keys are used by peers to authenticate each other. They can be passed around for use in configuration files.</span></span></p></td></tr><tr><td class="confluenceTd"><p><strong>show-client-config<span style="color:var(--ds-text,#172b4d);"> </span></strong></p></td><td class="confluenceTd"><p><em><span style="color:var(--ds-text,#172b4d);"><span style="color:var(--ds-text,#172b4d);"><span> W</span>ill show already created Peer configuration and generate a QR code for easier peer setup on a client device. Does not affect the WireGuard Server.</span></span></em></p></td></tr><tr><td colspan="2" class="confluenceTd"><p>Used for the client-server setup scenario, when the configuration is imported using a qr code for a client, configuration details on tab with qrcode will appear once it has been set in the fields:</p></td></tr><tr><td class="confluenceTd"><p><strong>client-address </strong><em><span style="color:var(--ds-text,#172b4d);">(IP/IPv6 prefix; Default: )</span></em></p></td><td class="confluenceTd"><p><span style="color:var(--ds-text,#172b4d);"><span>When <span style="color:var(--ds-text,#172b4d);">imported using a qr code for a client (for example, a phone)</span>, then this address for the wg interface is set on that device.</span></span></p></td></tr><tr><td class="confluenceTd"><p><strong>client-dns </strong><em><span style="color:var(--ds-text,#172b4d);">(IP/IPv6 prefix; Default: )</span></em></p></td><td class="confluenceTd"><p><span style="color:var(--ds-text,#172b4d);"><span><span style="color:var(--ds-text,#172b4d);">Specify when using WireGuard Server as a VPN gateway for peer traffic.</span></span></span></p></td></tr><tr><td class="confluenceTd"><p><strong>client-endpoint </strong><em>(IP/IPv6 prefix; Default: )</em></p></td><td class="confluenceTd"><p><span style="color:var(--ds-text,#172b4d);"><span><span style="color:var(--ds-text,#172b4d);">The IP address and port number of the WireGuard Server.</span></span></span></p></td></tr><tr><td class="confluenceTd"><p><strong>client-keepalive </strong>(<em>integer:0..65535; Default: 0</em>)</p></td><td class="confluenceTd"><p><span style="color:var(--ds-text,#172b4d);"><span>Same as <strong>persistent-keepalive</strong> but from peer side.</span></span></p></td></tr><tr><td class="confluenceTd"><p><strong>client-listen-port </strong>(<em>integer:0..65535</em><em>; Default: </em>)</p></td><td class="confluenceTd"><p><span style="color:var(--ds-text,#172b4d);"><span><span style="color:var(--ds-text,#172b4d);">The local port upon which this WireGuard tunnel will listen for incoming traffic from peers, and the port from which it will source outgoing packets.</span></span></span></p></td></tr><tr><td class="confluenceTd"><p><strong>name </strong>(<em>string; Default: </em>)</p></td><td class="confluenceTd"><p><span style="color:var(--ds-text,#172b4d);"><span><span style="color:var(--ds-text,#172b4d);">Allows adding name to a peer. Name will be used as a reference for a peer in WireGuard logs. (Available from RouterOS version 7.15)<br/></span></span></span></p></td></tr><tr><td class="confluenceTd"><p><strong>responder </strong><em>(yes | no; Default: </em><strong><em>no</em></strong><em>)</em></p></td><td class="confluenceTd"><p><span><span>Specifies if peer is intended to be connection initiator or only responder. Should be used on WireGuard devices that are used as &quot;servers&quot; for other devices as clients to connect to. Otherwise router will all repeatedly try to connect &quot;endpoint-address&quot; or &quot;current-endpoint-address&quot;.</span></span></p></td></tr></tbody></table></div><p><strong>*AllowedIPs </strong> configuration that is provided to the client through WireGuard peer export (configuration file or QR code) can not be changed and will be &quot;0.0.0.0/0, ::/0&quot; at the moment. If it is necessary to change these values on remote end, then that is up to the remote peer software used for WireGuard connection.</p><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p style="text-align: left;">Minimum parameters must be specified for importing on the client device by QR-code/file.</p><p style="text-align: left;">Example:<br/><br/></p><pre class="code-java"><span class="code-keyword" style="color:var(--ds-text-accent-magenta,#943d73);">interface</span>: wireguard1
+<span class="code-keyword" style="color:var(--ds-text-accent-magenta,#943d73);">public</span>-key: v/oIzPyFm1FPHrqhytZgsKjU7mUToQHLrW+Tb5e601M=
+<span class="code-keyword" style="color:var(--ds-text-accent-magenta,#943d73);">private</span>-key: KMwxqe/iXAU8Jn9dd1o5pPdHep2blGxNWm9I944/I24=
+allowed-address: 192.168.88.3/24
+client-address: 192.168.88.3/32
+client-endpoint: example.com:13231</pre></div></div><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>When using interface/wireguard/wg-import file=, you may get Could not parse error, if Wireguard import file starts with #, use it clean as per example:</p><pre class="code-java">[Interface]<br/>Address =192.168.88.3/24<br/>ListenPort = 13533<br/>PrivateKey = UBLqJEFZZf9wszZSUF2BPWa9dsMX99RbEcxlNfxWffk=</pre></div></div><h2 class="auto-cursor-target" id="WireGuard-Read-onlyproperties.1">Read-only properties</h2><div class="table-wrap"><table class="relative-table wrapped confluenceTable" style="width: 99.9274%;"><colgroup><col style="width: 18.1159%;"/><col style="width: 81.9047%;"/></colgroup><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td colspan="1" class="confluenceTd"><strong>current-endpoint-address </strong>(<em>IP/IPv6</em>)</td><td colspan="1" class="confluenceTd">The most recent source IP address of correctly authenticated packets from the peer.</td></tr><tr><td colspan="1" class="confluenceTd"><strong>current-endpoint-port </strong>(<em>integer</em>)</td><td colspan="1" class="confluenceTd">The most recent source IP port of correctly authenticated packets from the peer.</td></tr><tr><td colspan="1" class="confluenceTd"><strong>last-handshake </strong>(i<em>nteger</em>)</td><td colspan="1" class="confluenceTd">Time in seconds after the last successful handshake.</td></tr><tr><td colspan="1" class="confluenceTd"><strong>rx </strong>(<em>integer</em>)</td><td colspan="1" class="confluenceTd">The total amount of bytes received from the peer.</td></tr><tr><td colspan="1" class="confluenceTd"><strong>tx </strong>(<em>integer</em>)</td><td colspan="1" class="confluenceTd">The total amount of bytes transmitted to the peer.</td></tr></tbody></table></div><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p><span style="color:var(--ds-text-accent-purple-bolder,#352c63);">When you encounter issues with reply traffic having the wrong source address, using NAT to translate packet source addresses to your loopback interface is a common workaround. This approach helps ensure that the source address is consistent and correct when packets are routed back through the network.</span></p></div></div><h1 class="auto-cursor-target" id="WireGuard-Applicationexamples">Application examples</h1><h2 class="auto-cursor-target" id="WireGuard-SitetoSiteWireGuardtunnel">Site to Site WireGuard tunnel</h2><p><span style="color:var(--ds-text,#333333);">Consider setup as illustrated below. Two remote office routers are connected to the internet and office workstations are behind NAT. Each office has its own local subnet, 10.1.202.0/24 for Office1 and 10.1.101.0/24 for Office2. Both remote offices need secure tunnels to local networks behind routers.</span></p><p><span class="confluence-embedded-file-wrapper image-center-wrapper"><img class="confluence-embedded-image image-center" draggable="false" src="attachments/69664792/69664815.png" data-image-src="attachments/69664792/69664815.png" data-unresolved-comment-count="0" data-linked-resource-id="69664815" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="Site-to-site-ipsec-example.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="69664792" data-linked-resource-container-version="42" tabindex="0" alt=""></span></p><h3 id="WireGuard-WireGuardinterfaceconfiguration">WireGuard interface configuration</h3><p>First of all, WireGuard interfaces must be configured on both sites to allow automatic private and public key generation. The command is the same for both routers:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface/wireguard
+add listen-port=13231 name=wireguard1</pre>
+</div></div><p>Now when printing the interface details, both private and public keys should be visible to allow an exchange.</p><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p><span style="color:var(--ds-text,#333333);">Any private key will never be needed on the remote side device - hence the name private.</span></p></div></div><p><strong>Office1</strong></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface/wireguard print 
+Flags: X - disabled; R - running 
+ 0  R name=&quot;wireguard1&quot; mtu=1420 listen-port=13231 private-key=&quot;yKt9NJ4e5qlaSgh48WnPCDCEkDmq+VsBTt/DDEBWfEo=&quot; 
+      public-key=&quot;u7gYAg5tkioJDcm3hyS7pm79eADKPs/ZUGON6/fF3iI=&quot; </pre>
+</div></div><p class="auto-cursor-target"><strong>Office2</strong></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface/wireguard/print 
+Flags: X - disabled; R - running 
+ 0  R name=&quot;wireguard1&quot; mtu=1420 listen-port=13231 private-key=&quot;KMwxqe/iXAU8Jn9dd1o5pPdHep2blGxNWm9I944/I24=&quot; 
+      public-key=&quot;v/oIzPyFm1FPHrqhytZgsKjU7mUToQHLrW+Tb5e601M=&quot; </pre>
+</div></div><h3 class="auto-cursor-target" id="WireGuard-Peerconfiguration">Peer configuration</h3><p>Peer configuration defines who can use the WireGuard interface and what kind of traffic can be sent over it. To identify the remote peer, its public key must be specified together with the created WireGuard interface.</p><p><strong>Office1</strong></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface/wireguard/peers
+add allowed-address=10.1.101.0/24,10.255.255.1/32 endpoint-address=192.168.80.1 endpoint-port=13231 interface=wireguard1 \
+public-key=&quot;v/oIzPyFm1FPHrqhytZgsKjU7mUToQHLrW+Tb5e601M=&quot;</pre>
+</div></div><p><strong>Office2</strong></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface/wireguard/peers
+add allowed-address=10.1.202.0/24,10.255.255.2/32 endpoint-address=192.168.90.1 endpoint-port=13231 interface=wireguard1 \
+public-key=&quot;u7gYAg5tkioJDcm3hyS7pm79eADKPs/ZUGON6/fF3iI=&quot;</pre>
+</div></div><h3 class="auto-cursor-target" id="WireGuard-IPandroutingconfiguration">IP and routing configuration</h3><p>Lastly, IP and routing information must be configured to allow traffic to be sent over the tunnel.</p><p><strong>Office1</strong></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip/address
+add address=10.255.255.1/30 interface=wireguard1
+/ip/route
+add dst-address=10.1.101.0/24 gateway=wireguard1</pre>
+</div></div><p><strong>Office2</strong></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip/address
+add address=10.255.255.2/30 interface=wireguard1
+/ip/route
+add dst-address=10.1.202.0/24 gateway=wireguard1</pre>
+</div></div><h3 class="auto-cursor-target" id="WireGuard-Firewallconsiderations">Firewall considerations</h3><p class="auto-cursor-target">The default RouterOS firewall will block the tunnel from establishing properly. The traffic should be accepted in the &quot;input&quot; chain before any drop rules on both sites.</p><p><strong>Office1</strong></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip/firewall/filter
+add action=accept chain=input dst-port=13231 protocol=udp src-address=192.168.80.1</pre>
+</div></div><p><strong>Office2</strong></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip/firewall/filter
+add action=accept chain=input dst-port=13231 protocol=udp src-address=192.168.90.1</pre>
+</div></div><p class="auto-cursor-target">Additionally, it is possible that the &quot;forward&quot; chain restricts the communication between the subnets as well, so such traffic should be accepted before any drop rules as well.</p><p><strong>Office1</strong></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip/firewall/filter
+add action=accept chain=forward dst-address=10.1.202.0/24 src-address=10.1.101.0/24
+add action=accept chain=forward dst-address=10.1.101.0/24 src-address=10.1.202.0/24</pre>
+</div></div><p><strong>Office2</strong></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip/firewall/filter
+add action=accept chain=forward dst-address=10.1.101.0/24 src-address=10.1.202.0/24
+add action=accept chain=forward dst-address=10.1.202.0/24 src-address=10.1.101.0/24</pre>
+</div></div><h1 class="auto-cursor-target" id="WireGuard-RoadWarriorWireGuardtunnel">RoadWarrior WireGuard tunnel</h1><h2 id="WireGuard-RouterOSconfiguration">RouterOS configuration</h2><p>Add a new WireGuard interface and assign an IP address to it.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface wireguard
+add listen-port=13231 name=wireguard1
+/ip address
+add address=192.168.100.1/24 interface=wireguard1</pre>
+</div></div><p class="auto-cursor-target">Adding a new WireGuard interface will automatically generate a pair of private and public keys. You will need to configure the public key on your remote devices. To obtain the public key value, simply print out the interface details.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@home] &gt; /interface wireguard print 
+Flags: X - disabled; R - running 
+ 0  R name=&quot;wireguard1&quot; mtu=1420 listen-port=13231 private-key=&quot;cBPD6JNvbEQr73gJ7NmwepSrSPK3np381AWGvBk/QkU=&quot; 
+      public-key=&quot;VmGMh+cwPdb8//NOhuf1i1VIThypkMQrKAO9Y55ghG8=&quot; </pre>
+</div></div><p class="auto-cursor-target">For the next steps, you will need to figure out the public key of the remote device. Once you have it, add a new peer by specifying the public key of the remote device and allowed addresses that will be allowed over the WireGuard tunnel.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface wireguard peers
+add allowed-address=192.168.100.2/32 interface=wireguard1 public-key=&quot;&lt;paste public key from remote device here&gt;&quot;</pre>
+</div></div><p class="auto-cursor-target"><strong>Firewall considerations</strong></p><p>If you have default or strict firewall configured, you need to allow remote device to establish the WireGuard connection to your device.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip firewall filter
+add action=accept chain=input comment=&quot;allow WireGuard&quot; dst-port=13231 protocol=udp place-before=1</pre>
+</div></div><p class="auto-cursor-target">To allow remote devices to connect to the RouterOS services (e.g. request DNS), allow the WireGuard subnet in input chain.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip firewall filter
+add action=accept chain=input comment=&quot;allow WireGuard traffic&quot; src-address=192.168.100.0/24 place-before=1</pre>
+</div></div><p class="auto-cursor-target">Or simply add the WireGuard interface to &quot;LAN&quot; interface list.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface list member
+add interface=wireguard1 list=LAN</pre>
+</div></div><h2 class="auto-cursor-target" id="WireGuard-iOSconfiguration">iOS configuration</h2><p class="auto-cursor-target">Download the WireGuard application from the App Store. Open it up and create a new configuration from scratch.</p><p class="auto-cursor-target"><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/69664792/132350101.png" data-image-src="attachments/69664792/132350101.png" data-unresolved-comment-count="0" data-linked-resource-id="132350101" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="IMG_4392.PNG" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="69664792" data-linked-resource-container-version="42" tabindex="0" alt=""></span></p><p class="auto-cursor-target">First of all give your connection a &quot;Name&quot; and choose to generate a keypair. The generated public key is necessary for peer's configuration on RouterOS side.</p><p class="auto-cursor-target"><strong><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/69664792/132350102.png" data-image-src="attachments/69664792/132350102.png" data-unresolved-comment-count="0" data-linked-resource-id="132350102" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="IMG_4393.PNG" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="69664792" data-linked-resource-container-version="42" tabindex="0" alt=""></span><br/></strong></p><p class="auto-cursor-target">Specify an IP address in &quot;Addresses&quot; field that is in the same subnet as configured on the server side. This address will be used for communication. For this example, we used 192.168.100.1/24 on the RouterOS side, you can use 192.168.100.2 here.</p><p class="auto-cursor-target">If necessary, configure the DNS servers. If allow-remote-requests is set to yes under IP/DNS section on the RouterOS side, you can specify the remote WireGuard IP address here.</p><p class="auto-cursor-target"><strong><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/69664792/132350104.png" data-image-src="attachments/69664792/132350104.png" data-unresolved-comment-count="0" data-linked-resource-id="132350104" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="IMG_4394.PNG" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="69664792" data-linked-resource-container-version="42" tabindex="0" alt=""></span><br/></strong></p><p class="auto-cursor-target">Click &quot;Add peer&quot; which reveals more parameters.</p><p class="auto-cursor-target">The &quot;Public key&quot; value is the public key value that is generated on the WireGuard interface on RouterOS side.</p><p class="auto-cursor-target">&quot;Endpoint&quot; is the IP or DNS with port number of the RouterOS device that the iOS device can communicate with over the Internet.</p><p class="auto-cursor-target">&quot;Allowed IPs&quot; are set to 0.0.0.0/0 to allow all traffic to be sent over the WireGuard tunnel.</p><p class="auto-cursor-target"><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/69664792/132350106.png" data-image-src="attachments/69664792/132350106.png" data-unresolved-comment-count="0" data-linked-resource-id="132350106" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="IMG_4396.PNG" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="69664792" data-linked-resource-container-version="42" tabindex="0" alt=""></span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">Depending on your configuration, you may need to add a NAT rule
+chain=dstnat action=dst-nat to-ports=port protocol=udp in-interface=interface dst-port=port</pre>
+</div></div><h2 class="auto-cursor-target" id="WireGuard-Windows10configuration">Windows 10 configuration</h2><p>Download WireGuard installer from Wireguard<br/>Run as Administrator.</p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/69664792/180519026.png" data-image-src="attachments/69664792/180519026.png" data-unresolved-comment-count="0" data-linked-resource-id="180519026" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="test.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="69664792" data-linked-resource-container-version="42" tabindex="0" alt=""></span></p><p>Press Ctrl+n to add new empty tunnel, add name for interface, Public key should be auto generated copy it to RouterOS peer configuration.<br/>Add to server configuration, so full configuration looks like this (keep your auto generated PrivateKey in [Interface] section:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: actionscript3; gutter: false">[Interface]
+PrivateKey = your_autogenerated_private_key=
+Address = 192.168.100.2/24
+DNS = 192.168.100.1
+
+[Peer]
+PublicKey = your_MikroTik_public_KEY=
+AllowedIPs = 0.0.0.0/0
+Endpoint = example.com:13231</pre>
+</div></div><p><br/>Save and Activate<br/><br/><br/></p>
+                    </div>
+
+                                                            <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/69664792/69664815.png">Site-to-site-ipsec-example.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/69664792/132350101.png">IMG_4392.PNG</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/69664792/132350102.png">IMG_4393.PNG</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/69664792/132350104.png">IMG_4394.PNG</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/69664792/132350106.png">IMG_4396.PNG</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/69664792/180519026.png">test.png</a> (image/png)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

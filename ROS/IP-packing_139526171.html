@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : IP packing</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Extended-features_120324125.html">Extended features</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : IP packing
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Artūrs C.</span>, last updated by <span class='editor'> Guntis G.</span> on Apr 23, 2024
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <h1 id="IPpacking-Overview"><span class="mw-headline">Overview</span></h1><p>IP Packing provides packet packaging service on network links. It allows simple packet aggregation into larger packets and compression of the contents of packets.</p><h1 id="IPpacking-Requirements"><span class="mw-headline">Requirements</span></h1><p>Packet packing is part of the system package and has to have a discovery protocol enabled on an interface.</p><h2 id="IPpacking-Configuration"><span class="mw-headline">Configuration</span></h2><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false"> /ip packing</pre>
+</div></div><p>It required to have a configuration in two places, both routers should be set up symmetrically:</p><ul><li><code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">/ip packing </span></code>- to enable packet aggregation and/or compression on an interface</li><li><code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">/ip neighbor discovery</span></code>- to enable<span> </span>discovery<span> </span>protocol on the interface</li></ul><h2 id="IPpacking-Packingconfiguration"><span class="mw-headline">Packing configuration</span></h2><div class="table-wrap"><table class="relative-table wrapped confluenceTable" style="width: 99.9594%;"><colgroup><col style="width: 15.4406%;"/><col style="width: 84.5594%;"/></colgroup><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd">aggregated-size (<em>20 .. 16384 default:<strong>1500</strong></em>)</td><td class="confluenceTd">size of an aggregated packet that packing will try to achieve before sending a packet over the network</td></tr><tr><td class="confluenceTd">disabled (<em>yes|no</em>)</td><td class="confluenceTd">state of packing rule, if a value is<span> </span><em>yes</em><span> </span>it will be ignored and will not be part of the active configuration</td></tr><tr><td class="confluenceTd">interface (<em>interface name</em>)</td><td class="confluenceTd">packing will try to aggregate and/or compress packets from this interface</td></tr><tr><td class="confluenceTd">packing (<em>simple|compress-all|compress-headers|none</em>)</td><td class="confluenceTd">the action it should perform when a packet is leaving the interface packing rule is configured:<ul><li><code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">s</span><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">imple</span></code> - do just aggregate packets</li><li><code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">compress-all</span></code> - do aggregation and attempt to compress headers and payload of a packet</li><li><code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">compress-headers</span></code> - do aggregation and attempt to compress headers and leave the payload of a packet as is</li><li><code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">none</span></code> - send packets as is</li></ul></td></tr><tr><td class="confluenceTd">unpacking (<em>simple|compress-all|compress-headers|none</em>)</td><td class="confluenceTd">the action should be performed when a packet is received on the interface packing rule is configured on:<ul><li><code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">simple</span></code> - unpack received packets from aggregated packets received from the interface</li><li><code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">compress-all</span></code> - unpack aggregated packet and uncompress headers and payload of a packet</li><li><code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">compress-headers </span></code>- unpack aggregated packets and decompress headers of a packet</li><li><code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">none</span></code> - do nothing with a received packet</li></ul></td></tr></tbody></table></div><div role="region" aria-label="Warning" class="confluence-information-macro  confluence-information-macro-warning" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-error confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>The router should be seen as a neighbor of the router over the interface you want to enable packing on. If in the neighbor list there is no entry indicating packing, packing is not working!</p></div></div><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Packing may increase latency on the link it is configured on.</p></div></div><h1 id="IPpacking-Example"><span class="mw-headline">Example</span></h1><p>Router-A and Router-B are connected with cable with interface ether1 on Router-A and ether3 on Router-B. This example will aggregate packets coming from Router-A, but will leave packets from Router-B intact On Router-A:</p><p>Make sure discovery is enabled:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false"> /ip neighbor discovery set ether1 discover=yes </pre>
+</div></div><p>Add packing rule for the interface:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false"> /ip packing add interface=ether1 aggregated-size=1500 packing=simple unpacking=none </pre>
+</div></div><p>On Router-B:</p><p>Make sure discovery is enabled:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false"> /ip neighbor discovery set ether3 discover=yes </pre>
+</div></div><p>Add packing rule for the interface:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false"> /ip packing add interface=ether3 aggregated-size=1500 packing=none unpacking=simple</pre>
+</div></div><p style="margin-left: 20.0px;"><br/></p>
+                    </div>
+
+                                        
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:54</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

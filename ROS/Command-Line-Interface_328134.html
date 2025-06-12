@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : Command Line Interface</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Management-tools_328121.html">Management tools</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : Command Line Interface
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Normunds R.</span>, last updated on Jan 03, 2025
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p class="auto-cursor-target"><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742021383 {padding: 0px;}
+div.rbtoc1747742021383 ul {margin-left: 0px;}
+div.rbtoc1747742021383 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742021383'>
+<ul class='toc-indentation'>
+<li><a href='#CommandLineInterface-LoginOptions'>Login Options</a></li>
+<li><a href='#CommandLineInterface-BannerandMessages'>Banner and Messages</a></li>
+<li><a href='#CommandLineInterface-CommandPrompt'>Command Prompt</a></li>
+<li><a href='#CommandLineInterface-Hierarchy'>Hierarchy</a></li>
+<li><a href='#CommandLineInterface-ItemNamesandNumbers'>Item Names and Numbers</a>
+<ul class='toc-indentation'>
+<li><a href='#CommandLineInterface-ItemNames'>Item Names</a></li>
+<li><a href='#CommandLineInterface-ItemNumbers'>Item Numbers</a></li>
+</ul>
+</li>
+<li><a href='#CommandLineInterface-GeneralCommands'>General Commands</a></li>
+<li><a href='#CommandLineInterface-InputModes'>Input Modes</a></li>
+<li><a href='#CommandLineInterface-QuickTyping'>Quick Typing</a></li>
+<li><a href='#CommandLineInterface-ConsoleSearch'>Console Search</a></li>
+<li><a href='#CommandLineInterface-InternalChatSystem'>Internal Chat System</a></li>
+<li><a href='#CommandLineInterface-ListofKeys'>List of Keys</a></li>
+</ul>
+</div></p><p>The console is used for accessing the MikroTik Router's configuration and management features using text terminals, either remotely using a serial port, telnet, SSH, console screen within <a href="WinBox_328129.html">WinBox</a>, or directly using monitor and keyboard. The console is also used for writing scripts. This manual describes the general console operation principles. Please consult the Scripting Manual on some advanced console commands and on how to write scripts.</p><h1 id="CommandLineInterface-LoginOptions">Login Options</h1><p>Console login options enable or disable various console features like color, terminal detection, and many other.</p><p>Additional login parameters can be appended to the login name after the '+' sign.</p><pre>    login_name ::= user_name [ '+' parameters ]
+    parameters ::= parameter [ parameters ]
+    parameter ::= [ number ] 'a'..'z'
+    number ::= '0'..'9' [ number ]
+  </pre><p>If the parameter is not present, then the default value is used. If the number is not present then the implicit value of the parameter is used.</p><p>Example: admin+ct80w - will disable console colors, disable auto detection and then set terminal width to 80.</p><div class="table-wrap"><table class="wrapped confluenceTable"><colgroup><col/><col/><col/><col/></colgroup><tbody><tr><th class="confluenceTh">Param</th><th class="confluenceTh">Default</th><th class="confluenceTh">Implicit</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>&quot;w&quot;</strong></td><td class="confluenceTd">auto</td><td class="confluenceTd">auto</td><td class="confluenceTd">Set terminal width</td></tr><tr><td class="confluenceTd"><strong>&quot;h&quot;</strong></td><td class="confluenceTd">auto</td><td class="confluenceTd">auto</td><td class="confluenceTd">Set terminal height</td></tr><tr><td class="confluenceTd"><strong>&quot;c&quot;</strong></td><td class="confluenceTd">on</td><td class="confluenceTd">off</td><td class="confluenceTd">disable/enable console colors</td></tr><tr><td class="confluenceTd"><strong>&quot;t&quot;</strong></td><td class="confluenceTd">off</td><td class="confluenceTd">off</td><td class="confluenceTd">Disable auto-detection of terminal capabilities</td></tr><tr><td class="confluenceTd"><strong>&quot;e&quot;</strong></td><td class="confluenceTd">on</td><td class="confluenceTd">off</td><td class="confluenceTd">Enables &quot;dumb&quot; terminal mode</td></tr></tbody></table></div><h1 id="CommandLineInterface-BannerandMessages">Banner and Messages</h1><p>The login process will display the MikroTik banner and short help after validating the user name and password.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: text; gutter: false">  MMM      MMM       KKK                          TTTTTTTTTTT      KKK
+  MMMM    MMMM       KKK                          TTTTTTTTTTT      KKK
+  MMM MMMM MMM  III  KKK  KKK  RRRRRR     OOOOOO      TTT     III  KKK  KKK
+  MMM  MM  MMM  III  KKKKK     RRR  RRR  OOO  OOO     TTT     III  KKKKK
+  MMM      MMM  III  KKK KKK   RRRRRR    OOO  OOO     TTT     III  KKK KKK
+  MMM      MMM  III  KKK  KKK  RRR  RRR   OOOOOO      TTT     III  KKK  KKK
+
+  MikroTik RouterOS 6.22 (c) 1999-2014       https://www.mikrotik.com/
+
+[?]             Gives the list of available commands
+command [?]     Gives help on the command and list of arguments
+
+[Tab]           Completes the command/word. If the input is ambiguous,
+                a second [Tab] gives possible options
+
+/               Move up to base level
+..              Move up one level
+/command        Use command at the base level</pre>
+</div></div><p><br/></p><p>After the banner can be printed other important information, like <strong>/system note</strong> set by another admin, the last few critical log messages, demo version upgrade reminder, and default configuration description.</p><p>For example, the demo license prompt and last critical messages are printed</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: text; gutter: false">UPGRADE NOW FOR FULL SUPPORT
+----------------------------
+FULL SUPPORT benefits:
+- receive technical support
+- one year feature support
+- one year online upgrades
+    (avoid re-installation and re-configuring your router)
+To upgrade, register your license &quot;software ID&quot;
+on our account server www.mikrotik.com
+
+Current installation &quot;software ID&quot;: ABCD-456
+
+Please press &quot;Enter&quot; to continue!
+
+
+dec/10/2007 10:40:06 system,error,critical login failure for user root from 10.0.0.1 via telnet
+dec/10/2007 10:40:07 system,error,critical login failure for user root from 10.0.0.1 via telnet
+dec/10/2007 10:40:09 system,error,critical login failure for user test from 10.0.0.1 via telnet</pre>
+</div></div><h1 id="CommandLineInterface-CommandPrompt">Command Prompt</h1><p>At the end of the successful login sequence, the login process prints a banner that shows the command prompt, and hands over control to the user.</p><p>Default command prompt consists of user name, system identity, and current command path /&gt;</p><p>For example, change the current path from the root to the interface then go back to the root</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: text; gutter: false">  [admin@MikroTik] &gt; interface [enter]
+  [admin@MikroTik] /interface&gt; / [enter]
+  [admin@MikroTik] &gt;</pre>
+</div></div><p>Use <strong>up arrow</strong> to recall previous commands (if this is a multiline command, then you can press <strong>F8</strong> in order to expand it) from command history (commands that added sensitive data, like passwords, will not be available in the history), <strong>TAB</strong> key to automatically complete words in the command you are typing, <strong>ENTER</strong> key to execute the command, <strong>Control-C</strong> to interrupt currently running command and return to prompt and<strong> ?</strong> to display built-in help, in <strong>RouterOS v7</strong>, <strong>F1 </strong>has to be used instead.</p><p>The easiest way to log out of the console is to press <strong>Control-D</strong> at the command prompt while the command line is empty (You can cancel the current command and get an empty line with <strong>Control-C</strong>, so <strong>Control-C</strong> followed by <strong>Control-D</strong> will log you out in most cases).</p><p>It is possible to write commands that consist of multiple lines. When the entered line is not a complete command and more input is expected, the console shows a continuation prompt that lists all open parentheses, braces, brackets, and quotes, and also trailing backslash if the previous line ended with <strong>backslash</strong>-white-space.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: text; gutter: false">    [admin@MikroTik] &gt; {
+    {... :put (\
+    {(\... 1+2)}
+    3</pre>
+</div></div><p>When you are editing such multiple line entries, the prompt shows the number of current lines and total line count instead of the usual username and system name.</p><pre>line 2 of 3&gt; :put (\</pre><p>Sometimes commands ask for additional input from the user. For example, the command '<code><span style="color:var(--ds-icon-success,#22A06B);">/password</span></code>' asks for old and new passwords. In such cases, the prompt shows the name of the requested value, followed by colon and space.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: text; gutter: false">    [admin@MikroTik] &gt; /password
+    old password: ******
+    new password: **********
+    retype new password: **********</pre>
+</div></div><h1 id="CommandLineInterface-Hierarchy">Hierarchy</h1><p>The console allows the configuration of the router's settings using text commands. Since there is a lot of available commands, they are split into groups organized in a way of hierarchical menu levels. The name of a menu level reflects the configuration information accessible in the relevant section.</p><p>For example, you can issue the <code><span style="color:var(--ds-text-accent-blue,#0055CC);">/ip route</span> <span style="color:var(--ds-icon-success,#22A06B);">print</span></code> command:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: text; gutter: false">[admin@MikroTik] &gt; /ip route print 
+Flags: D - dynamic; X - disabled, I - inactive, A - active; 
+C - connect, S - static, r - rip, b - bgp, o - ospf, d - dhcp, v - vpn 
+ #     DST-ADDRESS        GATEWAY            DISTANCE
+ 0  XS 4.4.4.4            10.155.101.1      
+   D o 0.0.0.0/0          10.155.101.1            110
+ 1  AS 0.0.0.0/0          10.155.101.1              1
+   D b 1.0.4.0/24         10.155.101.1             20
+   D b 1.0.4.0/24         10.155.101.1             20
+   DAb 1.0.4.0/24         10.155.101.1             20
+[admin@MikroTik] &gt;</pre>
+</div></div><p>Instead of typing `/ip route` path before each command, the path can be typed only once to move into this particular branch of the menu hierarchy. Thus, the example above could also be executed like this:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: text; gutter: false">[admin@MikroTik] &gt; /ip route
+[admin@MikroTik] /ip/route&gt; print 
+Flags: D - dynamic; X - disabled, I - inactive, A - active; 
+C - connect, S - static, r - rip, b - bgp, o - ospf, d - dhcp, v - vpn 
+ #     DST-ADDRESS        GATEWAY            DISTANCE
+ 0  XS 4.4.4.4            10.155.101.1      
+   D o 0.0.0.0/0          10.155.101.1            110
+ 1  AS 0.0.0.0/0          10.155.101.1              1
+   D b 1.0.4.0/24         10.155.101.1             20
+   D b 1.0.4.0/24         10.155.101.1             20
+   DAb 1.0.4.0/24         10.155.101.1             20
+[admin@MikroTik] &gt;</pre>
+</div></div><p>Each word in the path can be separated by <strong>space</strong> (as in the example above) or by &quot;/&quot;</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: text; gutter: false">[admin@MikroTik] &gt; /ip/route/
+[admin@MikroTik] /ip/route&gt; print 
+Flags: D - dynamic; X - disabled, I - inactive, A - active; 
+C - connect, S - static, r - rip, b - bgp, o - ospf, d - dhcp, v - vpn 
+ #     DST-ADDRESS        GATEWAY            DISTANCE
+ 0  XS 4.4.4.4            10.155.101.1      
+   D o 0.0.0.0/0          10.155.101.1            110
+ 1  AS 0.0.0.0/0          10.155.101.1              1
+   D b 1.0.4.0/24         10.155.101.1             20
+   D b 1.0.4.0/24         10.155.101.1             20
+   DAb 1.0.4.0/24         10.155.101.1             20
+[admin@MikroTik] &gt;</pre>
+</div></div><p>Notice that the prompt changes in order to reflect where you are located in the menu hierarchy at the moment. To move to the top level again, type &quot; / &quot;</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: text; gutter: false">[admin@MikroTik] &gt; ip route
+[admin@MikroTik] /ip/route&gt; /
+[admin@MikroTik] &gt;</pre>
+</div></div><p>To move up one command level, type &quot; .. &quot;</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: text; gutter: false">[admin@MikroTik] /ip/route&gt; ..
+[admin@MikroTik] /ip&gt;</pre>
+</div></div><p>You can also use<strong> /</strong> and <strong>..</strong> to execute commands from other menu levels without changing the current level:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: text; gutter: false">[admin@MikroTik] /ip/route&gt; /ping 10.0.0.1
+10.0.0.1 ping timeout
+2 packets transmitted, 0 packets received, 100% packet loss
+[admin@MikroTik] /ip/firewall/nat&gt; .. service-port print
+Flags: X - disabled, I - invalid
+#   NAME                                                                PORTS
+0   ftp                                                                 21
+1   tftp                                                                69
+2   irc                                                                 6667
+3   h323
+4   sip
+5   pptp
+[admin@MikroTik] /ip/firewall/nat&gt;</pre>
+</div></div><h1 id="CommandLineInterface-ItemNamesandNumbers">Item Names and Numbers</h1><p>Many of the command levels operate with arrays of items: interfaces, routes, users, etc. Such arrays are displayed in similarly-looking lists. All items in the list have an item number followed by flags and parameter values.</p><p>To change the properties of an item, you have to use the set command and specify the name or number of the item.</p><h2 id="CommandLineInterface-ItemNames">Item Names</h2><p>Some lists have items with specific names assigned to each of them. Examples are interface or user levels. There you can use item names instead of item numbers.</p><p>You do not have to use the print command before accessing items by their names, which, as opposed to numbers, are not assigned by the console internally, but are properties of the items. Thus, they would not change on their own. However, there are all kinds of obscure situations possible when several users are changing the router's configuration at the same time. Generally, item names are more &quot;stable&quot; than the numbers, and also more informative, so you should prefer them to numbers when writing console scripts.</p><h2 id="CommandLineInterface-ItemNumbers">Item Numbers</h2><p>Item numbers are assigned by the print command and are not constant - it is possible that two successive print commands will order items differently. But the results of the last print commands are memorized and, thus, once assigned, item numbers can be used even after add, remove and move operations (since version 3, move operation does not renumber items). Item numbers are assigned on a per session basis, they will remain the same until you quit the console or until the next print command is executed. Also, numbers are assigned separately for every item list, so /<code>ip address print</code> will not change the numbering of the interface list.</p><p>You can specify multiple items as targets to some commands. Almost everywhere, where you can write the number of items, you can also write a list of numbers.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: text; gutter: false">[admin@MikroTik] &gt; interface print
+Flags: X - disabled, D - dynamic, R - running
+  #    NAME                 TYPE             MTU
+  0  R ether1               ether            1500
+  1  R ether2               ether            1500
+  2  R ether3               ether            1500
+  3  R ether4               ether            1500
+[admin@MikroTik] &gt; interface set 0,1,2 mtu=1460
+[admin@MikroTik] &gt; interface print
+Flags: X - disabled, D - dynamic, R - running
+  #    NAME                 TYPE             MTU
+  0  R ether1               ether            1460
+  1  R ether2               ether            1460
+  2  R ether3               ether            1460
+  3  R ether4               ether            1500
+[admin@MikroTik] &gt;</pre>
+</div></div><h1 id="CommandLineInterface-GeneralCommands">General Commands</h1><p>There are some commands that are common to nearly all menu levels, namely:<strong><span style="color:var(--ds-icon-success,#22A06B);"> print, set, remove, add, find, get, export, enable, disable, comment, move</span>.</strong> These commands have similar behavior throughout different menu levels.</p><div class="table-wrap"><table class="wrapped confluenceTable"><colgroup><col/><col/></colgroup><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><span style="color:var(--ds-icon-success,#22A06B);"><strong>add</strong></span></td><td class="confluenceTd">This command usually has all the same arguments as a set, except the item number argument. It adds a new item with the values you have specified, usually at the end of the item list, in places where the order of items is relevant. There are some required properties that you have to supply, such as the interface for a new address, while other properties are set to defaults unless you explicitly specify them.<p>Common Parameters</p><ul><li><span style="color:var(--ds-icon-success,#22A06B);">copy-from </span>- Copies an existing item. It takes default values of a new item's properties from another item. If you do not want to make an exact copy, you can specify new values for some properties. When copying items that have names, you will usually have to give a new name to a copy</li><li><span style="color:var(--ds-icon-success,#22A06B);">place-before</span> - places a new item before an existing item with a specified position. Thus, you do not need to use the move command after adding an item to the list</li><li><span style="color:var(--ds-icon-success,#22A06B);">disabled</span> - controls disabled/enabled state of the newly added item(-s)</li><li><span style="color:var(--ds-icon-success,#22A06B);">comment</span> - holds the description of a newly created item</li></ul><p>Return Values</p><ul><li>add command returns the internal number of items it has added</li></ul></td></tr><tr><td class="confluenceTd"><span style="color:var(--ds-icon-success,#22A06B);"><strong>edit</strong></span></td><td class="confluenceTd">This command is associated with the set command. It can be used to edit values of properties that contain a large amount of text, such as scripts, but it works with all editable properties. Depending on the capabilities of the terminal, either a full-screen editor or a single line editor is launched to edit the value of the specified property.</td></tr><tr><td class="confluenceTd"><span style="color:var(--ds-icon-success,#22A06B);"><strong>find</strong></span></td><td class="confluenceTd">The find command has the same arguments as a set, plus the flag arguments like disabled or active that take values yes or no depending on the value of the respective flag. To see all flags and their names, look at the top of the print command's output. The find command returns internal numbers of all items that have the same values of arguments as specified.</td></tr><tr><td class="confluenceTd"><span style="color:var(--ds-icon-success,#22A06B);"><strong>move</strong></span></td><td class="confluenceTd">Changes the order of items in the list. Parameters:<ul><li>the first argument specifies the item(-s) being moved.</li><li>the second argument specifies the item before which to place all items being moved (they are placed at the end of the list if the second argument is omitted).</li></ul></td></tr><tr><td class="confluenceTd"><span style="color:var(--ds-icon-success,#22A06B);"><strong>print</strong></span></td><td class="confluenceTd">Shows all information that's accessible from a particular command level. Thus, <code>/system clock print</code> shows the system date and time, <code>/ip route print</code> shows all routes etc. If there\'s a list of items in the current level and they are not read-only, i.e. you can change/remove them (example of read-only item list is <code>/system history</code>, which shows a history of executed actions), then print command also assigns numbers that are used by all commands that operate with items in this list.<p>Common Parameters:</p><ul><li><span style="color:var(--ds-icon-success,#22A06B);">append - </span></li><li><span style="color:var(--ds-icon-success,#22A06B);">brief</span> - forces the print command to use tabular output form</li><li><span style="color:var(--ds-icon-success,#22A06B);">count-only</span> - shows the number of items</li><li><span style="color:var(--ds-icon-success,#22A06B);">detail</span> - forces the print command to use property=value output form</li><li><span style="color:var(--ds-icon-success,#22A06B);">file</span> - prints the contents of the specific sub-menu into a file on the router.</li><li><span style="color:var(--ds-icon-success,#22A06B);">follow - </span></li><li><span style="color:var(--ds-icon-success,#22A06B);">follow-only - </span></li><li><span style="color:var(--ds-icon-success,#22A06B);">follow-strict - </span></li><li><span style="color:var(--ds-icon-success,#22A06B);">from</span> - show only specified items, in the same order in which they are given.</li><li><span style="color:var(--ds-icon-success,#22A06B);">interval</span> - updates the output from the print command for every interval of seconds.</li><li><span style="color:var(--ds-icon-success,#22A06B);">oid</span> - prints the OID value for properties that are accessible from SNMP.</li><li><span style="color:var(--ds-icon-success,#22A06B);">proplist</span> - comma-separated and ordered list of property names that should be included for the returned items.</li><li><span style="color:var(--ds-icon-success,#22A06B);">show-ids - </span></li><li><span style="color:var(--ds-icon-success,#22A06B);">where</span> - show only items that match specified criteria. The syntax of where the property is similar to the find command.</li><li><span style="color:var(--ds-icon-success,#22A06B);">without-paging</span> - prints the output without stopping after each screenful.</li></ul></td></tr><tr><td class="confluenceTd"><span style="color:var(--ds-icon-success,#22A06B);"><strong>remove</strong></span></td><td class="confluenceTd">Removes specified item(-s) from a list.</td></tr><tr><td class="confluenceTd"><span style="color:var(--ds-icon-success,#22A06B);"><strong>set</strong></span></td><td class="confluenceTd">Allows you to change values of general parameters or item parameters. The set command has arguments with names corresponding to values you can change. Use ? or double Tab to see a list of all arguments. If there is a list of items in this command level, then the set has one action argument that accepts the number of items (or list of numbers) you wish to set up. This command does not return anything.</td></tr></tbody></table></div><h1 id="CommandLineInterface-InputModes">Input Modes</h1><p>It is possible to switch between several input modes:</p><ul><li><strong>Normal mode</strong> - indicated by normal command prompt.</li><li><strong>Safe mode</strong> - safe mode is indicated by the word SAFE after the command prompt. In this mode, the configuration is saved to disk only after the safe mode is turned off. Safe mode can be turned on/off with <strong>Ctrl+X or F4. </strong><a href="Configuration-Management_328155.html#ConfigurationManagement-SafeMode">Read more &gt;&gt;</a></li><li><strong>Hot-lock mode</strong> - indicated by additional yellow &gt;. Hot-lock mode autocompletes commands and can be turned on/off with <strong>F7</strong></li></ul><h1 id="CommandLineInterface-QuickTyping">Quick Typing</h1><p>There are two features in the console that help entering commands much quicker and easier - the [<strong>Tab</strong>] key completions, and abbreviations of command names. Completions work similarly to the bash shell in UNIX. If you press the [<strong>Tab</strong>] key after a part of a word, the console tries to find the command within the current context that begins with this word. If there is only one match, it is automatically appended, followed by a space:</p><p><em>/inte</em><strong>[Tab]_</strong> becomes <strong>/interface _</strong></p><p>If there is more than one match, but they all have a common beginning, which is longer than that what you have typed, then the word is completed to this common part, and no space is appended:</p><p><em>/interface set e</em><strong>[Tab]_</strong> becomes <strong>/interface set ether_</strong></p><p>If you've typed just the common part, pressing the tab key once has no effect. However, pressing it for the second time shows all possible completions in compact form:</p><pre>[admin@MikroTik] &gt; interface set e[Tab]_
+[admin@MikroTik] &gt; interface set ether[Tab]_
+[admin@MikroTik] &gt; interface set ether[Tab]_
+ether1 ether5
+[admin@MikroTik] &gt; interface set ether_
+</pre><p>The <strong>[Tab]</strong> key can be used almost in any context where the console might have a clue about possible values - command names, argument names, arguments that have only several possible values (like names of items in some lists or name of the protocol in firewall and NAT rules). You cannot complete numbers, IP addresses, and similar values.</p><p>Another way to press fewer keys while typing is to abbreviate command and argument names. You can type only the beginning of the command name, and, if it is not ambiguous, the console will accept it as a full name. So typing:</p><pre>[admin@MikroTik] &gt; pi 10.1 c 3 si 100
+</pre><p>equals to:</p><pre>[admin@MikroTik] &gt; ping 10.0.0.1 count 3 size 100
+</pre><p>It is possible to complete not only the beginning, but also any distinctive sub-string of a name: if there is no exact match, the console starts looking for words that have string being completed as first letters of a multiple word name, or that simply contain letters of this string in the same order. If a single such word is found, it is completed at the cursor position. For example:</p><pre>[admin@MikroTik] &gt; interface x[TAB]_
+[admin@MikroTik] &gt; interface export _
+
+[admin@MikroTik] &gt; interface mt[TAB]_
+[admin@MikroTik] &gt; interface monitor-traffic _
+</pre><h1 id="CommandLineInterface-ConsoleSearch">Console Search</h1><p>Console search allows performing keyword search through the list of RouterOS menus and the history. The search prompt is accessible with the <strong>[Ctrl+r] </strong>shortcut. </p><h1 id="CommandLineInterface-InternalChatSystem">Internal Chat System</h1><p>RouterOS console has a built-in internal chat system. This allows remotely located admins to talk to each other directly in RouterOS CLI. To start the conversation prefix the intended message with the # symbol, anyone who is logged in at the time of sending the message will see it.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: text; gutter: false">[admin@MikroTik] &gt; # ready to break internet?
+[admin@MikroTik] &gt; 
+fake_admin: i was born ready
+[admin@MikroTik] &gt; </pre>
+</div></div><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: text; gutter: false">[fake_admin@MikroTik] &gt; 
+admin: ready to break internet?
+[fake_admin@MikroTik] &gt; # i was born ready
+[fake_admin@MikroTik] &gt; </pre>
+</div></div><h1 id="CommandLineInterface-ListofKeys">List of Keys</h1><div class="table-wrap"><table class="wrapped confluenceTable"><colgroup><col/><col/></colgroup><tbody><tr><th class="confluenceTh">Key</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd">Control-C</td><td class="confluenceTd">keyboard interrupt</td></tr><tr><td class="confluenceTd">Control-D</td><td class="confluenceTd">log out (if an input line is empty)</td></tr><tr><td class="confluenceTd">Control-K</td><td class="confluenceTd">clear from the cursor to the end of the line</td></tr><tr><td colspan="1" class="confluenceTd">Control-U</td><td colspan="1" class="confluenceTd">clear from the cursor to the beginning of the line</td></tr><tr><td class="confluenceTd">Control-X or F4</td><td class="confluenceTd">toggle safe mode</td></tr><tr><td class="confluenceTd">F7</td><td class="confluenceTd">toggle hot-lock mode</td></tr><tr><td colspan="1" class="confluenceTd">Control-R or F3</td><td colspan="1" class="confluenceTd">toggle console search</td></tr><tr><td class="confluenceTd">F6</td><td class="confluenceTd">toggle cellar</td></tr><tr><td class="confluenceTd">F1</td><td class="confluenceTd">show context-sensitive help.</td></tr><tr><td class="confluenceTd">Tab</td><td class="confluenceTd">perform line completion. When pressed a second time, show possible completions.</td></tr><tr><td colspan="1" class="confluenceTd">#</td><td colspan="1" class="confluenceTd">Send a message to an internal chat system</td></tr><tr><td class="confluenceTd">Delete</td><td class="confluenceTd">remove character at the cursor</td></tr><tr><td class="confluenceTd">Control-H or Backspace</td><td class="confluenceTd">removes character before cursor and moves the cursor back one position.</td></tr><tr><td class="confluenceTd">Control-\</td><td class="confluenceTd">split line at cursor. Insert newline at the cursor position. Display second of the two resulting lines.</td></tr><tr><td class="confluenceTd">Control-B or Left</td><td class="confluenceTd">move cursor backward one character</td></tr><tr><td class="confluenceTd">Control-F or Right</td><td class="confluenceTd">move cursor forward one character</td></tr><tr><td class="confluenceTd">Control-P or Up</td><td class="confluenceTd">go to the previous line. If this is the first line of input then recall previous input from history.</td></tr><tr><td class="confluenceTd">Control-N or Down</td><td class="confluenceTd">go to the next line. If this is the last line of input then recall the next input from the history</td></tr><tr><td class="confluenceTd">Control-A or Home</td><td class="confluenceTd">move the cursor to the beginning of the line. If the cursor is already at the beginning of the line, then go to the beginning of the first line of the current input</td></tr><tr><td class="confluenceTd">Control-E or End</td><td class="confluenceTd">move the cursor to the end of the line. If the cursor is already at the end of the line, then move it to the end of the last line of the current input</td></tr><tr><td class="confluenceTd">Control-L or F5</td><td class="confluenceTd">reset terminal and repaint screen</td></tr></tbody></table></div><p><br/></p>
+                    </div>
+
+                                        
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

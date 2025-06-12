@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : The Things Stack</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Internet-of-Things_46759975.html">Internet of Things</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Lora_16351615.html">Lora</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Setup_16351624.html">Setup</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : The Things Stack
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Unknown User (rudolfs)</span>, last updated by <span class='editor'> Deniss M.</span> on Apr 01, 2025
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742041222 {padding: 0px;}
+div.rbtoc1747742041222 ul {margin-left: 0px;}
+div.rbtoc1747742041222 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742041222'>
+<ul class='toc-indentation'>
+<li><a href='#TheThingsStack-Selectingaregion'>Selecting a region</a></li>
+<li><a href='#TheThingsStack-Registeringgateway'>Registering gateway</a></li>
+<li><a href='#TheThingsStack-UDPprotocolgatewayregistration'>UDP protocol gateway registration</a>
+<ul class='toc-indentation'>
+<li><a href='#TheThingsStack-UDPscenarioRouterOSsettings'>UDP scenario RouterOS settings</a></li>
+</ul>
+</li>
+<li><a href='#TheThingsStack-LNSandCUPSprotocolgatewayregistration'>LNS and CUPS protocol gateway registration</a>
+<ul class='toc-indentation'>
+<li><a href='#TheThingsStack-LNSscenarioRouterOSsettings'>LNS scenario RouterOS settings</a></li>
+<li><a href='#TheThingsStack-CUPSscenarioRouterOSsettings'>CUPS scenario RouterOS settings</a></li>
+</ul>
+</li>
+<li><a href='#TheThingsStack-Verification'>Verification</a></li>
+</ul>
+</div></p><h1 id="TheThingsStack-Selectingaregion">Selecting a region</h1><p><a class="external-link" href="https://console.cloud.thethings.network/" rel="nofollow">The Things Stack</a> is a new version of The Things network.</p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/67633276/67633279.png" data-image-src="attachments/67633276/67633279.png" data-unresolved-comment-count="0" data-linked-resource-id="67633279" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image2021-5-20_12-46-48.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="67633276" data-linked-resource-container-version="22" tabindex="0" alt=""></span></p><p><br/></p><p>Choose your region and login with The Things network account or other credentials.</p><h1 id="TheThingsStack-Registeringgateway">Registering gateway</h1><p>Once logged in, navigate to &quot;Go to gateways&quot;:</p><p><br/></p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/67633276/218759204.png" data-image-src="attachments/67633276/218759204.png" data-unresolved-comment-count="0" data-linked-resource-id="218759204" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2023-10-16_15-18-54.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="67633276" data-linked-resource-container-version="22" tabindex="0" alt=""></span></p><p><br/></p><p>Register a gateway by clicking on the &quot;<strong>+ Register gateway</strong>&quot; button:</p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/67633276/218759205.png" data-image-src="attachments/67633276/218759205.png" data-unresolved-comment-count="0" data-linked-resource-id="218759205" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2023-10-16_15-19-53.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="67633276" data-linked-resource-container-version="22" tabindex="0" alt=""></span></p><h1 id="TheThingsStack-UDPprotocolgatewayregistration">UDP protocol gateway registration</h1><p>Fill in the blank spaces. Input <strong>Gateway EUI</strong>. Make sure to select a correct frequency plan. Do not enable &quot;<strong>Require authenticated connection</strong>&quot; option (it is used for LNS and CUPS)!</p><p><br/></p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/67633276/232816865.png" data-image-src="attachments/67633276/232816865.png" data-unresolved-comment-count="0" data-linked-resource-id="232816865" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2024-1-30_13-59-46.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="67633276" data-linked-resource-container-version="22" tabindex="0" alt=""></span></p><p><br/></p><p>In RouterOS, <strong>Gateway EUI</strong> value can be found under &quot;<strong>IoT&gt;LoRa&gt;Devices&gt;Gateway ID</strong>&quot;):</p><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" draggable="false" width="420" src="attachments/67633276/232816867.png" data-image-src="attachments/67633276/232816867.png" data-unresolved-comment-count="0" data-linked-resource-id="232816867" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2024-1-30_14-1-14.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="67633276" data-linked-resource-container-version="22" tabindex="0" alt=""></span></p><p>For additional information check their <a class="external-link" href="https://www.thethingsindustries.com/docs/getting-started/" rel="nofollow"></a><a class="external-link" href="https://www.thethingsindustries.com/docs/getting-started/" rel="nofollow">documentation </a><a class="external-link" href="https://www.thethingsindustries.com/docs/getting-started/" rel="nofollow">page</a>.</p><h2 id="TheThingsStack-UDPscenarioRouterOSsettings">UDP scenario RouterOS settings</h2><p>Double-check that the correct TTN server is selected by the LoRa device (in RouterOS) and that the server setting uses &quot;UDP&quot; protocol:</p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/67633276/232816868.png" data-image-src="attachments/67633276/232816868.png" data-unresolved-comment-count="0" data-linked-resource-id="232816868" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2024-1-30_14-2-15.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="67633276" data-linked-resource-container-version="22" tabindex="0" alt=""></span></p><h1 id="TheThingsStack-LNSandCUPSprotocolgatewayregistration">LNS and CUPS protocol gateway registration</h1><p>Fill in the blank spaces. Input <strong>Gateway EUI</strong>. Make sure to select a correct frequency plan. Enable &quot;<strong>Require authenticated connection</strong>&quot; and the follow-up (for LNS) &quot;<strong>Generate API key for LNS</strong>&quot; and (for CUPS) &quot;<strong>Generate API key for CUPS</strong>&quot; options:</p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/67633276/232816869.png" data-image-src="attachments/67633276/232816869.png" data-unresolved-comment-count="0" data-linked-resource-id="232816869" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2024-1-30_14-3-42.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="67633276" data-linked-resource-container-version="22" tabindex="0" alt=""></span></p><p>In RouterOS,<strong> Gateway EUI</strong> value can be found under &quot;<strong>IoT&gt;LoRa&gt;Devices&gt;Gateway ID</strong>&quot;:</p><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" draggable="false" width="420" src="attachments/67633276/232816867.png" data-image-src="attachments/67633276/232816867.png" data-unresolved-comment-count="0" data-linked-resource-id="232816867" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2024-1-30_14-1-14.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="67633276" data-linked-resource-container-version="22" tabindex="0" alt=""></span></p><p>After clicking on &quot;<strong>Register gateway</strong>&quot; button, you should be prompted to download the keys. Download them.</p><p>To view LNS and CUPS keys, inspect download files. LNS key should also be visible under the<strong> </strong>&quot;<strong>LoRa Basics Station LNS authentication Key</strong>&quot; field:</p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/67633276/232816870.png" data-image-src="attachments/67633276/232816870.png" data-unresolved-comment-count="0" data-linked-resource-id="232816870" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2024-1-30_14-5-39.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="67633276" data-linked-resource-container-version="22" tabindex="0" alt=""></span></p><p><br/></p><p>For additional information check their <a class="external-link" href="https://www.thethingsindustries.com/docs/getting-started/" rel="nofollow"></a><a class="external-link" href="https://www.thethingsindustries.com/docs/getting-started/" rel="nofollow">documentation </a><a class="external-link" href="https://www.thethingsindustries.com/docs/getting-started/" rel="nofollow">page</a>.</p><h2 id="TheThingsStack-LNSscenarioRouterOSsettings">LNS scenario RouterOS settings</h2><p>Make sure that the correct TTN server is selected, that the correct port is configured (TTN expects LNS over 8887), that LNS protocol is chosen, that the LNS key (from the &quot;<strong>LoRa Basics Station LNS authentication Key</strong>&quot; field) is input and that &quot;<strong>SSL</strong>&quot; checkbox is enabled:</p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/67633276/232816871.png" data-image-src="attachments/67633276/232816871.png" data-unresolved-comment-count="0" data-linked-resource-id="232816871" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2024-1-30_14-6-37.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="67633276" data-linked-resource-container-version="22" tabindex="0" alt=""></span></p><p>The last step is to download and import <a class="external-link" href="https://www.thethingsindustries.com/docs/reference/root-certificates/" rel="nofollow">Root Certificates</a>. The page has links to the required file.</p><p>After the certificate file was downloaded, drag and drop it into the RouterOS file menu and import the certificate list:</p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/67633276/218759222.png" data-image-src="attachments/67633276/218759222.png" data-unresolved-comment-count="0" data-linked-resource-id="218759222" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2023-10-16_16-19-7.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="67633276" data-linked-resource-container-version="22" tabindex="0" alt=""></span></p><p>This should make the certificate list trusted:</p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/67633276/218759223.png" data-image-src="attachments/67633276/218759223.png" data-unresolved-comment-count="0" data-linked-resource-id="218759223" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2023-10-16_16-20-49.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="67633276" data-linked-resource-container-version="22" tabindex="0" alt=""></span></p><h2 id="TheThingsStack-CUPSscenarioRouterOSsettings">CUPS scenario RouterOS settings</h2><p>Make sure that the correct TTN server is selected, that the correct port is configured (TTN expects CUPS over 443), that CUPS protocol is chosen, that the CUPS key is input (obtained from the download cups.key file during gateway registration step) and that &quot;<strong>SSL</strong>&quot; checkbox is enabled:</p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/67633276/232816872.png" data-image-src="attachments/67633276/232816872.png" data-unresolved-comment-count="0" data-linked-resource-id="232816872" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2024-1-30_14-7-15.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="67633276" data-linked-resource-container-version="22" tabindex="0" alt=""></span></p><p>The last step is to download and import <a class="external-link" href="https://www.thethingsindustries.com/docs/reference/root-certificates/" rel="nofollow">Root Certificates</a>. The page has links to the required file.</p><p>After the certificate file was downloaded, drag and drop it into the RouterOS file menu and import the certificate list:</p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/67633276/218759222.png" data-image-src="attachments/67633276/218759222.png" data-unresolved-comment-count="0" data-linked-resource-id="218759222" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2023-10-16_16-19-7.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="67633276" data-linked-resource-container-version="22" tabindex="0" alt=""></span></p><p>This should make the certificate list trusted:</p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/67633276/218759223.png" data-image-src="attachments/67633276/218759223.png" data-unresolved-comment-count="0" data-linked-resource-id="218759223" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2023-10-16_16-20-49.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="67633276" data-linked-resource-container-version="22" tabindex="0" alt=""></span></p><h1 id="TheThingsStack-Verification">Verification</h1><p>If everything is configured in correctly, right after you enable the LoRa interface in RouterOS (&quot;<strong>IoT&gt;LoRa&gt;Devices&gt;Enable</strong>&quot;):</p><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" draggable="false" width="420" src="attachments/67633276/232816873.png" data-image-src="attachments/67633276/232816873.png" data-unresolved-comment-count="0" data-linked-resource-id="232816873" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2024-1-30_14-8-13.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="67633276" data-linked-resource-container-version="22" tabindex="0" alt=""></span></p><p>You should see the gateway connection &quot;Live data&quot; update:</p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/67633276/232816874.png" data-image-src="attachments/67633276/232816874.png" data-unresolved-comment-count="0" data-linked-resource-id="232816874" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2024-1-30_14-8-40.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="67633276" data-linked-resource-container-version="22" tabindex="0" alt=""></span></p><p><br/></p>
+                    </div>
+
+                                                            <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/67633276/67633279.png">image2021-5-20_12-46-48.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/67633276/67633280.png">image2021-5-20_12-48-1.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/67633276/67633281.png">image2021-5-20_12-50-43.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/67633276/67633282.png">image2021-5-20_12-53-1.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/67633276/67633283.png">image2021-5-20_12-55-11.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/67633276/67633284.png">image2021-5-20_12-56-20.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/67633276/67633285.png">image2021-5-20_12-57-1.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/67633276/67633286.png">image2021-5-20_12-57-28.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/67633276/67633287.png">image2021-5-20_12-58-36.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/67633276/67633288.png">image2021-5-20_12-59-40.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/67633276/67633290.png">image2021-5-20_13-3-55.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/67633276/67633292.png">image2021-5-20_13-8-37.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/67633276/67633294.png">image2021-5-20_13-11-35.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/67633276/218759204.png">image-2023-10-16_15-18-54.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/67633276/218759205.png">image-2023-10-16_15-19-53.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/67633276/218759206.png">image-2023-10-16_15-21-52.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/67633276/218759207.png">image-2023-10-16_15-30-57.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/67633276/218759209.png">image-2023-10-16_15-38-24.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/67633276/218759210.png">image-2023-10-16_15-43-45.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/67633276/218759211.png">image-2023-10-16_15-45-47.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/67633276/218759212.png">image-2023-10-16_15-47-8.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/67633276/218759214.png">image-2023-10-16_15-52-56.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/67633276/218759215.png">image-2023-10-16_15-54-37.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/67633276/218759216.png">image-2023-10-16_15-57-4.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/67633276/218759217.png">image-2023-10-16_16-2-38.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/67633276/218759218.png">image-2023-10-16_16-6-46.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/67633276/218759219.png">image-2023-10-16_16-9-36.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/67633276/218759220.png">image-2023-10-16_16-10-27.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/67633276/218759221.png">image-2023-10-16_16-16-33.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/67633276/218759222.png">image-2023-10-16_16-19-7.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/67633276/218759223.png">image-2023-10-16_16-20-49.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/67633276/232816760.png">image-2024-1-26_15-38-48.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/67633276/232816761.png">image-2024-1-26_15-39-4.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/67633276/232816762.png">image-2024-1-26_15-39-22.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/67633276/232816763.png">image-2024-1-26_15-53-11.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/67633276/232816764.png">image-2024-1-26_15-54-2.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/67633276/232816765.png">image-2024-1-26_15-54-28.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/67633276/232816766.png">image-2024-1-26_15-55-19.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/67633276/232816769.png">image-2024-1-26_16-5-24.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/67633276/232816865.png">image-2024-1-30_13-59-46.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/67633276/232816867.png">image-2024-1-30_14-1-14.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/67633276/232816868.png">image-2024-1-30_14-2-15.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/67633276/232816869.png">image-2024-1-30_14-3-42.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/67633276/232816870.png">image-2024-1-30_14-5-39.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/67633276/232816871.png">image-2024-1-30_14-6-37.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/67633276/232816872.png">image-2024-1-30_14-7-15.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/67633276/232816873.png">image-2024-1-30_14-8-13.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/67633276/232816874.png">image-2024-1-30_14-8-40.png</a> (image/png)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:54</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

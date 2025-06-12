@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : Firewall</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Firewall-and-Quality-of-Service_119144601.html">Firewall and Quality of Service</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : Firewall
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Māris B.</span>, last updated on May 24, 2024
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><span class="confluence-embedded-file-wrapper image-center-wrapper"><img class="confluence-embedded-image image-center" draggable="false" src="attachments/250708066/250708272.jpg" data-image-src="attachments/250708066/250708272.jpg" data-unresolved-comment-count="0" data-linked-resource-id="250708272" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="firewall-fundamental.jpg" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/jpeg" data-linked-resource-container-id="250708066" data-linked-resource-container-version="4" tabindex="0" alt=""></span></p><p>The firewall implements stateful (by utilizing connection tracking) and stateless packet filtering and thereby provides security functions that are used to manage data flow to, from, and through the router. Along with the Network Address Translation (NAT), it serves as a tool for preventing unauthorized access to directly attached networks and the router itself as well as a filter for outgoing traffic.</p><p>Network firewalls keep outside threats away from sensitive data available inside the network. Whenever different networks are joined together, there is always a threat that someone from outside of your network will break into your LAN. Such break-ins may result in private data being stolen and distributed, valuable data being altered or destroyed, or entire hard drives being erased. Firewalls are used as a means of preventing or minimizing the security risks inherent in connecting to other networks. A properly configured firewall plays a key role in efficient and secure network infrastructure deployment.</p><p><span>MikroTik RouterOS has very powerful firewall implementation with features including:</span></p><ul><li><span>stateless packet inspection</span></li><li><span>stateful packet inspection </span></li><li><span>Layer-7 protocol detection </span></li><li><span>peer-to-peer protocols filtering </span></li><li><span>traffic classification by:</span><ul><li><span>source MAC address</span></li><li><span>IP addresses (network or list) and address types (broadcast, local, multicast, unicast)</span></li><li><span>port or port range</span></li><li><span>IP protocols</span></li><li><span>protocol options (ICMP type and code fields, TCP flags, IP options and MSS) </span></li><li><span>interface the packet arrived from or left through</span></li><li><span>internal flow and connection marks</span></li><li><span>DSCP byte</span></li><li><span>packet content</span></li><li><span>rate at which packets arrive and sequence numbers</span></li><li><span>packet size</span></li><li><span>packet arrival time</span></li></ul></li></ul><p><span>and much more!</span></p><p><span>Firewall is split in three major modules:</span></p><ul><li><strong>filter/raw</strong> - used to deny traffic based on configured policies. Filtering in RAW tables allow to save resources if connection tracking is not required. </li><li><strong>mangle</strong> - used to mark certain connections, packets, streams, set priorities and do other tasks</li><li><strong>nat</strong> - used to set up address translation rules redirects and port forwarding</li></ul><h1 id="Firewall-Chains"><span>Chains</span></h1><p><span>Firewall filtering rules are grouped together in chains. It allows a packet to be matched against one common criterion in one chain, and then passed over for processing against some other common criteria to another chain. </span></p><p><span>For example, a packet should be matched against the IP address:port pair. Of course, it could be achieved by adding as many rules with IP address:port match as required to the forward chain, but a better way could be to add one rule that matches traffic from a particular IP address. Then rules that perform matching against separate ports can be added to &quot;<strong>mychain</strong>&quot; chain without specifying the IP addresses.</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip firewall filter 
+add chain=mychain protocol=tcp dst-port=22 action=accept
+add chain=mychain protocol=tcp dst-port=23 action=accept
+
+add chain=input src-address=1.1.1.2/32 jump-target=&quot;mychain&quot;</pre>
+</div></div><p><br/></p><p>When processing a chain, rules are taken from the chain in the order they are listed, from top to bottom. If a packet matches the criteria of the rule, then the specified action is performed on it, and no more rules are processed in that chain (the exception is the <strong>passthrough</strong> action).</p><p>If a packet has not matched any rule within the chain, then it is accepted. </p><p>Each firewall module has its own pre-defined chains:</p><ul><li><strong>raw</strong>:<ul><li>prerouting</li><li>output</li></ul></li><li><strong>filter</strong><ul><li>input</li><li>forward</li><li>output</li></ul></li><li><strong>mangle</strong><ul><li>prerouting</li><li>input</li><li>forward</li><li>output</li><li>postrouting</li></ul></li><li><strong>nat</strong><ul><li>srcnat</li><li>dstnat</li></ul></li></ul><p><br/></p><p>More detailed packet processing in RouterOS is described in the <a href="Packet-Flow-in-RouterOS_328227.html">Packet Flow in the RouterOS</a> diagram.</p>
+                    </div>
+
+                                                            <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/250708066/250708272.jpg">firewall-fundamental.jpg</a> (image/jpeg)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

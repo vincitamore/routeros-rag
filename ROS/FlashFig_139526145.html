@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : FlashFig</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Management-tools_328121.html">Management tools</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : FlashFig
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Oskars K.</span>, last updated by <span class='editor'> Mārtiņš S.</span> on May 08, 2024
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p class="firstHeading"><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742022388 {padding: 0px;}
+div.rbtoc1747742022388 ul {margin-left: 0px;}
+div.rbtoc1747742022388 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742022388'>
+<ul class='toc-indentation'>
+<li><a href='#FlashFig-Description'>Description</a></li>
+<li><a href='#FlashFig-FlashFigExample'>FlashFig Example</a>
+<ul class='toc-indentation'>
+<li><a href='#FlashFig-Requirements'>Requirements</a></li>
+<li><a href='#FlashFig-Pre-Configuration'>Pre-Configuration</a>
+<ul class='toc-indentation'>
+<li><a href='#FlashFig-WindowsComputer'>Windows Computer</a></li>
+<li><a href='#FlashFig-RouterBOARD'></a></li>
+<li><a href='#FlashFig-RouterBOARD.1'>RouterBOARD</a></li>
+</ul>
+</li>
+<li><a href='#FlashFig-Connect'>Connect</a></li>
+<li><a href='#FlashFig-RunFlashFig'>Run FlashFig</a></li>
+</ul>
+</li>
+<li><a href='#FlashFig-Troubleshoot'>Troubleshoot</a>
+<ul class='toc-indentation'>
+<li><a href='#FlashFig-FlashFigcannotfindarouter'>FlashFig can not find a router</a></li>
+<li><a href='#FlashFig-FlashFigfindsarouter,flashingisnotdone(noTFTPrequest)'>FlashFig finds a router, flashing is not done (no TFTP request)</a></li>
+<li><a href='#FlashFig-FlashFigisdone,butaconfigurationisnotapplied'>FlashFig is done, but a configuration is not applied</a></li>
+<li><a href='#FlashFig-Notenoughflashspace,ignoring'>Not enough flash space, ignoring</a></li>
+</ul>
+</li>
+</ul>
+</div></p><h2 id="FlashFig-Description"><span class="mw-headline">Description</span></h2><p>FlashFig is an application for mass router configuration. It can be used by MikroTik distributors, ISPs, or any other companies who need to apply RouterOS configuration to many routers in the shortest possible time.</p><p>FlashFig applies MikroTik RouterOS<span> </span><strong>configuration</strong><span> </span>to any RouterBOARD within<span> </span><strong>3 seconds</strong>. You can perform FlashFig on a batch of routers, the only thing you need is to<span> </span><strong>connect</strong><span> </span>RouterBOARD to a Layer 2 network running FlashFig and to<span> </span><strong>power</strong><span> </span>a FlashFig-enabled RouterBOARD up.</p><p>FlashFig only runs on a Windows computer and is available from the<span> </span><a class="external-link" href="https://mikrotik.com/download" rel="nofollow">downloads</a><span> </span>page.</p><p>All RouterBOARDs support FlashFig mode. It works between a Windows computer running <span style="letter-spacing: 0.0px;">FlashFig and a RouterBOARD in the same broadcast domain (direct Layer 2 Ethernet network connection is required).</span></p><p>FlashFig support is enabled on every new RouterBOARD manufactured since March 2010 by default from the factory. For older models, FlashFig can be enabled via RouterBOOT or from MikroTik RouterOS console - <em>/system routerboard settings set boot-device=flash-boot-once-then-nand</em> or <em>/system routerboard settings set boot-device=flash-boot</em>.</p><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Starting from RouterOS/RouterBOOT <strong>v7.16</strong>, flash boot mode will be enabled in the same way as from the factory, after every system reset initiated from the software. The same mode will be initiated when you reset router with the reset button, (bootloader version  v7.16 or higher is required). <br/>Please note that if you press and hold reset button before powering on the router, then the backup booter is used. The backup booter firmware (installed in the factory) must also then be v7.16 or higher. </p></div></div><p>FlashFig mode on a brand new RouterBOARD is disabled on further boots only after the first successful user login or successful FlashFig attempt to avoid unwanted reconfiguration at a later time. To use FlashFig a second time on the same router, you need to enable<span> </span><strong>flash-boot</strong><span> </span>in <a href="#FlashFig-RouterBOARD">Bootloader</a> settings (t<span style="color:var(--ds-text,#172b4d);">his setting will revert to NAND after a successful configuration change OR once any user logs into the board).</span></p><p>If RouterOS<span> </span><em>reset-configuration</em><span> </span>command is used later (or configuration reset using the Reset button), FlashFig configuration is loaded. To permanently overwrite, use the Netinstall process and check <em>Apply default configuration</em> or use <em>-r</em> flag in Linux-based command line.</p><p><span>You view FlashFig <a class="external-link" href="https://www.youtube.com/watch?v=gticPeOdN54" rel="nofollow">video tutorial</a> on MikroTik YouTube channel.</span></p><h2 id="FlashFig-FlashFigExample"><span class="mw-headline">FlashFig Example</span></h2><p>This is a step-by-step example of how to use the FlashFig process to apply a chosen MikroTik RouterOS configuration to a 'factory fresh' RouterBOARD.</p><h4 id="FlashFig-Requirements"><span class="mw-headline">Requirements</span></h4><p>The Windows computer must be equipped with the following ports and contain the following files:</p><ul><li>A working Ethernet port;</li><li>Valid .rsc file(s) with MikroTik RouterOS configuration similar to an export/import file. In addition to regular configuration commands, it is also possible to re-apply the factory passwords by using the read-only variables <em>$</em><span style="color:var(--ds-text,#172b4d);"><em>defconfPassword </em>and <em>$defconfWifiPassword</em> (</span><span style="color:var(--ds-text,#172b4d);">starting from RouterOS 7.10beta8)</span>;</li><li>Always use the latest FlashFig program available from the<span> </span><a class="external-link" href="https://mikrotik.com/download" rel="nofollow">downloads</a><span> </span>page;</li><li>The RouterBOARD has to be in flash-boot mode, if this is the very first boot, nothing needs to be done</li></ul><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body">Be aware of the text editor's treatment of CR/LF characters and test that the config has no errors when normally applied onto an identical version of RouterOS before applying via FlashFig as run-time errors will not be visible!</div></div><h4 id="FlashFig-Pre-Configuration"><span class="mw-headline">Pre-Configuration</span></h4><h5 id="FlashFig-WindowsComputer"><span class="mw-headline">Windows Computer</span></h5><ul><li>Run FlashFig;</li><li>Prepare<span> </span><strong>.rsc</strong><span> </span>file,<span> </span><strong>.rsc</strong><span> </span>file is regular/import file, it accepts valid MikroTik RouterOS CLI commands. You can create .rsc file with any text editor program (Notepad, Notepad++, Texteditor, TextEdit, Microsoft Word, OpenOffice Writer)</li></ul><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" draggable="false" height="250" src="attachments/139526145/139526153.png" data-image-src="attachments/139526145/139526153.png" data-unresolved-comment-count="0" data-linked-resource-id="139526153" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="Flashfig2.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="139526145" data-linked-resource-container-version="30" tabindex="0" alt=""></span></p><ul><li>Assign<span> </span><strong>Boot Client Address</strong>, which should be an address within <em>the same subnet as that configured on the computer's Ethernet interface</em>,</li></ul><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/139526145/139526154.png" data-image-src="attachments/139526145/139526154.png" data-unresolved-comment-count="0" data-linked-resource-id="139526154" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="Flashfig3.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="139526145" data-linked-resource-container-version="30" tabindex="0" alt=""></span></p><ul><li><strong>Browse</strong><span> </span>for<span> </span><strong>.rsc</strong><span> </span>MikroTik RouterOS configuration file to apply to the RouterBOARD, highlight the file and<span> </span><strong>Select</strong><span> </span>to approve it,</li></ul><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" draggable="false" height="250" src="attachments/139526145/139526155.png" data-image-src="attachments/139526145/139526155.png" data-unresolved-comment-count="0" data-linked-resource-id="139526155" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="Flashfig4.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="139526145" data-linked-resource-container-version="30" tabindex="0" alt=""></span></p><ul><li>Activate FlashFig server, now it is ready to FlashFig. Note, any RouterBOARD will be FlashFig'ed within the network when they are powered on with boot-device configured to<span> </span><strong>flash-boot</strong><span> </span>or<span> </span><strong>flash-boot-once-then-nand</strong>,</li></ul><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" draggable="false" height="250" src="attachments/139526145/139526156.png" data-image-src="attachments/139526145/139526156.png" data-unresolved-comment-count="0" data-linked-resource-id="139526156" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="Flashfig5.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="139526145" data-linked-resource-container-version="30" tabindex="0" alt=""></span></p><h5 id="FlashFig-RouterBOARD"><span class="mw-headline"><span class="confluence-anchor-link" id="FlashFig-RouterBOARD"></span></span></h5><h5 id="FlashFig-RouterBOARD.1"><span class="mw-headline">RouterBOARD</span></h5><ul><li>FlashFig mode is enabled on every RouterBOARD from the factory by default, which means<span> </span><strong>no configuration</strong><span> </span>is required on RouterBOARD.</li></ul><ul><li>If FlashFig is not enabled on your router, access the RouterBOARD with WinBox/Console and change the <a href="https://help.mikrotik.com/docs/display/ROS/RouterBOARD#RouterBOARD-Settings" rel="nofollow">boot-device</a> to <em>flash-boot</em> or <em><span style="color:var(--ds-text,#172b4d);">flash-boot-once-then-nand</span></em>:</li></ul><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">system/routerboard/settings/set boot-device=flash-boot</pre>
+</div></div><p>Or use a more preferable option, for a single boot flash-boot:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">system/routerboard/settings/set boot-device=flash-boot-once-then-nand</pre>
+</div></div><p>Your router is now ready for FlashFig.</p><h4 id="FlashFig-Connect"><span class="mw-headline">Connect</span></h4><p>Connect the <strong><em>Boot</em></strong> port of RouterBOARD and FlashFig computer to the same Local Area Network.</p><h4 id="FlashFig-RunFlashFig"><span class="mw-headline">Run FlashFig</span></h4><ul><li>Plug-in power for RouterBOARD</li><li>Check the status on FlashFig program,</li></ul><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" draggable="false" height="250" src="attachments/139526145/139526157.png" data-image-src="attachments/139526145/139526157.png" data-unresolved-comment-count="0" data-linked-resource-id="139526157" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="Flashfig6.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="139526145" data-linked-resource-container-version="30" tabindex="0" alt=""></span></p><p>Messages log shows &quot;FlashFigged&quot; and RouterBOARD should repeatedly make the morse code sound for the character &quot;/&quot; (&quot;_.._.&quot; and flash the LED - it is now safe to unplug / power down the router.</p><ul><li>FlashFig<span> </span><strong>configuration</strong><span> </span>was applied to the RouterBOARD and it is<span> </span><strong>ready</strong><span> </span>to be used in production with this new config.</li></ul><h2 id="FlashFig-Troubleshoot"><span class="mw-headline">Troubleshoot</span></h2><h3 id="FlashFig-FlashFigcannotfindarouter"><span class="mw-headline">FlashFig can not find a router</span></h3><p>If between a PC and a router there is another device (a router/switch), ensure that for this device:</p><ul><li>DHCP server is disabled;</li><li>if used ports are in a bridge, set bridge <em>protocol-mode </em>to <em>none</em>;</li><li>HW-offload for used ports is disabled.</li></ul><h3 id="FlashFig-FlashFigfindsarouter,flashingisnotdone(noTFTPrequest)"><span class="mw-headline">FlashFig </span><span class="mw-headline">finds a router, flashing is not done (</span><span class="mw-headline"><span style="color:var(--ds-text,#172b4d);">no TFTP request)</span></span></h3><p>Ensure that the computer on which FlashFig is running has only one network interface active.</p><h3 id="FlashFig-FlashFigisdone,butaconfigurationisnotapplied"><span class="mw-headline">FlashFig is done, but a configuration is not applied</span></h3><p>If all procedures went successfully, but RouterOS configuration from .rsc file is not applied, add <a href="https://help.mikrotik.com/docs/display/ROS/Configuration+Management#ConfigurationManagement-Startupdelay" rel="nofollow">startup delay</a> to *.rsc configuration file. The reason might be, that the configuration script is executed before all interfaces boots up.</p><h3 id="FlashFig-Notenoughflashspace,ignoring"><span class="mw-headline">Not enough flash space, ignoring</span></h3><p>FlashFig configuration maximum file size is up to 4000 bytes, otherwise program will return an error as above.</p>
+                    </div>
+
+                                                            <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/139526145/139526146.png">image2022-7-13_15-49-22.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/139526145/139526148.png">image2022-7-27_10-26-38.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/139526145/139526149.png">image2022-7-27_10-27-45.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/139526145/139526150.png">Flashfigdiagramm.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/139526145/139526152.png">Flashfig.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/139526145/139526153.png">Flashfig2.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/139526145/139526154.png">Flashfig3.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/139526145/139526155.png">Flashfig4.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/139526145/139526156.png">Flashfig5.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/139526145/139526157.png">Flashfig6.png</a> (image/png)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : IP Pools</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="IPv4-and-IPv6-Fundamentals_119144661.html">IPv4 and IPv6 Fundamentals</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : IP Pools
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Unknown User (emils)</span>, last updated by <span class='editor'> Guntis G.</span> on Feb 28, 2024
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742021017 {padding: 0px;}
+div.rbtoc1747742021017 ul {margin-left: 0px;}
+div.rbtoc1747742021017 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742021017'>
+<ul class='toc-indentation'>
+<li><a href='#IPPools-Summary'>Summary</a></li>
+<li><a href='#IPPools-IPv4Pool'>IPv4 Pool</a>
+<ul class='toc-indentation'>
+<li><a href='#IPPools-Example'>Example</a></li>
+<li><a href='#IPPools-Usedaddresses'>Used addresses</a></li>
+</ul>
+</li>
+<li><a href='#IPPools-IPv6Pool'>IPv6 Pool</a>
+<ul class='toc-indentation'>
+<li><a href='#IPPools-Example.1'>Example</a></li>
+<li><a href='#IPPools-Usedaddresses.1'>Used addresses</a></li>
+</ul>
+</li>
+</ul>
+</div></p><h1 id="IPPools-Summary">Summary</h1><p>IP pools are used to define range of IP addresses that can be used by various RouterOS utilities, for example, DHCP server, Point-to-Point servers and more. Separate lists for IPv4 and IPv6 are available. Whenever possible, the same IP address is given out to each client (OWNER/INFO pair).</p><h1 id="IPPools-IPv4Pool"><span class="mw-headline">IPv4 Pool</span></h1><p><strong>Sub-menu:</strong> <code>/ip pool</code></p><div class="table-wrap"><table class="wrapped confluenceTable" style="margin-left: 14.4318px;"><colgroup><col/><col/></colgroup><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>comment</strong> (<em>string</em>; Default: )</td><td class="confluenceTd">Short description of the pool</td></tr><tr><td class="confluenceTd"><p><strong>name</strong> (<em>string</em>; Default: )</p></td><td class="confluenceTd">Unique identifier of the pool</td></tr><tr><td class="confluenceTd"><strong>next-pool</strong><span> </span>(<em>string</em>; Default:<span> </span>)</td><td class="confluenceTd">When IP address acquisition is performed a pool that has no free addresses, and the next-pool property is set, then IP address will be acquired from next-pool</td></tr><tr><td class="confluenceTd"><strong>ranges </strong>(<em>IP</em>; Default:<span> </span>)</td><td class="confluenceTd">IP address list of non-overlapping IP address ranges in the form of: from1-to1,from2-to2,...,fromN-toN. For example, 10.0.0.1-10.0.0.27,10.0.0.32-10.0.0.47</td></tr></tbody></table></div><h2 id="IPPools-Example"><span class="mw-headline">Example</span></h2><p>To define a pool named &quot;my-pool&quot; with the 10.0.0.1-10.0.0.126 address range excluding gateway's address 10.0.0.1 and server's address 10.0.0.100, and the other pool dhcp-pool, with the 10.0.0.200-10.0.0.250 address range:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] ip pool&gt; add name=my-pool ranges=10.0.0.2-10.0.0.99,10.0.0.101-10.0.0.126
+[admin@MikroTik] ip pool&gt; add name=dhcp-pool ranges=10.0.0.200-10.0.0.250
+[admin@MikroTik] ip pool&gt; print
+  # NAME                                        RANGES
+  0 ip-pool                                     10.0.0.2-10.0.0.99
+                                                10.0.0.101-10.0.0.126
+  1 dhcp-pool                                   10.0.0.200-10.0.0.250</pre>
+</div></div><h2 id="IPPools-Usedaddresses"><span class="mw-headline">Used addresses<br/></span></h2><p><span class="mw-headline"><strong>Sub-menu:</strong> <code>/ip pool used</code></span></p><p>Here you can see all used IP addresses from IP pools.</p><p><br/></p><p><strong><span class="mw-headline">Read-only properties</span></strong></p><div class="table-wrap"><table class="relative-table wrapped confluenceTable" style="margin-left: 14.4318px;width: 44.3774%;"><colgroup><col style="width: 24.741%;"/><col style="width: 75.259%;"/></colgroup><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>address</strong> (<em>IP</em>)</td><td class="confluenceTd">IP address that is assigned to client from the pool</td></tr><tr><td class="confluenceTd"><p><strong>info </strong>(<em>string</em>)</p></td><td class="confluenceTd">For DHCP MAC address from leases menu and for PPP connections username of PPP type client</td></tr><tr><td class="confluenceTd"><strong>owner</strong><span> </span>(<em>string</em>)</td><td class="confluenceTd">Service which is using this IP address</td></tr><tr><td class="confluenceTd"><strong>pool </strong>(<em>string</em>)</td><td class="confluenceTd"><p>Name of the IP pool</p></td></tr></tbody></table></div><h1 id="IPPools-IPv6Pool">IPv6 Pool</h1><p><strong>Sub-menu:</strong> <code>/ipv6 pool</code></p><p><br/></p><div class="table-wrap"><table class="wrapped confluenceTable" style="margin-left: 14.4318px;"><colgroup><col/><col/></colgroup><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>name</strong><span> </span>(<em>string</em>; Default: )</td><td class="confluenceTd">Descriptive name of the pool.</td></tr><tr><td class="confluenceTd"><strong>prefix</strong><span> </span>(<em>IPv6/0..128</em>; Default: )</td><td class="confluenceTd">Ipv6 address prefix</td></tr><tr><td class="confluenceTd"><strong>prefix-length</strong><span> </span>(<em>integer [1..128]</em>; Default: )</td><td class="confluenceTd">The option represents the prefix size that will be given out to the client.</td></tr></tbody></table></div><p><strong>Read-only properties</strong></p><div class="table-wrap"><table class="wrapped confluenceTable" style="margin-left: 14.4318px;"><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>dynamic</strong><span> </span>(<em>yes | no</em>)</td><td class="confluenceTd">Whether the pool is dynamic.</td></tr><tr><td class="confluenceTd"><strong>expire-time</strong><span> </span>(<em>time</em>)</td><td class="confluenceTd">Expire time is set to dynamic pools added by<span> </span><a href="https://help.mikrotik.com/docs/display/ROS/DHCP#DHCP-DHCPv6Client" rel="nofollow">DHCPv6 client</a>.</td></tr></tbody></table></div><h2 id="IPPools-Example.1">Example</h2><p>The example will create a pool of &quot;2001::/60&quot; to give out /62 prefixes:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@test-host] /ipv6 pool&gt; add
+name: test prefix: 2001::/60
+prefix-length: 62
+[admin@test-host] /ipv6 pool&gt; print
+# NAME PREFIX PREFIX-LENGTH
+0 test 2001::/60 62bits</pre>
+</div></div><h2 id="IPPools-Usedaddresses.1"><span class="mw-headline">Used addresses</span></h2><p><strong>Sub-menu:</strong><span> </span><code>/ipv6 pool used</code></p><p><strong>Read-only properties</strong></p><div class="table-wrap"><table class="wrapped confluenceTable" style="margin-left: 14.4318px;"><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>info</strong><span> </span>(<em>string</em>)</td><td class="confluenceTd">Shows DUID related information received from the client (value in hex). Can contain also a raw timestamp in hex.</td></tr><tr><td class="confluenceTd"><strong>owner</strong><span> </span>(<em>string</em>)</td><td class="confluenceTd">What reserved the prefix (&quot;DHCP&quot;, etc.)</td></tr><tr><td class="confluenceTd"><strong>pool</strong><span> </span>(<em>string</em>)</td><td class="confluenceTd">Name of the pool.</td></tr><tr><td class="confluenceTd"><strong>prefix</strong><span> </span>(<em>IPv6/0..128</em>)</td><td class="confluenceTd">IPv6 prefix that is assigned to the client from the pool.</td></tr></tbody></table></div>
+                    </div>
+
+                                        
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

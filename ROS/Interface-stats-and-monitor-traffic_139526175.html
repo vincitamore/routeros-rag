@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : Interface stats and monitor-traffic</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="119144606.html">Diagnostics, monitoring and troubleshooting</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : Interface stats and monitor-traffic
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Edgars P.</span>, last updated on Jul 27, 2022
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742046053 {padding: 0px;}
+div.rbtoc1747742046053 ul {margin-left: 0px;}
+div.rbtoc1747742046053 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742046053'>
+<ul class='toc-indentation'>
+<li><a href='#Interfacestatsandmonitortraffic-Summary'>Summary</a></li>
+<li><a href='#Interfacestatsandmonitortraffic-Stats'>Stats</a></li>
+<li><a href='#Interfacestatsandmonitortraffic-Monitortraffic'>Monitor traffic</a></li>
+</ul>
+</div></p><h1 id="Interfacestatsandmonitortraffic-Summary">Summary</h1><p>Every RouterOS interface contains various counters, for example, the number of received and transmitted packets, <a href="https://help.mikrotik.com/docs/display/ROS/Packet+Flow+in+RouterOS#PacketFlowinRouterOS-FastPath" rel="nofollow">Fast Path</a> bytes, and link downs. </p><h1 id="Interfacestatsandmonitortraffic-Stats">Stats</h1><p>Use the <code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">stats</span></code> or <code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">stats-detail</span></code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);"> </span>commands to print the interface counters. The values starting with &quot;fp&quot; indicates the <a href="https://help.mikrotik.com/docs/display/ROS/Packet+Flow+in+RouterOS#PacketFlowinRouterOS-FastPath" rel="nofollow">Fast Path</a> counters. The value &quot;tx-queue-drop&quot; indicates the number of dropped packets by the <a href="https://help.mikrotik.com/docs/display/ROS/Queues#Queues-InterfaceQueue" rel="nofollow">interface queue</a>. </p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; /interface print stats 
+Flags: R - RUNNING
+Columns: NAME, RX-BYTE, TX-BYTE, RX-PACKET, TX-PACKET, TX-QUEUE-DROP
+#   NAME        RX-BYTE      TX-BYTE  RX-PACKET  TX-PACKET  TX-QUEUE-DROP
+0 R ether1  205 149 015  147 887 338    158 132    150 015              2
+1 R ether2   32 400 148  335 690 764         19    216 509              0
+2 R ether3  944 043 040   32 392 350    617 271         17              0
+3 R ether4    7 038 417   32 398 973          9          4              0
+4 R ether5    7 036 903   32 502 437          5          9              0
+5   sfp1              0            0          0          0              0
+[admin@MikroTik] &gt; /interface print stats-detail  
+Flags: D - dynamic; X - disabled, R - running; S - slave; P - passthrough 
+ 0  R   name=&quot;ether1&quot; last-link-down-time=jul/19/2022 12:37:06 last-link-up-time=jul/19/2022 12:37:09 link-downs=2 
+        rx-byte=205 164 277 tx-byte=147 977 500 rx-packet=158 254 tx-packet=150 156 tx-queue-drop=2 
+        fp-rx-byte=199 271 067 fp-tx-byte=0 fp-rx-packet=1 473 603 fp-tx-packet=0 
+
+ 1  R   name=&quot;ether2&quot; last-link-down-time=jul/19/2022 12:46:06 last-link-up-time=jul/19/2022 12:46:07 link-downs=10 
+        rx-byte=32 400 148 tx-byte=335 690 764 rx-packet=19 tx-packet=216 509 tx-queue-drop=0 
+        fp-rx-byte=33 718 434 fp-tx-byte=67 fp-rx-packet=60 037 fp-tx-packet=1 
+
+ 2  R   name=&quot;ether3&quot; last-link-down-time=jul/19/2022 12:46:06 last-link-up-time=jul/19/2022 12:46:08 link-downs=11 
+        rx-byte=944 043 040 tx-byte=32 392 350 rx-packet=617 271 tx-packet=17 tx-queue-drop=0 fp-rx-byte=6 860 921 
+        fp-tx-byte=0 fp-rx-packet=46 671 fp-tx-packet=0 
+
+ 3  R   name=&quot;ether4&quot; last-link-down-time=jul/19/2022 12:46:06 last-link-up-time=jul/19/2022 12:46:07 link-downs=10 
+        rx-byte=7 038 417 tx-byte=32 398 973 rx-packet=9 tx-packet=4 tx-queue-drop=0 fp-rx-byte=6 852 283 
+        fp-tx-byte=0 fp-rx-packet=46 586 fp-tx-packet=0 
+
+ 4  R   name=&quot;ether5&quot; last-link-down-time=jul/19/2022 12:46:06 last-link-up-time=jul/19/2022 12:46:08 link-downs=10 
+        rx-byte=7 036 903 tx-byte=32 502 437 rx-packet=5 tx-packet=9 tx-queue-drop=0 fp-rx-byte=6 850 637 
+        fp-tx-byte=178 fp-rx-packet=46 568 fp-tx-packet=2 
+
+ 5      name=&quot;sfp1&quot; link-downs=0 rx-byte=0 tx-byte=0 rx-packet=0 tx-packet=0 tx-queue-drop=0 fp-rx-byte=0 
+        fp-tx-byte=0 fp-rx-packet=0 fp-tx-packet=0 </pre>
+</div></div><h1 id="Interfacestatsandmonitortraffic-Monitortraffic">Monitor traffic</h1><p>The traffic passing through any interface can be monitored using the <span style="color:var(--ds-icon-accent-magenta,#cd519d);"><code>monitor-traffic</code></span> command.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; /interface monitor-traffic [find]
+                         name:     ether1 ether2 ether3 ether4 ether5 sfp1
+        rx-packets-per-second:         19      0      0      0      0    0
+           rx-bits-per-second:   27.8kbps   0bps   0bps   0bps   0bps 0bps
+     fp-rx-packets-per-second:         29      0      0      0      0    0
+        fp-rx-bits-per-second:   26.8kbps   0bps   0bps   0bps   0bps 0bps
+        tx-packets-per-second:         21      0      0      0      0    0
+           tx-bits-per-second:  149.4kbps   0bps   0bps   0bps   0bps 0bps
+     fp-tx-packets-per-second:          0      0      0      0      0    0
+        fp-tx-bits-per-second:       0bps   0bps   0bps   0bps   0bps 0bps
+    tx-queue-drops-per-second:          0      0      0      0      0    0
+
+</pre>
+</div></div><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Additional <a href="https://help.mikrotik.com/docs/display/ROS/Ethernet#Ethernet-Stats" rel="nofollow">Ethernet statistics</a> are available in the &quot;/interface ethernet&quot; menu. </p></div></div>
+                    </div>
+
+                                        
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:54</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

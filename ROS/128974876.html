@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : MPLS MTU, Forwarding and Label Bindings</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Multi-Protocol-Label-Switching---MPLS_328082.html">Multi Protocol Label Switching - MPLS</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : MPLS MTU, Forwarding and Label Bindings
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Māris B.</span>, last updated on Apr 18, 2023
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <h1 id="MPLSMTU,ForwardingandLabelBindings-LabelRangeandTTL"><span class="mw-headline">Label Range and TTL</span></h1><p><span class="mw-headline">From the <code><span style="color:var(--ds-text-accent-blue,#0055cc);">/mpls settings</span></code> menu it is possible to assign specific dynamic label range and TTL propagation. If for some reason static label mapping is used then the dynamic range can be adjusted to exclude statically assigned label numbers from being dynamically assigned by any of the label distribution protocols.</span></p><div class="table-wrap"><table class="relative-table wrapped confluenceTable" style="width: 98.313%;"><colgroup><col style="width: 10.007%;"/><col style="width: 89.993%;"/></colgroup><tbody><tr><th class="highlight-#deebff confluenceTh" data-highlight-colour="#deebff">Property</th><th class="highlight-#deebff confluenceTh" data-highlight-colour="#deebff">Description</th></tr><tr><td class="confluenceTd"><strong>dynamic-label-range</strong><span> </span>(<em>range of integer[16..1048575]</em>; Default:<span> </span><strong>16-1048575</strong>)</td><td class="confluenceTd">Range of Label numbers used for dynamic allocation. The first 16 labels are reserved for special purposes (as defined in RFC). If you intend to configure labels statically then adjust the dynamic default range not to include numbers that will be used in a static configuration.</td></tr><tr><td class="confluenceTd"><strong>propagate-ttl</strong><span> </span>(<em>yes | no</em>; Default:<span> </span><strong>yes</strong>)</td><td class="confluenceTd">Whether to copy TTL values from IP header to MPLS header. If this option is set to<span> </span><strong>no</strong><span> </span>then hops inside the MPLS cloud will be invisible from traceroutes.</td></tr><tr><td class="confluenceTd"><strong>allow-fast-path(</strong><em>yes | no</em>; Default: <strong>yes)</strong></td><td class="confluenceTd">Enable/disable MPLS fast-path support.</td></tr></tbody></table></div><h1 id="MPLSMTU,ForwardingandLabelBindings-MPLSMTU"><span class="mw-headline">MPLS MTU</span></h1><p>Configuration of MPLS MTU (path MTU + MPLS tag size) is useful in cases when there is a large variety of possible MTUs along the path. Configuring MPLS MTU to a minimum value that can pass all the hops will ensure that the MPLS packet will not be silently dropped on the devices that do not support big enough MTU.</p><p>MPLS MTUs are configured from the <span style="color:var(--ds-text-accent-blue,#0055cc);"><code>/mpls interface</code></span> menu.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: text; gutter: false">[admin@rack1_b35_CCR1036] /mpls/interface&gt; print 
+Flags: X - disabled; * - builtin 
+ 0    ;;; router-test
+      interface=ether1 mpls-mtu=1580 input=yes 
+
+ 1    ;;; router-test
+      interface=ether2 mpls-mtu=1580 input=yes 
+
+ 2    interface=all mpls-mtu=1500  </pre>
+</div></div><p><br/></p><p><strong>Properties</strong></p><div class="table-wrap"><table class="wrapped confluenceTable" style="margin-left: 14.4318px;"><colgroup><col/><col/></colgroup><tbody><tr><th class="highlight-#deebff confluenceTh" data-highlight-colour="#deebff">Property</th><th class="highlight-#deebff confluenceTh" data-highlight-colour="#deebff">Description</th></tr><tr><td class="confluenceTd"><strong>comment</strong><span> </span>(<em>string</em>; Default: )</td><td class="confluenceTd">Short description of the interface</td></tr><tr><td class="confluenceTd"><strong>disabled</strong><span> </span>(<em>yes | no</em>; Default:<span> </span><strong>no</strong>)</td><td class="confluenceTd">If set to<span> </span><strong>yes</strong><span> </span>then this configuration is ignored.</td></tr><tr><td class="confluenceTd"><strong>interface</strong><span> </span>(<em>name</em>; Default:)</td><td class="confluenceTd">Name of the interface or interface-list to match.</td></tr><tr><td class="confluenceTd"><strong>input<span> </span></strong>(<em>yes | no</em>; Default:<span> </span><strong>yes</strong>)</td><td class="confluenceTd">Whether to allow MPLS input on the interface</td></tr><tr><td class="confluenceTd"><strong>mpls-mtu</strong><span> </span>(<em>integer [512..65535]</em>; Default:<span> </span><strong>1508</strong>)</td><td class="confluenceTd">The option represents how big packets can be carried over the interface with added MPLS labels.</td></tr></tbody></table></div><p style="margin-left: 20.0px;"><br/></p><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Listed entries are ordered, and the first entry (iterating from the top to the bottom) that matches the interface will be used.</p></div></div><p>The order of the entries is important due to the possibility that different interface lists can contain the same interface and in addition, that interface can be referenced directly.</p><p>Selection of the MPLS MTU happens in the following manner:</p><ul><li>If the interface matched the entry from this table, then try to use configured MPLS MTU value</li><li>If the interface does not match any entry then consider MPLS MTU equal to L2MTU</li><li>If the interface does not support L2MTU, then consider MPLS MTU equal to L3 MTU</li></ul><p><span>On the MPLS ingress path, MTU is chosen by min(MPLS MTU - tagsize, l3mtu). This means that on interfaces that do not support L2MTU and default L3 MTU is set to 1500, max path MTU will be 1500 - tag size (the interface will not be able to pass full IP frame without fragmentation). In such scenarios, L3MTU must be increased by max observed tag size.</span></p><p>Read more on MTUs in the <a href="MTU-in-RouterOS_21725296.html">MTU in RouterOS</a> article.</p><p><br/></p><h2 id="MPLSMTU,ForwardingandLabelBindings-ForwardingTable"><span class="mw-headline">Forwarding Table</span></h2><p>Entries in the <span style="color:var(--ds-text-accent-blue,#0055cc);"><code>/mpls forwarding-table</code></span> menu show label bindings for specific routes that will be used in MPLS label switching. Properties in this menu are read-only.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: text; gutter: false">[admin@rack1_b35_CCR1036] /mpls/forwarding-table&gt; print 
+Flags: L, V - VPLS
+Columns: LABEL, VRF, PREFIX, NEXTHOPS
+#   LABEL  VRF   PREFIX         NEXTHOPS                                            
+0 L    16  main  10.0.0.0/8     { nh=10.155.130.1; interface=ether12 }              
+1 L    18  main  111.111.111.3  { label=impl-null; nh=111.12.0.1; interface=ether2 }
+2 L    17  main  111.111.111.2  { label=impl-null; nh=111.11.0.1; interface=ether1 }
+
+
+</pre>
+</div></div><p><br/></p><div class="table-wrap"><table class="relative-table wrapped confluenceTable" style="width: 98.1385%;"><colgroup><col style="width: 10.1424%;"/><col style="width: 89.8576%;"/></colgroup><tbody><tr><th class="highlight-#deebff confluenceTh" data-highlight-colour="#deebff">Property</th><th class="highlight-#deebff confluenceTh" data-highlight-colour="#deebff">Description</th></tr><tr><td class="confluenceTd"><strong>prefix</strong><span> </span>(<em>IP/Mask</em>)</td><td class="confluenceTd">Destination prefix for which labels are assigned</td></tr><tr><td class="confluenceTd"><strong>label</strong><span> </span>(<em>integer</em>)</td><td class="confluenceTd">Ingress MPLS label</td></tr><tr><td class="confluenceTd"><strong>ldp</strong><span> </span>(<em>yes | no</em>)</td><td class="confluenceTd">Whether labels are<span> </span><a href="LDP_121995275.html">LDP</a><span> </span>signaled</td></tr><tr><td class="confluenceTd"><strong>nexthops</strong><span> </span>()</td><td class="confluenceTd"><p>An array of the next-hops, each entry in the array represents one ECMP next-hop. Array entry can contain several parameters:</p><ul><li><strong>label</strong> - egress MPLS label</li><li><strong>nh</strong> - out next-hop IP address</li><li><strong>interface</strong> - out the interface</li></ul></td></tr><tr><td class="confluenceTd"><strong>out-label</strong><span> </span>(<em>integer</em>)</td><td class="confluenceTd">Label number which is added or switched to for outgoing packet.</td></tr><tr><td class="confluenceTd"><strong>packets</strong><span> </span>(<em>integer</em>)</td><td class="confluenceTd">Number of packets matched by this entry</td></tr><tr><td class="confluenceTd"><strong>te-sender</strong></td><td class="confluenceTd"><br/></td></tr><tr><td class="confluenceTd"><strong>te-session<span> </span></strong></td><td class="confluenceTd"><br/></td></tr><tr><td class="confluenceTd"><strong>traffic-eng<span> </span></strong></td><td class="confluenceTd">Shows whether the entry is signaled by RSVP-TE (Traffic Engineering)</td></tr><tr><td class="confluenceTd"><strong>type </strong><em>(string)</em></td><td class="confluenceTd">Type of the entry, for example, &quot;vpls&quot;, etc.</td></tr><tr><td class="confluenceTd"><strong>vpls</strong><span> </span>(<em>yes | no</em>)</td><td class="confluenceTd">Shows whether the entry is used for<span> </span><a href="VPLS_40992798.html">VPLS</a><span> </span>tunnels.</td></tr><tr><td class="confluenceTd"><strong>vpn</strong></td><td class="confluenceTd"><br/></td></tr><tr><td class="confluenceTd"><strong>vrf</strong></td><td class="confluenceTd">Name of the VRF table this entry belongs to</td></tr></tbody></table></div><p><br/></p><p><br/></p><p style="margin-left: 20.0px;"><br/></p><p><br/></p>
+                    </div>
+
+                                        
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : Port knocking</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Firewall-and-Quality-of-Service_119144601.html">Firewall and Quality of Service</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Firewall-and-QoS-Case-Studies_120324137.html">Firewall and QoS Case Studies</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : Port knocking
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Normunds R.</span>, last updated by <span class='editor'> Gļebs K.</span> on Sep 02, 2024
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p>All available public IP addresses are constantly being port scanned by bots and services like shodan.io and anyone can use this information to perform brute-force attacks and execute any known exploits. Port knocking is a cost-effective way to defend against this by not exposing any ports and simply listening to connection attempts - if the correct sequence of port connection attempts is made, the client is considered safe and added to a list of secured address list that bypass the WAN firewall rules.</p><h2 id="Portknocking-Setupexample">Setup example</h2><p>We are assuming you have already set up a firewall that drops all connection attempts from the WAN port, so you will need to add additional rules before that. <br/>First, create a firewall rule that listens on a given port and adds the connected source IP to an address list - this is the first knock.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip/firewall/filter add action=add-src-to-address-list address-list=888 address-list-timeout=30s chain=input dst-port=888 in-interface-list=WAN protocol=tcp</pre>
+</div></div><p>Then add a rule that does the same on another port, but only approves IPs that are already in the first list. You can repeat this step as many times as you like.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip/firewall/filter add action=add-src-to-address-list address-list=555 address-list-timeout=30s chain=input dst-port=555 in-interface-list=WAN protocol=tcp src-address-list=888</pre>
+</div></div><p>Finally, the last knock will be added to an IP list that is trusted and any input is accepted.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip/firewall/filter add action=add-src-to-address-list address-list=secured address-list-timeout=30m chain=input dst-port=222 in-interface-list=WAN protocol=tcp src-address-list=555
+/ip/firewall/filter add action=accept chain=input in-interface-list=WAN src-address-list=secured</pre>
+</div></div><h2 id="Portknocking-Knocktogainaccess">Knock to gain access</h2><p>To access the board from WAN, a port-knocking client could be used, but a simple bash one-liner with nmap can do the job.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: bash; gutter: false">for x in 888,555,222; do nmap -p $x -Pn xx.xx.xx.xx; done</pre>
+</div></div><h2 id="Portknocking-Blacklists">Blacklists</h2><p>Unless you are using a lot of knocks, a simple port scan could accidentally trigger the correct ports in the correct order, so it is advisable to add a blacklist as well.</p><p>At the very top of your firewall stack add a drop rule for the blacklist.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip/firewall/filter add action=drop chain=input disabled=yes in-interface-list=WAN src-address-list=blacklist</pre>
+</div></div><p>Then add suspicious IPs to the blacklist.</p><p>Bad ports - ones that will never be used by a trusted user and hence have a high timeout penalty.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip/firewall/filter add action=add-src-to-address-list address-list=blacklist address-list-timeout=1000m chain=input disabled=yes dst-port=666 in-interface-list=WAN protocol=tcp</pre>
+</div></div><p>Ports that slow down the port scanning process significantly to the point where it is pointless, but will never lock out a real user for too long. This could include every single port apart from the 'knock' ports, the key is that the source IP is not already in the secure list and hence those ports can be used after a successful knock.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip/firewall/filter add action=add-src-to-address-list address-list=blacklist address-list-timeout=1m chain=input disabled=yes dst-port=21,22,23,8291,10000-60000 in-interface-list=WAN protocol=tcp src-address-list=!secured</pre>
+</div></div><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Blacklist rules from this section are added <strong>disabled=yes </strong>in order to avoid locking out the user. Enable the filter rules, once the alternative access available or use &lt;Safe Mode&gt;</p></div></div><h2 class="auto-cursor-target" id="Portknocking-Useapassphraseforeachknock">Use a passphrase for each knock</h2><p>You could go even further by sending a passphrase with each knock.</p><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><p class="title conf-macro-render">Warning</p><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Layer7 rules are very resource-intensive. Do not use it unless you know what you are doing.</p></div></div><p><br/></p><div id="expander-438210048" class="expand-container"><div role="heading" aria-level="6" id="expander-control-438210048" class="expand-control"><button type="button" id="expand-button-438210048" class="aui-button aui-button-link aui-button-link-icon-text" aria-expanded="true" aria-controls="expander-content-438210048" ><span class="expand-icon aui-icon aui-icon-small aui-iconfont-chevron-down" aria-hidden="true"></span><span class="expand-control-text conf-macro-render">Click to open code block</span></button></div><div role="region" id="expander-content-438210048" class="expand-content" aria-labelledby="expand-button-438210048"><p>Then create a layer7 regex check that can be requested on the knock rule.</p><p>/ip firewall layer7-protocol add name=pass regexp=&quot;^passphrase/$&quot;<br/>/ip firewall filter<br/>add action=add-src-to-address-list address-list=888 address-list-timeout=30s chain=input dst-port=888 in-interface-list=WAN protocol=udp layer7-protocol=pass</p></div></div><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body">For additional security layer see the Bruteforse prevention article: <a href="Bruteforce-prevention_268337176.html">Bruteforce prevention</a> </div></div>
+                    </div>
+
+                                        
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

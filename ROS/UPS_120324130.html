@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : UPS</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Extended-features_120324125.html">Extended features</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : UPS
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Unknown User (emils)</span>, last updated on Jun 14, 2022
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <h2 id="UPS-Summary"><span class="mw-headline">Summary</span></h2><p><strong>Sub-menu:</strong> <code> /system ups </code><br/><strong>Standards:</strong> <code> <a class="external-link" href="http://www.exploits.org/nut/library/protocols/apcsmart.html" rel="nofollow">APC Smart Protocol</a> </code></p><p>The UPS monitor feature works with APC UPS units that support “smart” signalling over serial RS232 or USB connection. The UPS monitor service is not included in the default set of packages so it needs to be downloaded and installed manually with ups.npk package. This feature enables the network administrator to monitor the UPS and set the router to ‘gracefully’ handle any power outage with no corruption or damage to the router. The basic purpose of this feature is to ensure that the router will come back online after an extended power failure. To do this, the router will monitor the UPS and set itself to hibernate mode when the utility power is down and the UPS battery has less than 10% of its battery power left. The router will then continue to monitor the UPS (while in hibernate mode) and then restart itself when the utility power returns. If the UPS battery is drained and the router loses all power, the router will power back to full operation when the ‘utility’ power returns.</p><p>The UPS monitor feature on the MikroTik RouterOS supports</p><ul class="bullets"><li>hibernate and safe reboot on power and battery failure</li><li>UPS battery test and run time calibration test</li><li>monitoring of all &quot;smart&quot; mode status information supported by UPS</li><li>logging of power changes</li></ul><p class="mw-empty-elt"><br/></p><h2 id="UPS-ConnectingtheUPSunit"><span class="mw-headline">Connecting the UPS unit</span></h2><p>The serial APC UPS (BackUPS Pro or SmartUPS) requires a special serial cable (unless connected with USB). If no cable came with the UPS, a cable may be ordered from APC or one can be made &quot;in-house&quot;. Use the following diagram:</p><div class="table-wrap"><table class="wrapped confluenceTable" style="margin-left: 20.0%;"><tbody><tr><th class="confluenceTh">Router Side (DB9f)</th><th class="confluenceTh">Signal</th><th class="confluenceTh">Direction</th><th class="confluenceTh">UPS Side (DB9m)</th></tr><tr><td class="confluenceTd">2</td><td class="confluenceTd">Receive</td><td class="confluenceTd">IN</td><td class="confluenceTd">2</td></tr><tr><td class="confluenceTd">3</td><td class="confluenceTd">Send</td><td class="confluenceTd">OUT</td><td class="confluenceTd">1</td></tr><tr><td class="confluenceTd">5</td><td class="confluenceTd">Ground</td><td class="confluenceTd"><br/></td><td class="confluenceTd">4</td></tr><tr><td class="confluenceTd">7</td><td class="confluenceTd">CTS</td><td class="confluenceTd">IN</td><td class="confluenceTd">6</td></tr></tbody></table></div><p>If using a RouterBOARD device, make sure to set your &quot;RouterBOOT setup key&quot; to <em>Delete</em> instead of the default <em>Any key</em>. This is to avoid accidental opening of the setup menu if the UPS unit sends some data to the serial port during RouterBOARD startup. This can be done in the RouterBOOT options during boot time or via the RouterBoard Settings in Winbox :</p><pre>Select key which will enter setup on boot:
+ * 1 - any key
+   2 - &lt;Delete&gt; key only
+your choice:
+</pre><p><br/></p><h2 id="UPS-GeneralProperties"><span class="mw-headline">General Properties</span></h2><div class="table-wrap"><table class="wrapped confluenceTable"><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>alarm-setting</strong> (<em>delayed | immediate | low-battery | none</em>; Default: <strong>immediate</strong>)</td><td class="confluenceTd">UPS sound alarm setting:<ul><li>delayed - alarm is delayed to the on-battery event</li><li>immediate - alarm immediately after the on-battery event</li><li>low-battery - alarm only when the battery is low</li><li>none - do not alarm</li></ul></td></tr><tr><td class="confluenceTd"><strong>check-capabilities</strong> (<em>yes | no</em>; Default: <strong>yes</strong>)</td><td class="confluenceTd">Whether to check UPS capabilities before reading information. Disabling it can fix compatibility issues with some UPS models. (Applies to RouterOS version 6, implemented since v6.17)</td></tr><tr><td class="confluenceTd"><strong>min-runtime</strong> (<em>time</em>; Default: <strong>never</strong>)</td><td class="confluenceTd">Minimal run time remaining. After a 'utility' failure, the router will monitor the runtime-left value. When the value reaches the min-runtime value, the router will go to hibernate mode. <br/><ul><li>never - the router will go to hibernate mode when the &quot;battery low&quot; signal is sent indicating that the battery power is below 10%</li><li>0s - the router will continue to work as long as the battery is supplying sufficient voltage</li></ul></td></tr><tr><td class="confluenceTd"><strong>offline-time</strong> (<em>time</em>; Default: <strong>0s</strong>)</td><td class="confluenceTd">How long to work on batteries. The router waits that amount of time and then goes into hibernate mode until the UPS reports that the 'utility' power is back <br/><ul><li>0s - the router will go into hibernate mode according to the min-runtime setting. In this case, the router will wait until the UPS reports that the battery power is below 10%</li></ul></td></tr><tr><td class="confluenceTd"><strong>port</strong> (<em>string</em>; Default: )</td><td class="confluenceTd">Communication port of the router.</td></tr></tbody></table></div><p><br/>Read-only properties:</p><div class="table-wrap"><table class="wrapped confluenceTable"><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>load</strong> (<em>percent</em>)</td><td class="confluenceTd">The UPS's output load as a percentage of full rated load in Watts. The typical accuracy of this measurement is ±3% of the maximum of 105%</td></tr><tr><td class="confluenceTd"><strong>manufacture-date</strong> (<em>string</em>)</td><td class="confluenceTd">UPS's date of manufacture in the format &quot;mm/dd/yy&quot; (month, day, year).</td></tr><tr><td class="confluenceTd"><strong>model</strong> (<em>string</em>)</td><td class="confluenceTd">Less than 32 ASCII character string consisting of the UPS model name (the words on the front of the UPS itself)</td></tr><tr><td class="confluenceTd"><strong>nominal-battery-voltage</strong> (<em>integer</em>)</td><td class="confluenceTd">UPS's nominal battery voltage rating (this is not the UPS's actual battery voltage)</td></tr><tr><td class="confluenceTd"><strong>offline-after</strong> (<em>time</em>)</td><td class="confluenceTd">When will the router go offline</td></tr><tr><td class="confluenceTd"><strong>serial</strong> (<em>string</em>)</td><td class="confluenceTd">A string of at least 8 characters directly representing the UPS's serial number as set at the factory. Newer SmartUPS models have 12-character serial numbers</td></tr><tr><td class="confluenceTd"><strong>version</strong> (<em>string</em>)</td><td class="confluenceTd">UPS version, consists of three fields: SKU number, firmware revision, country code. The country code may be one of the following:<ul><li>I - 220/230/240 Vac</li><li>D - 115/120 Vac</li><li>A - 100 Vac</li><li>M - 208 Vac</li><li>J - 200 Vac</li></ul></td></tr></tbody></table></div><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><strong>Note:</strong> In order to enable UPS monitor, the serial port should be available.</div></div><p><br/></p><h3 id="UPS-Example"><span class="mw-headline">Example</span></h3><p>To enable the UPS monitor for port serial1:</p><pre>[admin@MikroTik] system ups&gt; add port=serial1 disabled=no
+[admin@MikroTik] system ups&gt; print
+Flags: X - disabled, I - invalid
+ 0    name=&quot;ups&quot; port=serial1 offline-time=5m min-runtime=5m
+      alarm-setting=immediate model=&quot;SMART-UPS 1000&quot; version=&quot;60.11.I&quot;
+      serial=&quot;QS0030311640&quot; manufacture-date=&quot;07/18/00&quot;
+      nominal-battery-voltage=24V
+[admin@MikroTik] system ups&gt;
+</pre><h2 id="UPS-RuntimeCalibration"><span class="mw-headline">Runtime Calibration</span></h2><p><strong>Command:</strong> <code> /system ups rtc &lt;id&gt;</code></p><p><br/></p><p>The rtc command causes the UPS to start a run time calibration until less than 25% of full battery capacity is reached. This command calibrates the returned run time value.</p><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><strong>Note:</strong> The test begins only if the battery capacity is 100%.</div></div><p><br/></p><h2 id="UPS-Monitoring"><span class="mw-headline">Monitoring</span></h2><p><strong>Command:</strong> <code> /system ups monitor &lt;id&gt;</code></p><p><br/></p><div class="table-wrap"><table class="wrapped confluenceTable"><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>battery-charge</strong> ()</td><td class="confluenceTd">the UPS's remaining battery capacity as a percent of the fully charged condition</td></tr><tr><td class="confluenceTd"><strong>battery-voltage</strong> ()</td><td class="confluenceTd">the UPS's present battery voltage. The typical accuracy of this measurement is ±5% of the maximum value (depending on the UPS's nominal battery voltage)</td></tr><tr><td class="confluenceTd"><strong>frequency</strong> ()</td><td class="confluenceTd">when operating on-line, the UPS's internal operating frequency is synchronized to the line within variations of 3 Hz of the nominal 50 or 60 Hz. The typical accuracy of this measurement is ±1% of the full scale value of 63 Hz</td></tr><tr><td class="confluenceTd"><strong>line-voltage</strong> ()</td><td class="confluenceTd">the in-line utility power voltage</td></tr><tr><td class="confluenceTd"><strong>load</strong> ()</td><td class="confluenceTd">the UPS's output load as a percentage of full rated load in Watts. The typical accuracy of this measurement is ±3% of the maximum of 105%</td></tr><tr><td class="confluenceTd"><strong>low-battery</strong> (<em>yes | no</em>)</td><td class="confluenceTd">only shown when the UPS reports this status</td></tr><tr><td class="confluenceTd"><strong>on-battery</strong> (<em>yes | no</em>)</td><td class="confluenceTd">Whether UPS battery is supplying power</td></tr><tr><td class="confluenceTd"><strong>on-line</strong> (<em>yes | no</em>)</td><td class="confluenceTd">whether power is being provided by the external utility (power company)</td></tr><tr><td class="confluenceTd"><strong>output-voltage</strong> ()</td><td class="confluenceTd">the UPS's output voltage</td></tr><tr><td class="confluenceTd"><strong>overloaded-output</strong> (<em>yes | no</em>)</td><td class="confluenceTd">only shown when the UPS reports this status</td></tr><tr><td class="confluenceTd"><strong>replace-battery</strong> (<em>yes | no</em>)</td><td class="confluenceTd">only shown when the UPS reports this status</td></tr><tr><td class="confluenceTd"><strong>runtime-calibration-running</strong> (<em>yes | no</em>)</td><td class="confluenceTd">only shown when the UPS reports this status</td></tr><tr><td class="confluenceTd"><strong>runtime-left</strong> (<em>time</em>)</td><td class="confluenceTd">the UPS's estimated remaining run time in minutes. You can query the UPS when it is operating in the on-line, bypass, or on-battery modes of operation. The UPS's remaining run time reply is based on available battery capacity and output load</td></tr><tr><td class="confluenceTd"><strong>smart-boost-mode</strong> (<em>yes | no</em>)</td><td class="confluenceTd">only shown when the UPS reports this status</td></tr><tr><td class="confluenceTd"><strong>smart-ssdd-mode</strong> ()</td><td class="confluenceTd">only shown when the UPS reports this status</td></tr><tr><td class="confluenceTd"><strong>transfer-cause</strong> (<em>string</em>)</td><td class="confluenceTd">the reason for the most recent transfer to on-battery operation (only shown when the unit is on-battery)</td></tr></tbody></table></div><h3 id="UPS-Example.1"><span class="mw-headline">Example</span></h3><p>When running on utility power:</p><pre>[admin@MikroTik] system ups&gt; monitor 0
+          on-line: yes
+       on-battery: no
+      RTC-running: no
+     runtime-left: 20m
+   battery-charge: 100%
+  battery-voltage: 27V
+     line-voltage: 226V
+   output-voltage: 226V
+             load: 45%
+      temperature: 39C
+        frequency: 50Hz
+  replace-battery: no
+      smart-boost: no
+       smart-trim: no
+         overload: no
+      low-battery: no
+
+[admin@MikroTik] system ups&gt;
+</pre><p><br/>When running on battery:</p><pre>[admin@MikroTik] system ups&gt; monitor 0
+          on-line: no
+       on-battery: yes
+   transfer-cause: &quot;Line voltage notch or spike&quot;
+      RTC-running: no
+     runtime-left: 19m
+    offline-after: 4m46s
+   battery-charge: 94%
+  battery-voltage: 24V
+     line-voltage: 0V
+   output-voltage: 228V
+             load: 42%
+      temperature: 39C
+        frequency: 50Hz
+  replace-battery: no
+      smart-boost: no
+       smart-trim: no
+         overload: no
+      low-battery: no
+
+      [admin@MikroTik] system ups&gt;
+</pre>
+                    </div>
+
+                                        
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:54</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

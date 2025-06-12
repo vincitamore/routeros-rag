@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : NAT-PMP</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Firewall-and-Quality-of-Service_119144601.html">Firewall and Quality of Service</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : NAT-PMP
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Guntis G.</span>, last updated on Sep 18, 2024
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <h1 id="NATPMP-Introduction">Introduction</h1><p>NAT Port Mapping Protocol (NAT-PMP) is a protocol used for transparent peer-to-peer network connectivity of personal computers and network-enabled intelligent devices or appliances. </p><p>Protocol operates by retrieving the external IPv4 address of a NAT gateway, thus allowing a client to make its external IPv4 address and port known to peers who may wish to communicate with it by creating dynamic NAT rules.</p><p>NAT-PMP uses UDP port number 5350 - on the client, and 5351 on the server side.</p><p>There are two interface types for PMP: <strong>internal</strong> (the one local clients are connected to) and <strong>external</strong> (the one the Internet is connected to).A router may only have one active external interface with a 'public' IP address on it</p><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>A router can have only one active <strong>external</strong> interface with a 'public' IP address on it. NAT-PMP <strong>internal</strong> interface can create NAT mapping for any subnet, not just the subnet present on the internal interface, so caution must be used when setting <strong>internal</strong> interfaces.</p></div></div><p>For more details on NAT PMP see<a class="external-link" href="https://www.rfc-editor.org/rfc/rfc6886" rel="nofollow"> <strong>RFC 6886</strong></a></p><p>NAT-PMP configuration is accessible from <span style="color:var(--ds-icon-success,#22a06b);"><code>/ip nat-pmp </code></span>menu.</p><h1 id="NATPMP-ConfigurationExample">Configuration Example</h1><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/220233819/220233824.png" data-image-src="attachments/220233819/220233824.png" data-unresolved-comment-count="0" data-linked-resource-id="220233824" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="UPnP.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="220233819" data-linked-resource-container-version="6" tabindex="0" alt=""></span></p><p>Let's consider that we already have this basic home setup illustrated above.</p><p>Before enabling PMP-NAT we need to masquerade outgoing LAN packets.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip firewall nat
+add action=masquerade chain=srcnat out-interface=ether1</pre>
+</div></div><p>Now we can enable PMP and add internal, external interfaces:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip nat-pmp set enable=yes
+/ip nat-pmp interfaces&gt; add interface=ether1 type=external disabled=no
+/ip nat-pmp interfaces&gt; add interface=ether2 type=internal disabled=no
+</pre>
+</div></div><p class="auto-cursor-target">When the client from the internal interface side sends PMP request, dynamic NAT rules are created on the router:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: text; gutter: false">[admin@MikroTik] &gt; ip firewall nat print 
+Flags: X - disabled, I - invalid, D - dynamic 
+
+0 chain=srcnat action=masquerade out-interface=ether1
+
+1 D ;;; nat-pmp 192.168.88.10: ApplicationX
+chain=dstnat action=dst-nat to-addresses=192.168.88.10 to-ports=55000 protocol=tcp 
+dst-address=10.0.0.1 in-interface=ether1 dst-port=55000
+
+2 D ;;; nat-pmp 192.168.88.10: ApplicationX
+chain=dstnat action=dst-nat to-addresses=192.168.88.10 to-ports=55000 protocol=udp 
+dst-address=10.0.0.1 in-interface=ether1 dst-port=55000
+
+</pre>
+</div></div><h1 id="NATPMP-Properties">Properties</h1><h2 id="NATPMP-Generalproperties">General properties</h2><p class="auto-cursor-target">Available from <span style="color:var(--ds-icon-success,#22a06b);"><code>/ip nat-pmp </code></span>menu.</p><div class="table-wrap"><table class="relative-table wrapped confluenceTable" style="width: 98.913%;"><colgroup><col style="width: 20.8356%;"/><col style="width: 79.1644%;"/></colgroup><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>enabled</strong><span> </span>(<em>yes | no<span> </span></em>; Default:<span> </span><strong>no</strong>)</td><td class="confluenceTd">Enable NAT-PMP service</td></tr></tbody></table></div><h2 id="NATPMP-NATPMPInterfaces">NAT PMP Interfaces</h2><p>Available from <span style="color:var(--ds-icon-success,#22a06b);"><code>/ip nat-pmp interfaces </code></span>menu.</p><p><br/></p><div class="table-wrap"><table class="relative-table wrapped confluenceTable" style="width: 99.6752%;"><colgroup><col style="width: 20.5379%;"/><col style="width: 79.4621%;"/></colgroup><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>interface</strong><span> </span>(<em>string</em>; Default: )</td><td class="confluenceTd">Interface name on which PMP will be running on</td></tr><tr><td class="confluenceTd"><strong>type</strong><span> </span>(<em>external | internal</em>; Default:<span> </span><strong>no</strong>)</td><td class="confluenceTd">PMP interface type:<ul><li><code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">external</span></code><span> </span>- the interface a global IP address is assigned to</li><li><code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">internal</span></code><span> </span>- router's local interface the clients are connected to</li></ul></td></tr><tr><td class="confluenceTd"><strong>forced-ip</strong><span> </span>(<em>Ip</em>; Default: )</td><td class="confluenceTd">Allow specifying what public IP to use if the external interface has more than one IP available.</td></tr></tbody></table></div><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p><span style="color:var(--ds-text-accent-lime-bolder,#37471f);">In more complex setups with VLANs, where the VLAN interface is part of the</span><span style="color:var(--ds-text-accent-lime-bolder,#37471f);"> LAN, <span style="color:var(--ds-text-accent-lime-bolder,#37471f);">for PMP to work properly, </span>the VLAN interface itself should be specified as the internal interface.</span></p></div></div>
+                    </div>
+
+                                                            <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/220233819/220233824.png">UPnP.png</a> (image/png)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : Ports</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Hardware_13500445.html">Hardware</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : Ports
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Māris B.</span>, last updated by <span class='editor'> Artis M.</span> on Oct 23, 2024
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><span class="mw-headline"><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742045800 {padding: 0px;}
+div.rbtoc1747742045800 ul {margin-left: 0px;}
+div.rbtoc1747742045800 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742045800'>
+<ul class='toc-indentation'>
+<li><a href='#Ports-Summary'>Summary</a></li>
+<li><a href='#Ports-General'>General</a></li>
+<li><a href='#Ports-Properties'>Properties</a></li>
+<li><a href='#Ports-RemoteAccess'>Remote Access</a></li>
+<li><a href='#Ports-Properties.1'>Properties</a></li>
+</ul>
+</div></span></p><h1 id="Ports-Summary"><span class="mw-headline">Summary</span></h1><p>There are many ways how to use ports on the routers. Most obvious one is to use serial port for initial RouterOS configuration after installation (by default serial0 is used by serial-terminal).</p><p>Serial and USB ports can also be used to:</p><ul><li>connect 3G modems;</li><li>connect to another device through a serial cable</li><li>access device connected to serial cable remotely.</li></ul><h1 id="Ports-General"><span class="mw-headline">General</span></h1><p><span class="mw-headline"><strong>Sub-menu:</strong> <code>/port</code></span></p><p>Menu lists all available serial and USB ports on the router and allows to configure port parameters, like baud-rate, flow-control, etc.</p><p>Below you can see default port configuration on LtAP. </p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@LtAP] &gt; /port/print                 
+Columns: DEVICE, NAME, CHANNELS, USED-BY, BAUD-RATE
+# DEVICE  NAME     CHANNELS  USED-BY                                     BAUD-RATE
+0         serial0         1  Serial Console(#0)                          auto     
+1         gps             1  GPS(#0)                                     115200   </pre>
+</div></div><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>List of the ports are maintained automatically by the RouterOS.</p></div></div><h1 id="Ports-Properties">Properties</h1><div class="table-wrap"><table class="wrapped confluenceTable"><colgroup><col/><col/></colgroup><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>baud-rate</strong> (<em>integer | auto</em>; Default: <strong>auto</strong>)</td><td class="confluenceTd">Baud rate (speed) used by the port. If set to <strong>auto</strong>, then RouterOS tries to detect baud rate automatically.</td></tr><tr><td class="confluenceTd"><strong>data-bits</strong> (<em>7 | 8</em>; Default: )</td><td class="confluenceTd">The number of data bits in each character.<ul><li><strong>7</strong> - true ASCII</li><li><strong>8</strong> - any data (matches the size of a byte)</li></ul></td></tr><tr><td class="confluenceTd"><strong>dtr</strong> (<em>on | off</em>; Default: )</td><td class="confluenceTd">Whether to enable RS-232 DTR signal circuit used by flow control.</td></tr><tr><td class="confluenceTd"><strong>flow-control</strong> (<em>hardware | none | xon-xoff</em>; Default: )</td><td class="confluenceTd">method of flow control to pause and resume the transmission of data.</td></tr><tr><td class="confluenceTd"><strong>name</strong> (<em>string</em>; Default: )</td><td class="confluenceTd">Name of the port.</td></tr><tr><td class="confluenceTd"><strong>parity</strong> (<em>even | none | odd</em>; Default: )</td><td class="confluenceTd">Error detection method. If enabled, extra bit is sent to detect the communication errors. In most cases parity is set to <strong>none</strong> and errors are handled by the communication protocol.</td></tr><tr><td class="confluenceTd"><strong>rts</strong> (<em>on | off</em>; Default: )</td><td class="confluenceTd">Whether to enable RS-232 RTS signal circuit used by flow control.</td></tr><tr><td class="confluenceTd"><strong>stop-bits</strong> (<em>1 | 2</em>; Default: )</td><td class="confluenceTd">Stop bits sent after each character. Electronic devices usually uses 1 stop bit.</td></tr></tbody></table></div><p><strong>Read-only properties</strong></p><div class="table-wrap"><table class="wrapped confluenceTable"><colgroup><col/><col/></colgroup><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>channels</strong> (<em>integer</em>)</td><td class="confluenceTd">Number of channels supported by the port.</td></tr><tr><td class="confluenceTd"><strong>inactive</strong> (<em>yes | no</em>)</td><td class="confluenceTd"><p>Shows current port state, <strong>inactive=yes</strong> - device with port previous was connected, but currently is not present</p></td></tr><tr><td class="confluenceTd"><strong>line-state</strong> ()</td><td class="confluenceTd"><br/></td></tr><tr><td class="confluenceTd"><strong>used-by</strong> (<em>string</em>)</td><td class="confluenceTd"><p>Shows who  is currently are using port and channel (#).  For example, by default <strong>Serial0</strong> is used by serial-console.</p></td></tr></tbody></table></div><h1 id="Ports-RemoteAccess"><span class="mw-headline">Remote Access</span></h1><p><span class="mw-headline"><strong>Sub-menu:</strong> <code>/port remote-access</code></span></p><p>If you want to access serial device that can only talk to COM ports and is located somewhere else behind router, then you can use remote-access.</p><p>As defined in RFC 2217 RouterOS can transfer data from/to a serial device over TCP connection.</p><p>Enabling remote access on RouterOS is very easy: </p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/port remote-access add port=serial0 protocol=rfc2217 tcp-port=9999</pre>
+</div></div><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>By default serial0 is used by serial-terminal. Without releasing the port, it cannot be used by remote-access or other services</p></div></div><h1 id="Ports-Properties.1">Properties</h1><div class="table-wrap"><table class="wrapped confluenceTable"><colgroup><col/><col/></colgroup><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>allowed-addresses</strong> (<em>IP address range</em>; Default: <strong>0.0.0.0/0</strong>)</td><td class="confluenceTd">Range of IP addresses allowed to access port remotely.</td></tr><tr><td class="confluenceTd"><strong>channel</strong> (<em>integer [0..4294967295]</em>; Default: <strong>0</strong>)</td><td class="confluenceTd">Port channel that will be used. If port has only one channel then channel number should always be <strong>0</strong>.</td></tr><tr><td class="confluenceTd"><strong>disabled</strong> (<em>yes | no</em>; Default: <strong>no</strong>)</td><td class="confluenceTd"><br/></td></tr><tr><td class="confluenceTd"><strong>local-address</strong> (<em>IP address</em>; Default: )</td><td class="confluenceTd">IP address used as source address.</td></tr><tr><td class="confluenceTd"><strong>log-file</strong> (<em>string</em>; Default: <strong>&quot;&quot;</strong>)</td><td class="confluenceTd">Name of the file, where communication will be logged. By default logging is disabled.</td></tr><tr><td class="confluenceTd"><strong>port</strong> (<em>string</em>; Default: )</td><td class="confluenceTd">Name of the port from Port list.</td></tr><tr><td class="confluenceTd"><strong>protocol</strong> (<em>raw | rfc2217</em>; Default: <strong>rfc2217</strong>)</td><td class="confluenceTd">RFC 2217 defines a protocol to transfer data from/to a serial device over TCP. If set to <strong>raw</strong>, then data is sent to serial as is.</td></tr><tr><td class="confluenceTd"><strong>tcp-port</strong> (<em>integer [1..65535]</em>; Default: <strong>0</strong>)</td><td class="confluenceTd">TCP port on which to listen for incoming connections.</td></tr></tbody></table></div><p><strong>Read-only properties</strong></p><div class="table-wrap"><table class="wrapped confluenceTable"><colgroup><col/><col/></colgroup><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>active</strong> (<em>yes | no</em>)</td><td class="confluenceTd">Whether remote access is active and ready to accept connection.</td></tr><tr><td class="confluenceTd"><strong>busy</strong> (<em>yes | no</em>)</td><td class="confluenceTd">Whether port is currently busy.</td></tr><tr><td class="confluenceTd"><strong>inactive</strong> (<em>yes | no</em>)</td><td class="confluenceTd"><br/></td></tr><tr><td class="confluenceTd"><strong>logging-active</strong> (<em>yes | no</em>)</td><td class="confluenceTd">Whether logging to file is currently running</td></tr><tr><td class="confluenceTd"><strong>remote-address</strong> (<em>IP address</em>)</td><td class="confluenceTd">IP address of remote location that is currently connected.</td></tr></tbody></table></div>
+                    </div>
+
+                                        
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:54</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

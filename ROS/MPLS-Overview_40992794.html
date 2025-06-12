@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : MPLS Overview</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Multi-Protocol-Label-Switching---MPLS_328082.html">Multi Protocol Label Switching - MPLS</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : MPLS Overview
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Unknown User (olga)</span>, last updated by <span class='editor'> Normunds R.</span> on Oct 03, 2024
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><span class="mw-headline"><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742029838 {padding: 0px;}
+div.rbtoc1747742029838 ul {margin-left: 0px;}
+div.rbtoc1747742029838 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742029838'>
+<ul class='toc-indentation'>
+<li><a href='#MPLSOverview-Overview'>Overview</a></li>
+<li><a href='#MPLSOverview-SupportedFeatures'>Supported Features</a></li>
+</ul>
+</div></span></p><h1 id="MPLSOverview-Overview"><span class="mw-headline">Overview</span></h1><p>MPLS stands for MultiProtocol Label Switching. It kind of replaces IP routing - packet forwarding decision (outgoing interface and next-hop router) is no longer based on fields in IP header (usually destination address) and routing table, but on labels that are attached to packet. This approach speeds up the forwarding process because next-hop lookup becomes very simple compared to routing lookup (finding the longest matching prefix).</p><p>The efficiency of the forwarding process is the main benefit of MPLS, but it must be taken into account that MPLS forwarding disables the processing of network layer (e.g. IP) headers, therefore no network layer-based actions like NAT and filtering can be applied to MPLS forwarded packets. Any network-layer-based actions should be taken on ingress or egress of MPLS cloud, with the preferred way being ingress - this way, e.g. traffic that is going to be dropped anyway does not travel through the MPLS backbone.</p><p>In the simplest form, MPLS can be thought of as improved routing - labels are distributed by means of LDP protocol for routes that are active and a labeled packet takes the same path it would take if it was not labeled. A router that routes unlabeled packets using some route for which it has received a label from the next hop, imposes a label on the packet, and sends it to the next hop - gets MPLS switched further along its path. A router that receives a packet with a label it has assigned to some route changes the packet label with one received from the next hop of a particular route and sends a packet to the next hop. Label switched path ensures delivery of data to the MPLS cloud egress point. Applications of MPLS are based on this basic MPLS concept of label switched paths.</p><p>Another way of establishing label switching paths is traffic engineering tunnels (TE tunnels) by means of the RSVP-TE protocol. Traffic engineering tunnels allow explicitly routed LSPs and constraint-based path selection (where constraints are interface properties and available bandwidth).</p><p>Taking into account the complexity, new protocols, and applications that MPLS introduces and the differences of concepts that MPLS adds to routed/bridged networks, it is recommended to have an in-depth understanding of MPLS concepts before implementing MPLS in a production network. Some suggested reading material:</p><ul style="text-decoration: none;"><li>Multiprotocol Label Switching <a class="external-link" href="http://en.wikipedia.org/wiki/Multiprotocol_Label_Switching" rel="nofollow" style="text-decoration: none;">http://en.wikipedia.org/wiki/Multiprotocol_Label_Switching</a></li><li>RFC3031 Multiprotocol Label Switching Architecture <a class="external-link" href="http://www.ietf.org/rfc/rfc3031.txt" rel="nofollow" style="text-decoration: none;">http://www.ietf.org/rfc/rfc3031.txt</a></li><li>MPLS Fundamentals by Luc De Ghein <a class="external-link" href="http://www.amazon.com/MPLS-Fundamentals-Luc-Ghein/dp/1587051974" rel="nofollow" style="text-decoration: none;">http://www.amazon.com/MPLS-Fundamentals-Luc-Ghein/dp/1587051974</a></li></ul><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Feature is not supported on SMIPS devices (hAP lite, hAP lite TC and hAP mini).</p></div></div><h1 id="MPLSOverview-SupportedFeatures"><span class="mw-headline">Supported Features</span></h1><p>Currently, RouterOS supports the following MPLS related features:</p><ul style="text-decoration: none;"><li>MPLS switching with penultimate hop popping support</li><li>static local label bindings for IPv4 and IPv6</li><li>static remote label bindings for IPv4 and IPv6</li><li>Label Distribution Protocol (RFC 3036, RFC 5036<span style="text-decoration: none;color:var(--ds-text-accent-lime-bolder,#37471f);">, and RFC 7552</span>) for IPv4 and IPv6<ul><li>downstream unsolicited label advertisement</li><li>independent label distribution control</li><li>liberal label retention</li><li>targeted session establishment</li><li>optional loop detection</li><li>ECMP support</li></ul></li><li>Virtual Private Lan Service<ul><li>VPLS LDP signaling (RFC 4762)</li><li>Cisco style static VPLS pseudowires (RFC 4447 FEC type 0x80)</li><li>VPLS pseudowire fragmentation and reassembly (RFC 4623)</li><li>VPLS MP-BGP based autodiscovery and signaling (RFC 4761)</li><li>Cisco VPLS BGP-based auto-discovery (draft-ietf-l2vpn-signaling-08)</li><li>support for multiple import/export route-target extended communities for BGP based VPLS (both, RFC 4761 and draft-ietf-l2vpn-signaling-08)</li></ul></li><li>RSVP-TE Tunnels<ul><li>tunnel head-end</li><li>explicit paths</li><li>OSPF extensions for TE tunnels</li><li>CSPF path selection</li><li>forwarding of VPLS and MPLS IP VPN traffic on TE tunnels</li><li>Ingress TE tunnel rate limit and automatic reserved bandwidth adjustment, see <a class="external-link" href="https://wiki.mikrotik.com/wiki/TE_tunnel_auto_bandwidth" rel="nofollow" style="text-decoration: none;" title="TE tunnel auto bandwidth">TE Tunnel Bandwidth Control</a></li><li>all tunnel bandwidth settings are specified and displayed in bits per second</li></ul></li><li>MP-BGP based MPLS IP VPN</li><li>Per-prefix and per-vrf label distribution policies for MP-BGP based MPLS VPN</li><li>OSPF extensions for MPLS TE</li><li>support for OSPF as CE-PE protocol</li><li>ping and traceroute for specified VRF</li><li>control over network-layer TTL propagation in MPLS</li><li>RIP as CE-PE protocol</li><li>per-VRF BGP instance redistribution settings</li></ul><p><strong>MPLS features that RouterOS DOES NOT HAVE yet:</strong></p><ul style="text-decoration: none;"><li>LDP features:<ul><li>downstream on-demand label advertisement</li><li>ordered label distribution control</li><li>conservative label retention</li></ul></li><li>TE features<ul><li>fast-reroute</li><li>link/node protection</li></ul></li><li>Support for BGP as label distribution protocol</li></ul><p><br/></p>
+                    </div>
+
+                                        
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

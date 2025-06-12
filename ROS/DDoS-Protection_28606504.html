@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : DDoS Protection</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Firewall-and-Quality-of-Service_119144601.html">Firewall and Quality of Service</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Firewall-and-QoS-Case-Studies_120324137.html">Firewall and QoS Case Studies</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : DDoS Protection
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Artūrs C.</span>, last updated by <span class='editor'> Normunds R.</span> on Oct 03, 2024
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <h1 id="DDoSProtection-Introduction">Introduction</h1><p><span style="color:var(--ds-text-accent-magenta-bolder,#50253f);">A denial-of-service (DoS) or distributed denial-of-service (DDoS) attack is a malicious attempt to disrupt normal traffic of a targeted server, service, or network by overwhelming the target or its surrounding infrastructure with a flood of Internet traffic. There are several types of DDoS attacks, for example, HTTP flood, SYN flood, DNS amplification, etc.</span></p><p><span style="color:var(--ds-text-accent-magenta-bolder,#50253f);"><span class="confluence-embedded-file-wrapper image-center-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image image-center" draggable="false" height="400" src="attachments/28606504/28606540.jpg" data-image-src="attachments/28606504/28606540.jpg" data-unresolved-comment-count="0" data-linked-resource-id="28606540" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="Untitled Diagram (1).jpg" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/jpeg" data-linked-resource-container-id="28606504" data-linked-resource-container-version="14" tabindex="0" alt=""></span></span></p><h1 id="DDoSProtection-ProtectionagainstDDoS"><span style="color:var(--ds-text-accent-magenta-bolder,#50253f);">Protection against DDoS</span></h1><h2 id="DDoSProtection-Configurationlines"><span style="color:var(--ds-text-accent-magenta-bolder,#50253f);">Configuration lines</span></h2><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>These rules are only an improvement for firewall, do not forget to properly secure your device.</p></div></div><p><br/></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip firewall address-list
+add list=ddos-attackers
+add list=ddos-targets
+/ip firewall filter
+add action=return chain=detect-ddos dst-limit=32,32,src-and-dst-addresses/10s
+add action=add-dst-to-address-list address-list=ddos-targets address-list-timeout=10m chain=detect-ddos
+add action=add-src-to-address-list address-list=ddos-attackers address-list-timeout=10m chain=detect-ddos
+/ip firewall raw
+add action=drop chain=prerouting dst-address-list=ddos-targets src-address-list=ddos-attackers</pre>
+</div></div><h2 id="DDoSProtection-ConfigurationExplained"><span style="color:var(--ds-text-accent-magenta-bolder,#50253f);">Configuration Explained</span></h2><p><span style="color:var(--ds-text-accent-magenta-bolder,#50253f);">First, we will send every new connection to the specific firewall chain where we will detect DDoS:</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip/firewall/filter/add chain=forward connection-state=new action=jump jump-target=detect-ddos</pre>
+</div></div><p class="auto-cursor-target">In the newly created chain, we will add the following rule with the &quot;dst-limit&quot; parameter. This parameter is written in the following format<span style="color:var(--ds-text-accent-lime-bolder,#37471f);">:<span> <strong>dst-limit=</strong></span></span><strong>count[/time],burst,mode[/expire]</strong>. We will match 32 packets with 32 packet burst based on destination and source address flow, which renews every 10 seconds. The rule will work <span style="color:var(--ds-text-accent-lime-bolder,#37471f);">until a given rate is exceeded.</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip/firewall/filter/add chain=detect-ddos dst-limit=32,32,src-and-dst-addresses/10s action=return</pre>
+</div></div><p>So far all the legitimate traffic should go through the &quot;action=return&quot;, but in the case of DoS/DDoS &quot;dst-limit&quot; buffer will be fulfilled and a rule will not &quot;catch&quot; any new traffic. Here come the next rules, which will deal with the attack. Let`s start with creating a list for attackers and victims which we will drop:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">ip/firewall/address-list/add list=ddos-attackers
+ip/firewall/address-list/add list=ddos-targets
+ip/firewall/raw/add chain=prerouting action=drop src-address-list=ddos-attackers dst-address-list=ddos-targets</pre>
+</div></div><p class="auto-cursor-target">With the firewall filter section, we will add attackers in the &quot;DDoS-attackers&quot; and victims in list &quot;ddos-targets&quot; list:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip/firewall/filter/
+add action=add-dst-to-address-list address-list=ddos-targets address-list-timeout=10m chain=detect-ddos
+add action=add-src-to-address-list address-list=ddos-attackers address-list-timeout=10m chain=detect-ddos</pre>
+</div></div><h1 style="text-align: left;" id="DDoSProtection-SYNAttack">SYN Attack</h1><h2 id="DDoSProtection-SYNFlood">SYN Flood</h2><p>An SYN flood is a form of DoS attack in which an attacker sends a succession of SYN requests to a target's system in an attempt to consume enough server resources to make the system unresponsive to legitimate traffic. Fortunately, in RouterOS we have a specific feature for such an attack:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip/settings/set tcp-syncookies=yes</pre>
+</div></div><p>The feature works by sending back ACK packets that contain a little cryptographic hash, which the responding client will echo back with as part of its SYN-ACK packet. If the kernel doesn't see this &quot;cookie&quot; in the reply packet, it will assume the connection is bogus and drop it. </p><h2 id="DDoSProtection-SYN-ACKFlood">SYN-ACK Flood</h2><p>An SYN-ACK flood is an attack method that involves sending a target server spoofed SYN-ACK packet at a high rate. The server requires significant resources to process such packets out-of-order (not in accordance with the normal SYN, SYN-ACK, ACK TCP three-way handshake mechanism), it can become so busy handling the attack traffic, that it cannot handle legitimate traffic and hence the attackers achieve a DoS/DDoS condition. In RouterOS, we can configure similar rules from the previously mentioned example, but more specifically for SYN-ACK flood:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip/firewall/filter add action=return chain=detect-ddos dst-limit=32,32,src-and-dst-addresses/10s protocol=tcp tcp-flags=syn,ack</pre>
+</div></div><p><br/></p><p><br/></p>
+                    </div>
+
+                                                            <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/28606504/28606539.jpg">Untitled Diagram.jpg</a> (image/jpeg)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/28606504/28606538.jpg">Untitled Diagram.jpg</a> (image/jpeg)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/28606504/28606540.jpg">Untitled Diagram (1).jpg</a> (image/jpeg)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : Resource</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="119144606.html">Diagnostics, monitoring and troubleshooting</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : Resource
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Unknown User (olga)</span>, last updated by <span class='editor'> Matīss O.</span> on Nov 24, 2023
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <h1 id="Resource-Summary"><span class="mw-headline">Summary</span></h1><h2 id="Resource-General"><span class="mw-headline">General</span></h2><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/system resource</pre>
+</div></div><p>The general resource menu shows overall resource usage and router statistics like uptime, memory usage, disk usage, version, etc.</p><p>It also has several sub-menus for more detailed hardware statistics like PCI, IRQ, and USB.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; system/resource/print 
+                   uptime: 29s
+                  version: 7.11.2 (stable)
+               build-time: Aug/31/2023 13:55:47
+         factory-software: 7.6
+              free-memory: 94.2MiB
+             total-memory: 224.0MiB
+                      cpu: ARM
+                cpu-count: 2
+            cpu-frequency: 800MHz
+                 cpu-load: 2%
+           free-hdd-space: 93.5MiB
+          total-hdd-space: 128.5MiB
+  write-sect-since-reboot: 85
+         write-sect-total: 222100
+               bad-blocks: 0%
+        architecture-name: arm
+               board-name: hAP ax lite LTE6
+                 platform: MikroTik
+</pre>
+</div></div><p style="margin-left: 20.0px;"><span style="font-size: 16.0px;font-weight: bold;letter-spacing: -0.006em;">Properties</span></p><p>All properties are read-only</p><div class="table-wrap"><table class="wrapped relative-table confluenceTable" style="margin-left: 14.4318px;width: 99.2765%;"><colgroup><col style="width: 47.4432%;"/><col style="width: 52.5095%;"/></colgroup><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>architecture-name</strong><span> </span>(<em>string</em>)</td><td class="confluenceTd">CPU architecture</td></tr><tr><td class="confluenceTd"><strong>bad-blocks</strong><span> </span>(<em>percent</em>)</td><td class="confluenceTd">Shows percentage of bad blocks on the NAND.</td></tr><tr><td class="confluenceTd"><strong>board-name</strong><span> </span>(<em>string</em>)</td><td class="confluenceTd">RouterBOARD model name</td></tr><tr><td class="confluenceTd"><strong>build-time<span> </span></strong>(<em>string</em>)</td><td class="confluenceTd">Installed RouterOS version build-time</td></tr><tr><td class="confluenceTd"><strong>cpu</strong><span> </span>(<em>string</em>)</td><td class="confluenceTd">CPU model that is on the board</td></tr><tr><td class="confluenceTd"><strong>cpu-count</strong><span> </span>(<em>integer</em>)</td><td class="confluenceTd">Number of CPUs present on the system. Each core is a separate CPU, Intel HT is also a separate CPU.</td></tr><tr><td class="confluenceTd"><strong>cpu-frequency</strong><span> </span>(<em>string</em>)</td><td class="confluenceTd">Current CPU frequency</td></tr><tr><td class="confluenceTd"><strong>cpu-load</strong><span> </span>(<em>percent</em>)</td><td class="confluenceTd">Percentage of used CPU resources. Combines all CPUs. Per-core CPU usage can be seen in <a class="external-link" href="https://wiki.mikrotik.com/wiki/Manual:System/Resource#CPU" rel="nofollow" style="text-decoration: none;">CPU submenu</a></td></tr><tr><td class="confluenceTd"><strong>factory-software<span> </span></strong>(<em>string</em>)</td><td class="confluenceTd">Minimal RouterOS version</td></tr><tr><td class="confluenceTd"><strong>free-hdd-space</strong><span> </span>(<em>string</em>)</td><td class="confluenceTd">Free space on hard drive or NAND</td></tr><tr><td class="confluenceTd"><strong>free-memory</strong><span> </span>(<em>string</em>)</td><td class="confluenceTd">The unused amount of RAM</td></tr><tr><td class="confluenceTd"><strong>platform</strong><span> </span>(<em>string</em>)</td><td class="confluenceTd">Platform name</td></tr><tr><td class="confluenceTd"><strong>total-hdd-space</strong><span> </span>(<em>string</em>)</td><td class="confluenceTd">Size of the hard drive or NAND</td></tr><tr><td class="confluenceTd"><strong>total-memory</strong><span> </span>(<em>string</em>)</td><td class="confluenceTd">Amount of installed RAM</td></tr><tr><td class="confluenceTd"><strong>uptime</strong><span> </span>(<em>time</em>)</td><td class="confluenceTd">Time interval passed since boot-up</td></tr><tr><td class="confluenceTd"><strong>version</strong><span> </span>(<em>string</em>)</td><td class="confluenceTd">Installed RouterOS version number</td></tr><tr><td class="confluenceTd"><strong>write-sect-since-reboot</strong><span> </span>(<em>integer</em>)</td><td class="confluenceTd">A number of sector writes in HDD or NAND since the router was last time rebooted</td></tr><tr><td class="confluenceTd"><strong>write-sect-total</strong><span> </span>(<em>integer</em>)</td><td class="confluenceTd">A number of sector writes in total</td></tr></tbody></table></div><h2 id="Resource-CPU"><span class="mw-headline">CPU</span></h2><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/system resource cpu</pre>
+</div></div><p>This submenu shows per-cpu usage, as long as IRQ and Disk usage.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@RB1100test] /system resource cpu&gt; print 
+CPU LOAD IRQ DISK 
+0 5% 0% 0% 
+[admin@RB1100test] /system resource cpu&gt; 
+
+</pre>
+</div></div><p style="margin-left: 20.0px;"><span style="font-size: 16.0px;font-weight: bold;letter-spacing: -0.006em;">Properties</span></p><p>Read-only properties</p><div class="table-wrap"><table class="wrapped relative-table confluenceTable" style="margin-left: 14.4318px;width: 99.2765%;"><colgroup><col style="width: 47.5852%;"/><col style="width: 52.3674%;"/></colgroup><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>cpu</strong><span> </span>(<em>integer</em>)</td><td class="confluenceTd">Identification number of CPU which usage is shown.</td></tr><tr><td class="confluenceTd"><strong>load</strong><span> </span>(<em>percent</em>)</td><td class="confluenceTd">CPU usage in percents</td></tr><tr><td class="confluenceTd"><strong>irq</strong><span> </span>(<em>percent</em>)</td><td class="confluenceTd">IRQ usage in percents</td></tr><tr><td class="confluenceTd"><strong>disk</strong><span> </span>(<em>percent</em>)</td><td class="confluenceTd">Disk usage in percents</td></tr></tbody></table></div><h2 id="Resource-IRQ"><span class="mw-headline">IRQ</span></h2><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/system resource irq</pre>
+</div></div><p><br/>The menu shows all used IRQs on the router. It is possible to set up<span> </span><a class="external-link" href="https://wiki.mikrotik.com/wiki/Manual:System/Resource#IRQ_Load_Balancing" rel="nofollow" style="text-decoration: none;">IRQ load balancing</a><span> </span>on multicore systems by assigning IRQ to a specific core. IRQ assignments are done by hardware and cannot be changed from RouterOS. For example, if all Ethernets are assigned to one IRQ, then you have to deal with hardware: upgrade motherboards BIOS, reassign IRQs manually in BIOS, if none of the above helps then change the hardware.</p><h3 id="Resource-Properties"><span class="mw-headline">Properties</span></h3><div class="table-wrap"><table class="wrapped relative-table confluenceTable" style="margin-left: 14.4318px;width: 98.9664%;"><colgroup><col style="width: 47.7344%;"/><col style="width: 52.1991%;"/></colgroup><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>cpu</strong><span> </span>(<em>auto | integer</em>; Default: )</td><td class="confluenceTd">Specifies which CPU is assigned to the IRQ.<ul><li><strong>auto</strong><span> </span>- pick CPU based on a number of interrupts. Uses<span> </span><a class="external-link" href="http://www.linuxfoundation.org/collaborate/workgroups/networking/napi" rel="nofollow" style="text-decoration: none;">NAPI</a><span> </span>to optimize interrupts.</li></ul></td></tr></tbody></table></div><p><strong>Read-only properties</strong></p><div class="table-wrap"><table class="wrapped relative-table confluenceTable" style="margin-left: 14.4318px;width: 99.2765%;"><colgroup><col style="width: 47.6326%;"/><col style="width: 52.3201%;"/></colgroup><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>active-cpu</strong><span> </span>(<em>integer</em>)</td><td class="confluenceTd">Shows active CPU in multicore systems.</td></tr><tr><td class="confluenceTd"><strong>count</strong><span> </span>(<em>integer</em>)</td><td class="confluenceTd">A number of interrupts. On ethernet interfaces interrupt=packet.</td></tr><tr><td class="confluenceTd"><strong>irq</strong><span> </span>(<em>integer</em>)</td><td class="confluenceTd">IRQ identification number</td></tr><tr><td class="confluenceTd"><strong>users</strong><span> </span>(<em>string</em>)</td><td class="confluenceTd">Process assigned to IRQ</td></tr></tbody></table></div><h3 id="Resource-IRQLoadBalancing"><span class="mw-headline">IRQ Load Balancing</span></h3><h2 id="Resource-USB"><span class="mw-headline">USB</span></h2><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/system resource usb</pre>
+</div></div><p>This menu displays all available USB controllers on the board. The menu is available only if at least one USB controller is present.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] /system resource usb&gt; print detail 
+0 device=&quot;2:1&quot; name=&quot;RB400 EHCI&quot; serial-number=&quot;rb400_usb&quot; vendor-id=&quot;0x1d6b&quot; 
+device-id=&quot;0x0002&quot; speed=&quot;480 Mbps&quot; ports=2 usb-version=&quot;2.00&quot; 
+1 device=&quot;1:1&quot; name=&quot;RB400 OHCI&quot; serial-number=&quot;rb400_usb&quot; vendor-id=&quot;0x1d6b&quot;
+ device-id=&quot;0x0001&quot; speed=&quot;12 Mbps&quot; ports=2 usb-version=&quot;1.10&quot;</pre>
+</div></div><h3 id="Resource-Properties.1"><span class="mw-headline">Properties</span></h3><div class="table-wrap"><table class="wrapped relative-table confluenceTable" style="margin-left: 14.4318px;width: 98.3463%;"><colgroup><col style="width: 48.1312%;"/><col style="width: 51.8115%;"/></colgroup><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>device</strong><span> </span>(<em>string</em>)</td><td class="confluenceTd"><br/></td></tr><tr><td class="confluenceTd"><strong>device-id</strong><span> </span>(<em>hex</em>)</td><td class="confluenceTd">Hexadecimal device ID</td></tr><tr><td class="confluenceTd"><strong>name</strong><span> </span>(<em>string</em>)</td><td class="confluenceTd">Descriptive name of the device retrieved from the driver</td></tr><tr><td class="confluenceTd"><strong>ports</strong><span> </span>(<em>integer</em>)</td><td class="confluenceTd">How many ports are supported by the USB controller</td></tr><tr><td class="confluenceTd"><strong>serial-number</strong><span> </span>(<em>string</em>)</td><td class="confluenceTd"><br/></td></tr><tr><td class="confluenceTd"><strong>speed</strong><span> </span>(<em>string</em>)</td><td class="confluenceTd">Max USB speed that can be used (480Mbps for USBv2 and 12Mbps for USBv1)</td></tr><tr><td class="confluenceTd"><strong>usb-version</strong><span> </span>(<em>string</em>)</td><td class="confluenceTd">Identifies max supported USB version</td></tr><tr><td class="confluenceTd"><strong>vendor</strong><span> </span>(<em>string</em>)</td><td class="confluenceTd">Device manufacturer's name.</td></tr><tr><td class="confluenceTd"><strong>vendor-id</strong><span> </span>(<em>hex</em>)</td><td class="confluenceTd">Hexadecimal vendor ID</td></tr></tbody></table></div><h2 id="Resource-PCI"><span class="mw-headline">PCI</span></h2><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/system resource pci</pre>
+</div></div><p>PCI submenu shows the information about all PCI devices on the board</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@RB1100test] /system resource pci&gt; print 
+# DEVICE VENDOR NAME IRQ 
+0 06:00.0 Attansic Technology Corp. unknown device (rev: 192) 18 
+1 05:00.0 Freescale Semiconductor Inc MPC8544 (rev: 17) 0 
+2 04:00.0 Attansic Technology Corp. unknown device (rev: 192) 17 
+3 03:00.0 Freescale Semiconductor Inc MPC8544 (rev: 17) 0 
+4 02:00.0 Attansic Technology Corp. unknown device (rev: 192) 16 
+5 01:00.0 Freescale Semiconductor Inc MPC8544 (rev: 17) 0 
+6 00:00.0 Freescale Semiconductor Inc MPC8544 (rev: 17) 0 
+
+</pre>
+</div></div><h3 id="Resource-Properties.2"><span class="mw-headline">Properties</span></h3><p>All properties are read-only</p><div class="table-wrap"><table class="wrapped relative-table confluenceTable" style="margin-left: 14.4318px;width: 99.2765%;"><colgroup><col style="width: 47.5852%;"/><col style="width: 52.3674%;"/></colgroup><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>category</strong><span> </span>(<em>string</em>)</td><td class="confluenceTd">PCI device type, for example,<span> </span><em>ethernet controller</em></td></tr><tr><td class="confluenceTd"><strong>device</strong><span> </span>(<em>string</em>)</td><td class="confluenceTd"><br/></td></tr><tr><td class="confluenceTd"><strong>device-id</strong><span> </span>(<em>hex</em>)</td><td class="confluenceTd">Hexadecimal device ID</td></tr><tr><td class="confluenceTd"><strong>io</strong><span> </span>(<em>hex-hex</em>)</td><td class="confluenceTd">I/O memory range</td></tr><tr><td class="confluenceTd"><strong>irq</strong><span> </span>(<em>integer</em>)</td><td class="confluenceTd">IRQ assigned to the device</td></tr><tr><td class="confluenceTd"><strong>memory</strong><span> </span>(<em>hex-hex</em>)</td><td class="confluenceTd">Memory range</td></tr><tr><td class="confluenceTd"><strong>name</strong><span> </span>(<em>string</em>)</td><td class="confluenceTd">Descriptive name of the device retrieved from the driver</td></tr><tr><td class="confluenceTd"><strong>vendor</strong><span> </span>(<em>string</em>)</td><td class="confluenceTd">Device manufacturer's name.</td></tr><tr><td class="confluenceTd"><strong>vendor-id</strong><span> </span>(<em>hex</em>)</td><td class="confluenceTd">Hexadecimal vendor ID</td></tr></tbody></table></div>
+                    </div>
+
+                                        
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:54</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : Lora</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Internet-of-Things_46759975.html">Internet of Things</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : Lora
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Unknown User (rudolfs)</span>, last updated by <span class='editor'> Deniss M.</span> on Dec 10, 2024
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p>Available settings:</p><ul><li data-uuid="0a603533-69c0-4ba4-be42-04aa126f6307"><h2 id="Lora-GeneralProperties"><a href="General-Properties_16351619.html">&nbsp;General Properties</a></h2></li></ul><p>Gateways initial steps and different LoRaWAN setup examples:</p><ul><li data-uuid="4eb398a2-e6b2-495b-8355-28c285e84172"><h2 id="Lora-Setup"><a href="Setup_16351624.html">&nbsp;Setup</a></h2></li></ul><p><br/></p><p>The term &quot;LoRa&quot; represents the &quot;radio&quot; itself (&quot;LoRa payloads&quot; are packets broadcasted by the nodes using the LoRa frequencies), while the term &quot;LoRaWAN&quot; represents a logical/link layer on top, that enables the communication between &quot;LoRa&quot; devices. In other words, &quot;LoRaWAN&quot; is how the &quot;LoRa&quot; radio devices communicate.</p><p><br/></p><p><strong>R11e-LR8</strong> (operates in 863-870 MHz frequency), <strong>R11e-LR9</strong> (operates in 902-928 MHz frequency) and <strong>R11e-LR2</strong> (operates using 2.4 GHz frequencies) are concentrator Gateway cards for LoRa® technology in mini PCIe form factor based on Semtech chipset. They enable LoRa® connectivity for any MikroTik product that has mPCIe slot with connected USB lines.</p><p>A typical LoRaWAN topology consists of 3 main elements → the server, the node and the gateway. The gateway's job is to simply forward received LoRa packets that are broadcasted by the nodes (within the same supported frequency spectrum) to the server.</p><p>MikroTik LoRaWAN gateways are devices that have R11e-LR<strong>x</strong> miniPCIe card and have &quot;iot&quot; <a href="https://help.mikrotik.com/docs/spaces/ROS/pages/40992872/Packages" rel="nofollow">package</a> (which enables LoRa drivers) installed.</p><p><br/></p><p>The primary design for the MikroTik gateway devices is to operate as LoRaWAN devices. To achieve this, simply configure/select a correct server in the LoRa interface settings. A few examples can be found in the <a href="https://help.mikrotik.com/docs/spaces/ROS/pages/16351624/Setup" rel="nofollow">setup section</a>.</p><p>However, if you do not wish to use a LoRaWAN network/topology, and you wish to forward &quot;raw LoRa&quot; payloads to your own server, you have an option to do so. You can use <a href="https://help.mikrotik.com/docs/spaces/ROS/pages/46759978/MQTT" rel="nofollow">MQTT </a>or <a href="https://help.mikrotik.com/docs/spaces/ROS/pages/8978514/Fetch" rel="nofollow">HTTP post</a> to forward received payloads to your MQTT/HTTP server, but it will require additional <a href="https://help.mikrotik.com/docs/spaces/ROS/pages/47579229/Scripting" rel="nofollow">scripting</a>. The script will have to collect information (payloads) from the <code><a href="https://help.mikrotik.com/docs/spaces/ROS/pages/16351619/General+Properties#GeneralProperties-Traffic" rel="nofollow">IoT&gt;LoRa&gt;Traffic</a></code> tab, store those payloads as variables, structure MQTT/HTTP message out of the variables and post it.</p><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Please note that if the payloads broadcasted by the node are encrypted, and you wish to forward them to your own MQTT/HTTP server (without using LoRaWAN), you will need to decipher the payloads on the server-side. The gateway does not have the built-in functionality to decipher node's data. Servers are responsible for this task.</p></div></div><p><br/></p>
+                    </div>
+
+                                        
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

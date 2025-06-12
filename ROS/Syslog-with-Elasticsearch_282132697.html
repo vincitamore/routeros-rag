@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : Syslog with Elasticsearch</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="119144606.html">Diagnostics, monitoring and troubleshooting</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Log_328094.html">Log</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : Syslog with Elasticsearch
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Artūrs Z.</span>, last updated on Nov 15, 2024
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742046133 {padding: 0px;}
+div.rbtoc1747742046133 ul {margin-left: 0px;}
+div.rbtoc1747742046133 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742046133'>
+<ul class='toc-indentation'>
+<li><a href='#SyslogwithElasticsearch-Introduction'>Introduction</a></li>
+<li><a href='#SyslogwithElasticsearch-Prerequisites'>Prerequisites</a></li>
+<li><a href='#SyslogwithElasticsearch-Setup'>Setup</a>
+<ul class='toc-indentation'>
+<li><a href='#SyslogwithElasticsearch-Elastic'>Elastic</a></li>
+<li><a href='#SyslogwithElasticsearch-RouterOS'>RouterOS</a></li>
+</ul>
+</li>
+<li><a href='#SyslogwithElasticsearch-UsingKibana'>Using Kibana</a></li>
+</ul>
+</div></p><h1 id="SyslogwithElasticsearch-Introduction">Introduction</h1><p>Elasticsearch is a popular NoSQL database that can be used to store a wide range of data, including Syslog data. Alongside with Kibana you can create a powerful tool to analyze Syslog data from your RouterOS devices. This guide will rely on Elasticsearch integrations and for it to work you need to have a working Elasticsearch setup. This guide will not cover setup instructions for Elasticsearch and Kibana, but will cover the relevant steps to setup Syslog data collection and analysis.</p><p>There are many possible configurations that can be made with Elasticsearch, but for the sake of this guide we will use the following principle:</p><ul><li data-uuid="53de54f8-e6b0-48f8-9c35-1dad488e1084">A RouterOS (10.0.0.1) device sends out NetFlow data to a server (10.0.0.2) running <a class="external-link" href="https://www.elastic.co/docs/current/integrations/udp" rel="nofollow">Custom UDP logs</a></li><li data-uuid="41dbc188-467a-4374-afaa-4a06a185db99">The server (10.0.0.2) running Custom UDP logs integration ingests Syslog data, processes the data and sends it to a <a class="external-link" href="https://www.elastic.co/guide/en/fleet/current/fleet-server.html" rel="nofollow">Fleet Server</a> (10.0.0.3)</li><li data-uuid="6a5751a2-2afc-4b98-971b-428225fdba39">A Fleet Server (10.0.0.3) stores the data in <a class="external-link" href="https://www.elastic.co/elasticsearch" rel="nofollow">Elasticsearch</a> (10.0.0.4)</li><li data-uuid="2a42d5cb-5fdb-45f9-b18b-0750fb0c8f89"><a class="external-link" href="https://www.elastic.co/kibana" rel="nofollow">Kibana</a> (10.0.0.5) retrieves data from Elasticsearch (10.0.0.4), analyzes it and allows you to search the data</li></ul><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>This guide will not use <a class="external-link" href="https://www.elastic.co/logstash" rel="nofollow">Logstash</a> as a part of analyzing Syslog data, it has been replaced by a Fleet Server.</p></div></div><p><br/></p><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>It is possible to install Elasticsearch, Kibana, Fleet Server and NetFlow Records integration on the same device.</p></div></div><h1 id="SyslogwithElasticsearch-Prerequisites">Prerequisites</h1><ul><li data-uuid="b25f168f-d081-4740-baea-f0c1a42f089e"><a class="external-link" href="https://www.elastic.co/guide/en/elasticsearch/reference/current/setup.html" rel="nofollow">Setup Elasticsearch</a><br/><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Elasticsearch is widely supported on many platforms. It is recommended to setup a cluster of Elasticsearch nodes.</p></div></div></li><li data-uuid="46e876eb-4f4a-48df-8308-4e206a1d6e1d"><a class="external-link" href="https://www.elastic.co/guide/en/kibana/current/setup.html" rel="nofollow">Setup kibana</a><br/><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Kibana can be installed on the same device on which you installed Elasticsearch, but it can also be installed on a separate device for performance reasons. While it is possible to analyze Syslog data without Kibana, it requires writing your own API requests, Kibana is very easy to use and has a wide range of features.</p></div></div></li><li data-uuid="9dce1bff-cee9-4792-b77b-2773a216cf55"><a class="external-link" href="https://www.elastic.co/guide/en/fleet/current/add-fleet-server-on-prem.html" rel="nofollow">Setup Fleet Server</a><br/><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>It is possible to setup Fleet Server on the same device on which you installed Elasticsearch and/or Kibana. It is recommended to install Fleet Server on a different device. Refer to Elasticsearch manual for recommendations on hardware and topology requirements.</p></div></div></li></ul><h1 id="SyslogwithElasticsearch-Setup">Setup</h1><p>The setup instructions are divided into two parts: Elastic (configuration regarding Elasticsearch, Kibana and Fleet Server) and RouterOS (configuration that is relevant to your RouterOS device).</p><h2 id="SyslogwithElasticsearch-Elastic">Elastic</h2><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Some steps might change over time, refer to Elastic's manual to find the most up-to-date steps.</p></div></div><ol><li data-uuid="17c9ca14-f57b-4cb5-82ea-a4dd9c0f79bf"><a class="external-link" href="https://www.elastic.co/guide/en/kibana/current/access.html" rel="nofollow">Log into your Kibana</a></li><li data-uuid="86106e49-a9cc-4869-8789-6867a789074a">Open the <a class="external-link" href="https://www.elastic.co/guide/en/kibana/current/fleet.html" rel="nofollow">Fleet</a> section under the main menu</li><li data-uuid="9813d14f-0bfe-4a69-b355-1f12b216782c">Open the &quot;<a class="external-link" href="https://www.elastic.co/guide/en/fleet/current/agent-policy.html" rel="nofollow">Agent policies</a>&quot; section</li><li data-uuid="8d3d3043-b28e-4309-b2b9-4c87cd05ddd7">Press &quot;Create agent policy&quot; button to <a class="external-link" href="https://www.elastic.co/guide/en/fleet/current/agent-policy.html#create-a-policy" rel="nofollow">create a new Agent Policy</a></li><li data-uuid="e8235422-4f5b-411e-b43b-1087a8d5e1e4">Give the policy a name, for example, &quot;Syslog policy&quot;, adjust advance settings if required, create the policy. Or you can use the API request below:<br/>sads<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">POST kbn:/api/fleet/agent_policies
+{
+  &quot;name&quot;: &quot;Syslog policy&quot;,
+  &quot;description&quot;: &quot;&quot;,
+  &quot;namespace&quot;: &quot;default&quot;,
+  &quot;monitoring_enabled&quot;: [
+    &quot;logs&quot;,
+    &quot;metrics&quot;
+  ],
+  &quot;inactivity_timeout&quot;: 1209600,
+  &quot;is_protected&quot;: false
+}</pre>
+</div></div></li><li data-uuid="262b6b9c-478e-4a8e-ae2f-38f874e3315a">Open your newly created policy by clicking on it's name</li><li data-uuid="f235af75-604f-45e2-ba16-fa5af637f0c1">Press &quot;<a class="external-link" href="https://www.elastic.co/guide/en/fleet/current/agent-policy.html#add-integration" rel="nofollow">Add integration</a>&quot;</li><li data-uuid="1fbe4735-db41-4b3a-a48d-b4086f759b08">Search for &quot;<a class="external-link" href="https://www.elastic.co/docs/current/integrations/udp" rel="nofollow">Custom UDP logs</a>&quot; and press &quot;Add Custom UDP logs&quot;</li><li data-uuid="a23e4504-5a06-421e-bf10-63e10bee12ff">Adjust configuration, make sure:<br/>- Specify &quot;Listen Address&quot; to the IP address of your server that is going to run the Custom UDP logs integration , in this example the address should be &quot;10.0.0.2&quot;<br/>- Set &quot;Listen Port&quot; to &quot;5514&quot;<br/>- Set&quot; Dataset name&quot; to &quot;routeros&quot;<br/>- Set &quot;Ingest Pipeline&quot; to &quot;logs-routeros@custom&quot;<br/>- Set &quot;Syslog Parsing&quot; to &quot;Yes&quot; </li><li data-uuid="20ad3e55-4ca1-455f-a3ca-e11fdaadfcab">Save the integration</li><li data-uuid="558c3719-88aa-41be-bd1d-b3e0a9a6242a">Press the &quot;<a class="external-link" href="https://www.elastic.co/guide/en/fleet/current/elastic-agent-installation.html" rel="nofollow">Add Elastic Agent to your host</a>&quot; button</li><li data-uuid="92a64732-27f7-4983-905a-675227d5735c">Follow the instructions on how to add Elastic Agent to your host<br/><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Official Elastic's manual recommends installing the Elastic Agent as Fleet-managed. Consider following the recommendation since managing the agents is easier when they are Fleet-managed.</p></div></div></li><li data-uuid="d13706ca-2b25-4dac-b95a-4cf2bb4da043">Go to &quot;Stack Management&quot; on the main menu, then open &quot;<a class="external-link" href="https://www.elastic.co/guide/en/elasticsearch/reference/current/ingest.html" rel="nofollow">Ingest Pipelines</a>&quot;</li><li data-uuid="b98494a5-f50e-464c-a54c-6f3ce71fb0cd">Create a new Ingest Pipeline by pressing &quot;<a class="external-link" href="https://www.elastic.co/guide/en/fleet/current/data-streams-pipeline-tutorial.html#data-streams-pipeline-one" rel="nofollow">Create pipeline</a>&quot; then &quot;New pipeline&quot;</li><li data-uuid="e3fd0c3c-0320-4f89-a973-c5c39dd06aa8">Set &quot;Name&quot; to &quot;logs-routeros@custom&quot;</li><li data-uuid="d4829ffd-9a02-491c-bd72-7ed2fb2f50fe">Press &quot;Import processors&quot; and paste the following processors:<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">[
+  {
+    &quot;grok&quot;: {
+      &quot;field&quot;: &quot;message&quot;,
+      &quot;patterns&quot;: [
+        &quot;^first L2TP UDP packet received from %{IP:source.ip}$&quot;,
+        &quot;^login failure for user %{USERNAME:user.name} from %{IP:source.ip} via %{DATA:service.name}$&quot;,
+        &quot;^%{USERNAME:user.name} logged in, %{IP:client.ip} from %{IP:source.ip}$&quot;,
+        &quot;^dhcp alert on %{DATA}: discovered unknown dhcp server, mac %{MAC:source.mac}, ip %{IP:source.ip}$&quot;,
+        &quot;in:%{DATA} out:%{DATA}, ?(connection-state:%{DATA},|)?(src-mac %{MAC:source.mac},|) proto %{DATA:network.transport} \\(%{DATA}\\), %{IP:source.ip}:?(%{INT:source.port}|)-&gt;%{IP:destination.ip}:?(%{INT:destination.port}|), len %{INT:network.bytes}$&quot;,
+        &quot;in:%{DATA} out:%{DATA}, ?(connection-state:%{DATA},|)?(src-mac %{MAC:source.mac},|) proto %{DATA:network.transport}, %{IP:source.ip}:?(%{INT:source.port}|)-&gt;%{IP:destination.ip}:?(%{INT:destination.port}|), len %{INT:network.bytes}$&quot;,
+        &quot;^%{DATA:network.name} (deassigned|assigned) %{IP:client.ip} for %{MAC:client.mac} %{DATA}$&quot;,
+        &quot;^%{DATA:user.name} logged out, %{INT:event.duration} %{INT} %{INT} %{INT} %{INT} from %{IP:client.ip}$&quot;,
+        &quot;^user %{DATA:user.name} logged out from %{IP:source.ip} via %{DATA:service.name}$&quot;,
+        &quot;^user %{DATA:user.name} logged in from %{IP:source.ip} via %{DATA:service.name}$&quot;,
+        &quot;^%{DATA:network.name} client %{MAC:client.mac} declines IP address %{IP:client.ip}$&quot;,
+        &quot;^%{DATA:network.name} link up \\(speed %{DATA}\\)$&quot;,
+        &quot;^%{DATA:network.name} link down$&quot;,
+        &quot;^user %{DATA:user.name} authentication failed$&quot;,
+        &quot;^%{DATA:network.name} fcs error on link$&quot;,
+        &quot;^phase1 negotiation failed due to time up %{IP:source.ip}\\[%{INT:source.port}\\]&lt;=&gt;%{IP:destination.ip}\\[%{INT:destination.port}\\] %{DATA}:%{DATA}$&quot;,
+        &quot;^%{DATA:network.name} (learning|forwarding)$&quot;,
+        &quot;^user %{DATA:user.name} is already active$&quot;,
+        &quot;^%{GREEDYDATA}$&quot;
+      ]
+    }
+  },
+  {
+    &quot;lowercase&quot;: {
+      &quot;field&quot;: &quot;network.transport&quot;,
+      &quot;ignore_missing&quot;: true
+    }
+  },
+  {
+    &quot;append&quot;: {
+      &quot;field&quot;: &quot;event.category&quot;,
+      &quot;value&quot;: [
+        &quot;authentication&quot;
+      ],
+      &quot;allow_duplicates&quot;: false,
+      &quot;if&quot;: &quot;ctx.message =~ /(login failure for user|logged in from|logged in,)/&quot;,
+      &quot;ignore_failure&quot;: true,
+      &quot;description&quot;: &quot;Enrich logon events&quot;
+    }
+  },
+  {
+    &quot;append&quot;: {
+      &quot;field&quot;: &quot;event.outcome&quot;,
+      &quot;value&quot;: [
+        &quot;success&quot;
+      ],
+      &quot;allow_duplicates&quot;: false,
+      &quot;if&quot;: &quot;ctx.message =~ /(logged in from|logged in,)/&quot;,
+      &quot;ignore_failure&quot;: true,
+      &quot;description&quot;: &quot;Enrich successful login events&quot;
+    }
+  },
+  {
+    &quot;append&quot;: {
+      &quot;field&quot;: &quot;event.outcome&quot;,
+      &quot;value&quot;: [
+        &quot;failure&quot;
+      ],
+      &quot;allow_duplicates&quot;: false,
+      &quot;if&quot;: &quot;ctx.message =~ /(login failure for user)/&quot;,
+      &quot;ignore_failure&quot;: true,
+      &quot;description&quot;: &quot;Enrich failed login events&quot;
+    }
+  },
+  {
+    &quot;append&quot;: {
+      &quot;field&quot;: &quot;event.category&quot;,
+      &quot;value&quot;: [
+        &quot;network&quot;
+      ],
+      &quot;allow_duplicates&quot;: false,
+      &quot;if&quot;: &quot;ctx.message =~ /( fcs error on link| link down| link up)/&quot;,
+      &quot;ignore_failure&quot;: true,
+      &quot;description&quot;: &quot;Enrich network events&quot;
+    }
+  },
+  {
+    &quot;append&quot;: {
+      &quot;field&quot;: &quot;event.outcome&quot;,
+      &quot;value&quot;: [
+        &quot;failure&quot;
+      ],
+      &quot;allow_duplicates&quot;: false,
+      &quot;if&quot;: &quot;ctx.message =~ /( fcs error on link)/&quot;,
+      &quot;ignore_failure&quot;: true,
+      &quot;description&quot;: &quot;Enrich network failures&quot;
+    }
+  },
+  {
+    &quot;append&quot;: {
+      &quot;field&quot;: &quot;event.category&quot;,
+      &quot;value&quot;: [
+        &quot;session&quot;
+      ],
+      &quot;allow_duplicates&quot;: false,
+      &quot;if&quot;: &quot;ctx.message =~ /(logged out)/&quot;,
+      &quot;ignore_failure&quot;: true
+    }
+  },
+  {
+    &quot;append&quot;: {
+      &quot;field&quot;: &quot;event.category&quot;,
+      &quot;value&quot;: [
+        &quot;threat&quot;
+      ],
+      &quot;allow_duplicates&quot;: false,
+      &quot;if&quot;: &quot;ctx.message =~ /(from address that has not seen before)/&quot;,
+      &quot;ignore_failure&quot;: true
+    }
+  },
+  {
+    &quot;append&quot;: {
+      &quot;field&quot;: &quot;service.name&quot;,
+      &quot;value&quot;: [
+        &quot;l2tp&quot;
+      ],
+      &quot;if&quot;: &quot;ctx.message =~ /(^L2TP\\/IPsec VPN)/&quot;,
+      &quot;ignore_failure&quot;: true
+    }
+  },
+  {
+    &quot;geoip&quot;: {
+      &quot;field&quot;: &quot;source.ip&quot;,
+      &quot;target_field&quot;: &quot;source.geo&quot;,
+      &quot;ignore_missing&quot;: true,
+      &quot;ignore_failure&quot;: true
+    }
+  },
+  {
+    &quot;geoip&quot;: {
+      &quot;field&quot;: &quot;destination.ip&quot;,
+      &quot;target_field&quot;: &quot;destination.geo&quot;,
+      &quot;ignore_missing&quot;: true,
+      &quot;ignore_failure&quot;: true
+    }
+  },
+  {
+    &quot;geoip&quot;: {
+      &quot;field&quot;: &quot;client.ip&quot;,
+      &quot;target_field&quot;: &quot;client.geo&quot;,
+      &quot;ignore_missing&quot;: true,
+      &quot;ignore_failure&quot;: true
+    }
+  }
+]</pre>
+</div></div></li><li data-uuid="d8c03940-d8ea-43d6-9065-ae5731a03c98">Press &quot;Save pipeline&quot;</li><li data-uuid="8daf39cb-a6b7-4999-8136-acaa9e4c22d9">Go to &quot;Stack Management&quot; on the main menu, then select &quot;Index Management&quot; and then select &quot;Component templates&quot;</li><li data-uuid="c346db65-1973-4533-81ab-7eb91f0fbb7e">Create a new template by pressing &quot;Create component template&quot;. </li><li data-uuid="b2e35c75-63a0-4b2b-bf82-e1d2667840c5">Set the &quot;Name&quot; to &quot;logs-routeros@custom&quot;</li><li data-uuid="e0f72582-a03f-491f-a96b-2be955f420a9">Under &quot;Index settings&quot; section, paste the following:<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">{
+  &quot;index&quot;: {
+    &quot;lifecycle&quot;: {
+      &quot;name&quot;: &quot;logs&quot;
+    },
+    &quot;default_pipeline&quot;: &quot;logs-routeros@custom&quot;
+  }
+}</pre>
+</div></div><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Change the ILM policy to your required policy name. The &quot;logs&quot; is the default policy that might be in use for other logs.</p></div></div></li><li data-uuid="b76e3490-cc76-4fe1-ac86-c12461a63424">Under &quot;Mappings&quot; section, press &quot;Load JSON&quot; and paste the following:<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">{
+  &quot;dynamic_templates&quot;: [],
+  &quot;properties&quot;: {
+    &quot;service&quot;: {
+      &quot;type&quot;: &quot;object&quot;,
+      &quot;properties&quot;: {
+        &quot;name&quot;: {
+          &quot;type&quot;: &quot;keyword&quot;
+        }
+      }
+    },
+    &quot;destination&quot;: {
+      &quot;type&quot;: &quot;object&quot;,
+      &quot;properties&quot;: {
+        &quot;port&quot;: {
+          &quot;type&quot;: &quot;long&quot;
+        },
+        &quot;ip&quot;: {
+          &quot;type&quot;: &quot;ip&quot;
+        }
+      }
+    },
+    &quot;host&quot;: {
+      &quot;type&quot;: &quot;object&quot;,
+      &quot;properties&quot;: {
+        &quot;ip&quot;: {
+          &quot;type&quot;: &quot;ip&quot;
+        }
+      }
+    },
+    &quot;client&quot;: {
+      &quot;type&quot;: &quot;object&quot;,
+      &quot;properties&quot;: {
+        &quot;ip&quot;: {
+          &quot;type&quot;: &quot;ip&quot;
+        },
+        &quot;mac&quot;: {
+          &quot;type&quot;: &quot;keyword&quot;
+        }
+      }
+    },
+    &quot;source&quot;: {
+      &quot;type&quot;: &quot;object&quot;,
+      &quot;properties&quot;: {
+        &quot;geo&quot;: {
+          &quot;type&quot;: &quot;object&quot;,
+          &quot;properties&quot;: {
+            &quot;continent_name&quot;: {
+              &quot;ignore_above&quot;: 1024,
+              &quot;type&quot;: &quot;keyword&quot;
+            },
+            &quot;region_iso_code&quot;: {
+              &quot;ignore_above&quot;: 1024,
+              &quot;type&quot;: &quot;keyword&quot;
+            },
+            &quot;city_name&quot;: {
+              &quot;ignore_above&quot;: 1024,
+              &quot;type&quot;: &quot;keyword&quot;
+            },
+            &quot;country_iso_code&quot;: {
+              &quot;ignore_above&quot;: 1024,
+              &quot;type&quot;: &quot;keyword&quot;
+            },
+            &quot;country_name&quot;: {
+              &quot;ignore_above&quot;: 1024,
+              &quot;type&quot;: &quot;keyword&quot;
+            },
+            &quot;location&quot;: {
+              &quot;type&quot;: &quot;geo_point&quot;
+            },
+            &quot;region_name&quot;: {
+              &quot;ignore_above&quot;: 1024,
+              &quot;type&quot;: &quot;keyword&quot;
+            }
+          }
+        },
+        &quot;as&quot;: {
+          &quot;type&quot;: &quot;object&quot;,
+          &quot;properties&quot;: {
+            &quot;number&quot;: {
+              &quot;type&quot;: &quot;long&quot;
+            },
+            &quot;organization&quot;: {
+              &quot;type&quot;: &quot;object&quot;,
+              &quot;properties&quot;: {
+                &quot;name&quot;: {
+                  &quot;ignore_above&quot;: 1024,
+                  &quot;type&quot;: &quot;keyword&quot;,
+                  &quot;fields&quot;: {
+                    &quot;text&quot;: {
+                      &quot;type&quot;: &quot;match_only_text&quot;
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        &quot;address&quot;: {
+          &quot;ignore_above&quot;: 1024,
+          &quot;type&quot;: &quot;keyword&quot;
+        },
+        &quot;port&quot;: {
+          &quot;type&quot;: &quot;long&quot;
+        },
+        &quot;domain&quot;: {
+          &quot;ignore_above&quot;: 1024,
+          &quot;type&quot;: &quot;keyword&quot;
+        },
+        &quot;ip&quot;: {
+          &quot;type&quot;: &quot;ip&quot;
+        },
+        &quot;mac&quot;: {
+          &quot;type&quot;: &quot;keyword&quot;
+        }
+      }
+    },
+    &quot;event&quot;: {
+      &quot;type&quot;: &quot;object&quot;,
+      &quot;properties&quot;: {
+        &quot;duration&quot;: {
+          &quot;type&quot;: &quot;long&quot;
+        },
+        &quot;category&quot;: {
+          &quot;type&quot;: &quot;keyword&quot;
+        },
+        &quot;outcome&quot;: {
+          &quot;type&quot;: &quot;keyword&quot;
+        }
+      }
+    },
+    &quot;message&quot;: {
+      &quot;type&quot;: &quot;match_only_text&quot;
+    },
+    &quot;user&quot;: {
+      &quot;type&quot;: &quot;object&quot;,
+      &quot;properties&quot;: {
+        &quot;name&quot;: {
+          &quot;type&quot;: &quot;keyword&quot;
+        }
+      }
+    },
+    &quot;network&quot;: {
+      &quot;type&quot;: &quot;object&quot;,
+      &quot;properties&quot;: {
+        &quot;bytes&quot;: {
+          &quot;type&quot;: &quot;long&quot;
+        },
+        &quot;name&quot;: {
+          &quot;type&quot;: &quot;keyword&quot;
+        },
+        &quot;transport&quot;: {
+          &quot;type&quot;: &quot;keyword&quot;
+        }
+      }
+    },
+    &quot;tags&quot;: {
+      &quot;ignore_above&quot;: 1024,
+      &quot;type&quot;: &quot;keyword&quot;
+    }
+  }
+}</pre>
+</div></div></li><li data-uuid="f14dc00b-233d-4c26-ae2b-fd261b475a6e">Press &quot;Next&quot; and then press &quot;Save component template&quot;<br/><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>If a component template exists with such a name, then edit the existing one instead.</p></div></div></li><li data-uuid="276728b0-cf87-4fd0-b7b2-7d987465866f">Go to &quot;Stack Management&quot; on the main menu, then select &quot;Index Management&quot; and then select &quot;Index templates&quot;</li><li data-uuid="d57016c6-c0ce-40ec-b206-e0cd07d2129b">Create a new template by pressing &quot;Create template&quot;</li><li data-uuid="70ece721-2ff2-4161-a538-f282118ad5cb">Set the &quot;Name&quot; to &quot;logs-routeros&quot;</li><li data-uuid="66cc6ae4-3aa3-476a-a2b5-9fd8aee8a5ce">Set &quot;Index patterns&quot; to &quot;<span class="eui-textTruncate">logs-routeros-*&quot;</span></li><li data-uuid="ce87db2c-6952-4f48-851d-478ac6d43911">Under &quot;Component templates&quot; section add the following templates to your new Index template:<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">logs@settings
+logs-routeros@custom
+ecs@mappings</pre>
+</div></div></li><li data-uuid="167a6e83-96e2-4afc-880e-7f4c8974810d">Press &quot;Next&quot; and then &quot;Save template&quot;</li><li data-uuid="ac061824-f762-4098-84fb-dbf7001ade7f">Make sure you have opened the 5514/UDP port on your host and elsewhere in the path from your RouterOS device (10.0.0.1).</li><li data-uuid="484017a6-628d-4c7e-a767-b0af2d1e93b5">Your Elastic Agent is now ready to receive Syslog data!</li></ol><h2 id="SyslogwithElasticsearch-RouterOS">RouterOS</h2><ol><li data-uuid="50dd095a-ea8b-427d-8523-10dd28382d52">Configure <a href="https://help.mikrotik.com/docs/spaces/ROS/pages/328094/Log#Log-Actions" rel="nofollow">Logging action</a> settings on your RouterOS Device (10.0.0.1):<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/system logging action
+set [find where name=&quot;remote&quot;] bsd-syslog=yes remote=10.0.0.2 remote-port=5514 syslog-facility=syslog</pre>
+</div></div><br/><br/></li><li data-uuid="c5ca6140-8f36-40ce-9b21-43466a32823e">Add <a href="https://help.mikrotik.com/docs/spaces/ROS/pages/328094/Log#Log-Topics" rel="nofollow">Topics</a> that you wish to receive from RouterOS device (10.0.0.1), for example:<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/system logging
+add action=remote topics=info
+add action=remote topics=error
+add action=remote topics=critical
+add action=remote topics=warning
+add action=remote topics=bridge,stp</pre>
+</div></div></li><li data-uuid="bcf3868d-37a1-4f85-8f2d-bb39a2868743">You should now start to see Syslog data being ingested!</li><li data-uuid="793a5cb0-52f8-4948-b435-e7c9538147d4">Continue the guide to start using Kibana</li></ol><h1 id="SyslogwithElasticsearch-UsingKibana">Using Kibana</h1><p>Kibana allows you to search the ingested Syslog data, to see ingested logs do the following:</p><ol><li data-uuid="1ad40911-89b6-473b-8066-1e4534392283"><a class="external-link" href="https://www.elastic.co/guide/en/kibana/current/access.html" rel="nofollow">Log into your Kibana</a></li><li data-uuid="46c49ca0-6cd6-45c5-a598-9c5d5ae405b2">Open &quot;Discover&quot; from the main menu</li><li data-uuid="85d7dd01-602d-49a7-9e89-25a428e30361"><a class="external-link" href="https://www.elastic.co/guide/en/kibana/current/discover-get-started.html#explore-fields-in-your-data" rel="nofollow">Add a filter</a>, use the following parameters:<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">Select a field: data_stream.dataset
+Select operator: IS
+Select a value: routeros</pre>
+</div></div></li><li data-uuid="a3ab802b-4018-484f-81e1-b1f90f29f490">For simplicity we recommend <a class="external-link" href="https://www.elastic.co/guide/en/kibana/current/discover-get-started.html#explore-fields-in-your-data" rel="nofollow">searching for fields</a> in the  Discover menu and searching for &quot;message&quot;, then adding the field to the view</li><li data-uuid="ef2f16c4-5115-4dbb-8c5b-da5dd44b441b">We also recommend searching for &quot;<span>log.syslog.hostname&quot; field and adding to the view as well.</span></li><li data-uuid="96b5e55e-0f89-4281-b790-b457b9fc8869">Consider <a class="external-link" href="https://www.elastic.co/guide/en/kibana/current/save-open-search.html#_save_a_search" rel="nofollow">saving the search</a> for easier access later</li><li data-uuid="79fb9480-b67e-401d-92a9-887fb18db17b">Done!</li></ol><div role="region" aria-label="Tip" class="confluence-information-macro  confluence-information-macro-tip" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-approve confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>While searching for logs can be useful, you are more likely looking for a way to create <a class="external-link" href="https://www.elastic.co/guide/en/kibana/current/alerting-getting-started.html" rel="nofollow">alerts</a> for certain activities and create <a class="external-link" href="https://www.elastic.co/guide/en/kibana/current/action-types.html" rel="nofollow">connectors</a> to send alerts e-mail, webhooks, chats and other options. Consider enabling the <a class="external-link" href="https://www.elastic.co/guide/en/security/current/spike-in-failed-logon-events.html" rel="nofollow">Spike in failed logon events</a> rule to alert for excessive failed login attempts. You can also create a <a class="external-link" href="https://www.elastic.co/guide/en/observability/current/metrics-threshold-alert.html" rel="nofollow">threshold rule </a>and set it to alert after fixed amount of failed logins.</p></div></div><p><br/></p>
+                    </div>
+
+                                        
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:54</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : PIM-SM</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Routing_328222.html">Routing</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Multicast_59965491.html">Multicast</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : PIM-SM
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Māris B.</span>, last updated by <span class='editor'> Edgars P.</span> on Oct 23, 2023
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742032230 {padding: 0px;}
+div.rbtoc1747742032230 ul {margin-left: 0px;}
+div.rbtoc1747742032230 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742032230'>
+<ul class='toc-indentation'>
+<li><a href='#PIMSM-Summary'>Summary</a></li>
+<li><a href='#PIMSM-Basicmulticastroutingonsingledevice'>Basic multicast routing on single device</a></li>
+<li><a href='#PIMSM-MulticastroutingwithstaticRP'>Multicast routing with static RP</a></li>
+<li><a href='#PIMSM-PropertyReference'>Property Reference</a>
+<ul class='toc-indentation'>
+<li><a href='#PIMSM-Instance'>Instance</a></li>
+<li><a href='#PIMSM-Interfacetemplate'>Interface template</a></li>
+<li><a href='#PIMSM-Interface'>Interface</a></li>
+<li><a href='#PIMSM-Neighbor'>Neighbor</a></li>
+<li><a href='#PIMSM-StaticRP'>Static RP</a></li>
+<li><a href='#PIMSM-UpstreamInformationBase'>Upstream Information Base</a></li>
+</ul>
+</li>
+</ul>
+</div></p><h1 id="PIMSM-Summary">Summary</h1><p>IP Multicast is a technology that allows data to be efficiently shared with many recipients over the Internet. Senders transmit their data to a specific multicast IP address, and receivers indicate their interest in receiving data sent to that address. The network then takes care of delivering the data from senders to receivers.</p><p>If both the sender and receiver for a multicast group are on the same local network segment, routers are not required for the process. Communication can happen directly, and this can be enhanced with the use of <a href="https://help.mikrotik.com/docs/pages/viewpage.action?pageId=59277403" rel="nofollow">IGMP snooping</a> switches. However, if the sender and receiver are on different network segments, a multicast routing protocol must be used to establish the path for data transmission between them.</p><p>Protocol Independent Multicast - Sparse Mode (PIM-SM or PIM) enables RouterOS to support multicast streaming over the network area. PIM stands for Platform Independent Multicast, meaning it's not tied to any particular unicast routing. SM stands for Sparse-Mode, which means that specific control messages ensure that data is delivered only to network segments where there are receivers that want it. In addition to the routing protocols that manage data transmission between network segments, routers need a way to discover local receivers on their directly connected network segment. For IPv4, this is achieved through the Internet Group Management Protocol (IGMP), and Multicast Listener Discovery (MLD) for IPv6.</p><p><span class="confluence-embedded-file-wrapper image-center-wrapper"><img class="confluence-embedded-image image-center" draggable="false" src="attachments/61767728/220233732.jpg" data-image-src="attachments/61767728/220233732.jpg" data-unresolved-comment-count="0" data-linked-resource-id="220233732" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="pim1.jpg" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/jpeg" data-linked-resource-container-id="61767728" data-linked-resource-container-version="28" tabindex="0" alt=""></span></p><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>RouterOS v7 has PIM-SM configuration available in the main<span> </span><strong>system</strong><span> </span>package. Older RouterOS versions need an additional<span> </span><strong>multicast</strong><span> </span>package installed in order to use PIM-SM. See more details about<span> </span><a href="https://help.mikrotik.com/docs/display/ROS/Packages" rel="nofollow">Packages</a>.</p><p>The feature is not supported on SMIPS devices (hAP lite, hAP lite TC and hAP mini).</p></div></div><h1 id="PIMSM-Basicmulticastroutingonsingledevice">Basic multicast routing on single device</h1><p>Picture this scenario, you have got a router with two interfaces, namely ether1 and ether2, and each of them is set up in separate networks. Normally, the router will create connected routes and hosts on both networks will be able to communicate using unicast traffic. However, if you want to enable multicast communication between these networks, you'll need to configure multicast routing separately because it won't work otherwise. In this scenario, we are going to create a simple configuration. This involves creating a PIM instance and configuring the required interfaces.</p><p><span class="confluence-embedded-file-wrapper image-center-wrapper"><img class="confluence-embedded-image image-center" draggable="false" src="attachments/61767728/220233733.jpg" data-image-src="attachments/61767728/220233733.jpg" data-unresolved-comment-count="0" data-linked-resource-id="220233733" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="pim2.jpg" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/jpeg" data-linked-resource-container-id="61767728" data-linked-resource-container-version="28" tabindex="0" alt=""></span></p><p>Begin by ensuring that IP addresses are set up on the router's interfaces.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip address
+add address=192.168.10.1/24 interface=ether1 network=192.168.10.0
+add address=192.168.20.1/24 interface=ether2 network=192.168.20.0</pre>
+</div></div><p>Configure PIM instance. For this example, the default settings should work fine.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/routing pimsm instance
+add name=pimsm-instance-1</pre>
+</div></div><p>Last, add interfaces and specify the PIM instance you created earlier.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/routing pimsm interface-template
+add interfaces=ether1,ether2 instance=pimsm-instance-1</pre>
+</div></div><p>Now router starts listening to IGMP membership reports (client join messages) and will route multicast traffic to clients interested in receiving it.</p><p>To test the configuration, you can configure a multicast sender using RouterOS <a href="https://help.mikrotik.com/docs/display/ROS/Traffic+Generator" rel="nofollow">traffic-generator</a> and IGMP client using <a href="https://help.mikrotik.com/docs/display/ROS/Group+Management+Protocol" rel="nofollow">GMP</a>.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false"># Multicast Sender
+/ip address
+add address=192.168.10.10/24 interface=ether1 network=192.168.10.0
+/tool traffic-generator packet-template
+add interface=ether1 ip-dst=229.1.1.2 mac-dst=01:00:5E:01:01:02/FF:FF:FF:FF:FF:FF name=multicast
+/tool traffic-generator quick tx-template=multicast mbps=10
+
+# Multicast Client
+/ip address
+add address=192.168.20.10/24 interface=ether1 network=192.168.20.0
+/routing gmp
+add disabled=no groups=229.1.1.2 interfaces=ether1</pre>
+</div></div><p>To verify whether multicast traffic is being properly routed, monitor the received packet counters on the client interface or use tools like <a href="https://help.mikrotik.com/docs/display/ROS/Torch" rel="nofollow">Torch</a> or a <a href="https://help.mikrotik.com/docs/display/ROS/Packet+Sniffer" rel="nofollow">Packet Sniffer</a>.</p><p>It is also possible to monitor active multicast group on router:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/routing pimsm uib-g print
+Columns: INSTANCE, GROUP
+# INSTANCE          GROUP    
+0 pimsm-instance-1  229.1.1.2
+
+/routing pimsm uib-sg print
+Flags: K - KEEPALIVE; S - SPT-BIT
+Columns: INSTANCE, GROUP, SOURCE
+#    INSTANCE          GROUP      SOURCE       
+0 KS pimsm-instance-1  229.1.1.2  192.168.10.10
+
+</pre>
+</div></div><h1 id="PIMSM-MulticastroutingwithstaticRP">Multicast routing with static RP</h1><p>In the upcoming example, we'll be working with multiple PIM routers, as shown in the diagram below. PIM-SM uses shared trees and to make this work, we need to designate a specific node as the multicast root distribution point. In PIM, this router is called the Rendezvous Point, or RP. There are various methods for selecting an RP in PIM, such as the Bootstrap Router (BSR) method. However, for this example, we'll be using a straightforward approach known as static RP configuration. This means that the administrator can manually specify one or more RPs for specific multicast groups.</p><p><span class="confluence-embedded-file-wrapper image-center-wrapper"><img class="confluence-embedded-image image-center" draggable="false" src="attachments/61767728/220233734.jpg" data-image-src="attachments/61767728/220233734.jpg" data-unresolved-comment-count="0" data-linked-resource-id="220233734" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="pim3.jpg" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/jpeg" data-linked-resource-container-id="61767728" data-linked-resource-container-version="28" tabindex="0" alt=""></span></p><p>To get started, we'll need to configure IP addresses and set up unicast routing. In this example, we'll use OSPF to exchange routing information between the routers. See more details about <a href="https://help.mikrotik.com/docs/display/ROS/OSPF" rel="nofollow">OSFP</a>.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false"># R1 Rendezvous Point:
+/interface bridge
+add name=loopback
+/ip address
+add address=10.0.0.1 interface=loopback network=10.0.0.1
+add address=10.0.1.1/24 interface=ether2 network=10.0.1.0
+add address=10.0.2.1/24 interface=ether3 network=10.0.2.0
+/routing ospf instance
+add disabled=no name=ospf-instance-1 router-id=10.0.0.1
+/routing ospf area
+add disabled=no instance=ospf-instance-1 name=ospf-area-1
+/routing ospf interface-template
+add area=ospf-area-1 disabled=no interfaces=loopback,ether2,ether3
+
+# R2:
+/interface bridge
+add name=loopback
+/ip address
+add address=10.0.0.2 interface=loopback network=10.0.0.2
+add address=10.0.1.2/24 interface=ether1 network=10.0.1.0
+add address=192.168.20.1/24 interface=ether12 network=192.168.20.0
+/routing ospf instance
+add disabled=no name=ospf-instance-1 router-id=10.0.0.2
+/routing ospf area
+add disabled=no instance=ospf-instance-1 name=ospf-area-1
+/routing ospf interface-template
+add area=ospf-area-1 disabled=no interfaces=loopback,ether1,ether12
+
+# R3:
+/interface bridge
+add name=loopback
+/ip address
+add address=10.0.0.3 interface=loopback network=10.0.0.3
+add address=10.0.2.3/24 interface=ether1 network=10.0.2.0
+add address=192.168.30.1/24 interface=ether12 network=192.168.30.0
+/routing ospf instance
+add disabled=no name=ospf-instance-1 router-id=10.0.0.3
+/routing ospf area
+add disabled=no instance=ospf-instance-1 name=ospf-area-1
+/routing ospf interface-template
+add area=ospf-area-1 disabled=no interfaces=loopback,ether1,ether12</pre>
+</div></div><p>As in the previous example with a single router, we need to configure the PIM instance and add the necessary interfaces on all routers.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false"># R1 Rendezvous Point:
+/routing pimsm instance
+add disabled=no name=pimsm-instance-1
+/routing pimsm interface-template
+add instance=pimsm-instance-1 interfaces=loopback,ether2,ether3
+
+# R2:
+/routing pimsm instance
+add disabled=no name=pimsm-instance-1
+/routing pimsm interface-template
+add instance=pimsm-instance-1 interfaces=loopback,ether1,ether12
+
+# R3:
+/routing pimsm instance
+add name=pimsm-instance-1
+/routing pimsm interface-template
+add instance=pimsm-instance-1 interfaces=loopback,ether1,ether12
+</pre>
+</div></div><p>Now, let's take a look at our PIM neighbors and their current statuses. On R1, there are two neighbors, while on R2 and R3, there's only one neighbor each.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false"># R1 Rendezvous Point:
+/routing pimsm neighbor print
+Flags: R - DESIGNATED-ROUTER; J - JOIN-TRACKING
+Columns: INSTANCE, ADDRESS, PRIORITY
+#    INSTANCE          ADDRESS          PRIORITY
+0 RJ pimsm-instance-1  10.0.1.2%ether2  1       
+1 RJ pimsm-instance-1  10.0.2.3%ether3  1       
+
+# R2:
+/routing pimsm neighbor print 
+Flags: R - DESIGNATED-ROUTER; J - JOIN-TRACKING
+Columns: INSTANCE, ADDRESS, PRIORITY
+#    INSTANCE          ADDRESS          PRIORITY
+0  J pimsm-instance-1  10.0.1.1%ether1  1       
+
+# R3:
+/routing pimsm neighbor print 
+Flags: J - JOIN-TRACKING
+Columns: INSTANCE, ADDRESS, PRIORITY
+#   INSTANCE          ADDRESS          PRIORITY
+0 J pimsm-instance-1  10.0.2.1%ether1  1       
+</pre>
+</div></div><p>Finally, we will select one router to act as our Rendezvous Point (RP). We will configure the R1 loopback IP address on all PIM routers. It's important to ensure that each router has the correct routing information to reach the R1 loopback address.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false"># R1 Rendezvous Point:
+/routing pimsm static-rp
+add address=10.0.0.1 instance=pimsm-instance-1
+
+# R2:
+/routing pimsm static-rp
+add address=10.0.0.1 instance=pimsm-instance-1
+
+# R3:
+/routing pimsm static-rp
+add address=10.0.0.1 instance=pimsm-instance-1</pre>
+</div></div><h1 id="PIMSM-PropertyReference">Property Reference</h1><h2 id="PIMSM-Instance">Instance</h2><p>The instance menu defines the main PIM-SM settings. The instance is then used for all other PIM-related configurations like interface-template, static RP, and Bootstrap Router.</p><p><strong style="text-decoration: none;">Sub-menu:<span style="color:var(--ds-text-accent-blue-bolder,#09326c);"><code> </code></span></strong><code>/routing pimsm instance</code></p><div class="table-wrap"><table class="relative-table wrapped confluenceTable" style="width: 100.0%;"><colgroup><col style="width: 23.8487%;"/><col style="width: 76.1513%;"/></colgroup><thead><tr><th style="text-align: left;" class="confluenceTh"><p>Property</p></th><th style="text-align: left;" class="confluenceTh"><p>Description</p></th></tr></thead><tbody><tr><td style="text-align: left;" class="confluenceTd"><strong>afi</strong><span> </span>(<em>ipv4 | ipv6</em>; Default:<span> <strong>ipv4</strong></span>)</td><td style="text-align: left;" class="confluenceTd">Specifies address family for PIM.</td></tr><tr><td style="text-align: left;" class="confluenceTd"><strong>bsm-forward-back</strong><span> </span>(<em>yes | no</em>; Default:<span> </span>)</td><td style="text-align: left;" class="confluenceTd">Currently not implemented.</td></tr><tr><td style="text-align: left;" class="confluenceTd"><strong>crp-advertise-contained</strong><span> </span>(<em>yes | no</em>; Default:<span> </span>)</td><td style="text-align: left;" class="confluenceTd"><p>Currently not implemented.</p></td></tr><tr><td style="text-align: left;" class="confluenceTd"><strong>name</strong><span> </span>(<em>text</em>; Default:<span> </span>)</td><td style="text-align: left;" class="confluenceTd"><span style="color:var(--ds-text,#172b4d);">Name of the instance.</span></td></tr><tr><td style="text-align: left;" class="confluenceTd"><strong>rp-hash-mask-length</strong> (<em style="text-align: left;">integer: 0..4294967295</em><span style="color:var(--ds-text,#172b4d);">; Default:</span><span style="color:var(--ds-text,#172b4d);"> <strong>30</strong> (IPv4), or <strong>126</strong> (IPv6</span>))</td><td style="text-align: left;" class="confluenceTd">The hash mask allows changing how many groups to map to one of the matching RPs.</td></tr><tr><td style="text-align: left;" class="confluenceTd"><strong>rp-static-override</strong> (<em>yes | no</em>; Default:<span> <strong>no</strong></span>)</td><td style="text-align: left;" class="confluenceTd">Changes the selection priority for static RP. When disabled, the bootstrap RP set has a higher priority. When enabled, static RP has a higher priority.</td></tr><tr><td style="text-align: left;" class="confluenceTd"><strong>ssm-range</strong> <span style="color:var(--ds-text,#172b4d);">(</span><em style="text-align: left;">IPv4 | IPv6</em><span style="color:var(--ds-text,#172b4d);">; Default: )</span></td><td style="text-align: left;" class="confluenceTd">Currently not implemented.</td></tr><tr><td style="text-align: left;" class="confluenceTd"><strong>switch-to-spt</strong> (<em>yes | no</em>; Default:<span> <strong>yes</strong></span>)</td><td style="text-align: left;" class="confluenceTd">Whether to switch to Shortest Path Tree (SPT) if multicast data bandwidth threshold is reached. The router will not proceed from protocol phase one (register encapsulation) to native multicast traffic flow if this option is disabled. It is recommended to enable this option.</td></tr><tr><td style="text-align: left;" class="confluenceTd"><strong>switch-to-spt-bytes</strong> (<em style="text-align: left;">integer: 0..4294967295</em><span style="color:var(--ds-text,#172b4d);">; Default:</span><span style="color:var(--ds-text,#172b4d);"> <strong>0</strong></span>)</td><td style="text-align: left;" class="confluenceTd">Multicast data bandwidth threshold. Switching to Shortest Path Tree (SPT) happens if this threshold is reached in the specified time interval. If a value of 0 is configured, switching will happen immediately.</td></tr><tr><td style="text-align: left;" class="confluenceTd"><strong>switch-to-spt-interval</strong> <span style="color:var(--ds-text,#172b4d);">(</span><em style="text-align: left;">time</em><span style="color:var(--ds-text,#172b4d);">; Default:</span><span style="color:var(--ds-text,#172b4d);"> </span><span style="color:var(--ds-text,#172b4d);">)</span></td><td style="text-align: left;" class="confluenceTd">Time interval in which to account for multicast data bandwidth, used in conjunction with <span style="color:var(--ds-background-accent-green-bolder,#1f845a);"><code>switch-to-spt-bytes</code></span> to determine if the switching threshold is reached.</td></tr><tr><td style="text-align: left;" class="confluenceTd"><strong>vrf</strong> <span style="color:var(--ds-text,#172b4d);">(</span><em style="text-align: left;" title="">name</em><span style="color:var(--ds-text,#172b4d);">; Default: main)</span></td><td style="text-align: left;" class="confluenceTd"><span style="color:var(--ds-text,#172b4d);">Name of the VRF.</span></td></tr></tbody></table></div><h2 id="PIMSM-Interfacetemplate">Interface template</h2><p>The interface template menu defines which interfaces will participate in PIM and what per-interface configuration will be used.</p><p><strong style="text-decoration: none;">Sub-menu:<span style="color:var(--ds-text-accent-blue-bolder,#09326c);"><code> </code></span></strong><code>/routing pimsm interface-template</code></p><div class="table-wrap"><table class="relative-table wrapped confluenceTable" style="width: 100.0%;"><colgroup><col style="width: 23.8487%;"/><col style="width: 76.1513%;"/></colgroup><thead><tr><th style="text-align: left;" class="confluenceTh"><p>Property</p></th><th style="text-align: left;" class="confluenceTh"><p>Description</p></th></tr></thead><tbody><tr><td style="text-align: left;" class="confluenceTd"><strong>hello-delay</strong><span> </span>(<em>time</em>; Default:<span> <strong>5s</strong></span>)</td><td style="text-align: left;" class="confluenceTd">Randomized interval for the initial Hello message on interface startup or detecting new neighbor.</td></tr><tr><td style="text-align: left;" class="confluenceTd"><strong>hello-period</strong><span> </span>(<em>time</em>; Default:<span> <strong>30s</strong></span>)</td><td style="text-align: left;" class="confluenceTd">Periodic interval for Hello messages.</td></tr><tr><td style="text-align: left;" class="confluenceTd"><strong>instance</strong><span> </span>(<em>name</em>; Default:<span> </span>)</td><td style="text-align: left;" class="confluenceTd">Name of the PIM instance this interface template belongs to.</td></tr><tr><td style="text-align: left;" class="confluenceTd"><strong>interfaces</strong><span> </span>(<em>name</em>; Default:<span> <strong>all</strong></span>)</td><td style="text-align: left;" class="confluenceTd">List of interfaces that will participate in PIM.</td></tr><tr><td style="text-align: left;" class="confluenceTd"><strong>join-prune-period</strong> (<em>time</em><span style="color:var(--ds-text,#172b4d);">; Default: <strong>1m</strong></span>)</td><td style="text-align: left;" class="confluenceTd"><br/></td></tr><tr><td style="text-align: left;" class="confluenceTd"><strong>join-tracking-support</strong> (<em>yes | no</em>; Default:<span> <strong>yes</strong></span>)</td><td style="text-align: left;" class="confluenceTd"><p>Sets the value of a Tracking (T) bit in the LAN Prune Delay option in the Hello message. When enabled, a router advertises its willingness to disable Join suppression. it is possible for upstream routers to explicitly track the join membership of individual downstream routers if Join suppression is disabled. Unless all PIM routers on a link negotiate this capability, explicit tracking and the disabling of the Join suppression mechanism are not possible.</p></td></tr><tr><td style="text-align: left;" class="confluenceTd"><strong>override-interval</strong> (<em>time</em><span style="color:var(--ds-text,#172b4d);">; Default: <strong>2s500ms</strong></span>)</td><td style="text-align: left;" class="confluenceTd">Sets the maximum time period over which to randomize when scheduling a delayed override Join message on a network that has join suppression enabled.</td></tr><tr><td style="text-align: left;" class="confluenceTd"><strong>priority</strong> (<em style="text-align: left;">integer: 0..4294967295</em><span style="color:var(--ds-text,#172b4d);">; Default:</span><span style="color:var(--ds-text,#172b4d);"> <strong>1</strong></span>)</td><td style="text-align: left;" class="confluenceTd">The Designated Router (DR) priority. A single Designated Router is elected on each network. The p<span style="color:var(--ds-text,#172b4d);">riority is used only if all neighbors have advertised a priority option. Numerically largest priority is preferred. In case of a tie or if priority is not used - the numerically largest IP address is preferred.</span></td></tr><tr><td style="text-align: left;" class="confluenceTd"><strong>propagation-delay</strong> (<em>time</em><span style="color:var(--ds-text,#172b4d);">; Default: <strong>500ms</strong></span>)</td><td style="text-align: left;" class="confluenceTd"><p>Sets the value for a prune pending timer. It is used by upstream routers to figure out how long they should wait for a Join override message before pruning an interface that has join suppression enabled.</p></td></tr><tr><td style="text-align: left;" class="confluenceTd"><strong>source-addresses</strong> <span style="color:var(--ds-text,#172b4d);">(</span><em style="text-align: left;">IPv4 | IPv6</em><span style="color:var(--ds-text,#172b4d);">; Default: )</span></td><td style="text-align: left;" class="confluenceTd"><br/></td></tr></tbody></table></div><h2 id="PIMSM-Interface">Interface</h2><p>The interface menu shows all interfaces that are currently participating in PIM and their statuses. This menu contains dynamic and read-only entries that get created by defined interface templates.</p><p><strong style="text-decoration: none;">Sub-menu:<span style="color:var(--ds-text-accent-blue-bolder,#09326c);"><code> </code></span></strong><code>/routing pimsm interface</code></p><div class="table-wrap"><table class="relative-table wrapped confluenceTable" style="width: 100.0%;"><colgroup><col style="width: 23.8487%;"/><col style="width: 76.1513%;"/></colgroup><thead><tr><th style="text-align: left;" class="confluenceTh"><p>Property</p></th><th style="text-align: left;" class="confluenceTh"><p>Description</p></th></tr></thead><tbody><tr><td style="text-align: left;" class="confluenceTd"><strong>address</strong><span> </span>(<em style="text-align: left;">IP%interface@vrf</em>)</td><td style="text-align: left;" class="confluenceTd">Shows IP address, interface, and VRF.</td></tr><tr><td style="text-align: left;" class="confluenceTd"><strong>designated-router</strong> (<em>yes | no</em>)</td><td style="text-align: left;" class="confluenceTd"><br/></td></tr><tr><td style="text-align: left;" class="confluenceTd"><strong>dr</strong><span> </span>(<em>yes | no</em>)</td><td style="text-align: left;" class="confluenceTd"><br/></td></tr><tr><td style="text-align: left;" class="confluenceTd"><strong>dynamic</strong><span> </span>(<em>yes | no</em>)</td><td style="text-align: left;" class="confluenceTd"><br/></td></tr><tr><td style="text-align: left;" class="confluenceTd"><strong>instance </strong>(<em>name</em>)</td><td style="text-align: left;" class="confluenceTd">Name of the PIM instance this interface template belongs to.</td></tr><tr><td style="text-align: left;" class="confluenceTd"><strong>join-tracking</strong> (<em>yes | no</em>)</td><td style="text-align: left;" class="confluenceTd"><p><br/></p></td></tr><tr><td style="text-align: left;" class="confluenceTd"><strong>override-interval</strong> (<em>time</em>)</td><td style="text-align: left;" class="confluenceTd"><br/></td></tr><tr><td style="text-align: left;" class="confluenceTd"><strong>priority</strong> (<em style="text-align: left;">integer: 0..4294967295</em>)</td><td style="text-align: left;" class="confluenceTd"><br/></td></tr><tr><td style="text-align: left;" class="confluenceTd"><strong>propagation-delay</strong> (<em>time</em>)</td><td style="text-align: left;" class="confluenceTd"><br/></td></tr></tbody></table></div><h2 id="PIMSM-Neighbor">Neighbor</h2><p>The neighbor menu shows all detected neighbors that are running PIM and their statuses. This menu contains dynamic and read-only entries.</p><p><strong style="text-decoration: none;">Sub-menu:<span style="color:var(--ds-text-accent-blue-bolder,#09326c);"><code> </code></span></strong><code>/routing pimsm neighbor</code></p><div class="table-wrap"><table class="relative-table wrapped confluenceTable" style="width: 100.0%;"><colgroup><col style="width: 23.8487%;"/><col style="width: 76.1513%;"/></colgroup><thead><tr><th style="text-align: left;" class="confluenceTh"><p>Property</p></th><th style="text-align: left;" class="confluenceTh"><p>Description</p></th></tr></thead><tbody><tr><td style="text-align: left;" class="confluenceTd"><strong>address</strong><span> </span>(<em style="text-align: left;">IP%interface</em>)</td><td style="text-align: left;" class="confluenceTd">Shows the neighbor's IP address and local interface the neighbor is detected on.</td></tr><tr><td style="text-align: left;" class="confluenceTd"><strong>designated-router</strong> (<em>yes | no</em>)</td><td style="text-align: left;" class="confluenceTd"><p>Shows whether the neighbor is elected as Designated Router (DR).</p></td></tr><tr><td style="text-align: left;" class="confluenceTd"><strong>instance </strong>(<em>name</em>)</td><td style="text-align: left;" class="confluenceTd">Name of the PIM instance this neighbor is detected on.</td></tr><tr><td style="text-align: left;" class="confluenceTd"><strong>join-tracking</strong> (<em>yes | no</em>)</td><td style="text-align: left;" class="confluenceTd"><p>Indicates the neighbor's value of a Tracking (T) bit in the LAN Prune Delay option in the Hello message.</p></td></tr><tr><td style="text-align: left;" class="confluenceTd"><strong>override-interval</strong> (<em>time</em>)</td><td style="text-align: left;" class="confluenceTd">Indicates the neighbor's value of the override interval in the LAN Prune Delay option in the Hello message.</td></tr><tr><td style="text-align: left;" class="confluenceTd"><strong>priority</strong> (<em style="text-align: left;">integer: 0..4294967295</em>)</td><td style="text-align: left;" class="confluenceTd">Indicates the neighbor's priority value.</td></tr><tr><td style="text-align: left;" class="confluenceTd"><strong>propagation-delay</strong> (<em>time</em>)</td><td style="text-align: left;" class="confluenceTd">Indicates the neighbor's value of the propagation delay in the LAN Prune Delay option in the Hello message.</td></tr><tr><td style="text-align: left;" class="confluenceTd"><strong>timeout</strong> <span style="color:var(--ds-text,#172b4d);">(</span><em style="text-align: left;">time</em><span style="color:var(--ds-text,#172b4d);">)</span></td><td style="text-align: left;" class="confluenceTd">Shows the reminding time after the neighbor is removed from the list if no new Hello message is received. The hold time equals to neighbor's <span style="color:var(--ds-background-accent-green-bolder,#1f845a);"><code>hello-period</code></span> * 3.5. </td></tr></tbody></table></div><h2 id="PIMSM-StaticRP">Static RP</h2><p>The static-rp menu allows manually defining the multicast group to RP mappings. Such a mechanism is not robust to failures but does at least provide a basic interoperability mechanism.</p><p><strong style="text-decoration: none;">Sub-menu:<span style="color:var(--ds-text-accent-blue-bolder,#09326c);"><code> </code></span></strong><code>/routing pimsm static-rp</code></p><div class="table-wrap"><table class="relative-table wrapped confluenceTable" style="width: 100.0%;"><colgroup><col style="width: 23.8487%;"/><col style="width: 76.1513%;"/></colgroup><thead><tr><th style="text-align: left;" class="confluenceTh"><p>Property</p></th><th style="text-align: left;" class="confluenceTh"><p>Description</p></th></tr></thead><tbody><tr><td style="text-align: left;" class="confluenceTd"><strong>address</strong> (<em style="text-align: left;">IPv4 | IPv6</em><span style="color:var(--ds-text,#172b4d);">; Default: </span>)</td><td style="text-align: left;" class="confluenceTd">The IP address of the static RP.</td></tr><tr><td style="text-align: left;" class="confluenceTd"><strong>group</strong><span> </span>(<em style="text-align: left;">IPv4 | IPv6</em><span style="color:var(--ds-text,#172b4d);">; Default: <strong>224.0.0.0/4</strong></span>)</td><td style="text-align: left;" class="confluenceTd">The multicast group that belongs to a specific RP.</td></tr><tr><td style="text-align: left;" class="confluenceTd"><strong>instance</strong><span> </span>(<em>name</em>; Default:<span> </span>)</td><td style="text-align: left;" class="confluenceTd">Name of the PIM instance this static RP belongs to.</td></tr></tbody></table></div><h2 class="auto-cursor-target" id="PIMSM-UpstreamInformationBase">Upstream Information Base</h2><p class="auto-cursor-target">The upstream information base menus show the any-source multicast (*,G) and source-specific multicast (S,G) groups and their statuses. These menus contain only read-only entries.</p><p><strong style="text-decoration: none;">Sub-menu:<span style="color:var(--ds-text-accent-blue-bolder,#09326c);"><code> </code></span></strong><code>/routing pimsm uib-g</code></p><div class="table-wrap"><table class="relative-table wrapped confluenceTable" style="width: 100.0%;"><colgroup><col style="width: 23.8487%;"/><col style="width: 76.1513%;"/></colgroup><thead><tr><th style="text-align: left;" class="confluenceTh"><p>Property</p></th><th style="text-align: left;" class="confluenceTh"><p>Description</p></th></tr></thead><tbody><tr><td style="text-align: left;" class="confluenceTd"><strong>group</strong><span> </span>(<em style="text-align: left;">IPv4 | IPv6</em>)</td><td style="text-align: left;" class="confluenceTd">The multicast group address.</td></tr><tr><td style="text-align: left;" class="confluenceTd"><strong>instance </strong>(<em>name</em>)</td><td style="text-align: left;" class="confluenceTd">Name of the PIM instance the multicast group is created on.</td></tr><tr><td style="text-align: left;" class="confluenceTd"><strong>rp</strong> (<em style="text-align: left;">IPv4 | IPv6</em>)</td><td style="text-align: left;" class="confluenceTd"><p>The address of the Rendezvous Point for this group.</p></td></tr><tr><td style="text-align: left;" class="confluenceTd"><strong>rp-local</strong> (<em>yes | no</em>)</td><td style="text-align: left;" class="confluenceTd">Indicates whether the multicast router itself is RP.</td></tr><tr><td style="text-align: left;" class="confluenceTd"><strong>rpf</strong> (<em style="text-align: left;">IP%interface</em>)</td><td style="text-align: left;" class="confluenceTd">The Reverse Path Forwarding (RPF) indicates the router address and outgoing interface that a Join message for that group is directed to.</td></tr></tbody></table></div><p><strong style="text-decoration: none;">Sub-menu:<span style="color:var(--ds-text-accent-blue-bolder,#09326c);"><code> </code></span></strong><code>/routing pimsm uib-sg</code></p><div class="table-wrap"><table class="relative-table wrapped confluenceTable" style="width: 100.0%;"><colgroup><col style="width: 23.8487%;"/><col style="width: 76.1513%;"/></colgroup><thead><tr><th style="text-align: left;" class="confluenceTh"><p>Property</p></th><th style="text-align: left;" class="confluenceTh"><p>Description</p></th></tr></thead><tbody><tr><td style="text-align: left;" class="confluenceTd"><strong>group</strong><span> </span>(<em style="text-align: left;">IPv4 | IPv6</em>)</td><td style="text-align: left;" class="confluenceTd">The multicast group address.</td></tr><tr><td style="text-align: left;" class="confluenceTd"><strong>instance </strong>(<em>name</em>)</td><td style="text-align: left;" class="confluenceTd">Name of the PIM instance the multicast group is created on.</td></tr><tr><td style="text-align: left;" class="confluenceTd"><strong>keepalive</strong> (<em>yes | no</em>)</td><td style="text-align: left;" class="confluenceTd"><br/></td></tr><tr><td style="text-align: left;" class="confluenceTd"><strong>register</strong> (<em>join | join-pending | prune</em>)</td><td style="text-align: left;" class="confluenceTd"><br/></td></tr><tr><td style="text-align: left;" class="confluenceTd"><strong>rpf</strong> (<em style="text-align: left;">IP%interface</em>)</td><td style="text-align: left;" class="confluenceTd">The Reverse Path Forwarding (RPF) indicates the router address and outgoing interface that a Join message for that group is directed to.</td></tr><tr><td style="text-align: left;" class="confluenceTd"><strong>source</strong> (<em style="text-align: left;">IPv4 | IPv6</em>)</td><td style="text-align: left;" class="confluenceTd">The source IP address of the multicast group.</td></tr><tr><td style="text-align: left;" class="confluenceTd"><strong>spt-bit</strong> (<em>yes | no</em>)</td><td style="text-align: left;" class="confluenceTd"><p>The Shortest Path Tree (SPT) bit indicates whether forwarding is taking place on the (S,G) Shortest Path Tree or on the (*,G) tree. A router can have an (S,G) state and still be forwarding on a (*,G) state during the interval when the source-specific tree is being constructed. When SPT bit is false, only the (*,G) forwarding state is used to forward packets from S to G. When SPT bit is true, both (*,G) and (S,G) forwarding states are used.</p></td></tr></tbody></table></div>
+                    </div>
+
+                                                            <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/61767728/220233732.jpg">pim1.jpg</a> (image/jpeg)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/61767728/220233733.jpg">pim2.jpg</a> (image/jpeg)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/61767728/220233734.jpg">pim3.jpg</a> (image/jpeg)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

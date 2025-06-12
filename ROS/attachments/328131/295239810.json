@@ -1,0 +1,32 @@
+{
+    "Status": {
+        "Status": {
+            "0": {
+                "alias": "IP:Firewall:Filter Rules:*14:Statistics:Packet Rate",
+                "tab": "Firewall",
+                "note": "Traffic to Web server"
+            },
+            "1": {
+                "alias": "IP:Firewall:Filter Rules:*14:General:Chain",
+                "separator": 1,
+                "note": "the alias structure is '[group name]:menu item name:tab name:[item id in dec]:[tab name]:item name'."
+            },
+            "2": {
+                "alias": "System:Clock:Clock:Time:Date",
+                "tab": "Date and time"
+            },
+            "3": {
+                "alias": "System:Clock:Clock:Time:Time"
+            },
+            "4": {
+                "alias": "Quick Set:CPE:Info:WLAN MAC Address",
+                "note": "Using QuickSet fields is possible, but not recommended",
+                "tab": "Random examples"
+            },
+            "5": {
+                "alias": "System:NTP Server:NTP Server:Enabled",
+                "note": "Getting tab name can be impossible, like for NTP server"
+            }
+        }
+    }
+}

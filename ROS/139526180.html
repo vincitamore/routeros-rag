@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : CRS3xx, CRS5xx, CCR2116, CCR2216 VLANs with Bonds</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Bridging-and-Switching_328068.html">Bridging and Switching</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Bridging-and-Switching-Case-Studies_119144611.html">Bridging and Switching Case Studies</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : CRS3xx, CRS5xx, CCR2116, CCR2216 VLANs with Bonds
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Edgars P.</span>, last updated by <span class='editor'> Guntis G.</span> on Apr 17, 2024
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742025469 {padding: 0px;}
+div.rbtoc1747742025469 ul {margin-left: 0px;}
+div.rbtoc1747742025469 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742025469'>
+<ul class='toc-indentation'>
+<li><a href='#CRS3xx,CRS5xx,CCR2116,CCR2216VLANswithBonds-Summary'>Summary</a></li>
+<li><a href='#CRS3xx,CRS5xx,CCR2116,CCR2216VLANswithBonds-Bonding'>Bonding</a></li>
+<li><a href='#CRS3xx,CRS5xx,CCR2116,CCR2216VLANswithBonds-Portswitching'>Port switching</a></li>
+<li><a href='#CRS3xx,CRS5xx,CCR2116,CCR2216VLANswithBonds-ManagementIP'>Management IP</a></li>
+<li><a href='#CRS3xx,CRS5xx,CCR2116,CCR2216VLANswithBonds-InvalidVLANfiltering'>Invalid VLAN filtering</a></li>
+<li><a href='#CRS3xx,CRS5xx,CCR2116,CCR2216VLANswithBonds-InterVLANrouting'>InterVLAN routing</a></li>
+<li><a href='#CRS3xx,CRS5xx,CCR2116,CCR2216VLANswithBonds-DHCP-Server'>DHCP-Server</a></li>
+<li><a href='#CRS3xx,CRS5xx,CCR2116,CCR2216VLANswithBonds-Jumboframes'>Jumbo frames</a></li>
+</ul>
+</div></p><h1 id="CRS3xx,CRS5xx,CCR2116,CCR2216VLANswithBonds-Summary">Summary</h1><p><span style="color:var(--ds-text-accent-lime-bolder,#37471f);">This page will show how to configure multiple switches to use bonding interfaces and port-based VLANs, it will also show a working example with a DHCP-Server, inter-VLAN routing, management IP, and invalid VLAN filtering configuration.</span></p><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p><span style="color:var(--ds-text-accent-lime-bolder,#37471f);">This article applies to CRS3xx, CRS5xx, CCR2116, and CCR2216 devices. It doesn't apply to CRS1xx/CRS2xx series.</span></p></div></div><p>For this network topology, we will be using two CRS326-24G-2S+, one CRS317-1G-16S+, and one CCR1072-1G-8S+, but the same principles can be applied to any CRS3xx, CRS5xx series devices, and a router. </p><p><span style="color:var(--ds-text-accent-lime-bolder,#37471f);"><span class="confluence-embedded-file-wrapper image-center-wrapper"><img class="confluence-embedded-image image-center" draggable="false" src="attachments/139526180/140017720.jpg" data-image-src="attachments/139526180/140017720.jpg" data-unresolved-comment-count="0" data-linked-resource-id="140017720" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="700px-Crs3xx_vlans_with_bonds.jpg" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/jpeg" data-linked-resource-container-id="139526180" data-linked-resource-container-version="6" tabindex="0" alt=""></span><br/></span></p><p><br/></p><p><span style="color:var(--ds-text-accent-lime-bolder,#37471f);">In this setup, SwitchA and SwitchC will tag all traffic from ports ether1-ether8 to VLAN ID 10, ether9-ether16 to VLAN ID 20, and ether17-ether24 to VLAN ID 30. Management will only be possible if a user is connecting with tagged traffic with VLAN ID 99 from ether1 on SwitchA or SwitchB, connecting to all devices will also be possible from the router using tagged traffic with VLAN ID 99. The SFP+ ports in this setup are going to be used as VLAN trunk ports while being in a bond to create a LAG interface.</span></p><h1 id="CRS3xx,CRS5xx,CCR2116,CCR2216VLANswithBonds-Bonding"><span style="color:var(--ds-text-accent-lime-bolder,#37471f);">Bonding</span></h1><p><span style="color:var(--ds-text-accent-lime-bolder,#37471f);">Bonding interfaces are used when a larger amount of bandwidth is required, this is done by creating a link aggregation group, which also provides hardware automatic failover and load balancing for switches. By adding two 10Gbps interfaces to bonding, you can increase the theoretical bandwidth limit to 20Gbps. Make sure that all bonded interfaces are linked to the same speed rates.</span></p><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p><span style="color:var(--ds-text-accent-lime-bolder,#37471f);"><span>When using the hardware-offloaded bridge, the </span>CRS3xx, CRS5xx, CCR2116, and CCR2216 devices aggregate traffic using the built-in switch chip without using CPU resources. To route the traffic a router with a powerful CPU is required to handle the aggregated traffic.</span></p></div></div><p>To create a 20Gbps bonding interface from sfp-sfpplus1 and sfp-sfpplus2 between SwitchA to SwitchB and between SwitchC to SwitchB, use these commands on<span> </span><strong>SwitchA</strong><span> </span>and<span> </span><strong>SwitchC</strong>:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface bonding
+add mode=802.3ad name=bond_1-2 slaves=sfp-sfpplus1,sfp-sfpplus2</pre>
+</div></div><p>To create a 40Gbps bonding interface between SwitchB and the Router and a 20Gbps bonding interface between SwitchA and SwitchC, use these commands on<span> </span><strong>SwitchB</strong>:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface bonding
+add mode=802.3ad name=bond_1-2 slaves=sfp-sfpplus1,sfp-sfpplus2
+add mode=802.3ad name=bond_3-4 slaves=sfp-sfpplus3,sfp-sfpplus4
+add mode=802.3ad name=bond_5-6-7-8 slaves=sfp-sfpplus5,sfp-sfpplus6,sfp-sfpplus7,sfp-sfpplus8</pre>
+</div></div><p>In our case the Router needs a software-based bonding interface, use these commands on<span> the </span><strong>Router</strong>:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface bonding
+add mode=802.3ad name=bond_1-2-3-4 slaves=sfp-sfpplus1,sfp-sfpplus2,sfp-sfpplus3,sfp-sfpplus4</pre>
+</div></div><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p><span style="color:var(--ds-text-accent-lime-bolder,#37471f);">Interface bonding does not create an interface with a larger link speed. Interface bonding creates a virtual interface that can load balance traffic over multiple interfaces. More details can be found on the<span> </span></span><a href="https://help.mikrotik.com/docs/display/ROS/Layer2+misconfiguration#Layer2misconfiguration-LAGinterfacesandloadbalancing" rel="nofollow">LAG interfaces and load balancing</a><span style="color:var(--ds-text-accent-lime-bolder,#37471f);"><span> </span>page.</span></p></div></div><h1 id="CRS3xx,CRS5xx,CCR2116,CCR2216VLANswithBonds-Portswitching"><span style="color:var(--ds-text-accent-lime-bolder,#37471f);">Port switching</span></h1><p>All switches in this setup require that all used ports are switched together. For bonding, you should add the bonding interface as a bridge port, instead of individual bonding ports. Use these commands on<span> </span><strong>SwitchA</strong><span> </span>and<span> </span><strong>SwitchC</strong>:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface bridge
+add name=bridge vlan-filtering=no
+/interface bridge port
+add bridge=bridge interface=ether1 pvid=10
+add bridge=bridge interface=ether2 pvid=10
+add bridge=bridge interface=ether3 pvid=10
+add bridge=bridge interface=ether4 pvid=10
+add bridge=bridge interface=ether5 pvid=10
+add bridge=bridge interface=ether6 pvid=10
+add bridge=bridge interface=ether7 pvid=10
+add bridge=bridge interface=ether8 pvid=10
+add bridge=bridge interface=ether9 pvid=20
+add bridge=bridge interface=ether10 pvid=20
+add bridge=bridge interface=ether11 pvid=20
+add bridge=bridge interface=ether12 pvid=20
+add bridge=bridge interface=ether13 pvid=20
+add bridge=bridge interface=ether14 pvid=20
+add bridge=bridge interface=ether15 pvid=20
+add bridge=bridge interface=ether16 pvid=20
+add bridge=bridge interface=ether17 pvid=30
+add bridge=bridge interface=ether18 pvid=30
+add bridge=bridge interface=ether19 pvid=30
+add bridge=bridge interface=ether20 pvid=30
+add bridge=bridge interface=ether21 pvid=30
+add bridge=bridge interface=ether22 pvid=30
+add bridge=bridge interface=ether23 pvid=30
+add bridge=bridge interface=ether24 pvid=30
+add bridge=bridge interface=bond_1-2</pre>
+</div></div><p>Add all bonding interfaces to a single bridge on SwitchB by using these commands on<span> </span><strong>SwitchB</strong>:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface bridge
+add name=bridge vlan-filtering=no
+/interface bridge port
+add bridge=bridge interface=bond_1-2
+add bridge=bridge interface=bond_3-4
+add bridge=bridge interface=bond_5-6-7-8</pre>
+</div></div><h1 id="CRS3xx,CRS5xx,CCR2116,CCR2216VLANswithBonds-ManagementIP"><span class="mw-headline">Management IP</span></h1><p>It is very useful to create a management interface and assign an IP address to it to preserve access to the switch. This is also very useful when updating your switches since such traffic to the switch will be blocked when enabling invalid VLAN filtering.</p><p>Create a routable VLAN interface on<span> </span><strong>SwitchA</strong>,<span> </span><strong>SwitchB,</strong><span> </span>and<span> </span><strong>SwitchC</strong>:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface vlan
+add interface=bridge name=MGMT vlan-id=99</pre>
+</div></div><p>The Router needs a routable VLAN interface to be created on the bonding interface, use these commands to create a VLAN interface on<span> the </span><strong>Router</strong>:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface vlan
+add interface=bond_1-2-3-4 name=MGMT vlan-id=99</pre>
+</div></div><p>For this guide, we are going to use these addresses for each device:</p><div class="table-wrap"><table class="wrapped confluenceTable"><tbody><tr><th style="text-align: center;" class="confluenceTh">Device</th><th style="text-align: center;" class="confluenceTh">Address</th></tr><tr><td class="confluenceTd">Router</td><td class="confluenceTd">192.168.99.1</td></tr><tr><td class="confluenceTd">SwitchA</td><td class="confluenceTd">192.168.99.2</td></tr><tr><td class="confluenceTd">SwitchB</td><td class="confluenceTd">192.168.99.3</td></tr><tr><td class="confluenceTd">SwitchC</td><td class="confluenceTd">192.168.99.4</td></tr></tbody></table></div><p>Add an IP address for each switch device on the VLAN interface (change X to the appropriate number):</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip address
+add address=192.168.99.X/24 interface=MGMT</pre>
+</div></div><p>Do not forget to add the default gateway and specify a DNS server on the switch devices:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip route
+add gateway=192.168.99.1
+/ip dns
+set servers=192.168.99.1</pre>
+</div></div><p>Add the IP address on the<span> </span><strong>Router</strong>:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip address
+add address=192.168.99.1/24 interface=MGMT</pre>
+</div></div><h1 id="CRS3xx,CRS5xx,CCR2116,CCR2216VLANswithBonds-InvalidVLANfiltering"><span class="mw-headline">Invalid VLAN filtering</span></h1><p>Since most ports on SwitchA and SwitchC are going to be access ports, you can set all ports to accept only certain types of packets, in this case, we will want SwitchA and SwitchC to only accept untagged packets, use these commands on<span> </span><strong>SwitchA</strong><span> </span>and<span> </span><strong>SwitchC</strong>:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface bridge port
+set [ find ] frame-types=admit-only-untagged-and-priority-tagged</pre>
+</div></div><p>There is an exception for frame types on SwitchA and SwitchC, in this setup access to the management is required from ether1 and bonding interfaces, they require that tagged traffic can be forwarded. Use these commands on<span> </span><strong>SwitchA</strong><span> </span>and<span> </span><strong>SwitchC</strong>:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface bridge port
+set [find where interface=ether1] frame-types=admit-all
+set [find where interface=bond_1-2] frame-types=admit-only-vlan-tagged</pre>
+</div></div><p>On SwitchB only tagged packets should be forwarded, use these commands on<span> </span><strong>SwitchB</strong>:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface bridge port
+set [ find ] frame-types=admit-only-vlan-tagged</pre>
+</div></div><p>An optional step is to set<span> </span><span style="color:var(--ds-background-accent-green-bolder,#1f845a);"><code>frame-types=admit-only-vlan-tagged</code></span><span> </span>on the bridge interface to disable the default untagged VLAN 1 (<code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">pvid=1</span></code>). We are using the tagged VLAN on the bridge for management access, so there is no need to accept untagged traffic on the bridge. Use these commands on the <strong>SwitchA</strong>,<span> </span><strong>SwitchB</strong><span> </span>and<span> </span><strong>SwitchC</strong>:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface bridge set [find name=bridge] frame-types=admit-only-vlan-tagged</pre>
+</div></div><p><span style="color:var(--ds-text-accent-lime-bolder,#37471f);">It is required to set up a bridge VLAN table. In this network setup, we need to allow VLAN 10 on ether1-ether8, VLAN 20 on ether9-ether16, VLAN 30 on ether17-ether24, VLAN 10,20,30,99 on bond_1-2, and a special case for ether1 to allow to forward VLAN 99 on SwitchA and SwitchC. Use these commands on<span> </span></span><strong>SwitchA</strong><span style="color:var(--ds-text-accent-lime-bolder,#37471f);"><span> </span>and<span> </span></span><strong>SwitchC</strong><span style="color:var(--ds-text-accent-lime-bolder,#37471f);">:</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface bridge vlan
+add bridge=bridge tagged=bond_1-2 vlan-ids=10
+add bridge=bridge tagged=bond_1-2 vlan-ids=20
+add bridge=bridge tagged=bond_1-2 vlan-ids=30
+add bridge=bridge tagged=bridge,bond_1-2,ether1 vlan-ids=99</pre>
+</div></div><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p><span style="color:var(--ds-text,#172b4d);">Bridge ports with </span><span style="color:var(--ds-background-accent-green-bolder,#1f845a);"><code>frame-types</code></span><span style="color:var(--ds-text,#172b4d);"><span> </span>set to <code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">admit-all</span></code> or<span> </span></span><span style="color:var(--ds-background-accent-green-bolder,#1f845a);"><code>admit-only-untagged-and-priority-tagged</code></span><span style="color:var(--ds-text,#172b4d);"> will be automatically added as untagged ports for the </span><span style="color:var(--ds-background-accent-green-bolder,#1f845a);"><code>pvid</code></span><span style="color:var(--ds-text,#172b4d);"> VLAN.</span></p></div></div><p>Similarly, it is required to set up a bridge VLAN table for SwitchB. Use these commands on<span> </span><strong>SwitchB</strong>:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface bridge vlan
+add bridge=bridge tagged=bond_1-2,bond_3-4,bond_5-6-7-8 vlan-ids=10,20,30
+add bridge=bridge tagged=bond_1-2,bond_3-4,bond_5-6-7-8,bridge vlan-ids=99</pre>
+</div></div><p>When everything is configured, VLAN filtering can be enabled. Use these commands on<span> </span><strong>SwitchA</strong>,<span> </span><strong>SwitchB,</strong><span> </span>and<span> </span><strong>SwitchC</strong>:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface bridge
+set bridge vlan-filtering=yes</pre>
+</div></div><div role="region" aria-label="Warning" class="confluence-information-macro  confluence-information-macro-warning" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-error confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p><span style="color:var(--ds-text-accent-lime-bolder,#37471f);">Double-check if port-based VLANs are set up properly. If a mistake was made, you might lose access to the switch and it can only be regained by resetting the configuration or by using the serial console.</span></p></div></div><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p><span class="mw-headline">VLAN filtering is described more in the<span> </span><a href="https://help.mikrotik.com/docs/display/ROS/Bridging+and+Switching#BridgingandSwitching-BridgeVLANFiltering" rel="nofollow">Bridge VLAN Filtering</a><span> </span>section.</span></p></div></div><h1 id="CRS3xx,CRS5xx,CCR2116,CCR2216VLANswithBonds-InterVLANrouting"><span style="font-size: 24.0px;letter-spacing: -0.01em;">InterVLAN routing</span></h1><p>To create InterVLAN routing, the VLAN interface for each customer VLAN ID must be created on the router and must have an IP address assigned to it. The VLAN interface must be created on the bonding interface created previously.</p><p>Use these commands on the<span> </span><strong>Router</strong>:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface vlan
+add interface=bond_1-2-3-4 name=VLAN10 vlan-id=10
+add interface=bond_1-2-3-4 name=VLAN20 vlan-id=20
+add interface=bond_1-2-3-4 name=VLAN30 vlan-id=30
+/ip address
+add address=192.168.10.1/24 interface=VLAN10
+add address=192.168.20.1/24 interface=VLAN20
+add address=192.168.30.1/24 interface=VLAN30</pre>
+</div></div><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p><span style="color:var(--ds-text-accent-lime-bolder,#37471f);">These commands are required for DHCP-Server. In case interVLAN routing is not desired but a DHCP-Server on a single router is required, then use<span> </span></span><a href="https://help.mikrotik.com/docs/display/ROS/Filter" rel="nofollow">Firewall Filter</a><span style="color:var(--ds-text-accent-lime-bolder,#37471f);"><span> </span>to block access between different subnets.</span></p></div></div><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p><span class="mw-headline">Since RouterOS v7, it is possible to route traffic using the L3 HW offloading on certain devices. See more details on<span> </span><a href="https://help.mikrotik.com/docs/display/ROS/L3+Hardware+Offloading" rel="nofollow">L3 Hardware Offloading</a>.</span></p></div></div><h1 id="CRS3xx,CRS5xx,CCR2116,CCR2216VLANswithBonds-DHCP-Server"><span class="mw-headline">DHCP-Server</span></h1><p>To get the DHCP-Server working for each VLAN ID, the server must be set up on the previously created VLAN interfaces (one server for each VLAN ID). Preferably each VLAN ID should have its own subnet and its own IP pool. A DNS Server could be specified as the router's IP address for a particular VLAN ID or a global DNS Server could be used, but this address must be reachable.</p><p>To set up the DHCP-Server, use these commands on the<span> </span><strong>Router</strong>:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip pool
+add name=VLAN10_POOL ranges=192.168.10.100-192.168.10.200
+add name=VLAN20_POOL ranges=192.168.20.100-192.168.20.200
+add name=VLAN30_POOL ranges=192.168.30.100-192.168.30.200
+/ip dhcp-server
+add address-pool=VLAN10_POOL disabled=no interface=VLAN10 name=VLAN10_DHCP
+add address-pool=VLAN20_POOL disabled=no interface=VLAN20 name=VLAN20_DHCP
+add address-pool=VLAN30_POOL disabled=no interface=VLAN30 name=VLAN30_DHCP
+/ip dhcp-server network
+add address=192.168.10.0/24 dns-server=192.168.10.1 gateway=192.168.10.1
+add address=192.168.20.0/24 dns-server=192.168.20.1 gateway=192.168.20.1
+add address=192.168.30.0/24 dns-server=192.168.30.1 gateway=192.168.30.1</pre>
+</div></div><p>In case the router's DNS Server is being used, don't forget to allow remote requests and make sure DNS Servers are configured on the router. Use these commands on the<span> </span><strong>Router</strong>:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip dns
+set allow-remote-requests=yes servers=8.8.8.8</pre>
+</div></div><div role="region" aria-label="Warning" class="confluence-information-macro  confluence-information-macro-warning" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-error confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p><span style="color:var(--ds-text-accent-lime-bolder,#37471f);">Make sure to secure your local DNS Server with Firewall from the outside when using<span> </span></span><span style="color:var(--ds-background-accent-green-bolder,#1f845a);"><code>allow-remote-requests</code></span><span style="color:var(--ds-text-accent-lime-bolder,#37471f);"><span> </span>set to<span> </span></span><code>yes</code><span style="color:var(--ds-text-accent-lime-bolder,#37471f);"><span> </span>since your DNS Server can be used for DDoS attacks if it is accessible from the Internet by anyone.</span></p></div></div><p>Don't forget to create NAT, assuming that sfp-sfpplus8 is used as WAN port, use these commands on the<span> </span><strong>Router</strong>:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip firewall nat
+add action=masquerade chain=srcnat out-interface=sfp-sfpplus8</pre>
+</div></div><h1 id="CRS3xx,CRS5xx,CCR2116,CCR2216VLANswithBonds-Jumboframes"><span class="mw-headline">Jumbo frames</span></h1><p>One can increase the total throughput in such a setup by enabling jumbo frames. This reduces the packet overhead by increasing the Maximum Transmission Unit (MTU). If a device in your network does not support jumbo frames, then it will not benefit from a larger MTU. Usually, the whole network does not support jumbo frames, but you can still benefit when sending data between devices that support jumbo frames, including all switches in the path.</p><p>In this case, if clients behind SwitchA and client behind SwitchC support jumbo frames, then enabling jumbo frames will be beneficial. Before enabling jumbo frames, determine the MAX-L2MTU by using this command:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@SwitchA] &gt; interface print 
+Flags: R - RUNNING
+Columns: NAME, TYPE, ACTUAL-MTU, L2MTU, MAX-L2MTU, MAC-ADDRESS
+ #   NAME           TYPE   ACTUAL-MTU  L2MTU  MAX-L2MTU  MAC-ADDRESS      
+ 1 R sfp-sfpplus1   ether        1500   1584      10218  64:D1:54:FF:E3:7F
+</pre>
+</div></div><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p><span style="color:var(--ds-text-accent-lime-bolder,#37471f);">More information can be found in<span> </span></span><a href="https://help.mikrotik.com/docs/display/ROS/MTU+in+RouterOS" rel="nofollow">MTU manual</a><span style="color:var(--ds-text-accent-lime-bolder,#37471f);"><span> </span>page.</span></p></div></div><p>When MAX-L2MTU is determined, choose the MTU size depending on the traffic on your network, use this command on<span> </span><strong>SwitchA</strong>,<span> </span><strong>SwitchB,</strong><span> </span>and<span> </span><strong>SwitchC</strong>:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface ethernet
+set [ find ] l2mtu=10218 mtu=10218</pre>
+</div></div><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p><span style="color:var(--ds-text-accent-lime-bolder,#37471f);">Don't forget to change the MTU on your client devices too, otherwise, the above-mentioned settings will not have any effect.</span></p></div></div>
+                    </div>
+
+                                                            <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/139526180/139526181.png">Crs3xx_vlans_with_bonds.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/139526180/140017720.jpg">700px-Crs3xx_vlans_with_bonds.jpg</a> (image/jpeg)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

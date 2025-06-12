@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : Partitions</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="System-Information-and-Utilities_119144657.html">System Information and Utilities</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : Partitions
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Normunds R.</span>, last updated by <span class='editor'> Serhii T.</span> on Mar 28, 2025
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <h1 id="Partitions-Summary"><span class="mw-headline">Summary</span></h1><p>Partitioning is supported on ARM, ARM64, MIPS, TILE, and PowerPC RouterBOARD type devices.</p><p>It is possible to partition NAND flash, allowing to install own OS on each partition and specify primary and fallback partitions.</p><p>If a partition should fail for some reason (failed upgrade, problematic configuration introduced, software problem), the next partition will boot instead. This can be used as an interactive backup where you keep a verified working installation and upgrade only some secondary partition. If you upgrade your configuration, and it proves to be good, you can use the &quot;save config&quot; button to copy it over to other partitions. </p><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p> Repartitioning of the NAND requires the latest bootloader version</p></div></div><p>Minimum partition sizes:</p><ul><li>32MB on MIPS</li><li>40MB on PowerPC</li><li>48MB on TILE</li></ul><p>The maximum number of allowed partitions is 8.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@1009up] &gt; /partitions/print
+Flags: A - ACTIVE; R - RUNNING
+Columns: NAME, FALLBACK-TO, VERSION, SIZE
+# NAME FALL VERSION SIZE 
+0 AR part0 next RouterOS v7.1beta4 Dec/15/2020 15:55:11 128MiB</pre>
+</div></div><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Starting from RouterOS version 7.17, you need to update the <a href="https://help.mikrotik.com/docs/spaces/ROS/pages/93749258/Device-mode" rel="nofollow">device-mode</a> to use the partitions.</p></div></div><h1 id="Partitions-Commands">Commands</h1><div class="table-wrap"><table class="wrapped relative-table confluenceTable" style="width: 100.0%;"><colgroup><col style="width: 47.2943%;"/><col style="width: 52.7237%;"/></colgroup><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>activate</strong> (<em>&lt;partition&gt;</em>)</td><td class="confluenceTd"><p>Assigns another partition as Active. This option is available if the &quot;partitions&quot; setting is enabled in device mode (since RouterOS 7.17).</p></td></tr><tr><td class="confluenceTd"><strong>repartition</strong> (<em>integer</em>)</td><td class="confluenceTd">Will reboot the router and reformat the NAND, leaving only active partition.</td></tr><tr><td class="confluenceTd"><strong>copy-to</strong> (<em>&lt;partition&gt;</em>)</td><td class="confluenceTd">Clone <strong>running</strong> OS with the config to specified partition. Previously stored data on the partition will be erased.</td></tr><tr><td class="confluenceTd"><strong>save-config-to</strong> (<em>&lt;partition&gt;</em>)</td><td class="confluenceTd">Clone <strong>running-config</strong> on a specified partition. Everything else is untouched.</td></tr><tr><td class="confluenceTd"><strong>restore-config-from</strong> (<em>&lt;partition&gt;</em>)</td><td class="confluenceTd">Copy config from specified partition to <strong>running</strong> partition</td></tr></tbody></table></div><h1 id="Partitions-Properties"><span class="mw-headline">Properties</span></h1><div class="table-wrap"><table class="wrapped relative-table confluenceTable" style="width: 100.0%;"><colgroup><col style="width: 47.384%;"/><col style="width: 52.5891%;"/></colgroup><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>name</strong> (<em>string</em>; Default: )</td><td class="confluenceTd">Name of the partition</td></tr><tr><td class="confluenceTd"><strong>fallback-to</strong> (<em>etherboot | next | &lt;partition-name&gt;</em>; Default: <strong>next</strong>)</td><td class="confluenceTd">What to do if an active partition fails to boot:<ul><li><strong>etherboot</strong> - switch to etherboot</li><li><strong>next'</strong> - try next partition</li><li>fallback to the specified partition</li></ul></td></tr></tbody></table></div><h2 id="Partitions-Read-only">Read-only</h2><div class="table-wrap"><table class="wrapped relative-table confluenceTable" style="width: 100.0%;"><colgroup><col style="width: 47.4738%;"/><col style="width: 52.4993%;"/></colgroup><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>active</strong> (<em>yes | no</em>)</td><td class="confluenceTd">Partition is active</td></tr><tr><td class="confluenceTd"><strong>running</strong> (<em>yes | no</em>)</td><td class="confluenceTd">Currently running partition</td></tr><tr><td class="confluenceTd"><strong>size</strong> (<em>integer[MiB]</em>)</td><td class="confluenceTd">Partition size</td></tr><tr><td class="confluenceTd"><strong>version</strong> (<em>string</em>)</td><td class="confluenceTd">Current RouterOS version installed on the partition</td></tr></tbody></table></div>
+                    </div>
+
+                                        
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : Spectral scan</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Wireless_1409138.html">Wireless</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : Spectral scan
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Artūrs C.</span> on Jul 27, 2022
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p style=""><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742037991 {padding: 0px;}
+div.rbtoc1747742037991 ul {margin-left: 0px;}
+div.rbtoc1747742037991 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742037991'>
+<ul class='toc-indentation'>
+<li><a href='#Spectralscan-Introduction'>Introduction</a></li>
+<li><a href='#Spectralscan-Console'>Console</a>
+<ul class='toc-indentation'>
+<li><a href='#Spectralscan-SpectralHistory'>Spectral History</a></li>
+<li><a href='#Spectralscan-SpectralScan'>Spectral Scan</a></li>
+</ul>
+</li>
+<li><a href='#Spectralscan-TheDude'>The Dude</a></li>
+</ul>
+</div></p><h1 style="" id="Spectralscan-Introduction">Introduction</h1><p style="">The spectral scan can scan all frequencies supported by your wireless card, and plot them directly in the console. The exact frequency span depends on the card. Allowed ranges on r52n: [4790; 6085], [2182; 2549].</p><p style="">A wireless card can generate 4us long spectral snapshots for any 20mhz wide channel. This is considered a single spectral sample.</p><p style="">To improve data quality spectrum is scanned with 10mhz frequency increments, which means doubled sample coverage at each specific frequency (considering 20mhz wide samples).</p><div role="region" aria-label="Warning" class="confluence-information-macro  confluence-information-macro-warning" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-error confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Currently, is NOT supported for Atheros 802.11ac chips (e.g. QCA98xx, IPQ-4018). See<span> </span><a class="external-link" href="https://mikrotik.com/products" rel="nofollow" style="text-decoration: none;">https://mikrotik.com/products</a><span> </span>determine the wireless chip on your device.</p></div></div><h1 style="" id="Spectralscan-Console"><span class="mw-headline">Console</span></h1><h2 style="" id="Spectralscan-SpectralHistory"><span class="mw-headline">Spectral History</span></h2><p style=""><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/139526162/139526163.png" data-image-src="attachments/139526162/139526163.png" data-unresolved-comment-count="0" data-linked-resource-id="139526163" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="Spectral-history.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="139526162" data-linked-resource-container-version="1" tabindex="0" alt=""></span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface wireless spectral-history &lt;wireless interface name&gt; </pre>
+</div></div><p style="margin-left: 20.0px;"><br/></p><p style="">Plots spectrogram. Legend and frequency ruler is printed every 24 lines. Numbers in the ruler correspond to the value at their leftmost character position. Power values that fall in different ranges are printed as different colored characters with the same foreground and background color, so it is possible to copy and paste the terminal output of this command.</p><ul style=""><li><em>value</em><span> </span>-- select value that is plotted on the output. 'interference' is special as it shows detected interference sources (affected by the 'classify-samples' parameter) instead of power readings, and cannot be made audible;</li><li><em>interval</em><span> </span>-- interval at which spectrogram lines are printed;</li><li><em>duration</em><span> </span>-- terminate command after a specified time. default is indefinite;</li><li><em>buckets</em><span> </span>-- how many values to show in each line of a spectrogram. This value is limited by the number of columns in the terminal. It is useful to reduce this value if using 'audible';</li><li><em>average-samples</em><span> </span>-- Number of 4us spectral snapshots to take at each frequency, and calculate average and maximum energy over them. (default 10);</li><li><em>classify-samples</em><span> </span>-- Number of spectral snapshots taken at each frequency and processed by the interference classification algorithm. Generally, more samples give more chance to spot certain types of interference (default 50);</li><li><em>range</em><span> </span>--<ul><li>2.4ghz - scan the whole 2.4ghz band;</li><li>5ghz - scan the whole 5ghz band;</li><li>current-channel - scan current channel only (20 or 40 MHz wide);</li><li>range - scan specific range;</li></ul></li></ul><ul style=""><li><em>audible=yes</em><span> </span>-- play each line as it is printed. There is a short silence between the lines. Each line is played from left to right, with higher frequencies corresponding to higher values in the spectrogram.</li></ul><h2 style="" id="Spectralscan-SpectralScan"><span class="mw-headline">Spectral Scan</span></h2><p style=""><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/139526162/139526164.png" data-image-src="attachments/139526162/139526164.png" data-unresolved-comment-count="0" data-linked-resource-id="139526164" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="Spectral-scan.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="139526162" data-linked-resource-container-version="1" tabindex="0" alt=""></span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false"> /interface wireless spectral-scan &lt;wireless interface name&gt; </pre>
+</div></div><p style="">Continuously monitor spectral data. This command uses the same data source as 'spectral-history', and thus shares many parameters.</p><p style="">Each line displays one spectrogram bucket -- frequency, the numeric value of power average, and a character graphic bar. A bar shows average power value with ':' characters and average peak hold with '.' characters. Maximum is displayed as a lone floating ':' character.</p><ul style=""><li><em>show-interference</em><span> </span>-- add a column that shows detected interference sources;</li></ul><p style="">Types of possibly classified interference:</p><ul style=""><li>Bluetooth-headset</li><li>Bluetooth-stereo</li><li>cordless-phone</li><li>microwave-oven</li><li>CWA</li><li>video-bridge</li><li>wifi</li></ul><h1 style="" id="Spectralscan-TheDude"><span class="mw-headline">The Dude</span></h1><p style="">The Dude is a free network monitoring and management program by MikroTik. You<span> </span><a class="external-link" href="http://www.mikrotik.com/thedude.php" rel="nofollow" style="text-decoration: none;">can download it here</a>.</p><p style="">The Dude has a built-in capability to run graphical Spectral Scan from any of your RouterOS devices with a supported wireless card. Simply select this device in your Dude map, right click and choose Tools -&gt; Spectral Scan.</p><p style=""><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/139526162/139526165.png" data-image-src="attachments/139526162/139526165.png" data-unresolved-comment-count="0" data-linked-resource-id="139526165" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="Spectral1.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="139526162" data-linked-resource-container-version="1" tabindex="0" alt=""></span></p><p style="">This will bring up the Spectral Scan GUI with various options and different view modes:</p><p style=""><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/139526162/139526166.png" data-image-src="attachments/139526162/139526166.png" data-unresolved-comment-count="0" data-linked-resource-id="139526166" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="Spectral-scan-dude.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="139526162" data-linked-resource-container-version="1" tabindex="0" alt=""></span></p>
+                    </div>
+
+                                                            <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/139526162/139526163.png">Spectral-history.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/139526162/139526164.png">Spectral-scan.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/139526162/139526165.png">Spectral1.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/139526162/139526166.png">Spectral-scan-dude.png</a> (image/png)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

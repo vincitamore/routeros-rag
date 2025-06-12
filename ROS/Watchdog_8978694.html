@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : Watchdog</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="119144606.html">Diagnostics, monitoring and troubleshooting</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : Watchdog
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Artūrs C.</span>, last updated by <span class='editor'> Guntis G.</span> on May 08, 2024
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742047037 {padding: 0px;}
+div.rbtoc1747742047037 ul {margin-left: 0px;}
+div.rbtoc1747742047037 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742047037'>
+<ul class='toc-indentation'>
+<li><a href='#Watchdog-Summary'>Summary</a></li>
+<li><a href='#Watchdog-Properties'>Properties</a></li>
+<li><a href='#Watchdog-QuickExample'>Quick Example</a></li>
+</ul>
+</div></p><h1 id="Watchdog-Summary">Summary</h1><p><strong>Sub-menu:</strong> <code>/system watchdog</code></p><p>This menu allows the configuring system to reboot, when a specific IP address does not respond, or when it detects, that the software has locked up. The detection is done in two ways:</p><ul><li>Software watchdog timer (mostly caused by hardware malfunction) device can recover itself with a reboot;</li><li>Ping watchdog can monitor connectivity to a specific IP address and trigger the reboot function.</li></ul><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p><strong>Note:</strong><span style="color:var(--ds-text-accent-lime-bolder,#37471f);"><span> </span>These are two different Watchdog features and both have their own settings. By default software Watchdog is enabled and ping Watchdog is disabled. You can enable ping Watchdog by specifying an IP address and you can disable the software Watchdog by unsetting the Watchdog Timer option.</span></p></div></div><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p><strong>Note:</strong><span style="color:var(--ds-text-accent-lime-bolder,#37471f);"><span> Watchdog reboot is not a system failure. Such reboot also will not generate autosupout file. Watchdog reboot is &quot;/system reboot&quot; automatically triggered by operating system when some service is not responding as fast as it should. Reasons for that can vary between damaged hardware, slow software implementation for some service, DDoS attack, bad configuration and others.</span></span></p></div></div><h1 id="Watchdog-Properties">Properties</h1><div class="table-wrap"><table class="relative-table wrapped confluenceTable" style="width: 74.712%;"><colgroup><col style="width: 26.5981%;"/><col style="width: 73.4019%;"/></colgroup><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>auto-send-supout</strong> (<em>yes | no</em>; Default: <strong>no</strong>)</td><td class="confluenceTd"><p>After the support output file is automatically generated, it can be sent by email.</p></td></tr><tr><td class="confluenceTd"><strong>automatic-supout</strong> (<em>yes | no</em>; Default: <strong>yes</strong>)</td><td class="confluenceTd"><p>When software failure happens, a file named &quot;autosupout.rif&quot; is generated automatically. The previous &quot;autosupout.rif&quot; file is renamed to &quot;autosupout.old.rif&quot;.</p></td></tr><tr><td class="confluenceTd"><strong>no-ping-delay</strong> (<em>time</em>; Default: 5m)</td><td class="confluenceTd"><p>Specifies how long will it wait before trying to reach the watch-address.</p></td></tr><tr><td class="confluenceTd"><strong>ping-timeout</strong> (<em>time</em>; Default: 60s)</td><td class="confluenceTd"><p>Specifies the time interval in which the device will be pinged 6 times (after &quot;no-ping-delay&quot;).</p></td></tr><tr><td class="confluenceTd"><strong>send-email-from</strong> (<em>string</em>; Default: )</td><td class="confluenceTd"><p>The e-mail address to send the support output file from. If not set, the value set in /tool e-mail is used.</p></td></tr><tr><td class="confluenceTd"><strong>send-email-to</strong> (<em>string</em>; Default: )</td><td class="confluenceTd"><p>The e-mail address to send the support output file to.</p></td></tr><tr><td class="confluenceTd"><strong>send-smtp-server</strong> (<em>string</em>; Default: )</td><td class="confluenceTd"><p>SMTP server address to send the support output file through. If not set, the value set in /tool e-mail is used.</p></td></tr><tr><td class="confluenceTd"><strong>watch-address</strong> (<em>IP</em>; Default: )</td><td class="confluenceTd"><p>The system will reboot, in case 6 sequential pings to the given IP address will fail. If set to none this feature is disabled. By default, the router will reboot every 6 minutes if the watch-address is set and not reachable.</p></td></tr><tr><td class="confluenceTd"><strong>watchdog-timer</strong> (<em>yes | no</em>; Default: <strong>yes</strong>)</td><td class="confluenceTd"><p>Whether to reboot if a system is unresponsive for a minute.</p></td></tr></tbody></table></div><h1 id="Watchdog-QuickExample">Quick Example</h1><p>To make system generate a support output file and sent it automatically to support@example.com through the 192.0.2.1in case of a software crash:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] system/watchdog/ set auto-send-supout=yes \
+\... send-to-email=support@example.com send-smtp-server=192.0.2.1
+[admin@MikroTik] system watchdog&gt; print
+      watch-address: none
+     watchdog-timer: yes
+      no-ping-delay: 5m
+   automatic-supout: yes
+   auto-send-supout: yes
+   send-smtp-server: 192.0.2.1
+      send-email-to: support@example.com</pre>
+</div></div>
+                    </div>
+
+                                        
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:54</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

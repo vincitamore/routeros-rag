@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : Container - HomeAssistant</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Extended-features_120324125.html">Extended features</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Container_84901929.html">Container</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : Container - HomeAssistant
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Deniss M.</span>, last updated on Feb 06, 2024
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742047205 {padding: 0px;}
+div.rbtoc1747742047205 ul {margin-left: 0px;}
+div.rbtoc1747742047205 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742047205'>
+<ul class='toc-indentation'>
+<li><a href='#ContainerHomeAssistant-Introduction'>Introduction</a></li>
+<li><a href='#ContainerHomeAssistant-Summary'>Summary</a></li>
+<li><a href='#ContainerHomeAssistant-Containerconfiguration'>Container configuration</a>
+<ul class='toc-indentation'>
+<li><a href='#ContainerHomeAssistant-Containermode'>Container mode</a></li>
+<li><a href='#ContainerHomeAssistant-Networking'>Networking</a></li>
+<li><a href='#ContainerHomeAssistant-Environmentvariablesandmounts'>Environment variables and mounts</a></li>
+<li><a href='#ContainerHomeAssistant-Gettingimage'>Getting image</a></li>
+<li><a href='#ContainerHomeAssistant-Startingthecontainer'>Starting the container</a></li>
+<li><a href='#ContainerHomeAssistant-Home-Assistantsetup'>Home-Assistant setup</a></li>
+</ul>
+</li>
+<li><a href='#ContainerHomeAssistant-Resources'>Resources</a></li>
+</ul>
+</div></p><h1 id="ContainerHomeAssistant-Introduction">Introduction</h1><p>The introduction of the container feature into the RouterOS made it possible to run all kinds of servers for all sorts of tasks inside the router. This is especially relevant for people, who want to reduce the number of devices in their network. Instead of running a server on a separate device/machine, why not run it inside the router?</p><p>In this guide, we will showcase how to install and host <a class="external-link" href="https://www.home-assistant.io/" rel="nofollow">Home-Assistant</a> server on RouterOS.</p><p>Home-Assistant is a very popular platform that is used to collect statistics from different sensors and supports different <a class="external-link" href="https://www.home-assistant.io/integrations/" rel="nofollow">integrations</a>.</p><h1 id="ContainerHomeAssistant-Summary">Summary</h1><p>Make sure to study our <a href="https://help.mikrotik.com/docs/display/ROS/Container" rel="nofollow">container</a> guide before proceeding with the configuration. Make sure to check the <a href="https://help.mikrotik.com/docs/display/ROS/Container#Container-Disclaimer" rel="nofollow">disclaimer</a> and <a href="https://help.mikrotik.com/docs/display/ROS/Container#Container-Requirements" rel="nofollow">requirements</a> sections to understand all the risks and necessary steps you might be required to do.</p><p>You can find supported architectures by following the <a class="external-link" href="https://hub.docker.com/r/homeassistant/home-assistant/tags" rel="nofollow">link</a>.</p><p>At the time, when the guide was published, <strong>home-assistant</strong> image was available for ARM32, ARM64, and AMD64 (CHR and x86) devices.</p><p>Based on the information from their <a class="external-link" href="https://www.home-assistant.io/installation/linux/" rel="nofollow">site</a>, recommended minimal requirements are:</p><ul><li>2 GB RAM</li><li>32 GB Storage</li></ul><p>Recommended does not mean set in stone, and we will be running this on <a class="external-link" href="http://L009UiGS-RM" rel="nofollow">L009UiGS</a> that has 512 MB RAM and a USB slot for the required storage. It is advised using recommended hardware specifications, but for testing, and low amounts of data, you can get by with 512+ MB RAM.</p><h1 id="ContainerHomeAssistant-Containerconfiguration">Container configuration</h1><p><strong>Sub-menu:</strong><span> </span><code>/container</code></p><p><em><strong>note</strong>: </em><strong>container</strong> package is required.</p><h2 id="ContainerHomeAssistant-Containermode">Container mode</h2><p>Enable container mode:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/system/device-mode/update container=yes</pre>
+</div></div><p>You will need to confirm the device-mode with a press of the reset button, or a cold reboot, if using container on X86.</p><h2 class="auto-cursor-target" id="ContainerHomeAssistant-Networking">Networking</h2><p>Add veth interface:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface/veth/add name=veth2 address=172.19.0.2/24 gateway=172.19.0.1
+</pre>
+</div></div><p class="auto-cursor-target">Create a bridge for both containers and add veth interfaces to it:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface/bridge/add name=ha
+/ip/address/add address=172.19.0.1/24 interface=ha
+/interface/bridge/port add bridge=ha interface=veth2
+</pre>
+</div></div><p class="auto-cursor-target">Forward TCP 8123 for home-assistant management (where 192.168.88.1 is the device's LAN IP address) if NAT is required (optional):</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip firewall nat add action=dst-nat chain=dstnat dst-address=192.168.88.1 dst-port=8123 protocol=tcp to-addresses=172.19.0.2 to-ports=8123
+</pre>
+</div></div><h2 id="ContainerHomeAssistant-Environmentvariablesandmounts">Environment variables and mounts</h2><p>Per the home-assist documentation, define mounts for the configuration files (where, <code>/usb1</code> is our external USB storage folder):</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/container mounts add dst=/config name=ha_config src=/usb1/ha_config
+</pre>
+</div></div><p class="auto-cursor-target">Create an environmental variable for home-assistant:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/container envs add key=TZ name=ha_env value=America/Los_Angeles</pre>
+</div></div><h2 class="auto-cursor-target" id="ContainerHomeAssistant-Gettingimage">Getting image</h2><p>To simplify the configuration, we will get the images from an external library.</p><p>Make sure that you have &quot;Registry URL&quot; set accordingly, limit RAM usage (if necessary), and set up a directory for the images:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/container/config/set registry-url=https://registry-1.docker.io tmpdir=/usb1/pull</pre>
+</div></div><p class="auto-cursor-target">Pull home-assistant image and wait for it to be extracted:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/container/add remote-image=homeassistant/home-assistant:latest interface=veth2 root-dir=/usb1/ha mounts=ha_config envlist=ha_env logging=yes</pre>
+</div></div><p class="auto-cursor-target">After running the command, RouterOS should start &quot;extracting&quot; the package. Check &quot;File System&quot; for newly created folders and monitor container status with the command <code>/container/print</code>.</p><h2 class="auto-cursor-target" id="ContainerHomeAssistant-Startingthecontainer">Starting the container</h2><p>After you make sure that the container has been added and the status changed to <code>status=stopped</code> after using <code>/container/print</code> → you can initiate it:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/container/start 0</pre>
+</div></div><h2 class="auto-cursor-target" id="ContainerHomeAssistant-Home-Assistantsetup">Home-Assistant setup</h2><p>Open your preferred web browser and access the Home-Assistant management portal by specifying management port &quot;:8123&quot;:</p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/204341276/204341289.png" data-image-src="attachments/204341276/204341289.png" data-unresolved-comment-count="0" data-linked-resource-id="204341289" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2023-8-4_11-7-51.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="204341276" data-linked-resource-container-version="33" tabindex="0" alt=""></span></p><p>Proceed with the setup. More information is explained in the <a class="external-link" href="https://www.home-assistant.io/getting-started/onboarding/" rel="nofollow">Home-Assistant onboarding guide</a>.</p><h1 id="ContainerHomeAssistant-Resources">Resources</h1><p>Just running the <strong>Home Assistant</strong> on L009 (without any load/traffic) takes up ~300 MB of RAM:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/system resource print
+                   uptime: 4m27s
+                  version: 7.13.3 (stable)
+               build-time: Jan/24/2024 13:16:46
+         factory-software: 7.10
+              free-memory: 143.0MiB
+             total-memory: 448.0MiB
+                      cpu: ARM</pre>
+</div></div><p>With the load, it will increase, but for testing, on this specific board, it should be enough.</p>
+                    </div>
+
+                                                            <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/204341276/204341289.png">image-2023-8-4_11-7-51.png</a> (image/png)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:54</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : The Things Network</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Internet-of-Things_46759975.html">Internet of Things</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Lora_16351615.html">Lora</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Setup_16351624.html">Setup</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : The Things Network
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Unknown User (rudolfs)</span>, last updated on May 19, 2021
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p>Once you have installed the lora package on your router and created an account on <code><a class="external-link" href="https://thethingsnetwork.org" rel="nofollow">The Things Network</a> you can set up a running gateway</code></p><ul><li>Login into your account and go to Console and select Gateways</li></ul><p><code> </code><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/16351627/16351629.png" data-image-src="attachments/16351627/16351629.png" data-unresolved-comment-count="0" data-linked-resource-id="16351629" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="L1.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="16351627" data-linked-resource-container-version="20" tabindex="0" alt=""></span></p><p><br/></p><ul><li>Select <em><em>register gateway </em></em>and fill in the blank spaces. Gateway EUI can be found in your lora interface</li></ul><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/16351627/16351635.png" data-image-src="attachments/16351627/16351635.png" data-unresolved-comment-count="0" data-linked-resource-id="16351635" data-linked-resource-version="2" data-linked-resource-type="attachment" data-linked-resource-default-alias="L5.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="16351627" data-linked-resource-container-version="20" tabindex="0" alt=""></span></p><p><br/></p><ul><li>You will have to manually add the Network Servers, or you can upgrade your router to the stable version <strong>6.48.2</strong> and these servers will be added automatically (highly recommended)<br/><a class="external-link" href="https://wiki.mikrotik.com/wiki/Manual:Upgrading_RouterOS" rel="nofollow">https://wiki.mikrotik.com/wiki/Manual:Upgrading_RouterOS</a></li></ul><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/16351627/67633157.png" data-image-src="attachments/16351627/67633157.png" data-unresolved-comment-count="0" data-linked-resource-id="67633157" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image2021-5-19_9-22-15.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="16351627" data-linked-resource-container-version="20" tabindex="0" alt=""></span></p><p><br/></p><div class="panel" style="border-width: 1px;"><div class="panelContent">
+<p>/lora servers</p>add address=eu1.cloud.thethings.industries down-port=1700 name=&quot;TTS Cloud (eu1)&quot; up-port=1700<br/>add address=nam1.cloud.thethings.industries down-port=1700 name=&quot;TTS Cloud (nam1)&quot; up-port=1700<br/>add address=au1.cloud.thethings.industries down-port=1700 name=&quot;TTS Cloud (au1)&quot; up-port=1700
+</div></div><p><br/></p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/16351627/67272709.png" data-image-src="attachments/16351627/67272709.png" data-unresolved-comment-count="0" data-linked-resource-id="67272709" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image2021-5-18_12-9-23.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="16351627" data-linked-resource-container-version="20" tabindex="0" alt=""></span></p><ul><li>After everything is filled press Register Gateway at the bottom of the page. If you have set everything accordingly to the previous steps you should see that your lora gateway is now connected</li></ul><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/16351627/16351639.png" data-image-src="attachments/16351627/16351639.png" data-unresolved-comment-count="0" data-linked-resource-id="16351639" data-linked-resource-version="4" data-linked-resource-type="attachment" data-linked-resource-default-alias="L9.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="16351627" data-linked-resource-container-version="20" tabindex="0" alt=""></span></p><ul><li>At this point everything is set and you have a working lora gateway. You can monitor incoming packets in Traffic section</li></ul><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/16351627/16351643.png" data-image-src="attachments/16351627/16351643.png" data-unresolved-comment-count="0" data-linked-resource-id="16351643" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="L10.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="16351627" data-linked-resource-container-version="20" tabindex="0" alt=""></span></p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/16351627/16351644.png" data-image-src="attachments/16351627/16351644.png" data-unresolved-comment-count="0" data-linked-resource-id="16351644" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="L11.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="16351627" data-linked-resource-container-version="20" tabindex="0" alt=""></span></p><p><br/></p><p>*Later this year, The Things Network will be migrating to a new version of network server, called <a class="external-link" href="https://console.cloud.thethings.network/" rel="nofollow">The Things Stack</a>.</p>
+                    </div>
+
+                                                            <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/16351627/16351629.png">L1.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/16351627/16351631.png">L6.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/16351627/16351632.png">L6.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/16351627/16351630.png">L6.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/16351627/16351634.png">L8.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/16351627/16351636.png">L5.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/16351627/16351635.png">L5.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/16351627/16351640.png">L9.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/16351627/16351641.png">L9.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/16351627/16351642.png">L9.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/16351627/16351639.png">L9.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/16351627/16351643.png">L10.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/16351627/16351644.png">L11.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/16351627/67272706.png">image2021-5-18_11-19-52.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/16351627/67272707.png">image2021-5-18_11-57-27.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/16351627/67272709.png">image2021-5-18_12-9-23.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/16351627/67633155.png">image2021-5-19_9-19-19.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/16351627/67633157.png">image2021-5-19_9-22-15.png</a> (image/png)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:54</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

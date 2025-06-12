@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : Console</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Getting-started_328119.html">Getting started</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : Console
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Māris B.</span>, last updated by <span class='editor'> Serhii T.</span> on Oct 15, 2024
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742019193 {padding: 0px;}
+div.rbtoc1747742019193 ul {margin-left: 0px;}
+div.rbtoc1747742019193 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742019193'>
+<ul class='toc-indentation'>
+<li><a href='#Console-Overview'>Overview</a></li>
+<li><a href='#Console-Hierarchy'>Hierarchy</a>
+<ul class='toc-indentation'>
+<li><a href='#Console-Example'>Example</a></li>
+</ul>
+</li>
+<li><a href='#Console-ItemNamesandNumbers'>Item Names and Numbers</a>
+<ul class='toc-indentation'>
+<li><a href='#Console-ItemNames'>Item Names</a></li>
+<li><a href='#Console-ItemNumbers'>Item Numbers</a></li>
+</ul>
+</li>
+<li><a href='#Console-QuickTyping'>Quick Typing</a></li>
+<li><a href='#Console-GeneralCommands'>General Commands</a></li>
+<li><a href='#Console-Modes'>Modes</a></li>
+<li><a href='#Console-Settings'>Settings</a></li>
+<li><a href='#Console-Listofkeys'>List of keys</a>
+<ul class='toc-indentation'>
+<li><a href='#Console-Built-inHelp'>Built-in Help</a></li>
+<li><a href='#Console-SafeMode'>Safe Mode</a></li>
+<li><a href='#Console-HotLockMode'>HotLock Mode</a></li>
+<li><a href='#Console-LockMode'>Lock Mode</a></li>
+</ul>
+</li>
+</ul>
+</div></p><h2 id="Console-Overview"><span class="mw-headline">Overview</span></h2><p>The console is used for accessing the MikroTik Router's configuration and management features using text terminals, either remotely using a serial port, telnet, SSH, or console screen within Winbox, or directly using a monitor and keyboard. The console is also used for writing scripts. This manual describes the general console operation principles. Please consult the Scripting Manual on some advanced console commands and on how to write scripts.</p><h2 id="Console-Hierarchy"><span class="mw-headline">Hierarchy</span></h2><p>The console allows the configuration of the router's settings using text commands. Since there are a lot of available commands, they are split into groups organized in a way of hierarchical menu levels. The name of a menu level reflects the configuration information accessible in the relevant section, eg.<span> </span><strong>/ip hotspot</strong>.</p><h4 id="Console-Example"><span class="mw-headline">Example</span></h4><p>For example, you can issue the<span> </span><strong>/ip route print</strong><span> </span>command:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; ip route print 
+Flags: X - disabled, A - active, D - dynamic, 
+C - connect, S - static, r - rip, b - bgp, o - ospf, m - mme,
+B - blackhole, U - unreachable, P - prohibit
+ # DST-ADDRESS PREF-SRC G GATEWAY DIS INTE... 
+0 A S 0.0.0.0/0 r 10.0.3.1 1 bridge1 
+1 ADC 1.0.1.0/24 1.0.1.1 0 bridge1 
+2 ADC 1.0.2.0/24 1.0.2.1 0 ether3 
+3 ADC 10.0.3.0/24 10.0.3.144 0 bridge1 
+4 ADC 10.10.10.0/24 10.10.10.1 0 wlan1 
+[admin@MikroTik] &gt;</pre>
+</div></div><p>Instead of typing<span> /</span><strong>ip route</strong><span> </span>path before each command, the path can be typed only once to move into this particular branch of the menu hierarchy. Thus, the example above could also be executed like this:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; ip route 
+[admin@MikroTik] ip route&gt; print 
+Flags: X - disabled, A - active, D - dynamic, 
+C - connect, S - static, r - rip, b - bgp, o - ospf, m - mme,
+ B - blackhole, U - unreachable, P - prohibit # 
+DST-ADDRESS PREF-SRC G GATEWAY DIS INTE... 
+0 A S 0.0.0.0/0 r 10.0.3.1 1 bridge1 
+1 ADC 1.0.1.0/24 1.0.1.1 0 bridge1 
+2 ADC 1.0.2.0/24 1.0.2.1 0 ether3 
+3 ADC 10.0.3.0/24 10.0.3.144 0 bridge1 
+4 ADC 10.10.10.0/24 10.10.10.1 0 wlan1 [
+admin@MikroTik] ip route&gt;</pre>
+</div></div><p>Notice that the prompt changes to reflect where you are located in the menu hierarchy at the moment. To move to the top level again, type &quot;<strong><span> </span>/<span> </span></strong>&quot;</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; ip route 
+[admin@MikroTik] ip route&gt; /
+[admin@MikroTik] &gt;</pre>
+</div></div><p>To move up one command level, type &quot;<span> </span><strong>..</strong><span> </span>&quot;</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] ip route&gt; .. 
+[admin@MikroTik] ip&gt;</pre>
+</div></div><p>You can also use<span> </span><strong>/</strong><span> </span>and<span> </span><strong>..</strong><span> </span>to execute commands from other menu levels without changing the current level:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] ip route&gt; /ping 10.0.0.1 
+10.0.0.1 ping timeout 
+2 packets transmitted, 0 packets received, 100% packet loss 
+[admin@MikroTik] ip firewall nat&gt; .. service-port print
+Flags: X - disabled, I - invalid 
+# NAME PORTS 
+0 ftp 21 
+1 tftp 69 
+2 irc 6667 
+3 h323 
+4 sip 
+5 pptp 
+[admin@MikroTik] ip firewall nat&gt;</pre>
+</div></div><h2 id="Console-ItemNamesandNumbers"><span class="mw-headline">Item Names and Numbers</span></h2><p>Many of the command levels operate with arrays of items: interfaces, routes, users, etc. Such arrays are displayed in similarly looking lists. All items in the list have an item number followed by flags and parameter values.</p><p>To change the properties of an item, you have to use<span> the </span><strong>set</strong><span> </span>command and specify the name or number of the item.</p><h4 id="Console-ItemNames"><span class="mw-headline">Item Names</span></h4><p>Some lists have items with specific names assigned to each of them. Examples are<span> </span><strong>interface</strong><span> </span>or<span> </span><strong>user</strong><span> </span>levels. There you can use item names instead of item numbers.</p><p>You do not have to use the<span> </span><strong>print</strong><span> </span>command before accessing items by their names, which, as opposed to numbers, are not assigned by the console internally, but are properties of the items. Thus, they would not change on their own. However, there are all kinds of obscure situations possible when several users are changing the router's configuration at the same time. Generally, item names are more &quot;stable&quot; than the numbers, and also more informative, so you should prefer them to numbers when writing console scripts.</p><h4 id="Console-ItemNumbers"><span class="mw-headline">Item Numbers</span></h4><p>Item numbers are assigned by the print command and are not constant - two successive print commands may order items differently. But the results of the last print commands are memorized and, thus, once assigned, item numbers can be used even after<span> </span><strong>add</strong>,<span> </span><strong>remove,</strong><span> </span>and<span> </span><strong>move</strong><span> </span>operations. Item numbers are assigned on a per-session basis, they will remain the same until you quit the console or until the next print command is executed. Also, numbers are assigned separately for every item list, so<span> for example, the </span><strong>ip address print</strong><span> </span>will not change the numbering of the interface list.</p><p>It is possible to use item numbers without running<span> the </span><strong>print</strong><span> </span>command. Numbers will be assigned just as if the<span> </span><strong>print</strong><span> </span>command was executed.</p><p>You can specify multiple items as targets for some commands. Almost everywhere, where you can write the number of item, you can also write a list of numbers.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; interface print 
+Flags: X - disabled, D - dynamic, R - running 
+# NAME TYPE MTU 
+0 R ether1 ether 1500 
+1 R ether2 ether 1500 
+2 R ether3 ether 1500 
+3 R ether4 ether 1500 
+[admin@MikroTik] &gt; interface set 0,1,2 mtu=1460 
+[admin@MikroTik] &gt; interface print
+ Flags: X - disabled, D - dynamic, R - running 
+# NAME TYPE MTU 
+0 R ether1 ether 1460 
+1 R ether2 ether 1460 
+2 R ether3 ether 1460 
+3 R ether4 ether 1500 
+[admin@MikroTik] &gt;</pre>
+</div></div><p><strong>Warning:</strong><span> </span>Do not use Item numbers in scripts, it is not a reliable way to edit items in<span> the </span><strong>scheduler. scripts</strong>, etc. Instead, use<span> the &quot;</span>find&quot;<span> </span>command. More info<span> </span><a href="https://help.mikrotik.com/docs/display/ROS/Scripting" rel="nofollow">here</a><span> </span>also look at<span> </span><a href="https://help.mikrotik.com/docs/display/ROS/Scripting+examples" rel="nofollow">scripting examples</a>.</p><h2 id="Console-QuickTyping"><span class="mw-headline">Quick Typing</span></h2><p>Two features in the console help entering commands much quicker and easier - the <strong>[Tab]</strong> key completions, and abbreviations of command names. Completions work similarly to the bash shell in UNIX. If you press the <strong>[Tab]</strong> key after a part of a word, the console tries to find the command within the current context that begins with this word. If there is only one match, it is automatically appended, followed by a space:</p><p><em>/inte</em><strong>[Tab]_</strong><span> </span>becomes<span> </span><strong>/interface _</strong></p><p>If there is more than one match, but they all have a common beginning, which is longer than that of what you have typed, then the word is completed to this common part, and no space is appended:</p><p><em>/interface set e</em><strong>[Tab]_</strong><span> </span>becomes<span> </span><strong>/interface set ether_</strong></p><p>If you've typed just the common part, pressing the tab key once has no effect. However, pressing it for the second time shows all possible completions in compact form:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; interface set e[Tab]_ 
+[admin@MikroTik] &gt; interface set ether[Tab]_ 
+[admin@MikroTik] &gt; interface set ether[Tab]_ 
+ether1 ether5 
+[admin@MikroTik] &gt; interface set ether_</pre>
+</div></div><p>The<span> </span><strong>[Tab]</strong><span> </span>key can be used almost in any context where the console might have a clue about possible values - command names, argument names, arguments that have only several possible values (like names of items in some lists or name of protocol in firewall and NAT rules). You cannot complete numbers, IP addresses, and similar values.</p><p>Another way to press fewer keys while typing is to abbreviate command and argument names. You can type only the beginning of the command name, and, if it is not ambiguous, the console will accept it as a full name. So typing:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; pin 10.1 c 3 si 100</pre>
+</div></div><p>equals to:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; ping 10.0.0.1 count 3 size 100</pre>
+</div></div><p>It is possible to complete not only the beginning, but also any distinctive substring of a name: if there is no exact match, the console starts looking for words that have string being completed as first letters of a multiple-word name, or that simply contain letters of this string in the same order. If a single such word is found, it is completed at the cursor position. For example:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; interface x[TAB][TAB]_ 
+dot1x  vxlan  export
+[admin@MikroTik] &gt; interface mt[TAB]_
+[admin@MikroTik] &gt; interface monitor-traffic _
+</pre>
+</div></div><h2 id="Console-GeneralCommands"><span class="mw-headline">General Commands</span></h2><p>Some commands are common to nearly all menu levels, namely:<span> </span><strong>print</strong>,<strong> set</strong>,<strong> remove</strong>, <strong>add</strong>,<strong> find</strong>,<strong> get</strong>, <strong>export</strong>,<strong> enable</strong>, <strong>disable</strong>, <strong>comment</strong>, and<strong> move</strong>. These commands have similar behavior throughout different menu levels.</p><ul><li><strong>add</strong><span> </span>- this command usually has all the same arguments as<span> </span><strong>set</strong>, except the item number argument. It adds a new item with the values you have specified, usually at the end of the item list, in places where the order of items is relevant. There are some required properties that you have to supply, such as the interface for a new address, while other properties are set to defaults unless you explicitly specify them.<ul><li>Common Parameters<ul><li><em>copy-from</em><span> </span>- Copies an existing item. It takes the default values of a new item's properties from another item. If you do not want to make an exact copy, you can specify new values for some properties. When copying items that have names, you will usually have to give a new name to a copy</li><li><em>place-before</em><span> </span>- places a new item before an existing item with a specified position. Thus, you do not need to use the move command after adding an item to the list. </li><li><em>disabled</em><span> </span>- controls disabled/enabled state of the newly added item(-s)</li><li><em>comment</em><span> </span>- holds the description of a newly created item</li></ul></li><li>Return Values<ul><li>add command returns the internal number of item it has added</li></ul></li></ul></li><li><strong>edit</strong><span> </span>- this command is associated with the<span> </span><strong>set</strong><span> </span>command. It can be used to edit values of properties that contain a large amount of text, such as scripts, but it works with all editable properties. Depending on the capabilities of the terminal, either a fullscreen editor or a single-line editor is launched to edit the value of the specified property. The edit field for console scripts is limited to 30 thousand characters.</li><li><strong>find</strong><span> </span>- The find command has the same arguments as set, plus the flag arguments like<span> </span><em>disabled</em><span> </span>or<span> </span><em>active</em><span> </span>that take values<span> </span><em>yes</em><span> </span>or<span> </span><em>no</em><span> </span>depending on the value of the respective flag. To see all flags and their names, look at the top of<span> the </span><strong>print</strong><span> </span>command's output. The<span> </span><strong>find</strong><span> </span>command returns internal numbers of all items that have the same values of arguments as specified.</li><li><strong>move</strong><span> </span>- changes the order of items in the list.<ul><li>Parameters<ul><li>first argument specifies the item(-s) being moved.</li><li>the second argument specifies the item before which to place all items being moved (they are placed at the end of the list if the second argument is omitted).</li></ul></li></ul></li><li><strong>print</strong><span> </span>- shows all information that's accessible from a particular command level. Thus,<span> </span><strong>/system clock print</strong><span> </span>shows the system date and time,<span> </span><strong>/ip route print</strong><span> </span>shows all routes, etc. If there's a list of items in the current level and they are not read-only, i.e. you can change/remove them (an example of a read-only item list is /system history, which shows a history of executed actions), then print command also assigns numbers that are used by all commands that operate with items in this list.<ul><li>Common Parameters<ul><li><em>from</em><span> </span>- show only specified items, in the same order in which they are given.</li><li><em>where</em><span> </span>- show only items that match specified criteria. The syntax of<span> </span><em>where</em><span> the </span>property is similar to the<span> </span><strong>find</strong><span> </span>command.</li><li><em>brief</em><span> </span>- forces the print command to use tabular output form</li><li><em>detail</em><span> </span>- forces the print command to use property=value output form</li><li><em>count-only</em><span> </span>- shows the number of items</li><li><em>file</em><span> </span>- prints the contents of the specific submenu into a file on the router.</li><li><em>interval</em><span> </span>- updates the output from the<span> </span><em>print</em><span> </span>command for every interval of seconds.</li><li><em>oid</em><span> </span>- prints the OID value for properties that are accessible from SNMP</li><li><em>without-paging</em><span> </span>- prints the output without stopping after each screenful.</li></ul></li></ul></li><li><strong>remove</strong><span> </span>- removes specified item(-s) from a list.</li><li><strong>set</strong><span> </span>- allows you to change values of general parameters or item parameters. The set command has arguments with names corresponding to values you can change. Use &quot;F1&quot; or double [Tab] to see a list of all arguments. If there is a list of items in this command level, then &quot;set&quot; has one action argument that accepts the number of item (or list of numbers) you wish to set up. This command does not return anything.</li><li><strong>reset</strong> - reset parameters to default values</li></ul><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>You can combine commands, here are two variants of the same command that will place a new firewall filter entry, by looking up the comment:</p><p>/ip firewall/filter/add chain=forward place-before=[find where comment=CommentX]<br/>/ip/firewall/filter/add chain=forward place-before=&quot;CommentX&quot;</p></div></div><h2 id="Console-Modes"><span class="mw-headline">Modes</span></h2><p>The console line editor works either in multiline mode or in single-line mode. In multiline mode line editor displays the complete input line, even if it is longer than a single terminal line. It also uses a full-screen editor for editing large text values, such as scripts. In single-line mode, only one terminal line is used for line editing, and long lines are shown truncated around the cursor. A full-screen editor is not used in this mode.</p><p>The choice of modes depends on detected terminal capabilities.</p><h2 id="Console-Settings"><span class="mw-headline">Settings</span></h2><p><span class="mw-headline">In &quot;/console/settings&quot; menu, it is possible to enable option for replacing reserved characters with underscores for file name.</span></p><div class="table-wrap"><table class="wrapped fixed-width confluenceTable" style="width: 769.0px;"><colgroup><col style="width: 266.0px;"/><col style="width: 503.0px;"/></colgroup><tbody><tr><th scope="col" class="confluenceTh">Property</th><th scope="col" class="confluenceTh">Description</th></tr><tr><td style="text-align: left;vertical-align: top;" class="confluenceTd"><span><strong>sanitize-names</strong>  </span><span style="color:var(--ds-text,#172b4d);">(<em>yes</em> <em style="text-align: left;">| no </em></span><span style="color:var(--ds-text,#172b4d);">Default: <strong>no</strong></span><span style="color:var(--ds-text,#172b4d);">)</span></td><td class="confluenceTd"><span class="mw-headline"> Replace reserved characters (\ / : * ?  |)  with underscores</span></td></tr></tbody></table></div><h2 id="Console-Listofkeys"><span class="mw-headline">List of keys</span></h2><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">F1              Give the list of available commands
+command F1      Give help on the command and list of arguments
+
+[Tab]           Complete the command/word. If the input is ambiguous,
+                a second [Tab] gives possible options
+
+F3 or Ctrl-R    Search command history
+F4 or Ctrl-X    Toggle safe mode
+F5 or Ctrl-L    Repaint the screen
+F7              Toggle hotlock mode
+F8              Print entire multiline input
+Ctrl-\          Split line
+Home or Ctrl-A  Go to the beginning of the line
+End or Ctrl-E   Go to the end of the line
+Ctrl-C          Interrupt current action
+Ctrl-D          Terminate session (on empty prompt)
+Ctrl-K          Delete to the end of the line
+Ctrl-U          Delete to the beginning of the line
+Ctrl-T          Switch to a background task
+
+/               Move up to base level
+..              Move up one level
+/command        Use command at the base level</pre>
+</div></div><p><br/></p><p><strong>up</strong>,<span> </span><strong>down</strong><span> </span>and<span> </span><strong>split</strong><span> </span>keys leave the cursor at the end of the line.</p><h3 id="Console-Built-inHelp"><span class="mw-headline">Built-in Help</span></h3><p>The console has built-in help. Press <strong>F1</strong> for general console usage Help. The general rule is that Help shows what you can type in a position where the<span> </span><strong>F1</strong><span> </span>was pressed (similarly to pressing<span> </span><strong>[Tab]</strong><span> </span>key twice, but in verbose form and with explanations).</p><h3 id="Console-SafeMode"><span class="mw-headline">Safe Mode</span></h3><p>It is sometimes possible to change router configuration in a way that will make the router inaccessible (except from the local console). Usually, this is done by accident, but there is no way to undo the last change when the connection to the router is already cut. Safe mode can be used to minimize such risk.</p><p>The <strong>&quot;Safe Mode&quot;</strong> button in the Winbox GUI allows you to enter Safe Mode, while in the CLI, you can access it by either using the keyboard shortcut <strong>F4</strong> or pressing <strong>[CTRL]+[X]</strong>. To exit without saving the made changes in CLI, hit<span> </span><strong>[CTRL]+[D].</strong></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] ip route&gt;[CTRL]+[X] 
+[Safe Mode taken] 
+[admin@MikroTik] ip route&lt;SAFE&gt;</pre>
+</div></div><p style="margin-left: 20.0px;"><br/></p><p><a class="external-link" href="https://wiki.mikrotik.com/wiki/File:2009-04-06_1317.png" rel="nofollow" style="text-decoration: none;"><span class="confluence-embedded-file-wrapper image-center-wrapper"><img class="confluence-embedded-image image-center" draggable="false" src="attachments/8978498/40992790.png" data-image-src="attachments/8978498/40992790.png" data-unresolved-comment-count="0" data-linked-resource-id="40992790" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="703px-2009-04-06_1317 (1).png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="8978498" data-linked-resource-container-version="34" tabindex="0" alt=""></span></a></p><p>Message<span> </span><strong>Safe Mode taken</strong><span> </span>is displayed and prompt changes to reflect that session is now in safe mode. All configuration changes that are made (also from other login sessions), while the router is in safe mode, are automatically undone if the safe mode session terminates abnormally. You can see all such changes that will be automatically undone and tagged with an<span> </span><strong>F</strong><span> </span>flag in the system history:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] /ip/route&gt; 
+[Safe Mode taken]
+[admin@MikroTik] /ip/route&lt;SAFE&gt; add
+[admin@MikroTik] /ip/route&lt;SAFE&gt; /system/history/print
+Flags: U, F - FLOATING-UNDO
+Columns: ACTION, BY, POLICY
+  ACTION                 BY     POLICY
+F route 0.0.0.0/0 added  admin  write</pre>
+</div></div><p>Now, if the telnet connection (or WinBox terminal) is cut, then after a while (TCP timeout is<span> </span><strong>9</strong><span> </span>minutes) all changes that were made while in safe mode will be undone. Exiting session by<span> </span><strong>[Ctrl]+[D]</strong><span> </span>also undoes all safe mode changes, while<span> </span><strong>/quit</strong><span> </span>does not.</p><p>If another user tries to enter safe mode, he's given the following message:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; 
+Hijacking Safe Mode from someone - unroll/release/don&#39;t take it [u/r/d]:</pre>
+</div></div><ul><li>[u] - undoes all safe mode changes, and puts the current session in safe mode.</li><li>[r] - keeps all current safe mode changes, and puts the current session in a safe mode. The previous owner of safe mode is notified about this:</li></ul><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] ip firewall rule input 
+[Safe mode released by another user]</pre>
+</div></div><ul><li>[d] - leaves everything as-is.</li></ul><p>If too many changes are made while in safe mode, and there's no room in history to hold them all (currently history keeps up to 100 most recent actions), then the session is automatically put out of the safe mode, and no changes are automatically undone. Thus, it is best to change the configuration in small steps, while in safe mode. Pressing <strong>[Ctrl]</strong>+<strong>[X]</strong> twice is an easy way to empty the safe mode action list.</p><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>As &quot;Safe Mode&quot; operates within the user's session and stores configuration changes, it will be ignored for commands requiring a reboot, such as resetting configuration or restoring from a backup.</p></div></div><h3 id="Console-HotLockMode"><span class="mw-headline">HotLock Mode</span></h3><p>When HotLock mode is enabled commands will be auto-completed.</p><p>To enter/exit HotLock mode press<span> </span><strong>F7</strong>.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] /ip/address&gt; [F7]
+[admin@MikroTik] /ip/address&gt;&gt;
+</pre>
+</div></div><p style="margin-left: 20.0px;"><span style="letter-spacing: 0.0px;">Double</span><code style="letter-spacing: 0.0px;">&gt;&gt;</code><span style="letter-spacing: 0.0px;">is an indication that HotLock mode is enabled. For example, if you type &quot;</span><code style="letter-spacing: 0.0px;">/in et&quot;</code><span style="letter-spacing: 0.0px;">, it will be auto-completed to</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] /ip/address&gt;&gt; /interface/ethernet/</pre>
+</div></div><h3 id="Console-LockMode"><span class="mw-headline">Lock Mode</span></h3><p>The &quot;<strong>:lock</strong>&quot; command locks the screen.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; :lock
+...
+  MMM      MMM       KKK                          TTTTTTTTTTT      KKK
+  MMMM    MMMM       KKK                          TTTTTTTTTTT      KKK
+  MMM MMMM MMM  III  KKK  KKK  RRRRRR     OOOOOO      TTT     III  KKK  KKK
+  MMM  MM  MMM  III  KKKKK     RRR  RRR  OOO  OOO     TTT     III  KKKKK
+  MMM      MMM  III  KKK KKK   RRRRRR    OOO  OOO     TTT     III  KKK KKK
+  MMM      MMM  III  KKK  KKK  RRR  RRR   OOOOOO      TTT     III  KKK  KKK
+
+  MikroTik RouterOS 7.16rc1 (c) 1999-2024       https://www.mikrotik.com/
+
+
+Session is locked       (Ctrl-D to Quit)
+
+ password for admin: </pre>
+</div></div>
+                    </div>
+
+                                                            <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/8978498/40992790.png">703px-2009-04-06_1317 (1).png</a> (image/png)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

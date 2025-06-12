@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : Upgrading and installation</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Getting-started_328119.html">Getting started</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : Upgrading and installation
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Māris B.</span>, last updated by <span class='editor'> Normunds R.</span> on Nov 12, 2024
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742018298 {padding: 0px;}
+div.rbtoc1747742018298 ul {margin-left: 0px;}
+div.rbtoc1747742018298 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742018298'>
+<ul class='toc-indentation'>
+<li><a href='#Upgradingandinstallation-Overview'>Overview</a></li>
+<li><a href='#Upgradingandinstallation-Upgrading'>Upgrading</a>
+<ul class='toc-indentation'>
+<li><a href='#Upgradingandinstallation-Versionnumbering'>Version numbering</a></li>
+<li><a href='#Upgradingandinstallation-Standardupgrade'>Standard upgrade</a></li>
+<li><a href='#Upgradingandinstallation-'></a></li>
+<li><a href='#Upgradingandinstallation-Manualupgrade'>Manual upgrade</a>
+<ul class='toc-indentation'>
+<li><a href='#Upgradingandinstallation-Manualupgradeprocess'>Manual upgrade process</a>
+<ul class='toc-indentation'>
+<li><a href='#Upgradingandinstallation-UsingWinBox'>Using WinBox</a></li>
+<li><a href='#Upgradingandinstallation-UsingFTP'>Using FTP</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href='#Upgradingandinstallation-RouterOSlocalupgrade'>RouterOS local upgrade</a>
+<ul class='toc-indentation'>
+<li><a href='#Upgradingandinstallation-.1'></a></li>
+</ul>
+</li>
+<li><a href='#Upgradingandinstallation-RouterOSupgradeusingDude'>RouterOS upgrade using Dude</a>
+<ul class='toc-indentation'>
+<li><a href='#Upgradingandinstallation-TheDudeauto-upgrade'>The Dude auto-upgrade</a></li>
+<li><a href='#Upgradingandinstallation-TheDudehierarchicalupgrade'>The Dude hierarchical upgrade</a></li>
+</ul>
+</li>
+<li><a href='#Upgradingandinstallation-Licenseissues'>License issues</a></li>
+</ul>
+</li>
+<li><a href='#Upgradingandinstallation-Netinstall'>Netinstall</a></li>
+<li><a href='#Upgradingandinstallation-CDInstall'>CD Install</a></li>
+<li><a href='#Upgradingandinstallation-RouterOSPackageTypes'>RouterOS Package Types</a></li>
+</ul>
+</div></p><h1 id="Upgradingandinstallation-Overview">Overview</h1><p>MikroTik devices are preinstalled with RouterOS, so installation is usually not needed, except in the case where installing RouterOS on an x86 PC or virtual instance CHR. The upgrade procedure on already installed devices is straightforward.</p><h1 id="Upgradingandinstallation-Upgrading">Upgrading</h1><h2 id="Upgradingandinstallation-Versionnumbering"><span class="mw-headline">Version numbering</span></h2><p>RouterOS versions are numbered sequentially when a period is used to separate sequences, it does <em>not</em> represent a decimal point, and the sequences do <em>not</em> have positional significance. An identifier of 2.5, for instance, is not &quot;two and a half&quot; or &quot;halfway to version three&quot;, it is the fifth second-level revision of the second first-level revision. Therefore v5.2 is older than v5.18, which is newer.</p><p>RouterOS versions are released in several &quot;release chains&quot;: Long term, Stable, Testing, and Development. When upgrading RouterOS, you can choose a release chain from which to install the new packages. </p><ul><li><strong>Long term</strong>: Released rarely, and includes only the most critical fixes, upgrades within one number branch do not contain new features. When a <strong>Stable</strong> release has been out for a while and seems to be stable enough, it gets promoted into the long-term branch, replacing an older release, which is then moved to the archive. This consecutively adds new features.</li><li><strong>Stable</strong>: Released every few months, including all tested new features and fixes.</li><li><strong>Testing</strong>: Released every few weeks, only undergoes basic internal testing, and should not be used in production.</li><li><strong>Development</strong>: Released when necessary. Includes raw changes and is available for software enthusiasts for testing new features.</li></ul><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/328142/195559425.png" data-image-src="attachments/328142/195559425.png" data-unresolved-comment-count="0" data-linked-resource-id="195559425" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="SoftwareReleaseSchema_2023-06-09.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="328142" data-linked-resource-container-version="75" tabindex="0" alt=""></span></p><h2 id="Upgradingandinstallation-Standardupgrade"><span class="mw-headline">Standard upgrade</span></h2><p>The package upgrade feature connects to the MikroTik download servers and checks if there is another RouterOS version for your device under the selected release channel. Can also be used for downgrading, if you, for example, are using stable release at the moment, but changed the release channel to the long-term.</p><p>After clicking the<em> Check For Updates</em> button in QuickSet (or in the System → Packages menu) the <em>Check For Updates</em> window will open with the current or the latest changelog (if a newer version exists). If newer version exists, buttons <em>Download </em>and <em>Download&amp;Install </em>will appear. By cicking the <em>Download</em> button a newest version will be downloaded (manual device reboot is required), by clicking <em>Download&amp;Install</em>, download will start, and after a successful download will reboot a device to install the downloaded packages.</p><p>The versions offered will depend on the selected release channel. Not all versions migh be available. It will not be possible to upgrade from an older version to the latest version in one go, when using check-for-updates approach. For example, if running RouterOS v6.x, even selecting the major release upgrade channel, called &quot;Upgrade&quot;, you will only see v7.12.1 as the available version. You must first upgrade to that intermediate version and only then newer releases will be available in the channels. This intermediate step can be done using check for updates too, but you will simply have to repeat check for updates after the first update to the intermediate version. </p><p>If custom packages are installed, the downloader will take that into account and download all necessary packages.</p><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>It is strongly recommended to upgrade the bootloader after RouterOS update. To upgrade the bootloader, execute command &quot;<em>/system routerboard upgrade</em>&quot; in CLI, followed by a reboot. <span style="color:var(--ds-text-accent-purple-bolder,#352c63);">Alternatively, navigate to the GUI System → RouterBOARD menu and click the &quot;Upgrade&quot; button, then reboot the device.</span></p></div></div><p><br/></p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/328142/328366.jpg" data-image-src="attachments/328142/328366.jpg" data-unresolved-comment-count="0" data-linked-resource-id="328366" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="Quickset-upgrade.jpg" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/jpeg" data-linked-resource-container-id="328142" data-linked-resource-container-version="75" tabindex="0" alt=""></span></p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/328142/191299848.png" data-image-src="attachments/328142/191299848.png" data-unresolved-comment-count="0" data-linked-resource-id="191299848" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2023-5-18_16-2-46.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="328142" data-linked-resource-container-version="75" tabindex="0" alt=""></span></p><h2 id="Upgradingandinstallation-"><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/328142/191299849.png" data-image-src="attachments/328142/191299849.png" data-unresolved-comment-count="0" data-linked-resource-id="191299849" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2023-5-18_16-4-16.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="328142" data-linked-resource-container-version="75" tabindex="0" alt=""></span></h2><p>You can <strong>automate</strong> the upgrade process by running a script in the system scheduler. This script queries the MikroTik upgrade servers for new versions, if the response received says &quot;New version is available&quot;, the script then issues the upgrade command below. Important note, this will not work, if you are running it for the first time on a release that is older. It might not see latest versions as available, if you are running v6.x, you would first have to manually select the &quot;Upgrade&quot; channel to do a major release upgrade to v7.12.1 intermediate version, and only afterwards newer v7 releases will be visible in the upgrade channels. </p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt;/system package update
+check-for-updates once
+:delay 3s;
+:if ( [get status] = &quot;New version is available&quot;) do={ install }</pre>
+</div></div><h2 id="Upgradingandinstallation-Manualupgrade"><span class="mw-headline">Manual upgrade <br/></span></h2><p>You can upgrade RouterOS in the following ways:</p><ul><li>WinBox – drag and drop files to the Files menu</li><li>WebFig - upload files from the Files menu</li><li>FTP - upload files to the root directory</li></ul><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>It is strongly recommended to upgrade the bootloader after upgrading RouterOS. To upgrade the bootloader, execute command &quot;<em>/system routerboard upgrade</em>&quot; in CLI, followed by a reboot. <span style="color:var(--ds-text-accent-purple-bolder,#352c63);">Alternatively, navigate to the GUI System → RouterBOARD menu and click the &quot;Upgrade&quot; button, then reboot the device.</span></p></div></div><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>RouterOS cannot be upgraded through a serial cable. Only <a href="https://help.mikrotik.com/docs/display/ROS/RouterBOOT#RouterBOOT-SimpleUpgrade" rel="nofollow">RouterBOOT</a> is upgradeable using this method.</p></div></div><h3 id="Upgradingandinstallation-Manualupgradeprocess"><span class="mw-headline">Manual upgrade process</span></h3><ul><li>First step - visit <a class="external-link" href="http://www.mikrotik.com" rel="nofollow">www.mikrotik.com</a> and head to the Software page, then choose the architecture of the system you have the RouterOS installed on (system architecture can be found in System → Resource section);</li><li>Download the <strong>routeros <em>(main)</em></strong> and extra packages that are installed on a device;</li><li>Upload packages to a device using one of the previously mentioned methods:</li></ul><p><strong>Menu:</strong><span> </span><em>/system/package/update install <strong>ignore-missing</strong></em> command allows upgrading only the RouterOS main package, while omitting packages that are either missing or not uploaded during a manual upgrade process.</p><h4 id="Upgradingandinstallation-UsingWinBox"><span class="mw-headline">Using WinBox</span></h4><p>Choose your system type, and download the upgrade package. Connect to your router with WinBox, Select the downloaded file with your mouse, and drag it to the Files menu. If some files are already present, make sure to put the package in the root menu, not inside the hotspot folder! The upload will start.</p><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" draggable="false" width="850" src="attachments/328142/191299851.png" data-image-src="attachments/328142/191299851.png" data-unresolved-comment-count="0" data-linked-resource-id="191299851" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2023-5-18_16-16-22.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="328142" data-linked-resource-container-version="75" tabindex="0" alt=""></span></p><p>After it finishes - reboot the device. The New version number will be seen in the Winbox Title and in the Packages menu</p><h4 id="Upgradingandinstallation-UsingFTP"><span class="mw-headline">Using FTP</span></h4><ul><li>Open your favorite SFTP program (in this case it is <a class="external-link" href="https://filezilla.sourceforge.net/" rel="nofollow">Filezilla</a>), select the package, and upload it to your router (<a class="external-link" href="https://demo2.mt.lv" rel="nofollow">demo2.mt.lv</a> is the address of my router in this example). note that in the image I'm uploading many packages, but in your case - you will have one file that contains them all</li><li>if you wish, you can check if the file is successfully transferred onto the router (optional):</li></ul><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt;/file print
+Columns: NAME, TYPE, SIZE, CREATION-TIME
+#  NAME                  TYPE       SIZE     CREATION-TIME       
+0  routeros-7.9-arm.npk  package    13.0MiB  may/18/2023 16:16:18
+1  pub                   directory           nov/04/2022 11:22:19
+2  ramdisk               directory           jan/01/1970 03:00:24</pre>
+</div></div><ul><li>reboot your router for the upgrade process to begin:</li></ul><pre>[admin@MikroTik] &gt;/system reboot
+Reboot, yes? [y/N]: y
+</pre><ul><li>after the reboot, your router will be up to date, you can check it in this menu:</li></ul><pre>[admin@MikroTik] &gt;/system package print
+</pre><ul><li>if your router did not upgrade correctly, make sure you check the <strong>log</strong></li></ul><pre>[admin@MikroTik] &gt;/log print without-paging
+</pre><h2 id="Upgradingandinstallation-RouterOSlocalupgrade"><span class="mw-headline">RouterOS local upgrade</span></h2><p><span class="mw-headline"><strong>Sub-menu:</strong> <code>system/package/local-update/</code></span></p><p>You can upgrade one or multiple MikroTik routers within your local network by using one device which have all needed packages. Feature is available from <strong>7.17beta3</strong> version in (system &gt; packages local update) and will replace (system &gt; auto update) feature. Here is a simple example with 3 routers (the same method works on networks with infinite numbers of routers):</p><p>Place needed packages under Files menu, on your main router:</p><h4 id="Upgradingandinstallation-.1"><span class="mw-headline"><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" draggable="false" height="250" src="attachments/328142/276856844.png" data-image-src="attachments/328142/276856844.png" data-unresolved-comment-count="0" data-linked-resource-id="276856844" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2024-10-18_7-27-19.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="328142" data-linked-resource-container-version="75" tabindex="0" alt=""></span></span></h4><p><strong>Optional</strong>, you can set mirror device between main one, if not needed, skip this step:</p><ul><li data-uuid="7b839608-2fa4-4c84-8187-9d74f821812c">Choose Local Package Sources and enable Mirror device. Set Primary Server where the packages are located, 10.155.136.50. Check Interval <strong>minimum</strong> setting can be set to 00:07:12, at which device will connect using Winbox to a main device and check for packages.<br/>If new packages are available, it will begin to download, please note download process is slow and may require some time when large amount of files are used. In case some failures, download will resume on next Check.</li></ul><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" draggable="false" height="250" src="attachments/328142/276856845.png" data-image-src="attachments/328142/276856845.png" data-unresolved-comment-count="0" data-linked-resource-id="276856845" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2024-10-18_7-27-54.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="328142" data-linked-resource-container-version="75" tabindex="0" alt=""></span></p><ul><li data-uuid="ff346afb-517a-4ba9-945c-9044a9e1edba">New &quot;packs&quot; folder is created, where mirror device will store packages:</li></ul><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" draggable="false" height="250" src="attachments/328142/276856846.png" data-image-src="attachments/328142/276856846.png" data-unresolved-comment-count="0" data-linked-resource-id="276856846" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2024-10-18_7-28-33.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="328142" data-linked-resource-container-version="75" tabindex="0" alt=""></span></p><ul><li data-uuid="0d24939c-1a07-4c5a-a5fd-a25eafc9c2ff">Add new package source on device which will be updated, in this example we use mirror device 10.155.136.71:</li></ul><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" draggable="false" height="250" src="attachments/328142/276856841.png" data-image-src="attachments/328142/276856841.png" data-unresolved-comment-count="0" data-linked-resource-id="276856841" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2024-10-18_7-18-47.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="328142" data-linked-resource-container-version="75" tabindex="0" alt=""></span></p><ul><li data-uuid="16437dbe-91bc-4924-b9ba-b3155483612c">Once you click Refresh in Local Update packages tab,  device using Winbox will try to connect to source and check if there are new packages. </li></ul><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" draggable="false" height="250" src="attachments/328142/276856843.png" data-image-src="attachments/328142/276856843.png" data-unresolved-comment-count="0" data-linked-resource-id="276856843" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2024-10-18_7-20-0.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="328142" data-linked-resource-container-version="75" tabindex="0" alt=""></span></p><ul><li data-uuid="d7c46dc7-d064-41d4-9c0e-1e15e97b3435">Choose packages and click download, after download completes device will be needed to reboot for update. </li></ul><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" draggable="false" height="250" src="attachments/328142/276856848.png" data-image-src="attachments/328142/276856848.png" data-unresolved-comment-count="0" data-linked-resource-id="276856848" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2024-10-18_7-29-43.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="328142" data-linked-resource-container-version="75" tabindex="0" alt=""></span></p><ul><li data-uuid="da261d4f-4660-4291-ae5c-37be51b5f80e">Use system/package/local-update/refresh to automate this in your scripts and tools fetch url= can be used to download packages from our web page, for example: tool/fetch url=<a class="external-link" href="https://download.mikrotik.com/routeros/7.16.1/routeros-7.16.1-arm.npk" rel="nofollow">https://download.mikrotik.com/routeros/7.16.1/routeros-7.16.1-arm.npk</a></li></ul><h2 id="Upgradingandinstallation-RouterOSupgradeusingDude"><span class="mw-headline">RouterOS upgrade using Dude</span></h2><div class='plugin-tabmeta-details'><h4 id="Upgradingandinstallation-TheDudeauto-upgrade"><span class="mw-headline">The Dude auto-upgrade</span></h4><p>The dude application can help you to upgrade the entire RouterOS network with one click per router.</p><ul><li>Set type <strong>RouterOS</strong> and correct password for any device on your Dude map, that you want to upgrade automatically,</li><li>Upload required RouterOS packages to Dude files</li><li>Upgrade the RouterOS version on devices from the RouterOS list. The upgrade process is automatic, after a click on upgrade (or force upgrade), the package will be uploaded and the router will be rebooted by the Dude automatically.</li></ul><h4 id="Upgradingandinstallation-TheDudehierarchicalupgrade"><span class="mw-headline">The Dude hierarchical upgrade</span></h4><p>For complicated networks, when routers are connected sequentially, the simplest example is &quot;1router-2router-3router| connection. You might get an issue, 2router will go to reboot before packages are uploaded to the 3router. The solution is Dude Groups, the feature allows you to group routers and upgrade all of them with one click!</p><ul><li>Select the group and click Upgrade (or Force Upgrade),</li></ul></div><h2 id="Upgradingandinstallation-Licenseissues"><span class="mw-headline">License issues</span></h2><p>When upgrading from older versions, there could be issues with your license key. Possible scenarios:</p><ul><li>When upgrading from RouterOS v2.8 or older, the system might complain about an expired upgrade time. To override this, use Netinstall to upgrade. Netinstall will ignore old license restrictions and will upgrade</li><li>When upgrading to RouterOS v4 or newer, the system will ask you to update the license to a new format. To do this, ensure your Winbox PC (not the router) has a working internet connection without any restrictions to reach <a class="external-link" href="https://www.mikrotik.com" rel="nofollow">www.mikrotik.com</a> and click &quot;update license&quot; in the license menu.</li></ul><h1 id="Upgradingandinstallation-Netinstall">Netinstall</h1><p><a href="Netinstall_24805390.html">NetInstall</a> is a widely-used installation tool for RouterOS. It runs on Windows systems or via a command-line tool, netinstall-cli, on Linux, or through Wine (with superuser permissions required).</p><p><span style="color:var(--ds-text,#333333);">The NetInstall utilities can be downloaded from the <a class="external-link" href="https://www.mikrotik.com/download" rel="nofollow"><span>MikroTik</span><span> download</span><span> section</span></a>.</span></p><p><a href="Netinstall_24805390.html">NetInstall</a> is also used to re-install RouterOS in cases where a previous installation has failed, been damaged, or where access passwords have been lost.</p><p>To use NetInstall, your device must support booting from Ethernet, with a direct Ethernet connection between the NetInstall computer and the target device. All RouterBOARDs support PXE network booting, which can be enabled in the RouterOS &quot;routerboard&quot; menu (if RouterOS is accessible) or in the bootloader settings using a serial console cable.</p><p><strong>Note:</strong> For RouterBOARD devices without a serial port or RouterOS access, you can activate PXE booting using the <a href="https://help.mikrotik.com/docs/spaces/ROS/pages/24805498/Reset+Button" rel="nofollow">Reset button</a>.</p><p><a href="Netinstall_24805390.html">NetInstall</a> can also directly install RouterOS onto a disk (USB/CF/IDE/SATA) connected to the NetInstall Windows machine. Once installed, simply transfer the disk to the Router machine and boot from it.</p><p><br/><strong>Attention! </strong>Do not try to install RouterOS on your system drive. Action will format your hard drive and wipe out your existing OS.</p><h1 id="Upgradingandinstallation-CDInstall">CD Install</h1><h1 id="Upgradingandinstallation-RouterOSPackageTypes">RouterOS Package Types</h1><p>Information about RouterOS packages can be found <a href="https://help.mikrotik.com/docs/display/ROS/Packages" rel="nofollow">here</a></p><p><br/></p>
+                    </div>
+
+                                                            <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328142/328366.jpg">Quickset-upgrade.jpg</a> (image/jpeg)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328142/328367.png">Package-upgrade.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328142/328368.png">Changelog-upgrade.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328142/328372.png">Metro-systemv2.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328142/22773822.jpg">Winb2.jpg</a> (image/jpeg)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328142/190283782.png">image-2023-5-11_12-13-27.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328142/191299848.png">image-2023-5-18_16-2-46.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328142/191299849.png">image-2023-5-18_16-4-16.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328142/191299851.png">image-2023-5-18_16-16-22.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328142/195559425.png">SoftwareReleaseSchema_2023-06-09.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328142/276856836.png">image-2024-10-18_6-58-29.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328142/276856837.png">image-2024-10-18_7-2-51.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328142/276856838.png">image-2024-10-18_7-11-57.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328142/276856839.png">image-2024-10-18_7-12-16.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328142/276856840.png">image-2024-10-18_7-18-40.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328142/276856841.png">image-2024-10-18_7-18-47.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328142/276856842.png">image-2024-10-18_7-19-56.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328142/276856843.png">image-2024-10-18_7-20-0.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328142/276856844.png">image-2024-10-18_7-27-19.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328142/276856845.png">image-2024-10-18_7-27-54.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328142/276856846.png">image-2024-10-18_7-28-33.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328142/276856847.png">image-2024-10-18_7-29-8.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328142/276856848.png">image-2024-10-18_7-29-43.png</a> (image/png)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

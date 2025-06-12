@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : IPv6 PD over PPP</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Virtual-Private-Networks_119144597.html">Virtual Private Networks</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="PPPoE_2031625.html">PPPoE</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : IPv6 PD over PPP
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Unknown User (emils)</span> on Jun 15, 2022
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><span class="mw-headline"><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742034229 {padding: 0px;}
+div.rbtoc1747742034229 ul {margin-left: 0px;}
+div.rbtoc1747742034229 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742034229'>
+<ul class='toc-indentation'>
+<li><a href='#IPv6PDoverPPP-Summary'>Summary</a>
+<ul class='toc-indentation'>
+<li><a href='#IPv6PDoverPPP-Configuration'>Configuration</a></li>
+<li><a href='#IPv6PDoverPPP-Server'>Server</a></li>
+<li><a href='#IPv6PDoverPPP-Client'>Client</a></li>
+<li><a href='#IPv6PDoverPPP-Testingstatus'>Testing status</a></li>
+</ul>
+</li>
+</ul>
+</div></span></p><h1 id="IPv6PDoverPPP-Summary"><span class="mw-headline">Summary</span></h1><p>This example demonstrates how to set up PPPoE server and client to use IPv6 Prefix Delegation.</p><p>IPv6 Prefixes can be delegated over PPP interfaces. When client connects, PPP will automatically add dynamic <a href="https://help.mikrotik.com/docs/display/ROS/DHCP#DHCP-DHCPv6Server" rel="nofollow"> DHCPv6-PD server</a>. This allows to run DHCPv6 client on PPP interfaces.</p><h2 id="IPv6PDoverPPP-Configuration"><span class="mw-headline">Configuration</span></h2><h2 id="IPv6PDoverPPP-Server"><span class="mw-headline">Server</span></h2><p>dhcpv6-pd-pool parameter under PPP Profiles is used to enable PPP-PD. PPP will use specified <a href="https://help.mikrotik.com/docs/display/ROS/IP+Pools#IPPools-IPv6Pool" rel="nofollow"> IPv6 pool </a>to create a dynamic DHCP server.</p><p>So first step is to add IPv6 pool:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ipv6 pool
+add name=myPool prefix=2001:db8:7501:ff00::/60 prefix-length=62</pre>
+</div></div><p>Now we can configure PPP profile and add PPPoE server</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ppp profile set default dhcpv6-pd-pool=myPool
+
+/interface pppoe-server server 
+add service-name=test interface=ether1</pre>
+</div></div><h2 id="IPv6PDoverPPP-Client"><span class="mw-headline">Client</span></h2><p>On client side we need to set up PPPoE client interface and run DHCP client on it.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface pppoe-client
+add name=client-test interface=ether1 user=a1 service-name=test
+
+/ipv6 dhcp-client 
+add interface=client-test pool-name=ppp-test pool-prefix-length=64</pre>
+</div></div><h2 id="IPv6PDoverPPP-Testingstatus"><span class="mw-headline">Testing status</span></h2><p>On server side check if dynamic DHCP server is added and prefix is bound to specific client:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@RB1100] /ipv6 dhcp-server&gt; print 
+Flags: D - dynamic, X - disabled, I - invalid 
+ #    NAME              INTERFACE            ADDRESS-POOL            LEASE-TIME
+ 0 D  &lt;pppoe-a1&gt;        &lt;pppoe-a1&gt;           myPool                  3d        
+
+[admin@RB1100] /ipv6 dhcp-server binding&gt; print 
+Flags: X - disabled, D - dynamic 
+ #   ADDRESS                                        DU       IAID SER.. STATUS 
+ 1 D 2001:db8:7501:ff04::/62                                  247 &lt;pp.. bound  
+ </pre>
+</div></div><p>On client side, check if DHCP client is bound and pool is added:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@x86-test] /ipv6 dhcp-client&gt; print 
+Flags: D - dynamic, X - disabled, I - invalid 
+ #    INTERFACE           STATUS        PREFIX                            EXPIRES-AFTER  
+0    client-test          bound         2001:db8:7501:ff04::/62           2d23h18m17s  
+
+[admin@x86-test] /ipv6 pool&gt; print 
+Flags: D - dynamic 
+ #   NAME                        PREFIX                                   PREFIX-LENGTH
+ 0 D ppp-test                    2001:db8:7501:ff04::/62                             64</pre>
+</div></div><p><br/></p>
+                    </div>
+
+                                        
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : IPIP</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Virtual-Private-Networks_119144597.html">Virtual Private Networks</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : IPIP
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Unknown User (emils)</span>, last updated by <span class='editor'> Oskars K.</span> on Jan 22, 2024
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><span class="mw-headline"><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742033253 {padding: 0px;}
+div.rbtoc1747742033253 ul {margin-left: 0px;}
+div.rbtoc1747742033253 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742033253'>
+<ul class='toc-indentation'>
+<li><a href='#IPIP-Summary'>Summary</a></li>
+<li><a href='#IPIP-Properties'>Properties</a></li>
+<li><a href='#IPIP-Example'>Example</a></li>
+</ul>
+</div></span></p><h1 id="IPIP-Summary"><span class="mw-headline">Summary</span></h1><p><strong>Sub-menu:</strong> <code> /interface ipip<br/><strong>Standards:</strong> <span style="color:var(--ds-text,#172b4d);"><a class="external-link" href="https://tools.ietf.org/html/rfc2003" rel="nofollow">RFC2003</a></span></code></p><p>The IPIP tunneling implementation on the MikroTik RouterOS is RFC 2003 compliant. IPIP tunnel is a simple protocol that encapsulates IP packets in IP to make a tunnel between two routers. The IPIP tunnel interface appears as an interface under the interface list. Many routers, including Cisco and Linux, support this protocol. This protocol makes multiple network schemes possible. <br/><br/>IP tunneling protocol adds the following possibilities to a network setup:</p><ul class="bullets"><li>to tunnel Intranets over the Internet</li></ul><ul><li>to use it instead of source routing</li></ul><h1 id="IPIP-Properties"><span class="mw-headline">Properties</span></h1><div class="table-wrap"><table class="wrapped confluenceTable"><colgroup><col/><col/></colgroup><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>clamp-tcp-mss</strong> (<em>yes | no</em>; Default: <strong>yes</strong>)</td><td class="confluenceTd">Controls whether to change MSS size for received TCP SYN packets. When enabled, a router will change the MSS size for received TCP SYN packets if the current MSS size exceeds the tunnel interface MTU (taking into account the TCP/IP overhead).The received encapsulated packet will still contain the original MSS, and only after decapsulation the MSS is changed.</td></tr><tr><td class="confluenceTd"><strong>dont-fragment</strong> (<em>inherit | no</em>; Default: <strong>no</strong>)</td><td class="confluenceTd"><p style="text-align: left;">Whether to include DF bit in related packets:</p><p style="text-align: left;"><em>no</em><span> </span>- fragment if needed,<span> </span><em>inherit</em><span> </span>- use Dont Fragment flag of original packet.</p><p style="text-align: left;">(Without Dont Fragment: inherit - packet may be fragmented).</p></td></tr><tr><td class="confluenceTd"><strong>dscp</strong> (<em>inherit | integer [0-63]</em>; Default: )</td><td class="confluenceTd">Set dscp value in IPIP header to a fixed value or inherit from dscp value taken from tunnelled traffic</td></tr><tr><td class="confluenceTd"><strong>ipsec-secret</strong> (<em>string</em>; Default: )</td><td class="confluenceTd">When secret is specified, router adds dynamic ipsec peer to remote-address with pre-shared key and policy with default values (by default phase2 uses sha1/aes128cbc).</td></tr><tr><td class="confluenceTd"><strong>local-address</strong> (<em>IP</em>; Default: )</td><td class="confluenceTd">IP address on a router that will be used by IPIP tunnel</td></tr><tr><td class="confluenceTd"><strong>mtu</strong> (<em>integer</em>; Default: <strong>1500</strong>)</td><td class="confluenceTd">Layer3 Maximum transmission unit</td></tr><tr><td class="confluenceTd"><strong>keepalive</strong> (<em>integer[/time],integer 0..4294967295</em>; Default: <strong>10s,10</strong>)</td><td class="confluenceTd">Tunnel keepalive parameter sets the time interval in which the tunnel running flag will remain even if the remote end of tunnel goes down. If configured time,retries fail, interface running flag is removed. Parameters are written in following format: <code>KeepaliveInterval,KeepaliveRetries</code> where KeepaliveInterval is time interval and KeepaliveRetries - number of retry attempts. By default keepalive is set to 10 seconds and 10 retries.</td></tr><tr><td class="confluenceTd"><strong>name</strong> (<em>string</em>; Default: )</td><td class="confluenceTd">Interface name</td></tr><tr><td class="confluenceTd"><strong>remote-address</strong> (<em>IP</em>; Default: )</td><td class="confluenceTd">IP address of remote end of IPIP tunnel</td></tr></tbody></table></div><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>There is no authentication or 'state' for this interface. The bandwidth usage of the interface may be monitored with the monitor feature from the interface menu.</p></div></div><h1 class="auto-cursor-target" id="IPIP-Example">Example</h1><p> Suppose we want to add an IPIP tunnel between routers R1 and R2: </p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/47579173/54853762.jpg" data-image-src="attachments/47579173/54853762.jpg" data-unresolved-comment-count="0" data-linked-resource-id="54853762" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="Ipip-sample.jpg" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/jpeg" data-linked-resource-container-id="47579173" data-linked-resource-container-version="6" tabindex="0" alt=""></span></p><p>At first, we need to configure IPIP interfaces and then add IP addresses to them. <br/><br/>The configuration for router <strong>R1</strong> is as follows:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] interface ipip&gt; add
+local-address: 10.0.0.1
+remote-address: 22.63.11.6
+[admin@MikroTik] interface ipip&gt; print
+Flags: X - disabled, R - running
+# NAME MTU LOCAL-ADDRESS REMOTE-ADDRESS
+0 X ipip1 1480 10.0.0.1 22.63.11.6
+
+[admin@MikroTik] interface ipip&gt; en 0
+[admin@MikroTik] interface ipip&gt; /ip address add address=1.1.1.1/24 interface=ipip1</pre>
+</div></div><p>The configuration of the <strong>R2</strong> is shown below:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] interface ipip&gt; add local-address=22.63.11.6 remote-address=10.
+0.0.1
+[admin@MikroTik] interface ipip&gt; print
+Flags: X - disabled, R - running
+# NAME MTU LOCAL-ADDRESS REMOTE-ADDRESS
+0 X ipip1 1480 22.63.11.6 10.0.0.1
+
+[admin@MikroTik] interface ipip&gt; enable 0
+[admin@MikroTik] interface ipip&gt; /ip address add address=1.1.1.2/24 interface=ipip1</pre>
+</div></div><p>Now both routers can ping each other: </p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] interface ipip&gt; /ping 1.1.1.2
+1.1.1.2 64 byte ping: ttl=64 time=24 ms
+1.1.1.2 64 byte ping: ttl=64 time=19 ms
+1.1.1.2 64 byte ping: ttl=64 time=20 ms
+3 packets transmitted, 3 packets received, 0% packet loss
+round-trip min/avg/max = 19/21.0/24 ms
+[admin@MikroTik] interface ipip&gt;</pre>
+</div></div>
+                    </div>
+
+                                                            <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/47579173/47579174.png">Ipip-sample.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/47579173/54853762.jpg">Ipip-sample.jpg</a> (image/jpeg)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

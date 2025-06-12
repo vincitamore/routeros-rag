@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : REST API</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Management-tools_328121.html">Management tools</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : REST API
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Māris B.</span>, last updated by <span class='editor'> Druvis Timma</span> on Sep 25, 2024
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742021690 {padding: 0px;}
+div.rbtoc1747742021690 ul {margin-left: 0px;}
+div.rbtoc1747742021690 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742021690'>
+<ul class='toc-indentation'>
+<li><a href='#RESTAPI-Overview'>Overview</a></li>
+<li><a href='#RESTAPI-Authentication'>Authentication</a>
+<ul class='toc-indentation'>
+<li><a href='#RESTAPI-JSONformat'>JSON format</a></li>
+</ul>
+</li>
+<li><a href='#RESTAPI-HTTPMethods'>HTTP Methods</a>
+<ul class='toc-indentation'>
+<li><a href='#RESTAPI-GET'>GET</a></li>
+<li><a href='#RESTAPI-PATCH'>PATCH</a></li>
+<li><a href='#RESTAPI-PUT'>PUT</a></li>
+<li><a href='#RESTAPI-DELETE'>DELETE</a></li>
+<li><a href='#RESTAPI-POST'>POST</a>
+<ul class='toc-indentation'>
+<li><a href='#RESTAPI-Proplist'>Proplist</a></li>
+<li><a href='#RESTAPI-Query'>Query</a></li>
+<li><a href='#RESTAPI-Timeout'>Timeout</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href='#RESTAPI-Errors'>Errors</a></li>
+</ul>
+</div></p><h1 id="RESTAPI-Overview">Overview</h1><p>Watch our <a class="external-link" href="https://youtu.be/dwEcUa2KXNc" rel="nofollow">video about this feature</a>.</p><p><span style="text-decoration: none;color:var(--ds-text,#172b4d);">The term &quot;REST API&quot; generally refers to <span style="text-decoration: none;color:var(--ds-text,#172b4d);">an API accessed via HTTP protocol at a predefined set of resource-oriented URLs.</span><br/>Starting from <strong>RouterOS v7.1beta4</strong>, it is implemented as a JSON wrapper interface of the console <a href="API_47579160.html">API</a>. It allows to create, read, update and delete resources and call arbitrary console commands.</span></p><p><span style="text-decoration: none;color:var(--ds-text,#172b4d);">To start using REST API, the <code style="text-decoration: none;">www-ssl</code> or <code>www</code> (starting with <strong>RouterOS v7.9</strong>) <a href="https://help.mikrotik.com/docs/display/ROS/Services" rel="nofollow">service</a> must be configured and running. When the <code>www-ssl</code></span><span style="text-decoration: none;color:var(--ds-text,#172b4d);"> service (HTTPS access) is enabled, the REST service can be accessed by connecting to <span style="color:var(--ds-text-accent-blue,#0055cc);"><code>https://&lt;routers_IP&gt;/rest</code></span>. When <code>www</code> service (HTTP access) is enabled the REST service can be accessed by connecting to <span style="color:var(--ds-text-accent-blue,#0055cc);"><code>http://&lt;routers_IP&gt;/rest</code></span>.<br/></span></p><div role="region" aria-label="Warning" class="confluence-information-macro  confluence-information-macro-warning" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-error confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>We do not advise enabling HTTP access (<code>www</code> service). The main risk is that authentication credentials can be read with passive eavesdropping. You can use it only when performing tests (not in a production environment) and when you are certain that nobody can listen in (inspect your traffic)!</p></div></div><p><span style="text-decoration: none;color:var(--ds-text,#172b4d);">The easiest way to start is to use cURL, wget, or any other HTTP client even RouterOS <a href="Fetch_8978514.html">fetch tool</a>.</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: powershell; gutter: false">$ curl -k -u admin: https://10.155.101.214/rest/system/resource
+[{&quot;architecture-name&quot;:&quot;tile&quot;,&quot;board-name&quot;:&quot;CCR1016-12S-1S+&quot;,
+&quot;build-time&quot;:&quot;Dec/04/2020 14:19:51&quot;,&quot;cpu&quot;:&quot;tilegx&quot;,&quot;cpu-count&quot;:&quot;16&quot;,
+&quot;cpu-frequency&quot;:&quot;1200&quot;,&quot;cpu-load&quot;:&quot;1&quot;,&quot;free-hdd-space&quot;:&quot;83439616&quot;,
+&quot;free-memory&quot;:&quot;1503133696&quot;,&quot;platform&quot;:&quot;MikroTik&quot;,
+&quot;total-hdd-space&quot;:&quot;134217728&quot;,&quot;total-memory&quot;:&quot;2046820352&quot;,
+&quot;uptime&quot;:&quot;2d20h12m20s&quot;,&quot;version&quot;:&quot;7.1beta4 (development)&quot;}]</pre>
+</div></div><p>Watch how to set up <a class="external-link" href="http://youtube.com/watch?v=dwEcUa2KXNc" rel="nofollow">REST api</a>.</p><h1 id="RESTAPI-Authentication">Authentication</h1><p>Authentication to the REST API is performed via <a class="external-link" href="http://en.wikipedia.org/wiki/Basic_access_authentication" rel="nofollow">HTTP Basic Auth</a>. Provide your <span style="text-decoration: none;color:var(--ds-text,#172b4d);">Username and password are the same as for the console user (by default &quot;admin&quot; with no password)</span>.</p><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>You have to set up <a href="Certificates_2555969.html">certificates</a> to use secure HTTPS, if self-signed certs are used, then CA must be imported to the trusted root. However, for testing purposes, it is possible to connect insecurely (for cUrl use -k flag, for wget use <span style="text-decoration: none;color:var(--ds-text,#172b4d);">--no-check-certificate</span>).</p></div></div><h2 style="text-decoration: none;" id="RESTAPI-JSONformat">JSON format</h2><p>Server broadly follows ECMA-404 standard, with following notes:</p><ul style="text-decoration: none;"><li>In JSON replies all object values are encoded as strings, even if the underlying data is a number or a boolean.</li><li>The server also accepts numbers in octal format (begins with 0) and hexadecimal format (begins with 0x). If the numbers are sent in a string format, they are assumed to be in decimal format.</li><li>Numbers with exponents are not supported.</li></ul><h1 id="RESTAPI-HTTPMethods">HTTP Methods</h1><p><span style="text-decoration: none;color:var(--ds-text,#172b4d);">Below is a table summarising supported HTTP methods</span></p><div class="table-wrap"><table class="wrapped fixed-table confluenceTable"><colgroup><col style="width: 102.0px;"/><col style="width: 118.0px;"/><col style="width: 82.0px;"/><col style="width: 421.0px;"/></colgroup><tbody><tr><th class="confluenceTh">HTTP Verv</th><th class="confluenceTh">CRUD</th><th colspan="1" class="confluenceTh">ROS</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd">GET</td><td class="confluenceTd">Read</td><td colspan="1" class="confluenceTd">print</td><td class="confluenceTd"><span style="text-decoration: none;color:var(--ds-text,#172b4d);">To get the records.</span></td></tr><tr><td class="confluenceTd">PATCH</td><td class="confluenceTd">Update/Modify</td><td colspan="1" class="confluenceTd">set</td><td class="confluenceTd"><span style="text-decoration: none;color:var(--ds-text,#172b4d);">To update a single record.</span></td></tr><tr><td class="confluenceTd">PUT</td><td class="confluenceTd">Create</td><td colspan="1" class="confluenceTd">add</td><td class="confluenceTd">To create a new record.</td></tr><tr><td colspan="1" class="confluenceTd">DELETE</td><td colspan="1" class="confluenceTd">Delete</td><td colspan="1" class="confluenceTd">remove</td><td colspan="1" class="confluenceTd">To delete a single record.</td></tr><tr><td colspan="1" class="confluenceTd">POST</td><td colspan="1" class="confluenceTd"><br/></td><td colspan="1" class="confluenceTd"><br/></td><td colspan="1" class="confluenceTd">Universal method to get access to all console commands.</td></tr></tbody></table></div><h2 id="RESTAPI-GET">GET</h2><p>This method allows getting the list of all records or a single record from the specified menu encoded in the URL.<br/>For example, get all IP addresses (equivalent to the '<span style="color:var(--ds-background-accent-blue-bolder,#0c66e4);"><code>ip/address/print</code></span>' command from the CLI):</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: powershell; gutter: false">$ curl -k -u admin: https://10.155.101.214/rest/ip/address
+[{&quot;.id&quot;:&quot;*1&quot;,&quot;actual-interface&quot;:&quot;ether2&quot;,&quot;address&quot;:&quot;10.0.0.111/24&quot;,&quot;disabled&quot;:&quot;false&quot;,
+&quot;dynamic&quot;:&quot;false&quot;,&quot;interface&quot;:&quot;ether2&quot;,&quot;invalid&quot;:&quot;false&quot;,&quot;network&quot;:&quot;10.0.0.0&quot;},
+{&quot;.id&quot;:&quot;*2&quot;,&quot;actual-interface&quot;:&quot;ether3&quot;,&quot;address&quot;:&quot;10.0.0.109/24&quot;,&quot;disabled&quot;:&quot;true&quot;,
+&quot;dynamic&quot;:&quot;false&quot;,&quot;interface&quot;:&quot;ether3&quot;,&quot;invalid&quot;:&quot;false&quot;,&quot;network&quot;:&quot;10.0.0.0&quot;}]</pre>
+</div></div><p>To return a single record, append the ID at the end of the URL:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: powershell; gutter: false">$ curl -k -u admin: https://10.155.101.214/rest/ip/address/*1
+{&quot;.id&quot;:&quot;*1&quot;,&quot;actual-interface&quot;:&quot;ether2&quot;,&quot;address&quot;:&quot;10.0.0.111/24&quot;,&quot;disabled&quot;:&quot;false&quot;,
+&quot;dynamic&quot;:&quot;false&quot;,&quot;interface&quot;:&quot;ether2&quot;,&quot;invalid&quot;:&quot;false&quot;,&quot;network&quot;:&quot;10.0.0.0&quot;}</pre>
+</div></div><p>If table contains named parameters, then name instread of ID can be used, for example, get ether1:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: powershell; gutter: false">$ curl -k -u admin: https://10.155.101.214/rest/interface/ether1</pre>
+</div></div><p>It is also possible to filter the output, for example, return only valid addresses that belong to the 10.155.101.0 network:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: powershell; gutter: false">$ curl -k -u admin: &quot;https://10.155.101.214/rest/ip/address?network=10.155.101.0&amp;dynamic=true&quot;
+[{&quot;.id&quot;:&quot;*8&quot;,&quot;actual-interface&quot;:&quot;sfp12&quot;,&quot;address&quot;:&quot;10.155.101.214/24&quot;,&quot;disabled&quot;:&quot;false&quot;,
+&quot;dynamic&quot;:&quot;true&quot;,&quot;interface&quot;:&quot;sfp12&quot;,&quot;invalid&quot;:&quot;false&quot;,&quot;network&quot;:&quot;10.155.101.0&quot;}]</pre>
+</div></div><p><span style="text-decoration: none;color:var(--ds-text,#172b4d);">Another example returns only addresses on the &quot;dummy&quot; interface and with the comment &quot;test&quot;:</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: powershell; gutter: false">$ curl -k -u admin: &#39;https://10.155.101.214/rest/ip/address?comment=test&amp;interface=dummy&#39;
+[{&quot;.id&quot;:&quot;*3&quot;,&quot;actual-interface&quot;:&quot;dummy&quot;,&quot;address&quot;:&quot;192.168.99.2/24&quot;,&quot;comment&quot;:&quot;test&quot;,
+&quot;disabled&quot;:&quot;false&quot;,&quot;dynamic&quot;:&quot;false&quot;,&quot;interface&quot;:&quot;dummy&quot;,&quot;invalid&quot;:&quot;false&quot;,&quot;network&quot;:&quot;192.168.99.0&quot;}]</pre>
+</div></div><p><span style="text-decoration: none;color:var(--ds-text,#172b4d);">If you want to return only specific properties, you can use the '</span><span style="color:var(--ds-background-accent-blue-bolder,#0c66e4);"><code style="text-decoration: none;">.proplist</code></span>'<span style="text-decoration: none;color:var(--ds-text,#172b4d);">, followed by the '=' and a list of comma-separated properties. For example, to show only the address and if it's disabled:</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: powershell; gutter: false">$ curl -k -u admin: https://10.155.101.214/rest/ip/address?.proplist=address,disabled
+[{&quot;address&quot;:&quot;10.0.0.111/24&quot;,&quot;disabled&quot;:&quot;false&quot;},{&quot;address&quot;:&quot;10.0.0.109/24&quot;,&quot;disabled&quot;:&quot;true&quot;}]</pre>
+</div></div><h2 id="RESTAPI-PATCH">PATCH</h2><p>This method is used to update a single record. Set <span style="text-decoration: none;color:var(--ds-text,#172b4d);">PATCH call body as a JSON object which contains fields and values of the properties to be updated. For example, </span><span style="text-decoration: none;color:var(--ds-text,#172b4d);">add a comment:<br/></span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: powershell; gutter: false">$ curl -k -u admin: -X PATCH https://10.155.101.214/rest/ip/address/*3 \
+  --data &#39;{&quot;comment&quot;: &quot;test&quot;}&#39; -H &quot;content-type: application/json&quot;
+{&quot;.id&quot;:&quot;*3&quot;,&quot;actual-interface&quot;:&quot;dummy&quot;,&quot;address&quot;:&quot;192.168.99.2/24&quot;,&quot;comment&quot;:&quot;test&quot;,
+&quot;disabled&quot;:&quot;false&quot;,&quot;dynamic&quot;:&quot;false&quot;,&quot;interface&quot;:&quot;dummy&quot;,&quot;invalid&quot;:&quot;false&quot;,&quot;network&quot;:&quot;192.168.99.0&quot;}</pre>
+</div></div><p><span style="text-decoration: none;color:var(--ds-text,#172b4d);">In case of a successful update, the server returns the updated object with all its parameters.</span></p><h2 id="RESTAPI-PUT"><span style="text-decoration: none;color:var(--ds-text,#172b4d);">PUT</span></h2><p><span style="text-decoration: none;color:var(--ds-text,#172b4d);">A method is used to create new records in the menu encoded in the URL. The body should be set as a JSON object containing parameters applied to the newly created record.</span></p><p><span style="text-decoration: none;color:var(--ds-text,#172b4d);">In case of success, the server returns the created object with all its parameters.</span></p><p><span style="text-decoration: none;color:var(--ds-text,#172b4d);">Only one resource can be created in a single request.</span></p><p><span style="text-decoration: none;color:var(--ds-text,#172b4d);">For example, add an IP address to a dummy interface:</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: powershell; gutter: false">$ curl -k -u admin: -X PUT https://10.155.101.214/rest/ip/address \
+  --data &#39;{&quot;address&quot;: &quot;192.168.111.111&quot;, &quot;interface&quot;: &quot;dummy&quot;}&#39; -H &quot;content-type: application/json&quot;
+{&quot;.id&quot;:&quot;*A&quot;,&quot;actual-interface&quot;:&quot;dummy&quot;,&quot;address&quot;:&quot;192.168.111.111/32&quot;,&quot;disabled&quot;:&quot;false&quot;,
+&quot;dynamic&quot;:&quot;false&quot;,&quot;interface&quot;:&quot;dummy&quot;,&quot;invalid&quot;:&quot;false&quot;,&quot;network&quot;:&quot;192.168.111.111&quot;}</pre>
+</div></div><h2 id="RESTAPI-DELETE"><span style="text-decoration: none;color:var(--ds-text,#172b4d);">DELETE</span></h2><p><span style="text-decoration: none;color:var(--ds-text,#172b4d);">This method is used to delete the record with a specified ID from the menu encoded in the URL. If the deletion has been succeeded, the server responds with an empty response. For example, call to delete the record twice, on second call router will return 404 error:</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: powershell; gutter: false">$ curl -k -u admin: -X DELETE https://10.155.101.214/rest/ip/address/*9
+$ curl -k -u admin: -X DELETE https://10.155.101.214/rest/ip/address/*9
+{&quot;error&quot;:404,&quot;message&quot;:&quot;Not Found&quot;}</pre>
+</div></div><h2 id="RESTAPI-POST"><span style="text-decoration: none;color:var(--ds-text,#172b4d);">POST</span></h2><p><span class="nolink">All the <a href="API_47579160.html">API</a> features are available through the <code>POST</code> method. The command word is encoded in the header and optional parameters are passed in the JSON object with the corresponding fields and values. For example, to change the password of the active user, send</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: text; gutter: false">POST https://router/rest/password
+{&quot;old-password&quot;:&quot;old&quot;,&quot;new-password&quot;:&quot;N3w&quot;, &quot;confirm-new-password&quot;:&quot;N3w&quot;}</pre>
+</div></div><p>REST response is structured similar to API response: </p><ul><li>If the response contains '<span style="color:var(--ds-background-accent-green-bolder,#1f845a);"><code>!re</code></span>' sentences (records), the JSON reply will contain a list of objects.</li><li><span style="letter-spacing: 0.0px;">If the '</span><span style="color:var(--ds-background-accent-green-bolder,#1f845a);"><code>!done</code></span>'<span style="letter-spacing: 0.0px;"> sentence contains data, the JSON reply will contain an object with the data.</span></li><li><span style="letter-spacing: 0.0px;">If there are no records or data in the '</span><span style="color:var(--ds-background-accent-green-bolder,#1f845a);"><code>!done</code></span>'<span style="letter-spacing: 0.0px;"> sentence, the response will hold an empty list.</span></li></ul><p>There are two special keys: <span style="color:var(--ds-background-accent-green-bolder,#1f845a);"><code>.proplist</code></span> and <span style="color:var(--ds-background-accent-green-bolder,#1f845a);"><code>.query</code></span>, which are used with the <span style="color:var(--ds-background-accent-blue-bolder,#0c66e4);"><code>print</code></span> command word. Read more about APIs responses, prop lists, and queries in the <a href="API_47579160.html">API</a> documentation.</p><h3 style="text-decoration: none;" id="RESTAPI-Proplist">Proplist</h3><p>The '.<span style="color:var(--ds-background-accent-green-bolder,#1f845a);"><code>proplist</code></span>' key is used to create <span style="color:var(--ds-background-accent-green-bolder,#1f845a);"><code>.proplist</code></span> attribute word. The values can be a single string with comma-separated values:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: text; gutter: false">POST https://router/rest/interface/print
+{&quot;.proplist&quot;:&quot;name,type&quot;}</pre>
+</div></div><p><span style="letter-spacing: 0.0px;">or a list of strings:</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: text; gutter: false">POST https://router/rest/interface/print
+{&quot;.proplist&quot;:[&quot;name&quot;,&quot;type&quot;]}</pre>
+</div></div><p style="text-decoration: none;">For example, return address and interface properties from the ip/address list:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: powershell; gutter: false">$ curl -k -u admin: -X POST https://10.155.101.214/rest/ip/address/print\
+  --data &#39;{&quot;_proplist&quot;: [&quot;address&quot;,&quot;interface&quot;]}&#39; -H &quot;content-type: application/json&quot;
+[{&quot;address&quot;:&quot;192.168.99.2/24&quot;,&quot;interface&quot;:&quot;dummy&quot;},
+{&quot;address&quot;:&quot;172.16.5.1/24&quot;,&quot;interface&quot;:&quot;sfpplus1&quot;},
+{&quot;address&quot;:&quot;172.16.6.1/24&quot;,&quot;interface&quot;:&quot;sfp2&quot;},
+{&quot;address&quot;:&quot;172.16.7.1/24&quot;,&quot;interface&quot;:&quot;sfp3&quot;},
+{&quot;address&quot;:&quot;10.155.101.214/24&quot;,&quot;interface&quot;:&quot;sfp12&quot;},
+{&quot;address&quot;:&quot;192.168.111.111/32&quot;,&quot;interface&quot;:&quot;dummy&quot;}]</pre>
+</div></div><h3 style="text-decoration: none;" id="RESTAPI-Query">Query</h3><p>The '<span style="color:var(--ds-background-accent-green-bolder,#1f845a);"><code>.query</code></span>' key is used to create a query stack. The value is a list of query words. For example this POST request :</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: text; gutter: false">POST https://router/rest/interface/print
+{&quot;.query&quot;:[&quot;type=ether&quot;,&quot;type=vlan&quot;,&quot;#|!&quot;]}</pre>
+</div></div><p>is equivalent to this API sentence</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: text; gutter: false">/interface/print
+?type=ether
+?type=vlan
+?#|!</pre>
+</div></div><p style="text-decoration: none;"><span class="nolink">For example, let's combine '<em>query</em>' and '<em>proplist</em>', to return '<span style="color:var(--ds-text-accent-green,#216e4e);">.id</span>', '<span style="color:var(--ds-text-accent-green,#216e4e);">address</span>', and '<span style="color:var(--ds-text-accent-green,#216e4e);">interface</span>' properties for all dynamic records and records with the network 192.168.111.111</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: powershell; gutter: false">$ curl -k -u admin: -X POST https://10.155.101.214/rest/ip/address/print \
+  --data &#39;{&quot;.proplist&quot;: [&quot;.id&quot;,&quot;address&quot;,&quot;interface&quot;], &quot;.query&quot;: [&quot;network=192.168.111.111&quot;,&quot;dynamic=true&quot;,&quot;#|&quot;]}&#39;\
+  -H &quot;content-type: application/json&quot;
+[{&quot;.id&quot;:&quot;*8&quot;,&quot;address&quot;:&quot;10.155.101.214/24&quot;,&quot;interface&quot;:&quot;sfp12&quot;},
+{&quot;.id&quot;:&quot;*A&quot;,&quot;address&quot;:&quot;192.168.111.111/32&quot;,&quot;interface&quot;:&quot;dummy&quot;}]</pre>
+</div></div><h3 style="text-decoration: none;" id="RESTAPI-Timeout"><span class="nolink">Timeout</span></h3><p><span class="nolink">If the command runs indefinitely, it will timeout and the connection will be closed with an error. The current timeout interval is 60 seconds. To avoid timeout errors, add a parameter that would sufficiently limit the command execution time. </span></p><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Timeout is not affected by the parameters passed to the commands. If the command is set to run for an hour, it will terminate early and return an error message.</p></div></div><p><span class="nolink">For example, let's see what we get when the ping command exceeds the timeout and how to prevent this by adding a count parameter:</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: powershell; gutter: false">$ curl -k -u admin: -X POST https://10.155.101.214/rest/ping \
+  --data &#39;{&quot;address&quot;:&quot;10.155.101.1&quot;}&#39; \
+  -H &quot;content-type: application/json&quot;
+{&quot;detail&quot;:&quot;Session closed&quot;,&quot;error&quot;:400,&quot;message&quot;:&quot;Bad Request&quot;}
+
+$ curl -k -u admin: -X POST https://10.155.101.214/rest/ping \
+  --data &#39;{&quot;address&quot;:&quot;10.155.101.1&quot;,&quot;count&quot;:&quot;4&quot;}&#39; \
+  -H &quot;content-type: application/json&quot;
+[{&quot;avg-rtt&quot;:&quot;453us&quot;,&quot;host&quot;:&quot;10.155.101.1&quot;,&quot;max-rtt&quot;:&quot;453us&quot;,&quot;min-rtt&quot;:&quot;453us&quot;,&quot;packet-loss&quot;:&quot;0&quot;,&quot;received&quot;:&quot;1&quot;,&quot;sent&quot;:&quot;1&quot;,&quot;seq&quot;:&quot;0&quot;,&quot;size&quot;:&quot;56&quot;,&quot;time&quot;:&quot;453us&quot;,&quot;ttl&quot;:&quot;64&quot;},
+{&quot;avg-rtt&quot;:&quot;417us&quot;,&quot;host&quot;:&quot;10.155.101.1&quot;,&quot;max-rtt&quot;:&quot;453us&quot;,&quot;min-rtt&quot;:&quot;382us&quot;,&quot;packet-loss&quot;:&quot;0&quot;,&quot;received&quot;:&quot;2&quot;,&quot;sent&quot;:&quot;2&quot;,&quot;seq&quot;:&quot;1&quot;,&quot;size&quot;:&quot;56&quot;,&quot;time&quot;:&quot;382us&quot;,&quot;ttl&quot;:&quot;64&quot;},
+{&quot;avg-rtt&quot;:&quot;495us&quot;,&quot;host&quot;:&quot;10.155.101.1&quot;,&quot;max-rtt&quot;:&quot;650us&quot;,&quot;min-rtt&quot;:&quot;382us&quot;,&quot;packet-loss&quot;:&quot;0&quot;,&quot;received&quot;:&quot;3&quot;,&quot;sent&quot;:&quot;3&quot;,&quot;seq&quot;:&quot;2&quot;,&quot;size&quot;:&quot;56&quot;,&quot;time&quot;:&quot;650us&quot;,&quot;ttl&quot;:&quot;64&quot;},
+{&quot;avg-rtt&quot;:&quot;461us&quot;,&quot;host&quot;:&quot;10.155.101.1&quot;,&quot;max-rtt&quot;:&quot;650us&quot;,&quot;min-rtt&quot;:&quot;359us&quot;,&quot;packet-loss&quot;:&quot;0&quot;,&quot;received&quot;:&quot;4&quot;,&quot;sent&quot;:&quot;4&quot;,&quot;seq&quot;:&quot;3&quot;,&quot;size&quot;:&quot;56&quot;,&quot;time&quot;:&quot;359us&quot;,&quot;ttl&quot;:&quot;64&quot;}]</pre>
+</div></div><p>Another example is a bandwidth test tool, which can be limited by providing run duration:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: powershell; gutter: false">$ curl -k -u admin: -X POST &#39;https://10.155.101.214/rest/tool/bandwidth-test&#39; \
+  --data &#39;{&quot;address&quot;:&quot;10.155.101.1&quot;,&quot;duration&quot;:&quot;2s&quot;}&#39; \
+  -H &quot;content-type: application/json&quot;
+[{&quot;.section&quot;:&quot;0&quot;,&quot;connection-count&quot;:&quot;20&quot;,&quot;direction&quot;:&quot;receive&quot;,&quot;lost-packets&quot;:&quot;0&quot;,
+&quot;random-data&quot;:&quot;false&quot;,&quot;rx-10-second-average&quot;:&quot;0&quot;,&quot;rx-current&quot;:&quot;0&quot;,&quot;rx-size&quot;:&quot;1500&quot;,
+&quot;rx-total-average&quot;:&quot;0&quot;,
+&quot;status&quot;:&quot;connecting&quot;},
+{&quot;.section&quot;:&quot;1&quot;,&quot;connection-count&quot;:&quot;20&quot;,&quot;direction&quot;:&quot;receive&quot;,&quot;duration&quot;:&quot;1s&quot;,
+&quot;lost-packets&quot;:&quot;0&quot;,&quot;random-data&quot;:&quot;false&quot;,&quot;rx-10-second-average&quot;:&quot;0&quot;,&quot;rx-current&quot;:&quot;0&quot;,
+&quot;rx-size&quot;:&quot;1500&quot;,&quot;rx-total-average&quot;:&quot;0&quot;,
+&quot;status&quot;:&quot;running&quot;},
+{&quot;.section&quot;:&quot;2&quot;,&quot;connection-count&quot;:&quot;20&quot;,&quot;direction&quot;:&quot;receive&quot;,&quot;duration&quot;:&quot;2s&quot;,
+&quot;lost-packets&quot;:&quot;581175&quot;,&quot;random-data&quot;:&quot;false&quot;,&quot;rx-10-second-average&quot;:&quot;854372352&quot;,
+&quot;rx-current&quot;:&quot;854372352&quot;,&quot;rx-size&quot;:&quot;1500&quot;,&quot;rx-total-average&quot;:&quot;854372352&quot;,
+&quot;status&quot;:&quot;running&quot;},
+{&quot;.section&quot;:&quot;3&quot;,&quot;connection-count&quot;:&quot;20&quot;,&quot;direction&quot;:&quot;receive&quot;,&quot;duration&quot;:&quot;3s&quot;,
+&quot;lost-packets&quot;:&quot;9014&quot;,&quot;random-data&quot;:&quot;false&quot;,&quot;rx-10-second-average&quot;:&quot;891979008&quot;,
+&quot;rx-current&quot;:&quot;929585664&quot;,&quot;rx-size&quot;:&quot;1500&quot;,&quot;rx-total-average&quot;:&quot;891979008&quot;,
+&quot;status&quot;:&quot;done testing&quot;}]</pre>
+</div></div><h1 id="RESTAPI-Errors"><span style="text-decoration: none;color:var(--ds-text,#172b4d);">Errors</span></h1><p><span class="nolink">The success or failure of the API calls is indicated in the HTTP status code. In case of failure (status code 400 or larger), the body of the response contains a JSON object with the error code, a description of the error, and optional error details. For example, trying to delete an interface will return</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: text; gutter: false">{&quot;error&quot;:406,&quot;message&quot;:&quot;Not Acceptable&quot;,&quot;detail&quot;:&quot;no such command or directory (remove)&quot;}</pre>
+</div></div><p><br/></p><p><br/></p><p><br/></p>
+                    </div>
+
+                                        
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

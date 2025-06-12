@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : Controller Bridge and Port Extender</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Bridging-and-Switching_328068.html">Bridging and Switching</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Bridging-and-Switching-Case-Studies_119144611.html">Bridging and Switching Case Studies</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : Controller Bridge and Port Extender
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Edgars P.</span>, last updated on Feb 12, 2025
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <div class="contentLayout2">
+<div class="columnLayout single" data-layout="single">
+<div class="cell normal" data-type="normal">
+<div class="innerCell">
+<p><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742025014 {padding: 0px;}
+div.rbtoc1747742025014 ul {margin-left: 0px;}
+div.rbtoc1747742025014 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742025014'>
+<ul class='toc-indentation'>
+<li><a href='#ControllerBridgeandPortExtender-Summary'>Summary</a>
+<ul class='toc-indentation'>
+<li><a href='#ControllerBridgeandPortExtender-Limitations'>Limitations</a></li>
+</ul>
+</li>
+<li><a href='#ControllerBridgeandPortExtender-Quicksetup'>Quick setup</a></li>
+<li><a href='#ControllerBridgeandPortExtender-Discoveryandcontrolprotocols'>Discovery and control protocols</a></li>
+<li><a href='#ControllerBridgeandPortExtender-Packetflow'>Packet flow</a></li>
+<li><a href='#ControllerBridgeandPortExtender-ControllerBridgesettingsandmonitoring'>Controller Bridge settings and monitoring</a></li>
+<li><a href='#ControllerBridgeandPortExtender-PortExtendersettings'>Port Extender settings</a></li>
+<li><a href='#ControllerBridgeandPortExtender-Configurationexamples'>Configuration examples</a>
+<ul class='toc-indentation'>
+<li><a href='#ControllerBridgeandPortExtender-BasicCBandPEconfiguration'>Basic CB and PE configuration</a></li>
+<li><a href='#ControllerBridgeandPortExtender-TrunkandAccessports'>Trunk and Access ports</a></li>
+<li><a href='#ControllerBridgeandPortExtender-CascadingmultiplePortExtendersandusingbondinginterface'>Cascading multiple Port Extenders and using bonding interface</a></li>
+<li><a href='#ControllerBridgeandPortExtender-Configurationmodificationandremoval'>Configuration modification and removal</a></li>
+</ul>
+</li>
+</ul>
+</div></p><div role="region" aria-label="Warning" class="confluence-information-macro  confluence-information-macro-warning" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-error confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>The feature has been removed from RouterOS since v7.18.</p></div></div><h1 id="ControllerBridgeandPortExtender-Summary">Summary</h1><hr/><p>Controller Bridge (CB) and Port Extender (PE) is an IEEE 802.1BR standard implementation in RouterOS for CRS3xx series switches. It allows virtually extending the CB ports with a PE device and manage these extended interfaces from a single controlling device. Such configuration provides a simplified network topology, flexibility, increased port density and ease of manageability. An example of Controller Bridge and Port Extender topology can be seen below.</p><p><span class="confluence-embedded-file-wrapper image-center-wrapper"><img class="confluence-embedded-image image-center" draggable="false" src="attachments/37224456/37224526.png" data-image-src="attachments/37224456/37224526.png" data-unresolved-comment-count="0" data-linked-resource-id="37224526" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="CB_summary.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="37224456" data-linked-resource-container-version="72" tabindex="0" alt=""></span></p><p>The Controller Bridge establishes communication with the Port Extender through a <strong>cascade port</strong>. Similarly, the Port Extender will communicate with the Controller Bridge only through an <strong>upstream port</strong>. On a PE device, control ports must be configured and only one port (closest to the CB) will act as an upstream port, other control ports can act as a backup for upstream port or even cascade port for switches connected in series (e.g. Port Extender 2 and 3 in the image above). Cascade and upstream ports are used to transmit and receive control and network traffic. <strong>Extended ports</strong> are interfaces that are controlled by the CB device and they are typically connected to the end hosts. Extended ports only transmit and receive network traffic.</p><p><span style="letter-spacing: 0.0px;">See supported features for each switch model below.</span></p><div class="table-wrap"><table class="wrapped confluenceTable"><colgroup><col/><col/><col/></colgroup><tbody><tr><th class="confluenceTh"><strong title=""><u>Model</u></strong></th><th class="confluenceTh"><strong title="">Controller Bridge</strong></th><th class="confluenceTh">Port Extender</th></tr><tr><td class="confluenceTd">netPower 15FR (CRS318-1Fi-15Fr-2S)</td><td class="highlight-#ffebe6 confluenceTd" style="text-align: center;" data-highlight-colour="#ffebe6"><strong title="">-</strong></td><td class="highlight-#e3fcef confluenceTd" style="text-align: center;" data-highlight-colour="#e3fcef"><strong title="">+</strong></td></tr><tr><td class="confluenceTd">netPower 16P (CRS318-16P-2S+)</td><td class="highlight-#ffebe6 confluenceTd" style="text-align: center;" data-highlight-colour="#ffebe6"><strong title="">-</strong></td><td class="highlight-#e3fcef confluenceTd" style="text-align: center;" data-highlight-colour="#e3fcef"><strong title="">+</strong></td></tr><tr><td class="confluenceTd"><span style="color:var(--ds-text,#172B4D);">CRS310-1G-5S-4S+ (netFiber 9/IN)</span></td><td class="highlight-#ffebe6 confluenceTd" style="text-align: center;" title="Background color : Light red 35%" data-highlight-colour="#ffebe6"><strong title="">-</strong></td><td class="highlight-#e3fcef confluenceTd" style="text-align: center;" title="Background color : Light green 35%" data-highlight-colour="#e3fcef"><strong title="">+</strong></td></tr><tr><td class="confluenceTd">CRS326-24G-2S+ (RM/IN)</td><td class="highlight-#ffebe6 confluenceTd" style="text-align: center;" data-highlight-colour="#ffebe6"><strong title="">-</strong></td><td class="highlight-#e3fcef confluenceTd" style="text-align: center;" data-highlight-colour="#e3fcef"><strong title="">+</strong></td></tr><tr><td class="confluenceTd">CRS328-24P-4S+</td><td class="highlight-#ffebe6 confluenceTd" style="text-align: center;" title="Background colour : Light red 35%" data-highlight-colour="#ffebe6"><strong title="">-</strong></td><td class="highlight-#e3fcef confluenceTd" style="text-align: center;" data-highlight-colour="#e3fcef"><strong title="">+</strong></td></tr><tr><td class="confluenceTd">CRS328-4C-20S-4S+</td><td class="highlight-#ffebe6 confluenceTd" style="text-align: center;" data-highlight-colour="#ffebe6"><strong title="">-</strong></td><td class="highlight-#e3fcef confluenceTd" style="text-align: center;" data-highlight-colour="#e3fcef"><strong title="">+</strong></td></tr><tr><td class="confluenceTd">CRS305-1G-4S+</td><td class="highlight-#ffebe6 confluenceTd" style="text-align: center;" data-highlight-colour="#ffebe6"><strong title="">-</strong></td><td class="highlight-#e3fcef confluenceTd" style="text-align: center;" data-highlight-colour="#e3fcef"><strong title="">+</strong></td></tr><tr><td class="confluenceTd">CRS309-1G-8S+</td><td class="highlight-#e3fcef confluenceTd" style="text-align: center;" data-highlight-colour="#e3fcef"><strong title="">+</strong></td><td class="highlight-#e3fcef confluenceTd" style="text-align: center;" data-highlight-colour="#e3fcef"><strong title="">+</strong></td></tr><tr><td class="confluenceTd">CRS317-1G-16S+</td><td class="highlight-#e3fcef confluenceTd" style="text-align: center;" data-highlight-colour="#e3fcef"><strong title="">+</strong></td><td class="highlight-#e3fcef confluenceTd" style="text-align: center;" title="Background colour : Light green 35%" data-highlight-colour="#e3fcef"><strong title="">+</strong></td></tr><tr><td class="confluenceTd">CRS312-4C+8XG</td><td class="highlight-#e3fcef confluenceTd" style="text-align: center;" data-highlight-colour="#e3fcef"><strong title="">+</strong></td><td class="highlight-#e3fcef confluenceTd" style="text-align: center;" data-highlight-colour="#e3fcef"><strong title="">+</strong></td></tr><tr><td class="confluenceTd">CRS326-24S+2Q+</td><td class="highlight-#e3fcef confluenceTd" style="text-align: center;" data-highlight-colour="#e3fcef"><strong title="">+</strong></td><td class="highlight-#e3fcef confluenceTd" style="text-align: center;" data-highlight-colour="#e3fcef"><strong title="">+</strong></td></tr><tr><td class="confluenceTd">CRS354-48G-4S+2Q+</td><td class="highlight-#e3fcef confluenceTd" style="text-align: center;" data-highlight-colour="#e3fcef"><strong title="">+</strong></td><td class="highlight-#e3fcef confluenceTd" style="text-align: center;" data-highlight-colour="#e3fcef"><strong title="">+</strong></td></tr><tr><td class="confluenceTd">CRS354-48P-4S+2Q+</td><td class="highlight-#e3fcef confluenceTd" style="text-align: center;" data-highlight-colour="#e3fcef"><strong title="">+</strong></td><td class="highlight-#e3fcef confluenceTd" style="text-align: center;" data-highlight-colour="#e3fcef"><strong title="">+</strong></td></tr></tbody></table></div><h2 id="ControllerBridgeandPortExtender-Limitations">Limitations</h2><p>Although controller allows to configure port extender interfaces, some bridging and switching features cannot be used or will not work properly. Below are the most common controller and extender limitations. The list might change <span style="color:var(--ds-text,#333333);">along upcoming RouterOS releases</span>.</p><div class="table-wrap"><table class="wrapped confluenceTable"><colgroup><col/><col/></colgroup><tbody><tr><th class="confluenceTh">Feature</th><th class="confluenceTh">Support</th></tr><tr><td class="confluenceTd">Bonding for cascade and upstream ports </td><td class="highlight-#e3fcef confluenceTd" style="text-align: center;" data-highlight-colour="#e3fcef">+</td></tr><tr><td class="confluenceTd">Bridge VLAN filtering</td><td class="highlight-#e3fcef confluenceTd" style="text-align: center;" data-highlight-colour="#e3fcef">+</td></tr><tr><td class="confluenceTd">Bonding for extended ports</td><td class="highlight-#ffebe6 confluenceTd" style="text-align: center;" data-highlight-colour="#ffebe6">-</td></tr><tr><td class="confluenceTd">Dot1x <span style="color:var(--ds-text,#172B4D);">authenticator (server)</span></td><td class="highlight-#ffebe6 confluenceTd" style="text-align: center;" data-highlight-colour="#ffebe6">-</td></tr><tr><td class="confluenceTd">Ingress and egress rate</td><td class="highlight-#ffebe6 confluenceTd" style="text-align: center;" data-highlight-colour="#ffebe6">-</td></tr><tr><td class="confluenceTd">Mirroring</td><td class="highlight-#ffebe6 confluenceTd" style="text-align: center;" data-highlight-colour="#ffebe6">-</td></tr><tr><td class="confluenceTd">Port ingress VLAN filtering</td><td class="highlight-#ffebe6 confluenceTd" style="text-align: center;" title="Background colour : Light red 35%" data-highlight-colour="#ffebe6">-</td></tr><tr><td class="confluenceTd">Port isolation</td><td class="highlight-#ffebe6 confluenceTd" style="text-align: center;" data-highlight-colour="#ffebe6">-</td></tr><tr><td class="confluenceTd">Storm control</td><td class="highlight-#ffebe6 confluenceTd" style="text-align: center;" data-highlight-colour="#ffebe6">-</td></tr><tr><td class="confluenceTd">Switch rules (ACL)</td><td class="highlight-#ffebe6 confluenceTd" style="text-align: center;" data-highlight-colour="#ffebe6">-</td></tr><tr><td class="confluenceTd">L3HW offloading</td><td class="highlight-#ffebe6 confluenceTd" style="text-align: center;" title="Background color : Light red 35%" data-highlight-colour="#ffebe6">-</td></tr><tr><td class="confluenceTd">MLAG</td><td class="highlight-#ffebe6 confluenceTd" style="text-align: center;" title="Background color : Light red 35%" data-highlight-colour="#ffebe6">-</td></tr></tbody></table></div><h1 id="ControllerBridgeandPortExtender-Quicksetup">Quick setup</h1><hr/><p>In this example, we will create a Controlling Bridge (e.g. a CRS317-1G-16S+ switch) that will connect to a single Port Extender (e.g. a CRS326-24G-2S+ switch) through an SFP+1 interface.</p><p>First, configure a bridge with enabled VLAN filtering on a CB device:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface bridge
+add name=bridge1 vlan-filtering=yes</pre>
+</div></div><p>On the same device, configure a port that is connected to the PE device and will act as cascade port:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface bridge port-controller
+set bridge=bridge1 cascade-ports=sfp-sfpplus1 switch=switch1</pre>
+</div></div><p>Last, on a PE device, simply configure a control port, which will be selected as an upstream port:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface bridge port-extender
+set control-ports=sfp-sfpplus1 switch=switch1</pre>
+</div></div><p class="auto-cursor-target">Once PE and CB devices are connected, all interfaces that are on the same switch group (except for control ports) will be extended and can be further configured on a CB device. An automatic bridge port configuration will be applied on the CB device which adds all extended ports in a single bridge, this configuration can be modified afterward.</p><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>In order to exclude some port from being extended (e.g. for out-of-band management purposes), additionally, configure <span style="color:var(--ds-text-accent-green-bolder,#164B35);"><code>excluded-ports</code></span> property.</p></div></div><br/><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Make sure not to include the <span style="color:var(--ds-icon-success,#22A06B);"><code>cascade-ports</code></span> and <code><span style="color:var(--ds-icon-success,#22A06B);">control-ports</span></code> in any routing or bridging configurations. These ports are recommended only for a CB and PE usage.</p></div></div><h1 id="ControllerBridgeandPortExtender-Discoveryandcontrolprotocols">Discovery and control protocols</h1><hr/><p>Before frame forwarding on extended ports is possible, Controlling Bridge and Port Extender must discover each other and exchange with essential information.</p><p>CB and PE enabled devices are using a neighbor discovery protocol LLDP with specific Port Extension TLV. This allows CB and PE devices to advertise their support on cascade and control ports.</p><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>CB and PE configuration can override the neighbor discovery settings, for example, if a cascade port is not included in a neighbor discovery interface list, the LLDP messages will be still sent.</p></div></div><p>Once LLDP messages are exchanged between CB and PE, a Control and Status Protocol (CSP) over an Edge Control Protocol (ECP) will initiate. The CSP is used between CB and PE to assert control and receive status information from the associated PE - it assigns unique IDs for extended ports, controls data-path settings (e.g. port VLAN membership) and sends port status information (e.g. interface stats, PoE-out monitoring). The ECP provides a reliable and sequenced frame delivery (encoded with EtherType 0x8940).</p><div role="region" aria-label="Warning" class="confluence-information-macro  confluence-information-macro-warning" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-error confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>The current CB implementation does not support any failover techniques. Once the CB device becomes unavailable, the PE devices will lose all the control and data forwarding rules.</p></div></div><h1 id="ControllerBridgeandPortExtender-Packetflow"><span style="font-size: 24.0px;letter-spacing: -0.01em;">Packet flow</span></h1><hr/><p>To better understand the underlying principles of Controlling Bridge and Port Extender, a packet walkthrough is provided below:</p><ol><li>An L2 packet is received on the extended port;</li><li>The Port Extender encapsulates the packet with an E-TAG header (EtherType 0x893F) and forwards it through an upstream port, towards the Controller Bridge. An E-TAG packet contains information regarding the PE source port ID. The PE device does not make any local switching decisions;</li><li>The Controller Bridge receives the E-TAG packet and knows exactly which extended interface received it. The CB then internally decapsulates the packet and proceed it through a regular switching decision (host learning, destination address lookup, VLAN filtering, etc.);</li><li>Once a switching decision is made, the CB will again encapsulate the original packet with an E-TAG and send it through a cascade port, towards Port Extender;<ol><li>For a single destination packet (unicast), the CB will include the PE destination port ID in the E-TAG and send it through a correct cascade port;</li><li>For a multi-destination packet (broadcast, multicast or unknown-unicast), the CB will include a target group mark and source port ID in the E-TAG and send a single packet replica per every cascade port;</li></ol></li><li>Once a PE device receives an E-TAG packet on the upstream port, PE decapsulates it and sends the original L2 packet through the extended port;<ol><li>For a single destination packet (unicast), the PE will send the packet only to the correct extended port;</li><li>For a multi-destination packet (broadcast, multicast or unknown-unicast), the PE will send a single packet replica per every extended port (except for the source port where the packet was received).</li></ol></li></ol></div>
+</div>
+</div>
+<div class="columnLayout two-equal" data-layout="two-equal">
+<div class="cell normal" data-type="normal">
+<div class="innerCell">
+<p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/37224456/37748773.png" data-image-src="attachments/37224456/37748773.png" data-unresolved-comment-count="0" data-linked-resource-id="37748773" data-linked-resource-version="3" data-linked-resource-type="attachment" data-linked-resource-default-alias="CB_unicast3.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="37224456" data-linked-resource-container-version="72" tabindex="0" alt=""></span></p></div>
+</div>
+<div class="cell normal" data-type="normal">
+<div class="innerCell">
+<p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/37224456/37748772.png" data-image-src="attachments/37224456/37748772.png" data-unresolved-comment-count="0" data-linked-resource-id="37748772" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="CB_broadcast2.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="37224456" data-linked-resource-container-version="72" tabindex="0" alt=""></span></p></div>
+</div>
+</div>
+<div class="columnLayout single" data-layout="single">
+<div class="cell normal" data-type="normal">
+<div class="innerCell">
+<h1 id="ControllerBridgeandPortExtender-ControllerBridgesettingsandmonitoring"><span style="font-size: 24.0px;letter-spacing: -0.01em;">Controller Bridge settings and monitoring</span></h1><hr/><p>This section describes the Controller Bridge settings and monitoring options. </p><p><strong>Sub-menu:</strong><span> </span><code>/interface bridge port-controller</code></p><div class="table-wrap"><table class="wrapped confluenceTable"><colgroup><col/><col/></colgroup><thead><tr><th style="text-align: left;" class="confluenceTh"><p>Property</p></th><th style="text-align: left;" class="confluenceTh"><p>Description</p></th></tr></thead><tbody><tr><td style="text-align: left;" class="confluenceTd"><strong>bridge</strong><span> </span>(<em>name; </em><span style="color:var(--ds-text,#333333);">Default:<span> </span></span><strong>none</strong>)</td><td style="text-align: left;" class="confluenceTd">The bridge interface where ports will be extended. The CB will only enable when <span style="color:var(--ds-icon-success,#22A06B);"><code>bridge</code></span> and <span style="color:var(--ds-icon-success,#22A06B);"><code>switch</code> </span>properties are specified, otherwise, it will be in a disabled state.</td></tr><tr><td style="text-align: left;" class="confluenceTd"><strong>cascade-ports</strong> (<em>interfaces; </em>Default: <strong>none</strong>)</td><td style="text-align: left;" class="confluenceTd">Interfaces that will act as cascade ports. A bonding interface with 802.3ad or balance-xor <span style="color:var(--ds-icon-success,#22A06B);"><code>mode</code></span> is also supported.</td></tr><tr><td style="text-align: left;" class="confluenceTd"><strong>switch</strong><span> </span>(<em>name; </em><span style="color:var(--ds-text,#333333);">Default:<span> </span></span><strong>none</strong>)</td><td style="text-align: left;" class="confluenceTd">The switch that will act as the CB and ensure the control and network traffic. The CB will only enable when <span style="color:var(--ds-icon-success,#22A06B);"><code>bridge</code></span> and <span style="color:var(--ds-icon-success,#22A06B);"><code>switch</code></span> properties are specified, otherwise, it will be in a disabled state.</td></tr></tbody></table></div><p>After CB and PE devices are configured and connected, each PE device will be automatically visible on the device menu, use <span style="color:var(--ds-text-accent-magenta,#943D73);"><code>print</code></span> and <span style="color:var(--ds-text-accent-magenta,#943D73);"><code>monitor</code></span> commands to see more details.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@Controller] &gt; interface bridge port-controller device print
+Flags: I - inactive 
+ 0   name=&quot;pe1&quot; pe-mac=64:D1:54:EB:AE:BC descr=&quot;MikroTik RouterOS 6.48beta35 (testing) CRS328-24P-4S+&quot; control-ports=pe1-sfpplus1,pe1-sfpplus2 
+
+ 1   name=&quot;pe2&quot; pe-mac=64:D1:54:C7:3A:58 descr=&quot;MikroTik RouterOS 6.48beta35 (testing) CRS326-24G-2S+&quot; control-ports=pe2-sfpplus1
+[admin@Controller] &gt; interface bridge port-controller device monitor pe2
+                 name: pe2
+               status: active
+  connected-via-ports: sfp-sfpplus1==pe1-sfpplus1,pe1-sfpplus2==pe2-sfpplus1
+   connected-via-devs: controller,pe1</pre>
+</div></div><p><strong>Sub-menu:</strong><span> </span><code>/interface bridge port-controller device</code></p><div class="table-wrap"><table class="wrapped confluenceTable"><colgroup><col/><col/></colgroup><thead><tr><th style="text-align: left;" class="confluenceTh"><p>Property</p></th><th style="text-align: left;" class="confluenceTh"><p>Description</p></th></tr><tr><td colspan="1" class="confluenceTd"><strong>connected-via-devs</strong><span> </span>(<em>name</em>)</td><td colspan="1" class="confluenceTd">Shows the connected devices in the path from PE to CB. </td></tr><tr><td colspan="1" class="confluenceTd"><strong>connected-via-ports</strong> (<em>name</em>)</td><td colspan="1" class="confluenceTd">Shows the connection path from PE to CB.</td></tr></thead><tbody><tr><td style="text-align: left;" class="confluenceTd"><strong>control-ports</strong><span> </span>(<em>interfaces</em>)</td><td style="text-align: left;" class="confluenceTd">PE device control ports.</td></tr><tr><td style="text-align: left;" class="confluenceTd"><strong>descr</strong> (<em>name</em>)</td><td style="text-align: left;" class="confluenceTd">Short PE device description.</td></tr><tr><td colspan="1" class="confluenceTd"><strong>name</strong> (<em>name</em>)</td><td colspan="1" class="confluenceTd">Automatically assigned PE device name.</td></tr><tr><td style="text-align: left;" class="confluenceTd"><strong>pe-mac</strong><span> </span>(<em>MAC address</em>)</td><td style="text-align: left;" class="confluenceTd">PE device MAC address.</td></tr><tr><td colspan="1" class="confluenceTd"><strong>status</strong><span> </span>(<em>active | inactive</em>)</td><td colspan="1" class="confluenceTd">PE device status.</td></tr></tbody></table></div><p>Additionally, each PE device interface can be monitored on the port menu, use <span style="color:var(--ds-text-accent-magenta,#943D73);"><code>print</code></span> and <span style="color:var(--ds-text-accent-magenta,#943D73);"><code>monitor</code></span> commands to see more details.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@Controller] &gt; interface bridge port-controller port print where !disabled
+Flags: I - inactive, X - disabled, R - running, U - upstream-port, C - cascade-port 
+ #    NAME                                   DEVICE
+ 0 I  pe1-ether1                             pe1
+ 1 R  pe1-ether2                             pe1
+ 2 R  pe1-ether3                             pe1
+ 3 R  pe1-ether4                             pe1
+ 4  U pe1-sfpplus1                           pe1
+ 5 RC pe1-sfpplus2                           pe1
+ 6 I  pe2-ether1                             pe2
+ 7 R  pe2-ether2                             pe2
+ 8 R  pe2-ether3                             pe2
+ 9 R  pe2-ether4                             pe2
+10  U pe2-sfpplus1                           pe2
+[admin@Controller] &gt; interface bridge port-controller port monitor [find where !disabled]
+           name: pe1-ether1 pe1-ether2 pe1-ether3 pe1-ether4 pe1-sfpplus1 pe1-sfpplus2 pe2-ether1 pe2-ether2 pe2-ether3 pe2-ether4 pe2-sfpplus1
+         status: unknown    link-ok    link-ok    link-ok    no-link      link-ok      unknown    link-ok    link-ok    link-ok    no-link
+           rate:            1Gbps      1Gbps      1Gbps      10Gbps       10Gbps                  1Gbps      1Gbps      1Gbps      10Gbps
+    port-status: not-added  ok         ok         ok         ok           ok           not-added  ok         ok         ok         ok
+           pcid:            457        458        459        480          481                     509        510        511        532</pre>
+</div></div><p><strong>Sub-menu:</strong><span> </span><code>/interface bridge port-controller port</code></p><div class="table-wrap"><table class="wrapped confluenceTable"><colgroup><col/><col/></colgroup><thead><tr><th style="text-align: left;" class="confluenceTh"><p>Property</p></th><th style="text-align: left;" class="confluenceTh"><p>Description</p></th></tr></thead><tbody><tr><td style="text-align: left;" class="confluenceTd"><strong>device</strong><span> </span>(<em>name</em>)</td><td style="text-align: left;" class="confluenceTd">Automatically assigned PE device name.</td></tr><tr><td colspan="1" class="confluenceTd"><strong>name</strong> (<em>name</em>)</td><td colspan="1" class="confluenceTd">Automatically assigned PE port name.</td></tr><tr><td colspan="1" class="confluenceTd"><strong>pcid</strong> (<em>integer</em>)</td><td colspan="1" class="confluenceTd">Automatically assigned port identifier.</td></tr><tr><td colspan="1" class="confluenceTd"><strong>port-status</strong> (<em>dev-inactive | not-added | ok</em>)</td><td colspan="1" class="confluenceTd">PE port status.</td></tr><tr><td colspan="1" class="confluenceTd"><strong>rate</strong> (<em>bps</em>)</td><td colspan="1" class="confluenceTd">Data rate of the connection.</td></tr><tr><td colspan="1" class="confluenceTd"><strong>status</strong><span> </span>(<em>link-ok | no-link | unknown</em>)</td><td colspan="1" class="confluenceTd">PE port link status.</td></tr></tbody></table></div><p>The Controller Bridge can monitor the PoE-out related information from Port Extenders on the port poe menu, use <span style="color:var(--ds-text-accent-magenta,#943D73);"><code>print</code></span> and <span style="color:var(--ds-text-accent-magenta,#943D73);"><code>monitor</code></span> commands to see more details. For more information regarding PoE-out, please visit the <a href="https://help.mikrotik.com/docs/display/ROS/PoE-Out" rel="nofollow">PoE-out manual</a>.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@Controller] &gt; interface bridge port-controller port poe print
+ # NAME                                    DEVICE
+ 0 pe1-ether1                              pe1
+ 1 pe1-ether2                              pe1
+ 2 pe1-ether3                              pe1
+ 3 pe1-ether4                              pe1
+ 4 pe1-ether5                              pe1
+ 5 pe1-ether6                              pe1
+ 6 pe1-ether7                              pe1
+...
+[admin@Controller] &gt; interface bridge port-controller port poe monitor pe1-ether2,pe1-ether3
+               name: pe1-ether2 pe1-ether3
+     poe-out-status: powered-on powered-on
+    poe-out-voltage: 52.8V      52.9V
+    poe-out-current: 123mA      95mA
+      poe-out-power: 6.4W       5W</pre>
+</div></div><h1 id="ControllerBridgeandPortExtender-PortExtendersettings">Port Extender settings</h1><hr/><p>This section describes the Port Extender settings.</p><p><strong>Sub-menu:</strong><span> </span><code>/interface bridge port-extender</code></p><div class="table-wrap"><table class="wrapped confluenceTable"><colgroup><col/><col/></colgroup><thead><tr><th style="text-align: left;" class="confluenceTh"><p>Property</p></th><th style="text-align: left;" class="confluenceTh"><p>Description</p></th></tr></thead><tbody><tr><td style="text-align: left;" class="confluenceTd"><strong>control-ports</strong><span> </span>(<em>interfaces; </em>Default: <strong>none</strong>)</td><td style="text-align: left;" class="confluenceTd">Interfaces that will either connect to the CB (upstream port) or connect other PE devices in series (cascade port). A bonding interface with 802.3ad or balance-xor <code><span style="color:var(--ds-icon-success,#22A06B);">mode</span></code> is also supported.</td></tr><tr><td style="text-align: left;" class="confluenceTd"><strong>excluded-ports </strong>(<em>interfaces; </em>Default: <strong>none</strong>)</td><td style="text-align: left;" class="confluenceTd">Interfaces that will not be extended.</td></tr><tr><td style="text-align: left;" class="confluenceTd"><strong>switch</strong><span> </span>(<em>name; </em><span style="color:var(--ds-text,#333333);">Default:<span> </span></span><strong>none</strong>)</td><td style="text-align: left;" class="confluenceTd">The switch that will act as the extender and ensure the control and network traffic. The PE will only enable when this property is specified, otherwise, it will be in a disabled state.</td></tr></tbody></table></div><h1 class="auto-cursor-target" id="ControllerBridgeandPortExtender-Configurationexamples">Configuration examples</h1><hr/><p>Below are described the most common configuration examples. For CB and PE configuration to work properly, a bridge VLAN filtering needs to be enabled, so make sure to understand the filtering principles first - <a href="https://help.mikrotik.com/docs/display/ROS/Bridging+and+Switching#BridgingandSwitching-BridgeVLANFiltering" rel="nofollow">bridge VLAN filtering</a>, <a href="https://help.mikrotik.com/docs/display/ROS/Bridge+VLAN+Table" rel="nofollow">bridge VLAN table</a>.</p><h2 id="ControllerBridgeandPortExtender-BasicCBandPEconfiguration">Basic CB and PE configuration</h2><p>In this example, a CRS317-1G-16S+ device is used as a Controller Bridge and CRS328-24P-4S+ as a Port Extender, see the connection scheme below.</p><p><span class="confluence-embedded-file-wrapper image-center-wrapper"><img class="confluence-embedded-image image-center" draggable="false" src="attachments/37224456/44761096.png" data-image-src="attachments/37224456/44761096.png" data-unresolved-comment-count="0" data-linked-resource-id="44761096" data-linked-resource-version="2" data-linked-resource-type="attachment" data-linked-resource-default-alias="Basic_CB_PE_config.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="37224456" data-linked-resource-container-version="72" tabindex="0" alt=""></span></p><p><span style="letter-spacing: 0.0px;">First, configure the CB device. This can be done by adding a bridge interface with enabled VLAN filtering. Additionally, add any local interfaces to the same bridge, it allows to <span>forward traffic between any local interfaces and extended interfaces.</span> In this example, an sfp-sfpplus2 interface is added.</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface bridge
+add name=bridge1 vlan-filtering=yes
+/interface bridge port
+add bridge=bridge1 interface=sfp-sfpplus2</pre>
+</div></div><p>To enable CB, specify the bridge, switch and at least one cascade port. Make sure that cascade ports are not included in the bridge or routing configurations. These ports are recommended only for a CB and PE usage.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface bridge port-controller
+set bridge=bridge1 cascade-ports=sfp-sfpplus1 switch=switch1</pre>
+</div></div><p>To enable PE, configure control ports and switch. Additionally, configure one or multiple interfaces that should not be extended with <span style="color:var(--ds-icon-success,#22A06B);"><code>excluded-ports</code></span> property (e.g. for out-of-band management purposes). In this example, all switch ports will be extended.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface bridge port-extender
+set control-ports=sfp-sfpplus4 switch=switch1</pre>
+</div></div><p>Once PE and CB devices finish the discovery and start the Control and Status Protocol (CSP), the RouterOS will permanently create new interfaces and add them into bridge on the CB device. Interfaces are named by the automatically assigned PE device name, plus the default interface name, these interface names can be modified afterwards. Note that control and excluded ports will be also displayed into the interface list, but they are not included into the bridge. </p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@Controller_Bridge] &gt; /interface print where name~&quot;pe&quot;
+Flags: D - dynamic, X - disabled, R - running, S - slave 
+ #     NAME                                TYPE       ACTUAL-MTU L2MTU  MAX-L2MTU
+ 0  RS pe1-ether1                          extport          1500  1584
+ 1  RS pe1-ether2                          extport          1500  1584
+ 2  RS pe1-ether3                          extport          1500  1584
+ 3   S pe1-ether4                          extport          1500  1584
+ 4   S pe1-ether5                          extport          1500  1584
+ 5   S pe1-ether6                          extport          1500  1584
+ 6   S pe1-ether7                          extport          1500  1584
+ 7   S pe1-ether8                          extport          1500  1584
+ 8   S pe1-ether9                          extport          1500  1584
+ 9   S pe1-ether10                         extport          1500  1584
+10   S pe1-ether11                         extport          1500  1584
+11   S pe1-ether12                         extport          1500  1584
+12   S pe1-ether13                         extport          1500  1584
+13   S pe1-ether14                         extport          1500  1584
+14   S pe1-ether15                         extport          1500  1584
+15   S pe1-ether16                         extport          1500  1584
+16   S pe1-ether17                         extport          1500  1584
+17   S pe1-ether18                         extport          1500  1584
+18   S pe1-ether19                         extport          1500  1584
+19   S pe1-ether20                         extport          1500  1584
+20   S pe1-ether21                         extport          1500  1584
+21   S pe1-ether22                         extport          1500  1584
+22   S pe1-ether23                         extport          1500  1584
+23   S pe1-ether24                         extport          1500  1584
+24  RS pe1-sfpplus1                        extport          1500  1584
+25  RS pe1-sfpplus2                        extport          1500  1584
+26  RS pe1-sfpplus3                        extport          1500  1584
+27     pe1-sfpplus4                        extport          1500  1584
+[admin@Controller_Bridge] &gt; interface bridge port print 
+Flags: X - disabled, I - inactive, D - dynamic, H - hw-offload 
+ #     INTERFACE              BRIDGE             HW  PVID PRIORITY  PATH-COST INTERNAL-PATH-COST    HORIZON
+ 0   H sfp-sfpplus2           bridge1            yes    1     0x80         10                 10       none
+ 1   H pe1-ether1             bridge1            yes    1     0x80         10                 10       none
+ 2   H pe1-ether2             bridge1            yes    1     0x80         10                 10       none
+ 3   H pe1-ether3             bridge1            yes    1     0x80         10                 10       none
+ 4 I H pe1-ether4             bridge1            yes    1     0x80         10                 10       none
+ 5 I H pe1-ether5             bridge1            yes    1     0x80         10                 10       none
+ 6 I H pe1-ether6             bridge1            yes    1     0x80         10                 10       none
+ 7 I H pe1-ether7             bridge1            yes    1     0x80         10                 10       none
+ 8 I H pe1-ether8             bridge1            yes    1     0x80         10                 10       none
+ 9 I H pe1-ether9             bridge1            yes    1     0x80         10                 10       none
+10 I H pe1-ether10            bridge1            yes    1     0x80         10                 10       none
+11 I H pe1-ether11            bridge1            yes    1     0x80         10                 10       none
+12 I H pe1-ether12            bridge1            yes    1     0x80         10                 10       none
+13 I H pe1-ether13            bridge1            yes    1     0x80         10                 10       none
+14 I H pe1-ether14            bridge1            yes    1     0x80         10                 10       none
+15 I H pe1-ether15            bridge1            yes    1     0x80         10                 10       none
+16 I H pe1-ether16            bridge1            yes    1     0x80         10                 10       none
+17 I H pe1-ether17            bridge1            yes    1     0x80         10                 10       none
+18 I H pe1-ether18            bridge1            yes    1     0x80         10                 10       none
+19 I H pe1-ether19            bridge1            yes    1     0x80         10                 10       none
+20 I H pe1-ether20            bridge1            yes    1     0x80         10                 10       none
+21 I H pe1-ether21            bridge1            yes    1     0x80         10                 10       none
+22 I H pe1-ether22            bridge1            yes    1     0x80         10                 10       none
+23 I H pe1-ether23            bridge1            yes    1     0x80         10                 10       none
+24 I H pe1-ether24            bridge1            yes    1     0x80         10                 10       none
+25   H pe1-sfpplus1           bridge1            yes    1     0x80         10                 10       none
+26   H pe1-sfpplus2           bridge1            yes    1     0x80         10                 10       none
+27   H pe1-sfpplus3           bridge1            yes    1     0x80         10                 10       none</pre>
+</div></div><p>Now the CRS317-1G-16S+ device has extended its ports using the CRS328-24P-4S+ device and packet forwarding can be done between all bridged ports. </p><h2 id="ControllerBridgeandPortExtender-TrunkandAccessports"><span style="font-size: 20.0px;letter-spacing: -0.008em;">Trunk and Access ports</span></h2><p>In this example, untagged (access) and tagged (trunk) port configuration will be created on the Controller Bridge device, see the network diagram below.</p><p><span class="confluence-embedded-file-wrapper image-center-wrapper"><img class="confluence-embedded-image image-center" draggable="false" src="attachments/37224456/44761216.png" data-image-src="attachments/37224456/44761216.png" data-unresolved-comment-count="0" data-linked-resource-id="44761216" data-linked-resource-version="3" data-linked-resource-type="attachment" data-linked-resource-default-alias="CB_PE_VLANs.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="37224456" data-linked-resource-container-version="72" tabindex="0" alt=""></span><span style="letter-spacing: 0.0px;">First, configure the CB and PE devices, the configuration is identical to the previous example. Use this configuration for CB device.</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface bridge
+add name=bridge1 vlan-filtering=yes
+/interface bridge port
+add bridge=bridge1 interface=sfp-sfpplus2
+/interface bridge port-controller
+set bridge=bridge1 cascade-ports=sfp-sfpplus1 switch=switch1</pre>
+</div></div><p>Use this configuration for PE device.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface bridge port-extender
+set control-ports=sfp-sfpplus4 switch=switch1</pre>
+</div></div><p>After extended ports are successfully created and added to the bridge on the CB device, we can start configuring VLAN related properties. First, configure access ports to their respective VLAN ID using a <span style="color:var(--ds-icon-success,#22A06B);"><code>pvid</code></span> property. Use a <span style="color:var(--ds-text-accent-magenta,#943D73);"><code>print</code></span> command in &quot;<span style="color:var(--ds-icon-success,#22A06B);"><code>/interface bridge port</code></span>&quot; menu to find out the exact interface name.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface bridge port
+set [find interface=pe1-ether1] pvid=10
+set [find interface=pe1-ether2] pvid=20
+set [find interface=pe1-ether3] pvid=30</pre>
+</div></div><p>Then add bridge VLAN entries and specify tagged, untagged ports. Note that there are two tagged ports - local port named sfp-sfpplus2 and extended port named pe1-sfpplus1.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface bridge vlan
+add bridge=bridge1 tagged=pe1-sfpplus1,sfp-sfpplus2 untagged=pe1-ether1 vlan-ids=10
+add bridge=bridge1 tagged=pe1-sfpplus1,sfp-sfpplus2 untagged=pe1-ether2 vlan-ids=20
+add bridge=bridge1 tagged=pe1-sfpplus1,sfp-sfpplus2 untagged=pe1-ether3 vlan-ids=30</pre>
+</div></div><p>At this point VLANs are configured and devices should be able to communicate through the ports. However, it is recommended to go even a step further and apply some additional filtering options. Enable port <span style="color:var(--ds-icon-success,#22A06B);"><code>ingress-filtering</code></span> on local bridge ports and use frame filtering based on the packet type with <code><span style="color:var(--ds-icon-success,#22A06B);">frame-types </span></code>setting.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface bridge port
+set [find interface=pe1-ether1] frame-types=admit-only-untagged-and-priority-tagged
+set [find interface=pe1-ether2] frame-types=admit-only-untagged-and-priority-tagged
+set [find interface=pe1-ether3] frame-types=admit-only-untagged-and-priority-tagged
+set [find interface=pe1-sfpplus1] frame-types=admit-only-vlan-tagged
+set [find interface=sfp-sfpplus2] frame-types=admit-only-vlan-tagged ingress-filtering=yes</pre>
+</div></div><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Port ingress VLAN filtering is not supported on extended ports.</p></div></div><h2 id="ControllerBridgeandPortExtender-CascadingmultiplePortExtendersandusingbondinginterface"><span style="letter-spacing: 0.0px;font-size: 20.0px;">Cascading multiple Port Extenders and using bonding interface</span></h2><p>In this example, two PE devices (CRS328-24P-4S+ and CRS326-24G-2S+) will be added to the CB (CRS317-1G-16S+). To increase throughput for upstream and cascade ports, <a href="https://help.mikrotik.com/docs/display/ROS/Bonding" rel="nofollow">bonding interfaces</a> will be created. See the network diagram below.</p><p><span class="confluence-embedded-file-wrapper image-center-wrapper"><img class="confluence-embedded-image image-center" draggable="false" src="attachments/37224456/46759938.png" data-image-src="attachments/37224456/46759938.png" data-unresolved-comment-count="0" data-linked-resource-id="46759938" data-linked-resource-version="2" data-linked-resource-type="attachment" data-linked-resource-default-alias="bonding_cascade.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="37224456" data-linked-resource-container-version="72" tabindex="0" alt=""></span></p><p>The CB and PE configuration is similar to the first example, the main difference is the bonding interface usage. First, configure the CB device - create a bonding interface for cascade port, create a bridge and add any needed local bridge ports, last enable the CB. Use the following commands:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface bonding
+add mode=802.3ad name=bond1 slaves=sfp-sfpplus1,sfp-sfpplus2
+/interface bridge
+add name=bridge1 vlan-filtering=yes
+/interface bridge port
+add bridge=bridge1 interface=sfp-sfpplus3
+/interface bridge port-controller
+set bridge=bridge1 cascade-ports=bond1 switch=switch1</pre>
+</div></div><p>Then configure the Port Extender 1 device. This device needs two bonding interfaces - the first one will be used as an upstream port and the second one will be a cascade port for the Port Extender 2 device. Additionally, configure one or multiple interfaces that should not be extended with <span style="color:var(--ds-icon-success,#22A06B);"><code>excluded-ports</code></span> property (e.g. for out-of-band management purposes). In this example, all switch ports will be extended.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface bonding
+add mode=802.3ad name=bond1 slaves=sfp-sfpplus1,sfp-sfpplus2
+add mode=802.3ad name=bond2 slaves=sfp-sfpplus3,sfp-sfpplus4
+/interface bridge port-extender
+set control-ports=bond1,bond2 switch=switch1</pre>
+</div></div><p>Last, configure the Port Extender 2 device - create a bonding interface and enable PE. Additionally, configure one or multiple <span style="color:var(--ds-icon-success,#22A06B);"><code>excluded-ports</code></span> if necessary. In this example, all switch ports will be extended.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface bonding
+add mode=802.3ad name=bond1 slaves=sfp-sfpplus1,sfp-sfpplus2
+/interface bridge port-extender
+set control-ports=bond1 switch=switch1</pre>
+</div></div><p>Now the CRS317-1G-16S+ device has extended its ports with additional 48 Gigabit Ethernet ports and packet forwarding can be achieved between all bridged ports.</p><p>Use the <span style="color:var(--ds-text-accent-magenta,#943D73);"><code>monitor</code></span> command in the device menu to see the PE device connection path. Also, use <span style="color:var(--ds-text-accent-magenta,#943D73);"><code>print</code></span> command in the port menu to see which PE interfaces are used as upstream and cascade ports.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@Controller_Bridge] &gt; interface bridge port-controller device monitor [find]
+                   name: pe1                    pe2
+                 status: active                 active
+    connected-via-ports: bond1==pe1-cntrl-bond1 bond1==pe1-cntrl-bond1
+                                                pe1-cntrl-bond2==pe2-cntrl-bond1
+     connected-via-devs: controller             controller
+                                                pe1
+[admin@Controller_Bridge] &gt; interface bridge port-controller port print where running or upstream-port 
+Flags: I - inactive, X - disabled, R - running, U - upstream-port, C - cascade-port 
+ #    NAME                                                  DEVICE                                                 
+ 0 R  pe1-ether2                                            pe1                                                    
+ 1 R  pe1-ether3                                            pe1                                                    
+ 2 R  pe1-ether4                                            pe1                                                    
+ 3  U pe1-sfpplus1                                          pe1                                                    
+ 4  U pe1-sfpplus2                                          pe1                                                    
+ 5 RC pe1-sfpplus3                                          pe1                                                    
+ 6 RC pe1-sfpplus4                                          pe1                                                    
+ 7 R  pe2-ether1                                            pe2                                                    
+ 8 R  pe2-ether2                                            pe2                                                    
+ 9 R  pe2-ether3                                            pe2                                                    
+10 R  pe2-ether4                                            pe2                                                    
+11  U pe2-sfpplus1                                          pe2                                                    
+12  U pe2-sfpplus2                                          pe2                                                    </pre>
+</div></div><h2 id="ControllerBridgeandPortExtender-Configurationmodificationandremoval"><span style="letter-spacing: 0.0px;font-size: 20.0px;">Configuration modification and removal</span></h2><p>In certain situations, CB and PE device configuration needs to be adjusted (e.g. PE device needs new control ports) or removed completely. To modify the PE device configuration, all related PE device configuration should be removed from the CB device first. Only then the new configuration can be applied.</p><p><span style="letter-spacing: 0.0px;"><span>First, to remove PE configuration from CB, disable the PE using the following command: </span></span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface bridge port-extender set switch=none control-ports=&quot;&quot; excluded-ports=&quot;&quot;</pre>
+</div></div><p>Then, on the CB device, remove the related bridge and other RouterOS configuration where PE interfaces were used (e.g. see the export from &quot;<code><span style="color:var(--ds-icon-success,#22A06B);">/interface bridge port</span></code>&quot; and &quot;<code><span style="color:var(--ds-icon-success,#22A06B);">/interface bridge vlan</span></code>&quot; menus). For example, to remove all bridge ports from a specific PE device, use the command below:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface bridge port remove [find interface~&quot;pe1&quot;]</pre>
+</div></div><p>Once the configuration is removed, PE can be removed from the CB device list. This command will also automatically remove all the PE device interfaces from the CB interface list. In case some PE interface configuration is still applied on the CB, it will not be valid anymore. Use <span style="color:var(--ds-text-accent-magenta,#943D73);"><code>print</code></span> command to find out the PE device name.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface bridge port-controller device remove [find name=pe1]</pre>
+</div></div></div>
+</div>
+</div>
+</div>
+                    </div>
+
+                                                            <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/37224456/37224526.png">CB_summary.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/37224456/37224558.png">CB_unicast.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/37224456/37224561.png">CB_unicast.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/37224456/37224560.svg">CB_unicast.svg</a> (image/svg+xml)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/37224456/37224554.png">CB_unicast.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/37224456/37224563.png">CB_broadcast.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/37224456/37224570.png">CB_unicast2.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/37224456/37748772.png">CB_broadcast2.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/37224456/37748774.png">CB_unicast3.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/37224456/37748775.png">CB_unicast3.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/37224456/37748773.png">CB_unicast3.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/37224456/44761213.png">Basic_CB_PE_config.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/37224456/44761096.png">Basic_CB_PE_config.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/37224456/44761217.png">CB_PE_VLANs.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/37224456/44761218.png">CB_PE_VLANs.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/37224456/44761216.png">CB_PE_VLANs.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/37224456/46759939.png">bonding_cascade.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/37224456/46759938.png">bonding_cascade.png</a> (image/png)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

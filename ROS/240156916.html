@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : S+RJ10 general guidance</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="119144606.html">Diagnostics, monitoring and troubleshooting</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : S+RJ10 general guidance
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Ingus Raudiņš</span>, last updated on Apr 30, 2025
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <h2 id="S+RJ10generalguidance-/*&lt;![CDATA[*/div.rbtoc1747742046461{padding:0px;}div.rbtoc1747742046461ul{margin-left:0px;}div.rbtoc1747742046461li{margin-left:0px;padding-left:0px;}/*]]&gt;*/#S+RJ10generalguidance-Summary#S+RJ10generalguidance-SummaryGeneralGuidance#"><span class="mw-headline"><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742046461 {padding: 0px;}
+div.rbtoc1747742046461 ul {margin-left: 0px;}
+div.rbtoc1747742046461 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742046461'>
+<ul class='toc-indentation'>
+<li><a href='#S+RJ10generalguidance-'></a></li>
+<li><a href='#S+RJ10generalguidance-Summary'>Summary</a></li>
+<li><a href='#S+RJ10generalguidance-GeneralGuidance'>General Guidance</a>
+<ul class='toc-indentation'>
+<li><a href='#S+RJ10generalguidance-Productspecification'>Product specification</a></li>
+<li><a href='#S+RJ10generalguidance-S+RJ10Positioningindevices'>S+RJ10 Positioning in devices</a></li>
+</ul>
+</li>
+<li><a href='#S+RJ10generalguidance-UsingtheS+RJ10SidebySideorwithpassivecoolingdevices'>Using the S+RJ10 Side by Side or with passive cooling devices</a></li>
+</ul>
+</div></span></h2><h2 id="S+RJ10generalguidance-Summary"><span class="mw-headline">Summary</span></h2><p><span class="mw-headline"><a class="external-link" href="https://mikrotik.com/product/s_rj10" rel="nofollow" style="text-decoration: none;">MikroTik S+RJ10</a><span style="color:var(--ds-text,#333333);"><span> </span>is a unique 6-speed RJ-45 SFP+ module based on a Marvell 88X3310P transceiver. It offers up to 10 Gbps speeds using twisted-pair copper cables. All the current MikroTik devices with an SFP+ cage support the S+RJ10 module. This article serves as a guideline of S+RJ10 usage in MikroTik devices with both passive and active cooling.</span></span></p><h2 id="S+RJ10generalguidance-GeneralGuidance"><span class="mw-headline">General Guidance</span></h2><h3 id="S+RJ10generalguidance-Productspecification"><span class="mw-headline">Product specification</span></h3><p>The average power consumption of the transceiver is 2.7 W (10GBASE-T, 30 m link) which is relatively high compared with<span> the </span><a class="external-link" href="https://mikrotik.com/product/Splus85DLC03D" rel="nofollow" style="text-decoration: none;">S+85DLC03D</a><span> </span>optical module with a maximum 0.8W power consumption. The operating temperature is 0 to +70 C, but the transceiver itself can heat up to 90 C.</p><h3 id="S+RJ10generalguidance-S+RJ10Positioningindevices"><span class="mw-headline">S+RJ10 Positioning in devices</span></h3><p>Due to high operating temperatures, it is recommended to use S+RJ10 transceivers while an optical transceiver or an unused SFP+ interface is in between them. Take a look at the transceivers capable distance<span> </span><a href="https://help.mikrotik.com/docs/display/ROS/MikroTik+wired+interface+compatibility#MikroTikwiredinterfacecompatibility-S+RJ10" rel="nofollow">comparison table</a>.</p><p>As mentioned, S+RJ10 heat up more than regular transceivers, and keeping them side by side can result in overheating, especially in devices with 4 linear SFP cages. It is recommended to place S+RJ10 in every second interface while keeping an optical transceiver or an empty port in between them.</p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/240156916/240156913.jpg" data-image-src="attachments/240156916/240156913.jpg" data-unresolved-comment-count="0" data-linked-resource-id="240156913" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="20190129_125436.jpg" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/jpeg" data-linked-resource-container-id="240156916" data-linked-resource-container-version="10" tabindex="0" alt=""></span></p><p>Even when using devices that come with separated SFP+ cages, for example, CRS309-1G-8S+, it is still not recommended to deploy the S+RJ10 transceivers beside each other. Use S+RJ10 in every second interface to avoid transceivers overheating which may cause unpredictable behavior.    </p><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" draggable="false" height="150" src="attachments/240156916/240156914.jpg" data-image-src="attachments/240156916/240156914.jpg" data-unresolved-comment-count="0" data-linked-resource-id="240156914" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="20190129_125301.jpg" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/jpeg" data-linked-resource-container-id="240156916" data-linked-resource-container-version="10" tabindex="0" alt="" aria-label="Recommended S+RJ10 placement"><span class='confluence-embedded-image-title' aria-hidden='true'>Recommended S+RJ10 placement</span></span><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" draggable="false" height="150" src="attachments/240156916/240156915.jpg" data-image-src="attachments/240156916/240156915.jpg" data-unresolved-comment-count="0" data-linked-resource-id="240156915" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="800px-20190129_125325.jpg" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/jpeg" data-linked-resource-container-id="240156916" data-linked-resource-container-version="10" tabindex="0" alt="" aria-label="It is not recommended to place transceivers side by side"><span class='confluence-embedded-image-title' aria-hidden='true'>It is not recommended to place transceivers side by side</span></span></p><p>Devices that come with 4 or 8-block SFP+ cages are not exceptions. It is recommended to use one S+RJ10 transceiver per 4xSFP+ cage block and avoid placing them side by side. Keep at least one vertical row empty(without S+RJ10) after plugging the S+RJ10 transceiver.</p><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" draggable="false" height="150" src="attachments/240156916/240156918.jpg" data-image-src="attachments/240156916/240156918.jpg" data-unresolved-comment-count="0" data-linked-resource-id="240156918" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="20190130_134631.jpg" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/jpeg" data-linked-resource-container-id="240156916" data-linked-resource-container-version="10" tabindex="0" alt="" aria-label="Recommended S+RJ10 placement"><span class='confluence-embedded-image-title' aria-hidden='true'>Recommended S+RJ10 placement</span></span><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" draggable="false" height="150" src="attachments/240156916/240156919.jpg" data-image-src="attachments/240156916/240156919.jpg" data-unresolved-comment-count="0" data-linked-resource-id="240156919" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="20190130_134505.jpg" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/jpeg" data-linked-resource-container-id="240156916" data-linked-resource-container-version="10" tabindex="0" alt="" aria-label="We do not recommend to place transceivers side by side"><span class='confluence-embedded-image-title' aria-hidden='true'>We do not recommend to place transceivers side by side</span></span></p><h2 id="S+RJ10generalguidance-UsingtheS+RJ10SidebySideorwithpassivecoolingdevices"><span class="mw-headline">Using the S+RJ10 Side by Side or with passive cooling devices</span></h2><p>There might be situations when it is not possible to use the recommended layout of the transceivers. In such cases where two or more S+RJ10 transceivers are plugged in beside one another or modules are used in passive cooling devices, the network administrator has to ensure additional cooling. The airflow around the device should be increased or the overall ambient temperature should be lowered to keep the temperature of the transceivers within the recommended range.</p><p><br/></p><p><br/></p><p><br/></p>
+                    </div>
+
+                                                            <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/240156916/240156913.jpg">20190129_125436.jpg</a> (image/jpeg)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/240156916/240156914.jpg">20190129_125301.jpg</a> (image/jpeg)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/240156916/240156915.jpg">800px-20190129_125325.jpg</a> (image/jpeg)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/240156916/240156918.jpg">20190130_134631.jpg</a> (image/jpeg)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/240156916/240156919.jpg">20190130_134505.jpg</a> (image/jpeg)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:54</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

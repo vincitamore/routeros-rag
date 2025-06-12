@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : GRE</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Virtual-Private-Networks_119144597.html">Virtual Private Networks</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : GRE
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Artūrs C.</span>, last updated by <span class='editor'> Oskars K.</span> on Jan 22, 2024
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742033152 {padding: 0px;}
+div.rbtoc1747742033152 ul {margin-left: 0px;}
+div.rbtoc1747742033152 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742033152'>
+<ul class='toc-indentation'>
+<li><a href='#GRE-Introduction'>Introduction</a></li>
+<li><a href='#GRE-Properties'>Properties</a></li>
+<li><a href='#GRE-Setupexample'>Setup example</a></li>
+</ul>
+</div></p><h1 id="GRE-Introduction">Introduction</h1><p><strong>Sub-menu:</strong> <code> /interface gre</code><br/><strong>Standards:</strong> <span style="color:var(--ds-text,#172b4d);"><a class="external-link" href="https://tools.ietf.org/html/rfc1701" rel="nofollow">RFC1701</a></span></p><p>GRE (Generic Routing Encapsulation) is a tunneling protocol that was originally developed by Cisco. It can encapsulate a wide variety of protocols creating a virtual point-to-point link.</p><p>GRE is the same as<span> </span>IPIP<span> </span>and<span> </span>EoIP<span> </span>which were originally developed as stateless tunnels. This means that if the remote end of the tunnel goes down, all traffic that was routed over the tunnels will get blackholed. To solve this problem, RouterOS has added a 'keepalive' feature for GRE tunnels.</p><div role="region" aria-label="Tip" class="confluence-information-macro  confluence-information-macro-tip" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-approve confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p><span style="color:var(--ds-text-accent-lime-bolder,#37471f);">GRE tunnel adds a 24 byte overhead (4-byte gre header + 20-byte IP header). GRE tunnel can forward only IP and IPv6 packets (ethernet type 800 and 86dd). Do not use the &quot;Check gateway&quot; option &quot;arp&quot; when a GRE tunnel is used as a route gateway.</span></p></div></div><h1 id="GRE-Properties"><span class="mw-headline">Properties</span></h1><div class="table-wrap"><table class="wrapped confluenceTable"><colgroup><col/><col/></colgroup><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>allow-fast-path </strong>(<em>yes | no</em>; Default: <strong>yes</strong>)</td><td class="confluenceTd">Whether to allow FastPath processing. Must be disabled if IPsec tunneling is used.</td></tr><tr><td class="confluenceTd"><strong>clamp-tcp-mss</strong> (<em>yes | no</em>; Default: <strong>yes</strong>)</td><td class="confluenceTd">Controls whether to change MSS size for received TCP SYN packets. When enabled, a router will change the MSS size for received TCP SYN packets if the current MSS size exceeds the tunnel interface MTU (taking into account the TCP/IP overhead). The received encapsulated packet will still contain the original MSS, and only after decapsulation the MSS is changed.</td></tr><tr><td class="confluenceTd"><strong>comment</strong> (<em>string</em>; Default: )</td><td class="confluenceTd">Short description of the tunnel.</td></tr><tr><td class="confluenceTd"><strong>disabled</strong> (<em>yes | no</em>; Default: <strong>no</strong>)</td><td class="confluenceTd">Enables/disables tunnel.</td></tr><tr><td class="confluenceTd"><strong>dont-fragment</strong> (<em>inherit | no</em>; Default: <strong>no</strong>)</td><td class="confluenceTd"><p style="text-align: left;">Whether to include DF bit in related packets:</p><p style="text-align: left;"><em>no</em><span> </span>- fragment if needed,<span> </span><em>inherit</em><span> </span>- use Dont Fragment flag of original packet.</p><p style="text-align: left;">(Without Dont Fragment: inherit - packet may be fragmented).</p></td></tr><tr><td class="confluenceTd"><strong>dscp</strong> (<em>inherit | integer [0-63]</em>; Default: )</td><td class="confluenceTd">Set dscp value in Gre header to a fixed value or inherit from dscp value taken from tunnelled traffic</td></tr><tr><td class="confluenceTd"><strong>ipsec-secret</strong> (<em>string</em>; Default: )</td><td class="confluenceTd">When secret is specified, router adds dynamic IPsec peer to remote-address with pre-shared key and policy (by default phase2 uses sha1/aes128cbc).</td></tr><tr><td class="confluenceTd"><strong>keepalive</strong> (<em>integer[/time],integer 0..4294967295</em>; Default: <strong>10s,10</strong>)</td><td class="confluenceTd">Tunnel keepalive parameter sets the time interval in which the tunnel running flag will remain even if the remote end of tunnel goes down. If configured time,retries fail, interface running flag is removed. Parameters are written in following format: <code>KeepaliveInterval,KeepaliveRetries</code> where KeepaliveInterval is time interval and KeepaliveRetries - number of retry attempts. By default keepalive is set to 10 seconds and 10 retries.</td></tr><tr><td class="confluenceTd"><strong>l2mtu</strong> (<em>integer [0..65536]</em>; Default: <strong>65535</strong>)</td><td class="confluenceTd">Layer2 Maximum transmission unit.</td></tr><tr><td class="confluenceTd"><strong>local-address</strong> (<em>IP</em>; Default: <strong>0.0.0.0</strong>)</td><td class="confluenceTd">IP address that will be used for local tunnel end. If set to 0.0.0.0 then IP address of outgoing interface will be used.</td></tr><tr><td class="confluenceTd"><strong>mtu</strong> (<em>integer [0..65536]</em>; Default: <strong>1476</strong>)</td><td class="confluenceTd">Layer3 Maximum transmission unit.</td></tr><tr><td class="confluenceTd"><strong>name</strong> (<em>string</em>; Default: )</td><td class="confluenceTd">Name of the tunnel.</td></tr><tr><td class="confluenceTd"><strong>remote-address</strong> (<em>IP</em>; Default: )</td><td class="confluenceTd">IP address of remote tunnel end.</td></tr></tbody></table></div><h1 id="GRE-Setupexample"><span class="mw-headline">Setup example</span></h1><p><span class="mw-headline"><span style="color:var(--ds-text-accent-lime-bolder,#37471f);">The goal of this example is to get Layer 3 connectivity between two remote sites over the internet</span></span></p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/24805531/54853764.jpg" data-image-src="attachments/24805531/54853764.jpg" data-unresolved-comment-count="0" data-linked-resource-id="54853764" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="Site-to-site-gre-example.jpg" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/jpeg" data-linked-resource-container-id="24805531" data-linked-resource-container-version="8" tabindex="0" alt=""></span></p><p>We have two sites,<span> </span><strong>Site1</strong><span> </span>with local network range 10.1.101.0/24 and<span> </span><strong>Site2</strong><span> </span>with local network range 10.1.202.0/24.</p><p>The first step is to create GRE tunnels. A router on site 1:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface gre add name=myGre remote-address=192.168.90.1 local-address=192.168.80.1</pre>
+</div></div><p class="auto-cursor-target"><span style="color:var(--ds-text-accent-lime-bolder,#37471f);">A router on site 2:</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface gre add name=myGre remote-address=192.168.80.1 local-address=192.168.90.1</pre>
+</div></div><p class="auto-cursor-target"><span style="color:var(--ds-text-accent-lime-bolder,#37471f);">As you can see tunnel configuration is quite simple.</span></p><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p><span style="color:var(--ds-text-accent-lime-bolder,#37471f);">In this example, a keepalive is not configured, so tunnel interface will have<span> a </span></span><strong>running</strong><span style="color:var(--ds-text-accent-lime-bolder,#37471f);"><span> </span>flag even if remote tunnel end is not reachable</span></p></div></div><p class="auto-cursor-target"><span class="auto-cursor-target" style="color:var(--ds-text-accent-lime-bolder,#37471f);"><span style="color:var(--ds-text-accent-lime-bolder,#37471f);">Now we just need to set up tunnel addresses and proper routing. A router on site 1:</span></span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip address add address=172.16.1.1/30 interface=myGre
+/ip route add dst-address=10.1.202.0/24 gateway=172.16.1.2</pre>
+</div></div><p><span style="color:var(--ds-text-accent-lime-bolder,#37471f);">A router on site 2:</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip address add address=172.16.1.2/30 interface=myGre
+/ip route add dst-address=10.1.101.0/24 gateway=172.16.1.1</pre>
+</div></div><p class="auto-cursor-target"><span style="color:var(--ds-text-accent-lime-bolder,#37471f);">At this point, both sites have Layer 3 connectivity over the GRE tunnel.</span></p>
+                    </div>
+
+                                                            <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/24805531/24805538.png">Site-to-site-gre-example.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/24805531/54853764.jpg">Site-to-site-gre-example.jpg</a> (image/jpeg)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

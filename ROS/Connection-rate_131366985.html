@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : Connection rate</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Firewall-and-Quality-of-Service_119144601.html">Firewall and Quality of Service</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Firewall-and-QoS-Case-Studies_120324137.html">Firewall and QoS Case Studies</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : Connection rate
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Artūrs C.</span>, last updated by <span class='editor'> Guntis G.</span> on Apr 26, 2024
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742028403 {padding: 0px;}
+div.rbtoc1747742028403 ul {margin-left: 0px;}
+div.rbtoc1747742028403 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742028403'>
+<ul class='toc-indentation'>
+<li><a href='#Connectionrate-Introduction'>Introduction</a></li>
+<li><a href='#Connectionrate-Theory'>Theory</a>
+<ul class='toc-indentation'>
+<li><a href='#Connectionrate-RuleExample'>Rule Example</a></li>
+</ul>
+</li>
+<li><a href='#Connectionrate-ApplicationExample-TrafficPrioritization'>Application Example - Traffic Prioritization</a>
+<ul class='toc-indentation'>
+<li><a href='#Connectionrate-QuickStartforImpatient'>Quick Start for Impatient</a>
+<ul class='toc-indentation'>
+<li><a href='#Connectionrate-Explanation'>Explanation</a></li>
+<li><a href='#Connectionrate-IPFirewallmangle'>IP Firewall mangle</a></li>
+<li><a href='#Connectionrate-Queue'>Queue</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div></p><h1 id="Connectionrate-Introduction">Introduction</h1><p>Connection Rate is a firewall matcher that allows capturing traffic based on the present speed of the connection.</p><h1 id="Connectionrate-Theory"><span class="mw-headline">Theory</span></h1><p>Each entry in the connection tracking table represents bidirectional communication. Every time a packet gets associated with a particular entry, the packet size value (including the IP header) is added to the &quot;connection-bytes&quot; value for this entry. (in other words &quot;connection-bytes&quot; includes both - upload and download).</p><p>Connection Rate calculates the speed of connection based on the change of &quot;connection-bytes&quot;. The connection rate is recalculated every second and does not have any averages.</p><p>Both options &quot;connection-bytes&quot; and &quot;connection-rate&quot; work only with TCP and UDP traffic. (you need to specify a protocol to activate these options). In the &quot;connection-rate&quot; you can specify a range of speed that you like to capture:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">ConnectionRate ::= [!]From-To
+  From,To ::= 0..4294967295    (integer number)</pre>
+</div></div><h2 id="Connectionrate-RuleExample"><span class="mw-headline">Rule Example</span></h2><p>These rules will capture TCP/UDP traffic that was going through the router when the connection speed was below 100kbps:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip firewall filter
+add action=accept chain=forward connection-rate=0-100k protocol=tcp
+add action=accept chain=forward connection-rate=0-100k protocol=udp</pre>
+</div></div><p style="margin-left: 20.0px;"><br/></p><h1 id="Connectionrate-ApplicationExample-TrafficPrioritization"><span class="mw-headline">Application Example - Traffic Prioritization</span></h1><p>Connection-rate can be used in various ways, that still need to be realized, but the most common setup will be to detect and set lower priorities to the &quot;heavy connections&quot; (connections that maintain a fast rate for long periods (such as P2P, HTTP, FTP downloads). By doing this you can prioritize all other traffic that usually includes VoIP and HTTP browsing and online gaming.</p><p>The method described in this example can be used together with other ways to detect and prioritize traffic. As the connection-rate option does not have any averages we need to determine what will be the margin that identifies &quot;heavy connections&quot;. If we assume that a normal HTTP browsing connection is less than 500kB (4Mb) long and VoIP requires no more than 200kbps speed, then every connection that after the first 500kB still has more than 200kbps speed can be assumed as &quot;heavy&quot;.</p><p>(You might have different &quot;connection-bytes&quot; for HTTP browsing and different &quot;connection-rate&quot; for VoIP in your network - so, please, do your own research before applying this example)</p><p>For this example, let's assume that we have a 6Mbps upload and download connection to ISP.</p><h2 id="Connectionrate-QuickStartforImpatient"><span class="mw-headline">Quick Start for Impatient</span></h2><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip firewall mangle
+add chain=forward action=mark-connection connection-mark=!heavy_traffic_conn new-connection-mark=all_conn
+add chain=forward action=mark-connection connection-bytes=500000-0 connection-mark=all_conn connection-rate=200k-100M new-connection-mark=heavy_traffic_conn protocol=tcp
+add chain=forward action=mark-connection connection-bytes=500000-0 connection-mark=all_conn connection-rate=200k-100M new-connection-mark=heavy_traffic_conn protocol=udp
+add chain=forward action=mark-packet connection-mark=heavy_traffic_conn new-packet-mark=heavy_traffic passthrough=no
+add chain=forward action=mark-packet connection-mark=all_conn new-packet-mark=other_traffic passthrough=no
+
+/queue tree
+add name=upload parent=public max-limit=6M
+add name=other_upload parent=upload limit-at=4M max-limit=6M packet-mark=other_traffic priority=1
+add name=heavy_upload parent=upload limit-at=2M max-limit=6M packet-mark=heavy_traffic priority=8
+add name=download parent=local max-limit=6M
+add name=other_download parent=download limit-at=4M max-limit=6M packet-mark=other_traffic priority=1
+add name=heavy_download parent=download limit-at=2M max-limit=6M packet-mark=heavy_traffic priority=8</pre>
+</div></div><p style="margin-left: 20.0px;"><br/></p><h3 id="Connectionrate-Explanation"><span class="mw-headline">Explanation</span></h3><p>In mangle, we need to separate all connections into two groups, and then mark packets from their 2 groups. As we are talking about client traffic most logical place for marking would be the mangle chain forward.</p><p>Keep in mind that as soon as a &quot;heavy&quot; connection will have lower priority and queue will hit max-limit - heavy connection will drop speed, and connection-rate will be lower. This will result in a change to a higher priority and the connection will be able to get more traffic for a short while, when again connection-rate will rise and that again will result in a change to lower priority). To avoid this we must make sure that once detected &quot;heavy connections&quot; will remain marked as &quot;heavy connections&quot; for all times.</p><h3 id="Connectionrate-IPFirewallmangle"><span class="mw-headline">IP Firewall mangle</span></h3><p><span class="mw-headline">This rule will ensure that that &quot;heavy&quot; connections will remain heavy&quot;. and mark the rest of the connections with the default connection mark:</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip firewall mangle
+add chain=forward action=mark-connection connection-mark=!heavy_traffic_conn new-connection-mark=all_conn</pre>
+</div></div><p style="margin-left: 20.0px;"><br/></p><p>These two rules will mark all heavy connections based on our standards, that every connection that after the first 500kB still has more than 200kbps speed can be assumed as &quot;heavy&quot;:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">add chain=forward action=mark-connection connection-bytes=500000-0 \
+    connection-mark=all_conn connection-rate=200k-100M new-connection-mark=heavy_traffic_conn protocol=tcp
+add chain=forward action=mark-connection connection-bytes=500000-0 \
+    connection-mark=all_conn connection-rate=200k-100M new-connection-mark=heavy_traffic_conn protocol=udp</pre>
+</div></div><p>The last two rules in mangle will simply mark all traffic from corresponding connections:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">add chain=forward action=mark-packet connection-mark=heavy_traffic_conn new-packet-mark=heavy_traffic passthrough=no
+add chain=forward action=mark-packet connection-mark=all_conn new-packet-mark=other_traffic passthrough=no</pre>
+</div></div><h3 id="Connectionrate-Queue"><span class="mw-headline">Queue</span></h3><p>This is a simple queue tree that is placed on the Interface HTB - &quot;public&quot; is an interface where your ISP is connected, and &quot;local&quot; is where are your clients. If you have more than 1 &quot;public&quot; or more than 1 &quot;local&quot; you will need to mangle upload and download separately and place the queue tree in global-out:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/queue tree
+add name=upload parent=public max-limit=6M
+add name=other_upload parent=upload limit-at=4M max-limit=6M packet-mark=other_traffic priority=1
+add name=heavy_upload parent=upload limit-at=2M max-limit=6M packet-mark=heavy_traffic priority=8
+add name=download parent=local max-limit=6M
+add name=other_download parent=download limit-at=4M max-limit=6M packet-mark=other_traffic priority=1
+add name=heavy_download parent=download limit-at=2M max-limit=6M packet-mark=heavy_traffic priority=8</pre>
+</div></div><p><br/></p>
+                    </div>
+
+                                        
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

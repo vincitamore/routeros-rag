@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : Group Management Protocol</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Routing_328222.html">Routing</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Multicast_59965491.html">Multicast</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : Group Management Protocol
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Edgars P.</span>, last updated by <span class='editor'> Unknown User (aleksis)</span> on Jun 13, 2022
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742032141 {padding: 0px;}
+div.rbtoc1747742032141 ul {margin-left: 0px;}
+div.rbtoc1747742032141 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742032141'>
+<ul class='toc-indentation'>
+<li><a href='#GroupManagementProtocol-Introduction'>Introduction</a></li>
+<li><a href='#GroupManagementProtocol-Configurationoptions'>Configuration options</a></li>
+<li><a href='#GroupManagementProtocol-Examples'>Examples</a></li>
+</ul>
+</div></p><h1 id="GroupManagementProtocol-Introduction">Introduction</h1><hr/><p>The Group Management Protocol allows any of the interfaces to become a receiver for the multicast stream. It allows testing the multicast routing and switching setups without using dedicated IGMP or MLD clients. The option is available since RouterOS v7.4 and it supports IGMP v1, v2, v3 and MLD v1, v2 protocols. </p><p>Interfaces are using IGMP v3 and MLD v2 by default. In case IGMP v1, v2 or MLD v1 queries are received, the interfaces will fall back to the appropriate version. Once Group Management Protocol is created on the interface, it will send an unsolicited membership report (join) packet and respond to query messages. If the configuration is removed or disabled, the interface will send a leave message.</p><h1 id="GroupManagementProtocol-Configurationoptions">Configuration options</h1><hr/><p>This section describes the Group Management Protocol configuration options.</p><p><strong>Sub-menu:</strong> <code>/routing gmp</code></p><div class="table-wrap"><table class="wrapped confluenceTable"><colgroup><col/><col/></colgroup><thead><tr><th style="text-align: left;" class="confluenceTh"><p>Property</p></th><th style="text-align: left;" class="confluenceTh"><p>Description</p></th></tr></thead><tbody><tr><td style="text-align: left;" class="confluenceTd"><strong>groups</strong><span> </span>(<em>IPv4 | IPv6</em>; Default: )</td><td style="text-align: left;" class="confluenceTd">The multicast group address to be used by the interface, multiple group addresses are supported.</td></tr><tr><td style="text-align: left;" class="confluenceTd"><strong>interfaces</strong><span> </span>(<em>name</em>; Default:<span> </span>)</td><td style="text-align: left;" class="confluenceTd">Name of the interface, multiple interfaces and interface lists are supported.</td></tr><tr><td style="text-align: left;" class="confluenceTd"><strong>exclude</strong><span> </span>(Default:<span> </span>)</td><td style="text-align: left;" class="confluenceTd"><p><span style="color:var(--ds-text,#172b4d);">When <code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">exclude</span></code> is set, the interface expects to reject multicast data from the configured <code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">sources</span></code>. When this option is not used, the interfaces will emit source specific join for the configured <code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">sources</span></code>.<br/></span></p></td></tr><tr><td style="text-align: left;" class="confluenceTd"><strong>sources</strong><span> </span>(<em>IPv4 | IPv6</em>; Default: )</td><td style="text-align: left;" class="confluenceTd">The source address list used by the interface, multiple source addresses are supported. <span style="color:var(--ds-text,#172b4d);">This setting has an effect when IGMPv3 or MLDv2 protocols are active. <br/></span></td></tr></tbody></table></div><h1 id="GroupManagementProtocol-Examples">Examples</h1><hr/><p>This example shows how to configure a simple multicast listener on the interface.</p><p>First, add an IP address on the interface:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip address
+add address=192.168.10.10/24 interface=ether1 network=192.168.10.0</pre>
+</div></div><p>Then configure Group Management Protocol on the same interface:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/routing gmp
+add groups=229.1.1.1 interfaces=ether1</pre>
+</div></div><p>It is now possible to check your multicast network to see if routers or switches have created the appropriate multicast forwarding entries and whether multicast data is being received on the interface (see the interface stats, or use a <a href="https://help.mikrotik.com/docs/display/ROS/Packet+Sniffer" rel="nofollow">Packet Sniffer</a> and <a href="https://help.mikrotik.com/docs/display/ROS/Torch" rel="nofollow">Torch</a>). </p>
+                    </div>
+
+                                        
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

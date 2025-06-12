@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : /routing/fantasy</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Routing_328222.html">Routing</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Routing-Debugging-Tools_59965489.html">Routing Debugging Tools</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : /routing/fantasy
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Māris B.</span>, last updated on Jul 06, 2021
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p>Fantasy menu is a fancy way to generate large amount of routes for testing purposes. Main benefits of this approach compared to script is the generation speed and simplicity. It is easy to remove all fantasy generated routes just by disabling fantasy rule.</p><p>Fantasy uses random generator from hashed route sequence number, seed and other parameters. </p><h3 style="text-decoration: none;" id="id-/routing/fantasy-ConfigurationOptions"><strong>Configuration Options</strong></h3><div class="table-wrap"><table class="relative-table confluenceTable"><thead><tr><th class="highlight-#deebff confluenceTh" data-highlight-colour="#deebff" style="text-align: left;"><p>Property</p></th><th class="highlight-#deebff confluenceTh" data-highlight-colour="#deebff" style="text-align: left;"><p>Description</p></th></tr></thead><colgroup><col style="width: 0.0px;"/><col style="width: 0.0px;"/></colgroup><tbody><tr><td style="text-align: left;" class="confluenceTd"><strong>comment</strong><span> </span>(<em>string</em>)</td><td style="text-align: left;" class="confluenceTd"><br/></td></tr><tr><td colspan="1" class="confluenceTd"><strong>count</strong><span> </span>(<em>integer:[0..4294967295]</em>)</td><td colspan="1" class="confluenceTd">How many routes to generate.</td></tr><tr><td colspan="1" class="confluenceTd"><strong>dealer-id</strong><span> </span>(<em>start-[end]:: integer:[0..4294967295]</em>)</td><td colspan="1" class="confluenceTd"><br/></td></tr><tr><td style="text-align: left;" class="confluenceTd"><strong title="">disabled</strong><span title=""> </span>(<em>yes | no</em>)</td><td style="text-align: left;" class="confluenceTd">ID reference is not used.</td></tr><tr><td style="text-align: left;" class="confluenceTd"><strong>dst-address</strong>(<em>Prefix</em>)</td><td style="text-align: left;" class="confluenceTd">Prefix from which route will be generated. </td></tr><tr><td colspan="1" class="confluenceTd"><strong>gateway</strong><span> </span>(string)</td><td colspan="1" class="confluenceTd"><br/></td></tr><tr><td colspan="1" class="confluenceTd"><strong>instance-id</strong><span> </span>(<em>start-[end]:: integer:[0..4294967295]</em>)</td><td colspan="1" class="confluenceTd"><br/></td></tr><tr><td style="text-align: left;" class="confluenceTd"><strong title="">name</strong><span title=""> </span>(<em title="">string</em>)</td><td style="text-align: left;" class="confluenceTd">Reference name</td></tr><tr><td colspan="1" class="confluenceTd"><strong>offset</strong><span> </span>(<em>integer:[0..4294967295]</em>)</td><td colspan="1" class="confluenceTd">Route sequence number offset</td></tr><tr><td colspan="1" class="confluenceTd"><strong>prefix-length</strong><span> </span>(start-[end]:: <em>integer:[0..4294967295] </em>)</td><td colspan="1" class="confluenceTd">Prefix length for generated route (can be specified as integer range). For example dst-address 192.168.0.0/16 and prefix-length 24 will generate /24 routes from 192.168.0.0/16 subnet.</td></tr><tr><td colspan="1" class="confluenceTd"><strong>priv-offset</strong><span> </span>(<em>start-[end]:: integer: [0..4294967295]</em>)</td><td colspan="1" class="confluenceTd"><br/></td></tr><tr><td colspan="1" class="confluenceTd"><strong>priv-size</strong><span> </span>(<em>start-[end]:: integer: [0..100000]</em>)</td><td colspan="1" class="confluenceTd"><br/></td></tr><tr><td colspan="1" class="confluenceTd"><strong>scope</strong><span> </span>(<em>start-[end]:: </em><em>integer: [0..255]</em>)</td><td colspan="1" class="confluenceTd">Scope to be set, can be set as range</td></tr><tr><td colspan="1" class="confluenceTd"><strong>seed</strong><span> </span>(<em>string</em>)</td><td colspan="1" class="confluenceTd">Random generator seed</td></tr><tr><td colspan="1" class="confluenceTd"><strong>target-scope</strong><span> </span>(<em>start-[end]:: </em><em>integer: [0..255]</em>)</td><td colspan="1" class="confluenceTd">Target scope to be set, can be set as range</td></tr><tr><td colspan="1" class="confluenceTd"><strong>use-hold</strong><span> </span>(<em>yes | no</em>)</td><td colspan="1" class="confluenceTd"><br/></td></tr></tbody></table></div>
+                    </div>
+
+                                        
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

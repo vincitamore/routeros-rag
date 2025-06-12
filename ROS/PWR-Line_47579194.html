@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : PWR Line</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Wired-Connections_119144653.html">Wired Connections</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : PWR Line
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Unknown User (emils)</span>, last updated by <span class='editor'> Oskars K.</span> on Jan 12, 2023
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <h1 id="PWRLine-Summary">Summary</h1><p>The PWR-Line series devices allow Ethernet-like connectivity between supported devices over regular power lines. When plugged into the same electrical circuit, the PWR-Line devices will establish connectivity by using the HomePlug AV standard. </p><h1 id="PWRLine-Properties">Properties</h1><div class="table-wrap"><table class="wrapped confluenceTable"><colgroup><col/><col/></colgroup><tbody><tr><td class="confluenceTd"><strong>arp</strong> (<em>disabled | enabled | proxy-arp | reply-only</em>; Default: <strong>enabled</strong>)</td><td class="confluenceTd">Address Resolution Protocol mode:<ul><li>disabled - the interface will not use ARP</li><li>enabled - the interface will use ARP</li><li>proxy-arp - the interface will use the ARP proxy feature</li><li>reply-only - the interface will only reply to requests originating from matching IP address/MAC address combinations which are entered as static entries in the &quot;/ip arp&quot; table. No dynamic entries will be automatically stored in the ARP table. Therefore for communications to be successful, a valid static entry must already exist.</li></ul></td></tr><tr><td class="confluenceTd"><strong>bandwidth</strong> (<em>integer/integer</em>; Default: <strong>unlimited/unlimited</strong>)</td><td class="confluenceTd">Sets max rx/tx bandwidth in kbps that will be handled by an interface. TX limit is supported on all Atheros <a href="https://help.mikrotik.com/docs/display/ROS/Switch+Chip+Features" rel="nofollow">switch-chip</a> ports. RX limit is supported only on Atheros8327/QCA8337 switch-chip ports.</td></tr><tr><td class="confluenceTd"><strong>comment</strong> (<em>string</em>; Default: )</td><td class="confluenceTd">Descriptive name of an item</td></tr><tr><td class="confluenceTd"><strong>l2mtu</strong> (<em>integer [0..65536]</em>; Default: )</td><td class="confluenceTd">Layer2 Maximum transmission unit. <a href="MTU-in-RouterOS_21725296.html">MTU in RouterOS</a></td></tr><tr><td class="confluenceTd"><strong>mac-address</strong> (<em>MAC</em>; Default: )</td><td class="confluenceTd">Media Access Control number of an interface.</td></tr><tr><td class="confluenceTd"><strong>mtu</strong> (<em>integer [0..65536]</em>; Default: <strong>1500</strong>)</td><td class="confluenceTd">Layer3 Maximum transmission unit</td></tr><tr><td class="confluenceTd"><strong>name</strong> (<em>string</em>; Default: )</td><td class="confluenceTd">Name of an interface</td></tr><tr><td class="confluenceTd"><strong>orig-mac-address</strong> (<em>MAC</em>; Default: )</td><td class="confluenceTd"><br/></td></tr><tr><td class="confluenceTd"><strong>rx-flow-control</strong> (<em>on | off | auto</em>; Default: <strong>off</strong>)</td><td class="confluenceTd">When set to on, the port will process received pause frames and suspend transmission if required. <strong>auto</strong> is the same as <strong>on</strong> except when auto-negotiation=yes flow control status is resolved by taking into account what the other end advertises. The feature is supported on AR724x, AR9xxx, and QCA9xxx CPU ports, all CCR ports, and all Atheros switch chip ports.</td></tr><tr><td class="confluenceTd"><strong>tx-flow-control</strong> (<em>on | off | auto</em>; Default: <strong>off</strong>)</td><td class="confluenceTd">When set to on, the port will send pause frames when specific buffer usage thresholds are met. <strong>auto</strong> is the same as <strong>on</strong> except when auto-negotiation=yes flow control status is resolved by taking into account what the other end advertises. The feature is supported on AR724x, AR9xxx, and QCA9xxx CPU ports, all CCR ports, and all Atheros switch chip ports.</td></tr></tbody></table></div><h1 id="PWRLine-Menuspecificcommands"><span class="mw-headline">Menu specific commands</span></h1><div class="table-wrap"><table class="wrapped confluenceTable"><colgroup><col/><col/></colgroup><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>configure</strong> ()</td><td class="confluenceTd">The command configures the attached PWR-Line device's network-key, network-password, plc-cco-selection-mode.</td></tr><tr><td class="confluenceTd"><strong>join</strong> ()</td><td class="confluenceTd">Initiates the pairing sequence which will look for other PWR-Line devices in the same electrical circuit that is also in the pairing mode. This mode lasts for 60 seconds.</td></tr><tr><td class="confluenceTd"><strong>leave</strong> ()</td><td class="confluenceTd">Initiates the leaving sequence which essentially randomizes the device's network-key.</td></tr><tr><td class="confluenceTd"><strong>monitor</strong> ()</td><td class="confluenceTd">Outputs PWR-Line-related statuses in real-time.</td></tr><tr><td class="confluenceTd"><strong>upgrade-firmware</strong> ()</td><td class="confluenceTd">Upgrades the PWR-Line device with specified firmware-file and pib-file files.</td></tr></tbody></table></div><h1 id="PWRLine-Configurationexample"><span class="mw-headline">Configuration example</span></h1><p>For two or more devices to be able to connect with each other, they must share the same network-key value. The currently configured network-key can be seen using the monitor command as plc-actual-network-key.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; /interface pwr-line monitor pwr-line1 
+name: pwr-line1
+connection-to-plc: ok
+tx-flow-control: no
+rx-flow-control: no
+plc-actual-network-key: c973947c200e1540b0f84b571d92bebe
+plc-hw-platform: QCA7420
+plc-sw-platform: MAC
+plc-fw-version: 1.4.0(24-20180515-CS)
+plc-line-freq: 50Hz
+plc-zero-crossing: detected
+plc-mac: B8:69:F4:C4:34:68</pre>
+</div></div><h2 id="PWRLine-Method1"><span class="mw-headline">Method 1</span></h2><p>There are two ways to set the same network-key on different devices. You can either use the network-key parameter which is a hashed version of network-password parameter. Or use the network-password parameter and let the router apply the hash on a human-readable string.</p><p>For example:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface pwr-line configure pwr-line1 network-password=mynetwork</pre>
+</div></div><p>is the same as: </p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface pwr-line configure pwr-line1 network-key=cb01fcc6167bf3d1edb1433c2ebde4b3</pre>
+</div></div><p>You must set the same key or password on all devices you wish to communicate with each other. </p><h2 id="PWRLine-Method2"><span class="mw-headline">Method 2</span></h2><p><span class="mw-headline">It is possible to use the join and leave commands and make the PWR-Line devices automatically synchronize the network-key value. It is advised to use the leave command before using the join command to make sure a new network-key is randomly generated and the device is not part of any old network. </span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface pwr-line leave pwr-line1</pre>
+</div></div><p>Then we can issue the join command. When doing so, the pairing sequence is enabled for 60 seconds, meaning you have to enable pairing mode on another device within 60 seconds for them to successfully pair.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface pwr-line join pwr-line1</pre>
+</div></div><h2 id="PWRLine-Method3"><span class="mw-headline">Method 3</span></h2><p>It is also possible to set a specified role for the PWR-Line device (master or slave) with the plc-cco-selection-mode parameter.</p><div class="table-wrap"><table class="wrapped confluenceTable"><colgroup><col/><col/></colgroup><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>plc-cco-selection-mode</strong> (<em>auto | always | never</em>; Default: <strong>auto</strong>)</td><td class="confluenceTd">Sets PWR-Line device mode:<ul><li>auto - PWR-Line will automatically decide what role to take depending on the situation upon joining a PWR-Line network.</li><li>always - PWR-Line will always be forced to act as &quot;central-coordinator&quot; or master device.</li><li>never - PWR-Line will always be forced to act as a slave device.</li></ul></td></tr></tbody></table></div><p class="auto-cursor-target">Example: </p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface pwr-line configure pwr-line1 plc-cco-selection-mode=auto</pre>
+</div></div><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface pwr-line configure pwr-line1 plc-cco-selection-mode=always</pre>
+</div></div><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface pwr-line configure pwr-line1 plc-cco-selection-mode=never</pre>
+</div></div><h1 id="PWRLine-SyncButtonusage"><span class="mw-headline">Sync Button usage</span></h1><ul><li>Hold 0.5 – 3 seconds to turn on sync mode. For 120 seconds will try to communicate with another PWR-LINE device. A blinking orange LED light indicates that it is in search mode. You have to also do the same on the other PWR-LINE device, so they can synchronize. Press the button again to cancel the search. You can also manually set the security keys in RouterOS settings.</li></ul><ul><li>Hold 5 – 8 seconds to generate a new security key. This is needed to remove a PWR-LINE device from an existing PWR-LINE network.</li></ul><ul><li>Hold 10 – 15 seconds to reset all PWR-LINE related settings.</li></ul><h1 id="PWRLine-SupportedHardware"><span class="mw-headline">Supported Hardware</span></h1><p><span class="mw-headline">The device is fully compatible with our PWR-LINE AP and the newest revisions of products that have a MicroUSB port, such as hAP lite, hAP lite tower, hAP mini, mAP, and mAP lite have a pwr-line interface. A simple software upgrade to v6.44+ enables this feature (supported by the mentioned devices with serial numbers that end with /9xx). PWR-LINE functionality is also supported by some previously manufactured units - if you have a unit with a serial number that ends with /8xx, upgrade to 6.44+ and see if the pwr-line interface shows up). </span></p>
+                    </div>
+
+                                        
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

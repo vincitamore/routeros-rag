@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : Backup</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Getting-started_328119.html">Getting started</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : Backup
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Unknown User (olga)</span>, last updated by <span class='editor'> Serhii T.</span> on Mar 12, 2024
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <h1 id="Backup-Summary"><span class="mw-headline">Summary</span></h1><p>The RouterOS backup feature allows cloning a router configuration in binary format, which can then be re-applied on the same device. The system's backup file also contains the device's MAC addresses, which are restored when the backup file is loaded.</p><p><span style="color:var(--ds-text,#172b4d);">We recommend restoring the backup on the same version of RouterOS.</span></p><div role="region" aria-label="Warning" class="confluence-information-macro  confluence-information-macro-warning" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-error confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>If The Dude or User-manager or installed on the router, then the system backup will not contain configuration from these services, therefore, additional care should be taken to save configuration from these services. Use the provided tool mechanisms to save/export configuration if you want to save it.</p></div></div><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>System backups contain sensitive information about your device and its configuration, always consider encrypting the backup file and keeping the backup file in a safe place.</p></div></div><h1 id="Backup-Savingabackup"><span class="mw-headline">Saving a backup</span></h1><p><strong>Sub-menu:</strong><span> </span><code>/system backup save</code></p><div class="table-wrap"><table class="wrapped relative-table confluenceTable" style="margin-left: 14.4318px;width: 99.391%;"><colgroup><col style="width: 43.4818%;"/><col style="width: 56.5182%;"/></colgroup><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>dont-encrypt</strong><span> </span>(<em>yes | no</em>; Default:<span> </span><strong>no</strong>)</td><td class="confluenceTd">Disable backup file encryption. Note that since RouterOS v6.43 without a provided<span> </span>password,<span> </span>the backup file is unencrypted.</td></tr><tr><td class="confluenceTd"><strong>encryption</strong><span> </span>(<em>aes-sha256 | rc4</em>; Default:<span> </span><strong>aes-sha256</strong>)</td><td class="confluenceTd">The encryption algorithm to use for encrypting the backup file. Note that is not considered a secure encryption method and is only available for compatibility reasons with older RouterOS versions.</td></tr><tr><td class="confluenceTd"><strong>name</strong><span> </span>(<em>string</em>; Default:<span> </span><strong>[identity]-[date]-[time].backup</strong>)</td><td class="confluenceTd">The filename for the backup file.</td></tr><tr><td class="confluenceTd"><strong>password</strong><span> </span>(<em>string</em>; Default: )</td><td class="confluenceTd">Password for the encrypted backup file. Note that since RouterOS v6.43 without a provided<span> </span>password,<span> </span>the backup file is unencrypted.</td></tr></tbody></table></div><p><br/></p><div role="region" aria-label="Warning" class="confluence-information-macro  confluence-information-macro-warning" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-error confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>If<span> a </span>password<span> </span>is not provided in RouterOS versions older than v6.43, then the backup file will be encrypted with the current user's password, except if the<span> </span><em>dont-encrypted</em><span> </span>property is used or the current user's password is empty.</p></div></div><p>The backup file will be available under<span> </span><code>/file</code><span> </span>menu, which can be downloaded using FTP or using Winbox.</p><h1 id="Backup-Loadingabackup"><span class="mw-headline">Loading a backup</span></h1><p><span class="mw-headline">Load units backup without password:</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; system/backup/load name=auto-before-reset.backup password=&quot;&quot;</pre>
+</div></div><p><br/></p><div class="table-wrap"><table class="wrapped relative-table confluenceTable" style="margin-left: 14.4318px;width: 99.391%;"><colgroup><col style="width: 43.6453%;"/><col style="width: 56.3547%;"/></colgroup><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>name</strong><span> </span>(<em>string</em>; Default: )</td><td class="confluenceTd">File name for the backup file.</td></tr><tr><td class="confluenceTd"><strong>password</strong><span> </span>(<em>string</em>; Default: )</td><td class="confluenceTd">Password for the encrypted backup file.</td></tr></tbody></table></div><h1 id="Backup-Example"><span class="mw-headline">Example</span></h1><p>To save the router's configuration to file test and a password:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; /system backup save name=test password=&lt;YOUR_PASSWORD&gt; 
+Configuration backup saved 
+[admin@MikroTik] &gt; /system backup</pre>
+</div></div><p>To see the files stored on the router:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; /file print 
+# NAME TYPE SIZE CREATION-TIME 
+0 test.backup backup 12567 sep/08/2018 21:07:50 
+[admin@MikroTik] &gt;</pre>
+</div></div><p>To load the saved backup file test:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; /system backup load name=test 
+password: &lt;YOUR_PASSWORD&gt; 
+Restore and reboot? [y/N]: y 
+Restoring system configuration 
+System configuration restored, rebooting now</pre>
+</div></div><h1 id="Backup-Cloudbackup"><span class="mw-headline">Cloud backup</span></h1><p>Since RouterOS v6.44 it is possible to securely store your device's backup file on MikroTik's Cloud servers, read more about this feature on the<span> </span><a href="Cloud_97779929.html">IP/Cloud</a><span> </span>page.</p>
+                    </div>
+
+                                        
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

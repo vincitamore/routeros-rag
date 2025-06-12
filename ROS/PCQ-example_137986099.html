@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : PCQ example</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Firewall-and-Quality-of-Service_119144601.html">Firewall and Quality of Service</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Queues_328088.html">Queues</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : PCQ example
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Artūrs C.</span>, last updated by <span class='editor'> Druvis Timma</span> on May 20, 2025
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p>Per Connection Queue (PCQ) is a queuing discipline that can be used to dynamically equalize or shape traffic for multiple users, using little administration. It is possible to divide PCQ scenarios into three major groups: equal bandwidth for a number of users, certain bandwidth equal distribution between users, and unknown bandwidth equal distribution between users.</p><h1 id="PCQexample-EqualBandwidthforaNumberofUsers"><span class="mw-headline">Equal Bandwidth for a Number of Users</span></h1><p>Use PCQ type can be used through the Queue Tree and Simple Queues to equalize the bandwidth [and set max limit] for a number of users. We will set the 64kbps download and 32kbps upload limits.</p><p><span class="confluence-embedded-file-wrapper image-center-wrapper"><img class="confluence-embedded-image image-center" draggable="false" src="attachments/137986099/137986100.jpg" data-image-src="attachments/137986099/137986100.jpg" data-unresolved-comment-count="0" data-linked-resource-id="137986100" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="PCQ.jpg" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/jpeg" data-linked-resource-container-id="137986099" data-linked-resource-container-version="6" tabindex="0" alt=""></span></p><h2 id="PCQexample-Step1:addPCQinQueueTypes">Step 1: add PCQ in Queue Types</h2><p>Add two new entries - one for download and one for upload.<span> </span><code><span style="color:var(--ds-icon-success,#22a06b);">dst-address</span></code><span> </span>is a classifier for the user's download traffic,<span> and </span><code><span style="color:var(--ds-icon-success,#22a06b);">src-address</span></code><span> </span>for upload traffic:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/queue type add name=&quot;PCQ_download&quot; kind=pcq pcq-rate=64000 pcq-classifier=dst-address
+/queue type add name=&quot;PCQ_upload&quot; kind=pcq pcq-rate=32000 pcq-classifier=src-address
+ </pre>
+</div></div><h2 id="PCQexample-Step2:deploythePCQ">Step 2: deploy the PCQ</h2><h3 id="PCQexample-QueueTreeoption">Queue Tree option</h3><p>Mark all packets with packet-marks upload/download: (let's consider that ether1-WAN is the public interface to the Internet and ether2-LAN is a local interface where clients are connected):</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip firewall mangle add chain=prerouting action=mark-packet \
+   in-interface=ether2-LAN new-packet-mark=client_upload
+/ip firewall mangle add chain=prerouting action=mark-packet \
+   in-interface=ether1-WAN new-packet-mark=client_download</pre>
+</div></div><p>Then, two queue rules are required, one for download and one for upload:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/queue tree add parent=global queue=PCQ_download packet-mark=client_download
+/queue tree add parent=global queue=PCQ_upload packet-mark=client_upload</pre>
+</div></div><h3 id="PCQexample-SimpleQueuesoption">Simple Queues option</h3><p>Alternatively you can do it in one step like so:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/queue simple add target=192.168.0.0/24 queue=PCQ_upload/PCQ_download</pre>
+</div></div>
+                    </div>
+
+                                                            <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/137986099/137986100.jpg">PCQ.jpg</a> (image/jpeg)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

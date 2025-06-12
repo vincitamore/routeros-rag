@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : LEDs</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Hardware_13500445.html">Hardware</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : LEDs
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Unknown User (olga)</span>, last updated by <span class='editor'> Gļebs K.</span> on Mar 06, 2025
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><span class="mw-headline"><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742045018 {padding: 0px;}
+div.rbtoc1747742045018 ul {margin-left: 0px;}
+div.rbtoc1747742045018 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742045018'>
+<ul class='toc-indentation'>
+<li><a href='#LEDs-Summary'>Summary</a></li>
+<li><a href='#LEDs-PropertyDescription'>Property Description</a></li>
+<li><a href='#LEDs-LEDSettings'>LED Settings</a>
+<ul class='toc-indentation'>
+<li><a href='#LEDs-Indoordevices'>Indoor devices</a></li>
+<li><a href='#LEDs-WirelessSystems'>Wireless Systems</a></li>
+</ul>
+</li>
+<li><a href='#LEDs-Examples'>Examples</a>
+<ul class='toc-indentation'>
+<li><a href='#LEDs-Basicexample'>Basic example</a></li>
+<li><a href='#LEDs-ModemSignalStrengthexample'>Modem Signal Strength example</a></li>
+<li><a href='#LEDs-ModemAccessTechnologyexample'>Modem Access Technology example</a></li>
+</ul>
+</li>
+</ul>
+</div></span></p><h1 id="LEDs-Summary"><span class="mw-headline">Summary</span></h1><p><span class="mw-headline"><strong>Sub-menu:</strong> <code>/system leds</code></span></p><p>RouterOS allows configuring each LED's activity the way that the user wishes. It is possible to configure the LEDs to display wireless strength, blink the LEDs on interface traffic activity, and many other options.</p><p>For example, default led configuration on Groove</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] /system leds&gt; print 
+Flags: X - disabled 
+# TYPE INTERFACE LEDS 
+0 wireless-signal-strength led1 
+led2 
+led3 
+led4 
+led5 
+1 interface-activity ether1 user-led 
+</pre>
+</div></div><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p><span style="color:var(--ds-text-accent-purple-bolder,#352c63);">Not all boards have the necessary hardware capabilities to support this feature.</span></p></div></div><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p><span>RB Groove uses five LEDs for wireless strength and one for ethernet activity monitoring.</span></p></div></div><h1 id="LEDs-PropertyDescription"><span class="mw-headline">Property Description</span></h1><div class="table-wrap"><table class="wrapped relative-table confluenceTable" style="margin-left: 14.4318px;width: 98.8226%;"><colgroup><col style="width: 47.2039%;"/><col style="width: 52.7961%;"/></colgroup><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>disabled</strong><span> </span>(<em>yes | no</em>; Default:<span> </span><strong>no</strong>)</td><td class="confluenceTd">Whether an item is disabled</td></tr><tr><td class="confluenceTd"><strong>interface</strong><span> </span>(<em>string</em>; Default: )</td><td class="confluenceTd">Name of the interface which will be used for led status. Applicable only if<span> </span><strong>type</strong><span> </span>is interface specific.</td></tr><tr><td class="confluenceTd"><strong>modem-signal-treshold</strong><span> </span>(<em>integer [-113..-51]</em>; Default: )</td><td class="confluenceTd">Applicable if a type is<span> </span><strong>modem-signal</strong></td></tr><tr><td class="confluenceTd"><strong>leds</strong><span> </span>(<em>list of leds</em>; Default: )</td><td class="confluenceTd">List of led names used for a status report. For example, wireless signal strength will require more than one led.</td></tr><tr><td class="confluenceTd"><strong>type</strong><span> </span>(<em>align-down | align-left | align-right | align-up | ap-cap | fan-fault | flash-access | interface-activity | interface-receive | interface-speed | interface-speed-1G | interface-speed-25G | interface-status | interface-transmit | modem-signal | modem-technology | off | on | poe-fault | poe-out | wireless-signal-strength | wireless-status</em>; Default: )</td><td class="confluenceTd">Type of the status:<ul><li>align-down<span> </span>- light the led if the w60g device needs to be aligned downwards for the best signal quality</li><li>align-left<span> </span>- light the led if the w60g device needs to be aligned to the left</li><li>align-right<span> </span>- light the led if the w60g device needs to be aligned to the right</li><li>align-up<span> </span>- light the led if the w60g device needs to be aligned upwards</li><li>ap-cap<span> </span>- blink on CAP initializing with CAPsMAN, steady on once connected</li><li>fan-fault<span> </span>- light the led when any of the devices controlled fans stop working</li><li>flash-access<span> </span>- blink the led on flash access</li><li>interface-activity<span> </span>- blink the led on interface (traffic) activity</li><li>interface-receive<span> </span>- blink the led on interface received a traffic</li><li>interface-speed<span> </span>- light the led when interface works in 10Gbit rate</li><li>interface-speed-1G<span> </span>- light the led when interface works in 1Gbit rate</li><li>interface-speed-25G<span> </span>- light the led when interface works in 25Gbit rate</li><li>interface-speed-100G - light the led when interface works in 100Gbit rate</li><li>interface-status<span> </span>- light the led on interface status change</li><li>interface-transmit<span> </span>- blink the led on interface transmitted traffic</li><li>modem-signal<span> </span>- blink the led on 3G modem signal (either USB or miniPCIe)</li><li>modem-technology<span> </span>- turns on LEDs in order of modem technology generation: GSM; 3G; LTE; single led turns on only when LTE is active.</li><li>off<span> </span>- turn off the led</li><li>on<span> </span>- turn on the led</li><li>poe-fault<span> </span>- light the led when PoE out budget is close to the maximum supported limit</li><li>poe-out<span> </span>- light the led when interface PoE out turns on</li><li>wireless-signal-strength<span> </span>- light the leds displaying wireless signal (requires more than one led)</li><li>wireless-status<span> </span>- light the led on wireless status change.</li></ul></td></tr></tbody></table></div><h1 id="LEDs-LEDSettings"><span class="mw-headline">LED Settings</span></h1><p>Global settings are stored in LEDs Setting menu.</p><p><strong>Sub-menu:</strong><span> </span><code>/system leds setting</code></p><div class="table-wrap"><table class="wrapped relative-table confluenceTable" style="margin-left: 14.4318px;width: 99.391%;"><colgroup><col style="width: 46.8737%;"/><col style="width: 53.1263%;"/></colgroup><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>all-leds-off</strong><span> </span>(<em>after-1h | after-1min | immediate | never</em>; Default:<span> </span><strong>never</strong>)</td><td class="confluenceTd">Whether and when all LEDs of a router can be turned off</td></tr></tbody></table></div><p><br/>The listed devices support turning off their LEDs (LED dark mode), however, some LEDs still cannot be turned off due to the device design factors.</p><h2 id="LEDs-Indoordevices"><strong>Indoor devices</strong></h2><div class="table-wrap"><table class="wrapped relative-table confluenceTable" style="margin-left: 14.4318px;width: 99.391%;"><colgroup><col style="width: 46.792%;"/><col style="width: 53.208%;"/></colgroup><tbody><tr><th class="confluenceTh">RouterBoard</th><th class="confluenceTh">LED description</th></tr><tr><td class="confluenceTd"><strong>CRS305-1G-4S+; CRS309-1G-8S+<br/></strong></td><td class="confluenceTd">Turns off all LEDs except Ethernet LED and Power LED</td></tr><tr><td class="confluenceTd"><strong>RB5009UG+S+IN; RB5009UPr+S+<br/></strong></td><td class="confluenceTd">Turns off all LEDs</td></tr><tr><td class="confluenceTd"><strong>L009UiGS-RM; L009UiGS-2HaxD-IN<br/></strong></td><td class="confluenceTd">Turns off PWR, USR and Ether1 LEDs</td></tr><tr><td class="confluenceTd"><strong>L41G-2axD; L41G-2axD&amp;FG621-EA (hAP ax lite series)<br/></strong></td><td class="confluenceTd">Turns off all LEDs except Ethernet LEDs</td></tr><tr><td class="confluenceTd"><strong>RB760iGS (hEX S)</strong></td><td class="confluenceTd">Turns off Power LED and SFP LED</td></tr><tr><td class="confluenceTd"><strong>E50UG</strong></td><td class="confluenceTd">Turns off all LEDs except Ethernet1 LED</td></tr><tr><td class="confluenceTd"><strong>RB924i-2nD-BT5&amp;BG77; RB924iR-2nD-BT5&amp;BG77 (KNOT series)</strong></td><td class="confluenceTd">Turns off all LEDs</td></tr><tr><td class="confluenceTd"><strong>RB951Ui-2HnD</strong></td><td class="confluenceTd">Turns off all LEDs except Power LED</td></tr><tr><td class="confluenceTd"><strong>RB951Ui-2nD (hAP); RB952Ui-5ac2nD (hAP ac lite); RB952Ui-5ac2nD-TC (hAP ac lite TC)</strong></td><td class="confluenceTd">Turns off all LEDs except Power LED</td></tr><tr><td class="confluenceTd"><strong>RB962UiGS-5HacT2HnT (hAP ac)</strong></td><td class="confluenceTd">Turns off all LEDs except Port5 PoE LED</td></tr><tr><td class="confluenceTd"><strong>RBcAP2n; RBcAP2nD (cAP)</strong></td><td class="confluenceTd">Turns off all LEDs</td></tr><tr><td class="confluenceTd"><strong>RBcAPGi-5acD2nD (cAP ac); RBcAPGi-5acD2nD-XL (cAP XL ac)<br/></strong></td><td class="confluenceTd">Turns off all LEDs</td></tr><tr><td class="confluenceTd"><strong>cAPGi-5HaxD2HaxD (cAP ax)</strong></td><td class="confluenceTd">Turns off all LEDs except Ethernet LEDs</td></tr><tr><td class="confluenceTd"><strong>RBD25G/RB25GR-5HPacQD2HPnD (Audience)</strong></td><td class="confluenceTd">Turns off all LEDs except Ethernet LEDs</td></tr><tr><td class="confluenceTd"><strong>RBD52G-5HacD2HnD-TC (hAP ac^2)</strong></td><td class="confluenceTd">Turns off all LEDs</td></tr><tr><td class="confluenceTd"><strong>RBD53iG-5HacD2HnD (hAP ac^3)</strong></td><td class="confluenceTd">Turns off all LEDs</td></tr><tr><td class="confluenceTd"><strong>RBD53G-5HacD2HnD-TC (Chateau series)</strong></td><td class="confluenceTd">Turns off all LEDs</td></tr><tr><td class="confluenceTd"><strong>RBwsAP5Hac2nD (wsAP ac lite)</strong></td><td class="confluenceTd">Turns off all LEDs</td></tr><tr><td class="confluenceTd"><strong>C52iG-5HaxD2HaxD-TC (hAP ax^2)</strong></td><td class="confluenceTd">Turns off all LEDs except Ethernet LEDs</td></tr><tr><td class="confluenceTd"><strong>C53UiG+5HPaxD2HPaxD (hAP ax^3)<br/></strong></td><td class="confluenceTd">Turns off all LEDs except Ethernet LEDs</td></tr><tr><td class="confluenceTd"><strong>S53UG+5HaxD2HaxD-TC (Chateau ax series)</strong></td><td class="confluenceTd">Turns off all LEDs except Ethernet LEDs</td></tr></tbody></table></div><h2 id="LEDs-WirelessSystems"><strong>Wireless Systems</strong></h2><div class="table-wrap"><table class="wrapped relative-table confluenceTable" style="margin-left: 14.4318px;width: 99.391%;"><colgroup><col style="width: 46.828%;"/><col style="width: 53.1785%;"/></colgroup><tbody><tr><th class="confluenceTh">RouterBoard</th><th class="confluenceTh">LED description</th></tr><tr><td class="confluenceTd"><strong>CME22-2n-BG77 (CME Gateway)</strong></td><td class="confluenceTd">Turns off all LEDs</td></tr><tr><td class="confluenceTd"><strong>CubeG-5ac60ay (Cube 60Pro ac); CubeG-5ac60ay-SA (CubeSA 60Pro ac)</strong></td><td class="confluenceTd">Turns off all LEDs</td></tr><tr><td class="confluenceTd"><strong>CubeG-5ac60ad (Cube 60G ac)</strong></td><td class="confluenceTd">Turns off all LEDs</td></tr><tr><td class="confluenceTd"><strong>RB912R-2nD-LTm (ltAP mini / ltAP mini LTE kit)</strong></td><td class="confluenceTd">Turns off all LEDs</td></tr><tr><td class="confluenceTd"><strong>RB912UAG-6HPnD (BaseBox 6)</strong></td><td class="confluenceTd">Turns off all LEDs</td></tr><tr><td class="confluenceTd"><strong>RBD23UGS-5HPacD2HnD (NetMetal ac^2)</strong></td><td class="confluenceTd">Turns off all LEDs</td></tr><tr><td class="confluenceTd"><strong>L11UG-5HaxD; L11UG-5HaxD-NB (NetBox 5 ax)</strong></td><td class="confluenceTd">Turns off all LEDs</td></tr><tr><td class="confluenceTd"><strong>L22UGS-5HaxD2HaxD-15S (mANTBox ax 15s)</strong></td><td class="confluenceTd">Turns off all LEDs</td></tr><tr><td class="confluenceTd"><strong>L23UGSR-5HaxD2HaxD; L23UGSR-5HaxD2HaxD-NM (NetMetal ax)</strong></td><td class="confluenceTd">Turns off all LEDs</td></tr><tr><td class="confluenceTd"><strong>RBLDF-2nD (LDF 2); RBLDF-5nD (LDF 5); RBLHGR</strong></td><td class="confluenceTd">Turns off all LEDs</td></tr><tr><td class="confluenceTd"><strong>RBLDFG-5acD (LDF 5 ac)</strong></td><td class="confluenceTd">Turns off all LEDs except Ethernet LED</td></tr><tr><td class="confluenceTd"><strong>RBLHG2nD (LHG 2); RBLHG2nD-XL (LHG XL 2)</strong></td><td class="confluenceTd">Turns off all LEDs</td></tr><tr><td class="confluenceTd"><strong>RBLHG5nD (LHG 5); RBLHG5HPnD (LHG HP5); RBLHG5HPnD-XL (LHG XL HP5)</strong></td><td class="confluenceTd">Turns off all LEDs</td></tr><tr><td class="confluenceTd"><strong>RBLHGG-5acD (LHG 5 ac); RBLHGG-5acD-XL (LHG XL 5 ac); RBLHGG-5HPacD2HPnD (LHG XL 52 ac); RBSXTsqG-5acD (SXTsq 5 ac)</strong></td><td class="confluenceTd">Turns off all LEDs except Ethernet LED</td></tr><tr><td class="confluenceTd"><strong>RBLHGG-60ad (Wireless Wire Dish)</strong></td><td class="confluenceTd">Turns off all LEDs</td></tr><tr><td class="confluenceTd"><strong>LHGGM&amp;EG18-EA (LHG LTE18 kit); ATLGM&amp;EG18-EA (ATL LTE18 kit)<br/></strong></td><td class="confluenceTd">Turns off all LEDs</td></tr><tr><td class="confluenceTd"><strong>RBLtAP-2HnD (LtAP)</strong></td><td class="confluenceTd">Turns off all LEDs except Ethernet LEDs</td></tr><tr><td class="confluenceTd"><strong>RBSXTsq-60ad (SXTsq Lite60); RBCube-60ad (Cube Lite60)</strong></td><td class="confluenceTd">Turns off all LEDs</td></tr><tr><td class="confluenceTd"><strong>RBwAPG-60ad (Wireless Wire)</strong></td><td class="confluenceTd">Turns off all LEDs</td></tr><tr><td class="confluenceTd"><strong>RBwAPGR-5HacD2HnD (wAP ac)</strong></td><td class="confluenceTd">Turns off all LEDs except Ethernet LED</td></tr></tbody></table></div><h1 id="LEDs-Examples"><span class="mw-headline">Examples</span></h1><h2 id="LEDs-Basicexample"><span class="mw-headline">Basic example</span></h2><p>LED control via CLI commands for scripting purposes:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">#add led entry with specific type &quot;on&quot; or &quot;off&quot; to leds menu
+/system leds add leds=led1 type=off
+#to control led
+/system leds set [find where leds=&quot;led1&quot;] type=on
+or
+/system leds set [find where leds=&quot;led1&quot;] type=off
+
+</pre>
+</div></div><p><span style="letter-spacing: 0.0px;">Enable the User ACT LED to show current CAP status on an RB951</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/system leds
+add leds=user-led type=ap-cap</pre>
+</div></div><h2 id="LEDs-ModemSignalStrengthexample"><span style="font-size: 20.0px;letter-spacing: -0.008em;">Modem Signal Strength example</span></h2><p>The whole modem-signal strength range is [-113..-51] and the modem-signal-threshold increases the weakest signal limit to -91 so the signal range for LED indication is [-91..-51]. That range is divided into equal parts depending on number of LEDs configured for modem-signal LED trigger. The first LED turns on when signal is above -91 and the last LED turns on when signal reaches -51.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/system leds
+add interface=lte1 leds=led1,led2,led3,led4,led5 modem-signal-treshold=-91 type=modem-signal
+
+</pre>
+</div></div><h2 id="LEDs-ModemAccessTechnologyexample"><span style="font-size: 20.0px;letter-spacing: -0.008em;">Modem Access Technology example</span></h2><p>These LED trigger examples turn on LEDs in order of modem technology generation: GSM; 3G; LTE.</p><ul><li>1 LED: led1 turns on when LTE is active;</li></ul><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/system leds add interface=lte1 leds=led1 modem-type=modem-technology</pre>
+</div></div><p style="margin-left: 20.0px;"><br/></p><ul><li>2 LEDs: led1 - 3G; led2 - LTE;</li></ul><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/system leds
+add interface=lte1 leds=led1,led2 modem-type=modem-technology
+
+</pre>
+</div></div><ul><li class="auto-cursor-target">3 LEDs: led1 - GSM; led2 - 3G; led3 - LTE</li></ul><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/system leds add interface=lte1 leds=led1,led2,led3 modem-type=modem-technology</pre>
+</div></div>
+                    </div>
+
+                                        
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:54</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

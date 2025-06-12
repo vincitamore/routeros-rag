@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : E-mail</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="System-Information-and-Utilities_119144657.html">System Information and Utilities</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : E-mail
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Unknown User (reinisjs)</span>, last updated by <span class='editor'> Serhii T.</span> on Apr 25, 2025
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742032694 {padding: 0px;}
+div.rbtoc1747742032694 ul {margin-left: 0px;}
+div.rbtoc1747742032694 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742032694'>
+<ul class='toc-indentation'>
+<li><a href='#Email-Properties'>Properties</a></li>
+<li><a href='#Email-SendingEmail'>Sending Email</a></li>
+<li><a href='#Email-Basicexamples'>Basic examples</a></li>
+</ul>
+</div></p><p>An E-mail tool is a utility that allows sending e-mails from the router. The tool can be used to send regular configuration backups and exports to a network administrator.</p><p>Email tool uses only plain authentication and TLS encryption. Other methods are not supported.</p><hr/><h1 id="Email-Properties"><span class="mw-headline">Properties</span></h1><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/tool e-mail</pre>
+</div></div><p class="auto-cursor-target"><span style="font-weight: 400;letter-spacing: 0.0px;">This submenu allows setting SMTP server that will be used.</span></p><div class="table-wrap"><table class="wrapped confluenceTable" style="margin-left: 16.7656px;"><colgroup><col/><col/></colgroup><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>address</strong><span> </span>(<em>IP/IPv6 address</em>; Default:<span> </span><strong>0.0.0.0</strong>)</td><td class="confluenceTd"><p>SMTP server's IP address.</p></td></tr><tr><td class="confluenceTd"><strong>from</strong><span> </span>(<em>string</em>; Default:<span> </span><strong>&lt;&gt;</strong>)</td><td class="confluenceTd">Name or email address that will be shown as a receiver.</td></tr><tr><td class="confluenceTd"><strong>password</strong><span> </span>(<em>string</em>; Default:<span> </span><strong>&quot;&quot;</strong>)</td><td class="confluenceTd">Password used for authenticating to an SMTP server.</td></tr><tr><td class="confluenceTd"><strong>port</strong><span> </span>(<em>integer[0..65535]</em>; Default:<span> </span><strong>25</strong>)</td><td class="confluenceTd">SMTP server's port.</td></tr><tr><td class="confluenceTd"><strong>tls</strong><span> </span>(<em>no|yes|starttls</em>; Default:<span> </span><strong>no</strong>)</td><td class="confluenceTd">Whether to use TLS encryption:<ul><li>yes - sends STARTTLS and drops the session if TLS is not available on the server</li><li>no<span> </span>- do not send STARTTLS</li><li><span>starttls </span>- sends STARTTLS and continue without TLS if a server responds that TLS is not available</li></ul></td></tr><tr><td class="confluenceTd"><strong>user</strong><span> </span>(<em>string</em>; Default:<span> </span><strong>&quot;&quot;</strong>)</td><td class="confluenceTd">The username used for authenticating to an SMTP server.</td></tr><tr><td style="text-align: left;" class="confluenceTd"><p><strong>vrf</strong> (<em>VRF name</em>; default value:<span> </span><strong>main</strong>)</p></td><td style="text-align: left;" class="confluenceTd">Set VRF on which service is creating outgoing connections.</td></tr></tbody></table></div><p><br/></p><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><strong>Note:</strong><span> </span>All server's configurations (if specified) can be overridden by<span> </span>send<span> </span>command.</div></div><hr/><h1 id="Email-SendingEmail"><span class="mw-headline">Sending Email</span></h1><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/tool e-mail send</pre>
+</div></div><p class="auto-cursor-target"><span style="font-weight: 400;letter-spacing: 0.0px;">Send command takes the following parameters:</span></p><div class="table-wrap"><table class="wrapped confluenceTable" style="margin-left: 16.7656px;"><colgroup><col/><col/></colgroup><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>body</strong><span> </span>(<em>string</em>; Default: )</td><td class="confluenceTd">The actual body of the email message</td></tr><tr><td class="confluenceTd"><strong>cc</strong><span> </span>(<em>string</em>; Default: )</td><td class="confluenceTd">Send a copy to listed recipients. Multiple addresses allowed, use &quot;,&quot; to separate entries</td></tr><tr><td class="confluenceTd"><strong>file</strong><span> </span>(<em>File[,File]</em>; Default: )</td><td class="confluenceTd">List of the file names that will be attached to the mail separated by a comma.</td></tr><tr><td class="confluenceTd"><strong>from</strong><span> </span>(<em>string</em>; Default: )</td><td class="confluenceTd">Name or email address which will appear as the sender. If a not specified value from<span> the </span>server's configuration<span> </span>is used.</td></tr><tr><td class="confluenceTd"><strong>password</strong><span> </span>(<em>string</em>; Default: )</td><td class="confluenceTd">Password used to authenticate to an SMTP server. If a not specified value from<span> the </span>server's configuration<span> </span>is used.</td></tr><tr><td class="confluenceTd"><strong>port</strong><span> </span>(<em>integer[0..65535]</em>; Default: )</td><td class="confluenceTd">Port of SMTP server. If not specified, a value from<span> the </span>server's configuration<span> </span>is used.</td></tr><tr><td class="confluenceTd"><strong>server</strong><span> </span>(<em>IP/IPv6 address</em>; Default: )</td><td class="confluenceTd">Ip or IPv6 address of SMTP server. If not specified, a value from<span> the </span>server's configuration<span> </span>is used.</td></tr><tr><td class="confluenceTd"><strong>tls</strong><span> </span>(<em>yes|no|starttls</em>; Default:<span> </span><strong>no</strong>)</td><td class="confluenceTd">Whether to use TLS encryption:<ul><li>yes - sends STARTTLS and drops the session if TLS is not available on the server</li><li>no<span> </span>- do not send STARTTLS</li><li><span>starttls </span>- sends STARTTLS and continue without TLS if a server responds that TLS is not available</li></ul></td></tr><tr><td class="confluenceTd"><strong>subject</strong><span> </span>(<em>string</em>; Default: )</td><td class="confluenceTd">The subject of the message.</td></tr><tr><td class="confluenceTd"><strong>to</strong><span> </span>(<em>string</em>; Default: )</td><td class="confluenceTd">Destination email address. Single address allowed.</td></tr><tr><td class="confluenceTd"><strong>user</strong><span> </span>(<em>string</em>; Default: )</td><td class="confluenceTd">The username used to authenticate to an SMTP server. If not specified, a value from<span> the </span>server's configuration<span> </span>is used.</td></tr></tbody></table></div><hr/><h1 id="Email-Basicexamples"><span class="mw-headline">Basic examples</span></h1><p><strong>This example will show how to send an email with configuration export every 24hours.</strong></p><p>1. Configure SMTP server</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] /tool e-mail&gt; set server=10.1.1.1 port=25 from=&quot;router@mydomain.com&quot;</pre>
+</div></div><p>2. Add a new<span> </span>script<span> </span>named &quot;export-send&quot;:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/export file=export 
+/tool e-mail send to=&quot;config@mydomain.com&quot; subject=&quot;$[/system identity get name] export&quot; \ 
+body=&quot;$[/system clock get date] configuration file&quot; file=export.rsc</pre>
+</div></div><p>3. Add<span> </span>scheduler<span> </span>to run our script:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/system scheduler add on-event=&quot;export-send&quot; start-time=00:00:00 interval=24h</pre>
+</div></div><p><br/></p><p><strong>Send e-mail to a server using TLS/SSL encryption. For example, Google mail requires that.</strong></p><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>After the Google mail added <strong>a new security policy</strong> that <strong>does not allow 3d-party devices to authenticate</strong> <strong>using</strong> your standard <strong>Gmail</strong> <strong>password</strong> → you need to generate a 16-digit passcode (&quot;App password&quot;) and use it instead of your Gmail password. To configure this, navigate to the &quot;<strong>Security&gt;How you sign in to Google</strong>&quot; section settings and:</p><ul><li><strong>Enable 2-Step Verification;</strong></li><li><strong>Generate an App password</strong>.</li></ul><p>Use the newly generated App password in the &quot;set password=<strong>mypassword</strong>&quot; setting shown below.</p></div></div><p>1. configure a client to connect to the correct server:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/tool e-mail 
+set address=smtp.gmail.com
+set port=465
+set tls=yes 
+set from=myuser@gmail.com 
+set user=myuser 
+set password=mypassword</pre>
+</div></div><p>2. send e-mail using send command:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/tool e-mail send to=myuser@anotherdomain.com subject=&quot;email test&quot; body=&quot;email test&quot; </pre>
+</div></div>
+                    </div>
+
+                                        
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : Supout.rif</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Getting-started_328119.html">Getting started</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : Supout.rif
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Normunds R.</span>, last updated by <span class='editor'> Mārtiņš S.</span> on Oct 16, 2024
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <h1 id="Supout.rif-Whatissupout.riffile?"><span class="mw-headline">What is supout.rif file?</span></h1><p>The support file is used for debugging MikroTik RouterOS and to solve the support questions faster. All MikroTik Router information is saved in a binary file, which is stored in the router and can be downloaded from the router using FTP or WinBox. If required, then you can generate the file on the &quot;/flash&quot; folder on devices with FLASH type memory or external storage drive, by specifying the full path to the file &quot;name=flash/supout.rif&quot;. You can view the contents of this file in your<span> </span><a class="external-link" href="https://www.mikrotik.com/" rel="nofollow" style="text-decoration: none;">Mikrotik account</a>, simply click on &quot;Supout.rif viewer&quot; located in the left column and upload the file.</p><p>This file contains all your router's configuration, logs, and some other details that will help MikroTik Support to solve your issue. The file does not contain sensitive information or router passwords.</p><h1 id="Supout.rif-CreatingaSupportOutputfile"><span class="mw-headline">Creating a Support Output file</span></h1><h2 id="Supout.rif-Winbox"><span class="mw-headline">Winbox</span></h2><p><span class="mw-headline">To generate this file in Winbox, click on &quot;Make Supout.rif&quot;.</span></p><p><span class="mw-headline"><span style="color:var(--ds-text-accent-lime-bolder,#37471f);">To save the file to your computer, right mouse click on the file and select &quot;Download&quot; to get support output file or simply drag the file to your desktop.</span></span></p><h2 id="Supout.rif-Webfig"><span class="confluence-embedded-file-wrapper image-center-wrapper"><img class="confluence-embedded-image image-center" draggable="false" src="attachments/328106/328423.png" data-image-src="attachments/328106/328423.png" data-unresolved-comment-count="0" data-linked-resource-id="328423" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="download.PNG" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="328106" data-linked-resource-container-version="44" tabindex="0" alt=""></span><span class="mw-headline">Webfig</span></h2><p><span class="mw-headline"><span style="color:var(--ds-text-accent-lime-bolder,#37471f);">To generate this file in Webfig, click on &quot;Make Supout.rif&quot; and then &quot;Download&quot; to get it on your computer.</span></span></p><p><span class="confluence-embedded-file-wrapper image-center-wrapper"><img class="confluence-embedded-image image-center" draggable="false" src="attachments/328106/328421.png" data-image-src="attachments/328106/328421.png" data-unresolved-comment-count="0" data-linked-resource-id="328421" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="makesupout.PNG" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="328106" data-linked-resource-container-version="44" tabindex="0" alt=""></span></p><p><span class="confluence-embedded-file-wrapper image-center-wrapper"><img class="confluence-embedded-image image-center" draggable="false" src="attachments/328106/328424.png" data-image-src="attachments/328106/328424.png" data-unresolved-comment-count="0" data-linked-resource-id="328424" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="webfig.PNG" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="328106" data-linked-resource-container-version="44" tabindex="0" alt=""></span></p><h2 id="Supout.rif-Console"><span class="mw-headline">Console</span></h2><p><span class="mw-headline"><span style="color:var(--ds-text-accent-lime-bolder,#37471f);">To generate this file, please type in the command line:</span></span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/system sup-output name=supout.rif</pre>
+</div></div><p class="auto-cursor-target">If you open the file on supout viewer and output is too narrow, then you can re-generate supout file and specify output width manually with output-width option:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/system sup-output name=supout.rif output-width=300</pre>
+</div></div>
+                    </div>
+
+                                                            <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328106/328421.png">makesupout.PNG</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328106/328423.png">download.PNG</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328106/328424.png">webfig.PNG</a> (image/png)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

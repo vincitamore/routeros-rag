@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : Interface Lists</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="System-Information-and-Utilities_119144657.html">System Information and Utilities</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : Interface Lists
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Unknown User (emils)</span>, last updated by <span class='editor'> Guntis G.</span> on Mar 26, 2024
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742032758 {padding: 0px;}
+div.rbtoc1747742032758 ul {margin-left: 0px;}
+div.rbtoc1747742032758 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742032758'>
+<ul class='toc-indentation'>
+<li><a href='#InterfaceLists-Summary'>Summary</a></li>
+<li><a href='#InterfaceLists-Lists'>Lists</a></li>
+<li><a href='#InterfaceLists-Members'>Members</a></li>
+</ul>
+</div></p><h1 id="InterfaceLists-Summary">Summary</h1><p>Allows defining a set of interfaces for easier interface management in the different interface-based configuration sections such as Neighbor Discovery, Firewall, Bridge, and Internet Detect. </p><h1 id="InterfaceLists-Lists">Lists</h1><p><strong>Sub-menu:</strong> <code>/interface list<br/></code></p><p>This menu contains information about all interface lists available on the router. There are four predefined lists - <span style="color:var(--ds-background-accent-green-bolder,#1f845a);"><code>all </code></span>(contains all interfaces), <code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">none</span></code><em> </em>(contains no interfaces), <code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">dynamic</span></code><em> </em>(contains dynamic interfaces), and <code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">static</span></code><em> </em>(contains static interfaces). It is also possible to create additional interface lists.</p><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Dynamic interfaces are interfaces that have a &quot;dynamic&quot; flag. Any interface that doesn't have a dynamic flag will be part of the <code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">static</span></code> interface list.</p></div></div><p><br/></p><div class="table-wrap"><table class="wrapped relative-table confluenceTable" style="width: 100.0%;"><colgroup><col style="width: 7.86263%;"/><col style="width: 92.1374%;"/></colgroup><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>name</strong> (<em>string</em>)</td><td class="confluenceTd">Name of the interface list</td></tr><tr><td class="confluenceTd"><strong>include</strong> (<em>string</em>)</td><td class="confluenceTd">Defines interface list which members are included in the list. It is possible to add multiple lists separated by commas</td></tr><tr><td class="confluenceTd"><strong>exclude</strong> (<em>string</em>)</td><td class="confluenceTd">Defines interface list which members are excluded from the list. It is possible to add multiple lists separated by commas</td></tr></tbody></table></div><p><br/>Members are added to the interface list in the following order:</p><ol><li>include members are added to the interface list</li><li>exclude members are removed from the list</li><li>Statically configured members are added to the list</li></ol><h1 id="InterfaceLists-Members">Members</h1><p><strong>Sub-menu:</strong> <code>/interface list member</code></p><p>This sub-menu contains information about statically configured interface members to each interface list. Note that dynamically added interfaces by include and exclude statements are not represented in this sub-menu.</p><div class="table-wrap"><table class="wrapped relative-table confluenceTable" style="width: 99.9097%;"><colgroup><col style="width: 7.86974%;"/><col style="width: 92.1303%;"/></colgroup><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>interface</strong> (<em>string</em>)</td><td class="confluenceTd">Name of the interface</td></tr><tr><td class="confluenceTd"><strong>list</strong> (<em>string</em>)</td><td class="confluenceTd">Name of the interface list</td></tr></tbody></table></div><p><br/></p><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Care must be taken when working with bridges and lists. Adding a bridge as a member is not the same as adding all its ports! And adding all slave ports as members is not the same as adding the bridge itself. This can particularly impact functionality of neighbor discovery.</p></div></div><p><br/></p>
+                    </div>
+
+                                        
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

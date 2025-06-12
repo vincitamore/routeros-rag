@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : NetFlow analysis with Elasticsearch</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="119144606.html">Diagnostics, monitoring and troubleshooting</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Traffic-Flow_21102653.html">Traffic Flow</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : NetFlow analysis with Elasticsearch
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Artūrs Z.</span>, last updated on Nov 15, 2024
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <h1 id="NetFlowanalysiswithElasticsearch-/*&lt;![CDATA[*/div.rbtoc1747742046831{padding:0px;}div.rbtoc1747742046831ul{margin-left:0px;}div.rbtoc1747742046831li{margin-left:0px;padding-left:0px;}/*]]&gt;*/#NetFlowanalysiswithElasticsearch-Introduction#NetFlowanalysiswit"><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742046831 {padding: 0px;}
+div.rbtoc1747742046831 ul {margin-left: 0px;}
+div.rbtoc1747742046831 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742046831'>
+<ul class='toc-indentation'>
+<li><a href='#NetFlowanalysiswithElasticsearch-'></a></li>
+<li><a href='#NetFlowanalysiswithElasticsearch-Introduction'>Introduction</a></li>
+<li><a href='#NetFlowanalysiswithElasticsearch-Prerequisites'>Prerequisites</a></li>
+<li><a href='#NetFlowanalysiswithElasticsearch-Setup'>Setup</a>
+<ul class='toc-indentation'>
+<li><a href='#NetFlowanalysiswithElasticsearch-Elastic'>Elastic</a></li>
+<li><a href='#NetFlowanalysiswithElasticsearch-RouterOS'>RouterOS</a></li>
+</ul>
+</li>
+<li><a href='#NetFlowanalysiswithElasticsearch-UsingKibana'>Using Kibana</a></li>
+<li><a href='#NetFlowanalysiswithElasticsearch-Logretation'>Log retation</a>
+<ul class='toc-indentation'>
+<li><a href='#NetFlowanalysiswithElasticsearch-UseadifferentILMpolicy'>Use a different ILM policy</a></li>
+</ul>
+</li>
+</ul>
+</div></h1><h1 id="NetFlowanalysiswithElasticsearch-Introduction">Introduction</h1><p>Elasticsearch is a popular NoSQL database that can be used to store a wide range of data, including NetFlow logs. Alongside with Kibana you can create a powerful tool to analyze NetFlow data from your RouterOS devices. This guide will rely on Elasticsearch integrations and for it to work you need to have a working Elasticsearch setup. This guide will not cover setup instructions for Elasticsearch and Kibana, but will cover the relevant steps to setup NetFlow log collection and analysis.</p><p>There are many possible configurations that can be made with Elasticsearch, but for the sake of this guide we will use the following principle:</p><ul style="list-style-type: square;"><li data-uuid="5294e7db-4bff-4edf-a02e-3f627435b4d6">A RouterOS (10.0.0.1) device sends out NetFlow data to a server (10.0.0.2) running <a class="external-link" href="https://www.elastic.co/docs/current/integrations/netflow" rel="nofollow">NetFlow integration</a></li><li data-uuid="4045264b-4f64-481f-acb3-7465de96bb7e">The server (10.0.0.2) running NetFlow integration ingests NetFlow data, processes the data and sends it to a <a class="external-link" href="https://www.elastic.co/guide/en/fleet/current/fleet-server.html" rel="nofollow">Fleet Server</a> (10.0.0.3)</li><li data-uuid="e1025b0c-58a9-4c9b-b83e-38ac46f71edc">A Fleet Server (10.0.0.3) stores the data in <a class="external-link" href="https://www.elastic.co/elasticsearch" rel="nofollow">Elasticsearch</a> (10.0.0.4)</li><li data-uuid="4cfad0ec-7f13-4811-8686-d917b782230b"><a class="external-link" href="https://www.elastic.co/kibana" rel="nofollow">Kibana</a> (10.0.0.5) retrieves data from Elasticsearch (10.0.0.4), analyzes it and allows you to search the data</li></ul><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" draggable="false" height="250" src="attachments/282132674/282132670.png" data-image-src="attachments/282132674/282132670.png" data-unresolved-comment-count="0" data-linked-resource-id="282132670" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2024-11-15_10-47-3.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="282132674" data-linked-resource-container-version="2" tabindex="0" alt=""></span></p><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>This guide will not use <a class="external-link" href="https://www.elastic.co/logstash" rel="nofollow">Logstash</a> as a part of analyzing NetFlow data, it has been replaced by a Fleet Server.</p></div></div><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>It is possible to install Elasticsearch, Kibana, Fleet Server and NetFlow Records integration on the same device.</p></div></div><p><br/></p><h1 id="NetFlowanalysiswithElasticsearch-Prerequisites">Prerequisites</h1><ul style="list-style-type: square;"><li data-uuid="18032343-3fd8-4eb6-bb1c-fe37681bc36a"><a class="external-link" href="https://www.elastic.co/guide/en/elasticsearch/reference/current/setup.html" rel="nofollow">Setup Elasticsearch</a><br/><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Elasticsearch is widely supported on many platforms. It is recommended to setup a cluster of Elasticsearch nodes.</p></div></div></li><li data-uuid="1746d85c-92a2-4555-b260-676864c9ad2c"><a class="external-link" href="https://www.elastic.co/guide/en/kibana/current/setup.html" rel="nofollow">Setup kibana</a><br/><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Kibana can be installed on the same device on which you installed Elasticsearch, but it can also be installed on a separate device for performance reasons. While it is possible to analyze NetFlow data without Kibana, it requires writing your own API requests, Kibana is very easy to use and has a wide range of features.</p></div></div></li><li data-uuid="2511010c-188e-4c28-be4f-d9e9ba2424bd"><a class="external-link" href="https://www.elastic.co/guide/en/fleet/current/add-fleet-server-on-prem.html" rel="nofollow">Setup Fleet Server</a><br/><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>It is possible to setup Fleet Server on the same device on which you installed Elasticsearch and/or Kibana. It is recommended to install Fleet Server on a different device. Refer to Elasticsearch manual for recommendations on hardware and topology requirements.</p></div></div></li></ul><h1 id="NetFlowanalysiswithElasticsearch-Setup">Setup</h1><p>The setup instructions are divided into two parts: Elastic (configuration regarding Elasticsearch, Kibana and Fleet Server) and RouterOS (configuration that is relevant to your RouterOS device).</p><h2 id="NetFlowanalysiswithElasticsearch-Elastic">Elastic</h2><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Some steps might change over time, refer to Elastic's manual to find the most up-to-date steps.</p></div></div><ol><li data-uuid="d36fbd4c-e4da-4810-9bca-4409515ced3a"><a class="external-link" href="https://www.elastic.co/guide/en/kibana/current/access.html" rel="nofollow">Log into your Kibana</a></li><li data-uuid="01c79b39-2939-48cc-850a-455d44d2771a">Open the <a class="external-link" href="https://www.elastic.co/guide/en/kibana/current/fleet.html" rel="nofollow">Fleet</a> section under the main menu</li><li data-uuid="923ff2cf-5112-4d61-a40f-90da8a0db012">Open the &quot;<a class="external-link" href="https://www.elastic.co/guide/en/fleet/current/agent-policy.html" rel="nofollow">Agent policies</a>&quot; section</li><li data-uuid="3a4fe9a5-be29-4349-9852-497fae45539a">Press &quot;Create agent policy&quot; button to <a class="external-link" href="https://www.elastic.co/guide/en/fleet/current/agent-policy.html#create-a-policy" rel="nofollow">create a new Agent Policy</a></li><li data-uuid="3a4fe9a5-be29-4349-9852-497fae45539a">Give the policy a name, for example, &quot;NetFlow policy&quot;, adjust advance settings if required, create the policy</li><li data-uuid="09a32556-e91b-48ac-8c86-0c0e1be484b5">Open your newly created policy by clicking on it's name</li><li data-uuid="a5dde2f2-d86c-4c42-a812-6017678178a4">Press &quot;<a class="external-link" href="https://www.elastic.co/guide/en/fleet/current/agent-policy.html#add-integration" rel="nofollow">Add integration</a>&quot;</li><li data-uuid="56343aa3-a7eb-4818-a73e-31e5512f4699">Search for &quot;<a class="external-link" href="https://www.elastic.co/docs/current/integrations/netflow" rel="nofollow">NetfFlow Records</a>&quot; and press &quot;Add NetFlow Records&quot;</li><li data-uuid="38c6707f-5a3a-4ed1-9d0c-b0984a5c3bdc">Adjust configuration, make sure:<br/>- Specify &quot;UDP host to listen on&quot; to the IP address of your server that is going to run the NetFlow Records integration , in this example the address should be &quot;10.0.0.2&quot;</li><li data-uuid="0fcf7e9f-38c0-460e-b13c-b0d54dc75095">Save the integration</li><li data-uuid="c12ebdf2-3af1-4007-ae29-65f06645960b">Press the &quot;<a class="external-link" href="https://www.elastic.co/guide/en/fleet/current/elastic-agent-installation.html" rel="nofollow">Add Elastic Agent to your host</a>&quot; button</li><li data-uuid="2ed4dec0-5835-48bf-938c-fc5cb327b199">Follow the instructions on how to add Elastic Agent to your host<br/><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Official Elastic's manual recommends installing the Elastic Agent as Fleet-managed. Consider following the recommendation since managing the agents is easier when they are Fleet-managed.</p></div></div></li><li data-uuid="bc45d00f-fce3-4afa-b256-fdf45f3b48d3">Make sure you have opened the NetFlow port on your host and elsewhere in the path from your RouterOS device (10.0.0.1), the default destination port is 2055/UDP.</li><li data-uuid="34ad369d-9240-49d0-a432-2c7e3e39ccde">Your Elastic Agent is now ready to receive NetFlow data!</li></ol><h2 id="NetFlowanalysiswithElasticsearch-RouterOS">RouterOS</h2><ol><li data-uuid="c6215eab-ea27-486a-99bf-7c3f5fa0252d">(optional) Create an <a href="https://help.mikrotik.com/docs/spaces/ROS/pages/47579180/Interface+Lists" rel="nofollow">Interface list</a> (for example, &quot;NetFlow_interfaces&quot;) and add interface that need NetFlow data analysis<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/interface list
+add name=NetFlow_interfaces
+/interface list member
+add interface=VLAN3000 list=NetFlow_interfaces</pre>
+</div></div></li><li data-uuid="ebb983e0-fc18-4cb5-b2a9-48b9eb67e110">Configure <a href="https://help.mikrotik.com/docs/spaces/ROS/pages/21102653/Traffic+Flow" rel="nofollow">Traffic-flow</a> to send NetFlow data to your Elastic Agent (10.0.0.2)<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/ip traffic-flow
+enabled=yes interfaces=NetFlow_interfaces
+/ip traffic-flow target
+add dst-address=10.0.0.2</pre>
+</div></div></li><li data-uuid="1010a8b9-33e3-414b-89e7-ab18fbf3dae7">You should now start to see NetFlow data being ingested!</li><li data-uuid="e073e5c4-f873-469f-b3fa-46103ca5f445">Continue the guide to start using Kibana</li></ol><h1 id="NetFlowanalysiswithElasticsearch-UsingKibana">Using Kibana</h1><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Some steps might change over time, refer to Elastic's manual to find the most up-to-date steps.</p></div></div><p>The NetFlow Records integration provides some useful assets that can be used to analyze NetFlow data. Make sure you <a class="external-link" href="https://www.elastic.co/guide/en/fleet/7.17/install-uninstall-integration-assets.html" rel="nofollow">install the assets</a> first before continuing. The following section will give you some basic ways how to see NetFlow data.</p><ol><li data-uuid="b9f9195f-2edd-47df-9e37-e9fa98c7913c"><a class="external-link" href="https://www.elastic.co/guide/en/kibana/current/access.html" rel="nofollow">Log into your Kibana</a></li><li data-uuid="cc15eb05-f86e-4a28-8dbe-57e73c7059b1">Open the &quot;<a class="external-link" href="https://www.elastic.co/kibana/kibana-dashboard" rel="nofollow">Dashboards</a>&quot; menu in the main menu</li><li data-uuid="85e87c1a-535f-453f-9bb0-eeeb24016ac5">Search the Dashboards and find &quot;NetFlow&quot;</li></ol><p>You should now see multiple NetFlow Dashboards. For example, try opening the &quot;<span class="euiBreadcrumb__content css-1f8jnzg-euiBreadcrumb__content-application-lastChild-isTruncatedLast" title="[Logs Netflow] Overview" data-test-subj="breadcrumb last">[Logs Netflow] Overview&quot;. If your NetFlow data is properly ingested, then you should now see graphs that summarizes your traffic.</span></p><p><span class="euiBreadcrumb__content css-1f8jnzg-euiBreadcrumb__content-application-lastChild-isTruncatedLast" title="[Logs Netflow] Overview" data-test-subj="breadcrumb last">Another useful Dashboard is the &quot;<span class="euiBreadcrumb__content css-1f8jnzg-euiBreadcrumb__content-application-lastChild-isTruncatedLast" title="[Logs Netflow] Flow records" data-test-subj="breadcrumb last">[Logs Netflow] Flow records&quot;, which shows you exact NetFlow records. A very useful feature is the filtering option (the + button on top), that allows you add filters to NetFlow data, for example, you can filter the records to show only a single IP address:</span></span></p><p><span class="euiBreadcrumb__content css-1f8jnzg-euiBreadcrumb__content-application-lastChild-isTruncatedLast" title="[Logs Netflow] Overview" data-test-subj="breadcrumb last"><span class="euiBreadcrumb__content css-1f8jnzg-euiBreadcrumb__content-application-lastChild-isTruncatedLast" title="[Logs Netflow] Flow records" data-test-subj="breadcrumb last"><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" draggable="false" height="250" src="attachments/282132674/282132673.png" data-image-src="attachments/282132674/282132673.png" data-unresolved-comment-count="0" data-linked-resource-id="282132673" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2024-11-15_12-6-13.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="282132674" data-linked-resource-container-version="2" tabindex="0" alt=""></span></span></span></p><p>There are other options such as searching for a specific time range. You should read more about <a class="external-link" href="https://www.elastic.co/guide/en/kibana/current/discover-get-started.html#find-the-data-you-want-to-use" rel="nofollow">Discover</a> to understand the possibilities better.</p><p>For quick reference, these are the fields that you are most likely going to want to use for searching NEtFlow data:</p><ul style="list-style-type: square;"><li data-uuid="ec116be5-a180-42ff-857b-774cfed69647">source.ip</li><li data-uuid="51d5ea13-a70a-4901-ba6b-053636269a44">source.port</li><li data-uuid="a6656308-9722-4fec-a0c6-d2f64eba5447">destination.ip</li><li data-uuid="ce430d63-c725-4f2c-a6c0-ef896d17d999">destination.port</li><li data-uuid="09833afb-1d86-45c0-a19c-e45b31369348"><span>network.transport</span></li></ul><p><span>If you want to examine a single record, it is recommended to use the <a class="external-link" href="https://www.elastic.co/guide/en/kibana/current/discover-get-started.html#find-the-data-you-want-to-use" rel="nofollow">Discover</a> view. NetFlow data can be found as &quot;data_stream.dataset: netflow.log&quot;.</span></p><h1 id="NetFlowanalysiswithElasticsearch-Logretation">Log retation</h1><p>Depending on your local laws you might be required to store NetFlow data for a specified period of time. Be aware that busy networks can generated a lot of NetFlow data, even terabytes per day. You are most likely going to want to adjust <a class="external-link" href="https://www.elastic.co/guide/en/elasticsearch/reference/current/set-up-lifecycle-policy.html" rel="nofollow">LIfecycle Policy</a>. By default the NetFlow data should go under the &quot;logs&quot; policy. If you have multiple Elasticsearch nodes, you can utilize &quot;<a class="external-link" href="https://www.elastic.co/guide/en/elasticsearch/reference/current/ilm-index-lifecycle.html" rel="nofollow">phases</a>&quot;, which allows you to store data on different types of storage media, but if you only have a single Elasticsearch node, your options are limited and you will most likely want to <a class="external-link" href="https://www.elastic.co/guide/en/elasticsearch/reference/current/ilm-delete.html" rel="nofollow">delete</a> old data. For example, if you want to delete data after 6 months, then you can simply change the ILM policy to delete data after 6 months or use this API request:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">PUT _ilm/policy/logs
+{
+  &quot;policy&quot;: {
+    &quot;phases&quot;: {
+      &quot;hot&quot;: {
+        &quot;min_age&quot;: &quot;0ms&quot;,
+        &quot;actions&quot;: {
+          &quot;rollover&quot;: {
+            &quot;max_age&quot;: &quot;30d&quot;,
+            &quot;max_primary_shard_size&quot;: &quot;50gb&quot;
+          },
+          &quot;set_priority&quot;: {
+            &quot;priority&quot;: 101
+          }
+        }
+      },
+      &quot;delete&quot;: {
+        &quot;min_age&quot;: &quot;180d&quot;,
+        &quot;actions&quot;: {
+          &quot;delete&quot;: {
+            &quot;delete_searchable_snapshot&quot;: true
+          }
+        }
+      }
+    }
+  }
+}</pre>
+</div></div><div role="region" aria-label="Warning" class="confluence-information-macro  confluence-information-macro-warning" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-error confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>If you change the &quot;logs&quot; policy, this will apply to ALL your logs, not just NetFlow data. If you need a different retention period for other logs, then it is better to create a new ILM policy and specify the NetFlow integration to use the newly created ILM policy.</p></div></div><h2 id="NetFlowanalysiswithElasticsearch-UseadifferentILMpolicy">Use a different ILM policy</h2><p>If you want your NetFlow data to have a different retention period, then you need to do the following steps:</p><ol><li data-uuid="8192df73-247f-48f5-9905-689088d548de">Create a new ILM policy, give it a new name and set the desired period for the delete phase, or use this API request:<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">PUT _ilm/policy/netflow-logs
+{
+  &quot;policy&quot;: {
+    &quot;phases&quot;: {
+      &quot;hot&quot;: {
+        &quot;min_age&quot;: &quot;0ms&quot;,
+        &quot;actions&quot;: {
+          &quot;rollover&quot;: {
+            &quot;max_age&quot;: &quot;30d&quot;,
+            &quot;max_primary_shard_size&quot;: &quot;50gb&quot;
+          },
+          &quot;set_priority&quot;: {
+            &quot;priority&quot;: 101
+          }
+        }
+      },
+      &quot;delete&quot;: {
+        &quot;min_age&quot;: &quot;1000d&quot;,
+        &quot;actions&quot;: {
+          &quot;delete&quot;: {
+            &quot;delete_searchable_snapshot&quot;: true
+          }
+        }
+      }
+    }
+  }
+}</pre>
+</div></div></li><li data-uuid="11b1793c-abbb-45fc-bf71-70c488f999ed">Goto Kibana, open &quot;Stack Management&quot;, then go to &quot;Index Management&quot; and then &quot;Component Templates&quot;</li><li data-uuid="b28026db-4848-4f50-9c21-43b47aa21edd">Search for &quot;logs-netflow.log@custom&quot;, open it and edit it</li><li data-uuid="b7c6ca6f-674b-452c-8525-aa7ff27f1161">Go to the &quot;Index settings&quot; section</li><li data-uuid="1a411c7c-d2e8-4536-98fe-f6297a55ce8d">Paste in the following:<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">{
+  &quot;index&quot;: {
+    &quot;lifecycle&quot;: {
+      &quot;name&quot;: &quot;netflow-logs&quot;
+    }
+  }
+}</pre>
+</div></div></li><li data-uuid="7cee0d94-296e-42bb-a226-75faf3af763c">Press &quot;Next&quot; and then &quot;Save component template&quot;</li></ol>
+                    </div>
+
+                                                            <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/282132674/282132670.png">image-2024-11-15_10-47-3.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/282132674/282132673.png">image-2024-11-15_12-6-13.png</a> (image/png)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:54</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

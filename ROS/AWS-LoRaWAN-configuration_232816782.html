@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : AWS LoRaWAN configuration</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Internet-of-Things_46759975.html">Internet of Things</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Lora_16351615.html">Lora</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Setup_16351624.html">Setup</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : AWS LoRaWAN configuration
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Deniss M.</span>, last updated on Jan 30, 2024
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742039650 {padding: 0px;}
+div.rbtoc1747742039650 ul {margin-left: 0px;}
+div.rbtoc1747742039650 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742039650'>
+<ul class='toc-indentation'>
+<li><a href='#AWSLoRaWANconfiguration-AWS-Registeringthegateway'>AWS - Registering the gateway</a>
+<ul class='toc-indentation'>
+<li><a href='#AWSLoRaWANconfiguration-Step1-addgateway'>Step 1 - add gateway</a></li>
+<li><a href='#AWSLoRaWANconfiguration-Step2-configureyourgateway'>Step 2 - configure your gateway</a></li>
+</ul>
+</li>
+<li><a href='#AWSLoRaWANconfiguration-RouterOS-Connectingthegateway'>RouterOS - Connecting the gateway</a>
+<ul class='toc-indentation'>
+<li><a href='#AWSLoRaWANconfiguration-Uploadingandimportingcertificates'>Uploading and importing certificates</a></li>
+<li><a href='#AWSLoRaWANconfiguration-Serverconfiguration'>Server configuration</a>
+<ul class='toc-indentation'>
+<li><a href='#AWSLoRaWANconfiguration-LNSscenario'>LNS scenario</a></li>
+<li><a href='#AWSLoRaWANconfiguration-CUPSscenario'>CUPS scenario</a></li>
+</ul>
+</li>
+<li><a href='#AWSLoRaWANconfiguration-Connectionverification'>Connection verification</a></li>
+</ul>
+</li>
+</ul>
+</div></p><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>This scenario will work starting with RouterOS version <strong>7.14beta8</strong>.</p></div></div><p>Before we proceed with the settings, you need to create an account in the AWS system. You can find more information on how to do that following this <a class="external-link" href="https://aws.amazon.com/premiumsupport/knowledge-center/create-and-activate-aws-account/" rel="nofollow">link</a>.</p><p>After you are logged-in, go to <strong>Services&gt;IoT Core</strong> section on the portal.</p><h1 id="AWSLoRaWANconfiguration-AWS-Registeringthegateway">AWS - Registering the gateway</h1><p>The first step is to register the LoRaWAN gateway.</p><p>Navigate to the <a class="external-link" href="https://eu-central-1.console.aws.amazon.com/iot/home?region=eu-central-1#/wireless/gateways" rel="nofollow">Gateways</a> section (under <a class="external-link" href="https://eu-central-1.console.aws.amazon.com/iot/home?region=eu-central-1#/wireless/landing" rel="nofollow">LPWAN devices</a>).</p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/232816782/232816786.png" data-image-src="attachments/232816782/232816786.png" data-unresolved-comment-count="0" data-linked-resource-id="232816786" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2024-1-29_15-4-23.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="232816782" data-linked-resource-container-version="23" tabindex="0" alt=""></span></p><p>Click on the &quot;<strong>Add gateway</strong>&quot; button. </p><h2 id="AWSLoRaWANconfiguration-Step1-addgateway">Step 1 - add gateway</h2><ul><li>Input the gateway's EUI;</li><li>Select device's frequency band;</li><li>Configure optional fields if required;</li></ul><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/232816782/232816852.png" data-image-src="attachments/232816782/232816852.png" data-unresolved-comment-count="0" data-linked-resource-id="232816852" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2024-1-30_13-39-1.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="232816782" data-linked-resource-container-version="23" tabindex="0" alt=""></span></p><p>Finish the step by clicking on the &quot;<strong>Add gateway</strong>&quot; once again.</p><p>In RouterOS settings, gateway's EUI and frequency plan can be checked under <strong>IoT&gt;LoRa&gt;Devices</strong> tab:</p><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" draggable="false" width="500" src="attachments/232816782/232816851.png" data-image-src="attachments/232816782/232816851.png" data-unresolved-comment-count="0" data-linked-resource-id="232816851" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2024-1-30_13-38-19.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="232816782" data-linked-resource-container-version="23" tabindex="0" alt=""></span></p><h2 id="AWSLoRaWANconfiguration-Step2-configureyourgateway">Step 2 - configure your gateway</h2><ul><li>Generate a gateway certificate (&quot;<strong>Create certificate</strong>&quot; button), and download the certificate file and private key files (&quot;<strong>Download certificate files</strong>&quot; button);</li><li>Copy CUPS and LNS endpoints and download server trust certificates (&quot;<strong>Download server trust certificates</strong>&quot; button);</li><li>Add suggested gateway permissions;</li></ul><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/232816782/232816792.png" data-image-src="attachments/232816782/232816792.png" data-unresolved-comment-count="0" data-linked-resource-id="232816792" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2024-1-29_15-32-17.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="232816782" data-linked-resource-container-version="23" tabindex="0" alt=""></span></p><p>Finish the step by clicking on &quot;<strong>Submit</strong>&quot;.</p><p>You will be redirected to the page where your newly created gateway should appear.</p><h1 id="AWSLoRaWANconfiguration-RouterOS-Connectingthegateway">RouterOS - Connecting the gateway</h1><h2 id="AWSLoRaWANconfiguration-Uploadingandimportingcertificates">Uploading and importing certificates</h2><p>Before we proceed with the setup, you need to download <a class="external-link" href="https://www.amazontrust.com/repository/" rel="nofollow">Amazon Root CA</a> and upload it, together with the gateway certificate file and its key, into the RouerOS file list menu:</p><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" draggable="false" width="500" src="attachments/232816782/232816805.png" data-image-src="attachments/232816782/232816805.png" data-unresolved-comment-count="0" data-linked-resource-id="232816805" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2024-1-29_16-26-45.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="232816782" data-linked-resource-container-version="23" tabindex="0" alt=""></span></p><p>After the files were uploaded, import the certificates, one by one (under <strong>System&gt;Certificates</strong>):</p><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" draggable="false" width="500" src="attachments/232816782/232816806.png" data-image-src="attachments/232816782/232816806.png" data-unresolved-comment-count="0" data-linked-resource-id="232816806" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2024-1-29_16-30-31.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="232816782" data-linked-resource-container-version="23" tabindex="0" alt=""></span></p><p>Make sure to upload the gateway certificate first and then its key (so that the gateway certificate has both K-key and T-trusted flags present). In the end, you should have all 3 file imported, like so:</p><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" draggable="false" width="500" src="attachments/232816782/232816807.png" data-image-src="attachments/232816782/232816807.png" data-unresolved-comment-count="0" data-linked-resource-id="232816807" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2024-1-29_16-31-47.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="232816782" data-linked-resource-container-version="23" tabindex="0" alt=""></span></p><h2 id="AWSLoRaWANconfiguration-Serverconfiguration">Server configuration</h2><h3 id="AWSLoRaWANconfiguration-LNSscenario">LNS scenario</h3><p>Navigate to the <strong>IoT&gt;LoRa&gt;Servers</strong> tab and add a new server:</p><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" draggable="false" width="500" src="attachments/232816782/232816808.png" data-image-src="attachments/232816782/232816808.png" data-unresolved-comment-count="0" data-linked-resource-id="232816808" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2024-1-29_16-36-22.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="232816782" data-linked-resource-container-version="23" tabindex="0" alt=""></span></p><ul><li>Name the server;</li><li>Input LNS endpoint address (without &quot;<code>wss://</code>&quot; and &quot;<code>:443</code>&quot;);</li><li>Select LNS protocol;</li><li>Change port to &quot;443&quot;;</li><li>Enable SSL checkbox;</li><li>Select gateway certificate.</li></ul><p>Make sure to apply newly configured server under <strong>IoT&gt;LoRa&gt;Devices</strong> tab:</p><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" draggable="false" width="500" src="attachments/232816782/232816850.png" data-image-src="attachments/232816782/232816850.png" data-unresolved-comment-count="0" data-linked-resource-id="232816850" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2024-1-30_13-36-52.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="232816782" data-linked-resource-container-version="23" tabindex="0" alt=""></span></p><p>And then, <strong>enable</strong> the LoRa interface.</p><h3 id="AWSLoRaWANconfiguration-CUPSscenario">CUPS scenario</h3><p>Navigate to the <strong>IoT&gt;LoRa&gt;Servers</strong> tab and add a new server:</p><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" draggable="false" width="500" src="attachments/232816782/232816845.png" data-image-src="attachments/232816782/232816845.png" data-unresolved-comment-count="0" data-linked-resource-id="232816845" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2024-1-30_13-16-50.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="232816782" data-linked-resource-container-version="23" tabindex="0" alt=""></span></p><ul><li>Name the server;</li><li>Input CUPS endpoint address (without &quot;<code>https://</code>&quot; and &quot;<code>:443</code>&quot;);</li><li>Select CUPS protocol;</li><li>Change port to &quot;443&quot;;</li><li>Enable SSL checkbox;</li><li>Select gateway certificate.</li></ul><p>Make sure to apply newly configured server under <strong>IoT&gt;LoRa&gt;Devices</strong> tab:</p><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" draggable="false" width="500" src="attachments/232816782/232816849.png" data-image-src="attachments/232816782/232816849.png" data-unresolved-comment-count="0" data-linked-resource-id="232816849" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2024-1-30_13-36-41.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="232816782" data-linked-resource-container-version="23" tabindex="0" alt=""></span></p><p>And then, <strong>enable</strong> the LoRa interface.</p><h2 id="AWSLoRaWANconfiguration-Connectionverification">Connection verification</h2><p>If everything is configured correctly, you should see &quot;connected&quot; status on the AWS portal:</p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/232816782/232816847.png" data-image-src="attachments/232816782/232816847.png" data-unresolved-comment-count="0" data-linked-resource-id="232816847" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2024-1-30_13-35-57.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="232816782" data-linked-resource-container-version="23" tabindex="0" alt=""></span></p>
+                    </div>
+
+                                                            <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/232816782/232816786.png">image-2024-1-29_15-4-23.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/232816782/232816787.png">image-2024-1-29_15-6-48.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/232816782/232816788.png">image-2024-1-29_15-12-40.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/232816782/232816789.png">image-2024-1-29_15-14-25.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/232816782/232816790.png">image-2024-1-29_15-22-49.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/232816782/232816791.png">image-2024-1-29_15-24-3.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/232816782/232816792.png">image-2024-1-29_15-32-17.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/232816782/232816805.png">image-2024-1-29_16-26-45.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/232816782/232816806.png">image-2024-1-29_16-30-31.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/232816782/232816807.png">image-2024-1-29_16-31-47.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/232816782/232816808.png">image-2024-1-29_16-36-22.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/232816782/232816809.png">image-2024-1-29_16-40-47.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/232816782/232816812.png">image-2024-1-29_16-46-18.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/232816782/232816813.png">image-2024-1-29_16-47-50.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/232816782/232816815.png">image-2024-1-29_16-49-56.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/232816782/232816844.png">image-2024-1-30_13-15-17.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/232816782/232816845.png">image-2024-1-30_13-16-50.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/232816782/232816847.png">image-2024-1-30_13-35-57.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/232816782/232816849.png">image-2024-1-30_13-36-41.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/232816782/232816850.png">image-2024-1-30_13-36-52.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/232816782/232816851.png">image-2024-1-30_13-38-19.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/232816782/232816852.png">image-2024-1-30_13-39-1.png</a> (image/png)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

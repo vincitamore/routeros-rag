@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : IP Services</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Firewall-and-Quality-of-Service_119144601.html">Firewall and Quality of Service</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : IP Services
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Māris B.</span>, last updated on May 24, 2024
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <h1 id="IPServices-Services"><span style="letter-spacing: -0.01em;">Services</span></h1><p><span style="letter-spacing: -0.01em;"><span style="color:var(--ds-text-accent-lime-bolder,#37471f);">This section lists protocols and ports used by various MikroTik RouterOS services. It helps you to determine why your MikroTik router listens to certain ports, and what you need to block/allow in case you want to prevent or grant access to certain services.</span><br/></span></p><p>The default services are:</p><div class="table-wrap"><table class="relative-table wrapped confluenceTable" style="margin-left: 18.9688px;width: 98.9724%;"><colgroup><col style="width: 46.5232%;"/><col style="width: 53.4321%;"/></colgroup><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>telnet</strong></td><td class="confluenceTd">Telnet service</td></tr><tr><td class="confluenceTd"><strong>ftp</strong></td><td class="confluenceTd">FTP service</td></tr><tr><td class="confluenceTd"><strong>www</strong></td><td class="confluenceTd">Webfig HTTP service</td></tr><tr><td class="confluenceTd"><strong>ssh</strong></td><td class="confluenceTd">SSH service</td></tr><tr><td class="confluenceTd"><strong>www-ssl</strong></td><td class="confluenceTd">Webfig HTTPS service</td></tr><tr><td class="confluenceTd"><strong>api</strong></td><td class="confluenceTd">API service</td></tr><tr><td class="confluenceTd"><strong>winbox</strong></td><td class="confluenceTd">Responsible for Winbox tool access, as well as Tik-App smartphone app and Dude probe</td></tr><tr><td class="confluenceTd"><strong>api-ssl</strong></td><td class="confluenceTd">API over SSL service</td></tr></tbody></table></div><h2 id="IPServices-Properties"><span class="mw-headline">Properties</span></h2><p>Note that it is not possible to add new services, only existing service modifications are allowed.</p><div class="table-wrap"><table class="relative-table wrapped confluenceTable" style="margin-left: 18.9688px;width: 98.9444%;"><colgroup><col style="width: 46.4696%;"/><col style="width: 53.5304%;"/></colgroup><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>address</strong><span> </span>(<em>IP address/netmask | IPv6/0..128</em>; Default: )</td><td class="confluenceTd">List of IP/IPv6 prefixes from which the service is accessible.</td></tr><tr><td class="confluenceTd"><strong>certificate</strong><span> </span>(<em>name</em>; default:<span> </span><strong>none</strong>)</td><td class="confluenceTd">The name of the certificate used by a particular service. Applicable only for services that depend on certificates (<em>www-ssl, api-ssl</em>)</td></tr><tr><td class="confluenceTd"><strong>name</strong><span> </span>(<em>name</em>; default:<span> </span><strong>none</strong>)</td><td class="confluenceTd">Service name</td></tr><tr><td class="confluenceTd"><strong>port</strong><span> </span>(<em>integer: 1..65535</em>; Default: )</td><td class="confluenceTd">The port particular service listens on</td></tr></tbody></table></div><p class="auto-cursor-target">To restrict Winbox service access to the device only from the <strong>192.168.88.0/24</strong> subnet, we have to configure the following:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; ip service set [find name~&quot;winbox&quot;] address=192.168.88.0/24
+[admin@MikroTik] &gt; ip service print 
+Flags: X - disabled, I - invalid 
+# NAME PORT ADDRESS CERTIFICATE 
+0 telnet 23
+1 XI ftp 21
+2 XI www 80
+3 ssh 22
+4 XI www-ssl 443 none 
+5 XI api 8728
+6 winbox 8291 192.168.88.0/24 
+7 XI api-ssl 8729 none</pre>
+</div></div><div role="region" aria-label="Tip" class="confluence-information-macro  confluence-information-macro-tip" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-approve confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>We recommend disabling unused services.</p></div></div>
+                    </div>
+
+                                                            <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328229/328394.png">connections.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328229/2555917.png">Pfd1.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328229/2555918.png">nats.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328229/2555919.png">mangle.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328229/3211266.drawio">Untitled Diagram.drawio</a> (application/octet-stream)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328229/3211267.jpg">firewall.jpg</a> (image/jpeg)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328229/4390941.jpg">firewall-fundamental.jpg</a> (image/jpeg)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328229/4390940.jpg">firewall-fundamental.jpg</a> (image/jpeg)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : Bluetooth</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Internet-of-Things_46759975.html">Internet of Things</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : Bluetooth
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Deniss M.</span>, last updated on Jan 21, 2025
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742038077 {padding: 0px;}
+div.rbtoc1747742038077 ul {margin-left: 0px;}
+div.rbtoc1747742038077 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742038077'>
+<ul class='toc-indentation'>
+<li><a href='#Bluetooth-Summary'>Summary</a></li>
+<li><a href='#Bluetooth-Configuration'>Configuration</a>
+<ul class='toc-indentation'>
+<li><a href='#Bluetooth-Devices'>Devices</a></li>
+<li><a href='#Bluetooth-Advertisers'>Advertisers</a></li>
+<li><a href='#Bluetooth-ADstructures'>AD structures</a></li>
+<li><a href='#Bluetooth-Connections'>Connections</a></li>
+<li><a href='#Bluetooth-Scanners'>Scanners</a></li>
+<li><a href='#Bluetooth-Advertisingreports'>Advertising reports</a></li>
+<li><a href='#Bluetooth-Whitelist'>Whitelist</a></li>
+<li><a href='#Bluetooth-PeripheralDevices'>Peripheral Devices</a></li>
+<li><a href='#Bluetooth-Decode-ad'>Decode-ad</a></li>
+</ul>
+</li>
+</ul>
+</div></p><h1 id="Bluetooth-Summary">Summary</h1><p>Bluetooth is a short-range wireless technology that allows broadcasting the data over specific Bluetooth channels. </p><p>There are 40 unique bands (channels) and each band has a 2 MHz separation. 37, 38, and 39 channels are used for primary advertising, and 0-36 are used for data transmission.</p><p>During the advertising process, the BLE advertising packet is broadcasted. This packet contains the Preamble, Access Address, PDU and CRS fields.</p><p>The Preamble and Access Address fields help the receiver detect frames. CRS field is used to check errors. PDU consists of PDU Header and PDU Payload. PDU defines the packet itself.</p><p><span>PDU Header contains information about the PDU type. Based on the type, the payload fields may differ.</span></p><p><span>For example, when PDU type is ADV_NONCONN_IND → PDU Payload consists of &quot;AdvA&quot; (a field that contains information about the advertiser's address) and &quot;AdvData&quot; (a field that contains data information) fields:</span></p><p><span>1 octet = 1 byte = 8 bits</span></p><div class="table-wrap"><table class="relative-table wrapped confluenceTable" style="width: 41.1958%;"><colgroup class=""><col class="" style="width: 24.2667%;"/><col class="" style="width: 75.7333%;"/></colgroup><tbody class=""><tr class=""><td class="confluenceTd">Preamble</td><td class="confluenceTd">1 octet</td></tr><tr class=""><td class="confluenceTd">Access-Address</td><td class="confluenceTd">4 octets</td></tr><tr class=""><td class="confluenceTd">PDU</td><td class="confluenceTd"><ul><li>PDU Header = 2 octets</li><li>PDU Payload = AdvA (6 octets)+AdvData (0...31 octets)</li></ul></td></tr><tr class=""><td colspan="1" class="confluenceTd">CRS</td><td colspan="1" class="confluenceTd">3 octets</td></tr></tbody></table></div><p>There are different PDU types:</p><ul><li>ADV_IND (where payload consists of AdvA [6octets] + AdvData [0-31 octets] and which is used for connectable, scannable undirected advertising);</li><li>ADV_NOCONN_IND (where payload consists of AdvA [6octets] + AdvData [0-31 octets] and which is used for non-connectable, non-scannable undirected advertising);</li><li>ADV_SCAN_IND (where payload consists of AdvA [6octets] + AdvData [0-31 octets] and which is used for scannable, undirected advertising);</li><li>SCAN_REQ (where payload consists of ScanA [6octets] + AdvA [6octets], where ScanA field contains scanner's address and AdvA contains advertiser's address, and which is used for requesting SCAN_RSP response);</li><li>SCAN_RSP (where payload consists of AdvA [6octets] + ScanRspData [0-31 octets], where ScanRspData can contain any data from the advertiser's host and which is used to respond to a SCAN_REQ request);</li><li>ADV_DIRECT_IND (where payload consists of AdvA [6octets] + TargetA [6octets], where TargetA is the device address field to which the PDU is addressed, and which is used for connectable, directed advertising);</li><li>etc</li></ul><p>You can find more information about the packet structure over <a class="external-link" href="https://www.bluetooth.com/specifications/specs/core-specification/" rel="nofollow">here</a> (Bluetooth specifications).</p><p>The main application for the Bluetooth interface in RouterOS is to monitor Bluetooth advertising packets (scanner feature) that are broadcasted by other devices (like for example, <a href="https://help.mikrotik.com/docs/display/UM/TG-BT5-IN" rel="nofollow">Bluetooth tags</a>) or broadcast advertising packets (advertiser feature).</p><h1 id="Bluetooth-Configuration">Configuration</h1><p><strong>Sub-menu:</strong><span> </span><code>/iot bluetooth</code></p><p><em><strong>note</strong>: </em><strong>iot</strong> package is required for a device with a build-in Bluetooth chip, like the <a class="external-link" href="https://mikrotik.com/product/knot" rel="nofollow">KNOT</a></p><p><em><strong>note</strong>: </em>if your device is ARM, ARM64 architecture and it has a USB slot, <strong>iot-bt-extra</strong> package can enable Bluetooth functionality via USB-Bluetooth dongle. Not all Bluetooth adapters were tested. Adapters must support <strong>LE 4.0+</strong>. There is no &quot;peripheral&quot; list yet.</p><p><strong>Iot</strong> package is available with RouterOS version 6.48.3. <strong>Iot-bt-extra package</strong> is availible with RouterOS 7.18. You can get them from our <a class="external-link" href="https://mikrotik.com/download" rel="nofollow">download page</a> - under &quot;Extra packages&quot;.</p><h2 id="Bluetooth-Devices">Devices</h2><p>In this menu you can check and set general Bluetooth chip parameters:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/iot bluetooth print
+Columns: NAME, PUBLIC-ADDRESS, RANDOM-STATIC-ADDRESS, ANTENNA
+  #  NAM  PUBLIC-ADDRESS     RANDOM-STATIC-ADD  ANTENNA 
+  0  bt1  00:00:00:00:00:00  F4:4E:E8:04:77:3A  internal
+/iot bluetooth set</pre>
+</div></div><p class="auto-cursor-target"><em><strong>note</strong>: </em>Public address is the IEEE registered, permanent address. This address can not be changed. In the &quot;print&quot; example above, the device does not have a public address assigned (all octets are set to 0).</p><p class="auto-cursor-target">Configurable settings are shown below:</p><div class="table-wrap"><table class="relative-table wrapped confluenceTable" style="width: 53.0854%;"><colgroup class=""><col class="" style="width: 35.8931%;"/><col class="" style="width: 64.1308%;"/></colgroup><tbody class=""><tr class=""><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr class=""><td class="confluenceTd"><strong>antenna </strong>(<em>string</em>; Default: internal)</td><td class="confluenceTd">Choose whether to use an internal or an external Bluetooth antenna</td></tr><tr class=""><td colspan="1" class="confluenceTd"><strong>name </strong>(<em>string</em>; Default: )</td><td colspan="1" class="confluenceTd">Descriptive name of Bluetooth chip/interface</td></tr><tr class=""><td colspan="1" class="confluenceTd"><p><strong>random-static-address </strong>(<em>MAC address</em>; Default: )</p></td><td colspan="1" class="confluenceTd">A user-configurable address for the Bluetooth chip</td></tr></tbody></table></div><p>You can monitor chip stats with the command:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/iot bluetooth print stats
+Columns: NAME, RX-BYTES, TX-BYTES, RX-ERRORS, TX-ERRORS, RX-EVT, TX-CMD, RX-ACL, TX-ACL
+  #  NAM  RX-BYTE  TX-  R  T  RX-EV  TX  R  T
+  0  bt1  1857835  235  0  0  46677  45  0  0</pre>
+</div></div><h2 id="Bluetooth-Advertisers">Advertisers</h2><p>In this menu, it is possible to set up the Bluetooth chip to broadcast advertising packets. You can check and set advertiser settings with the commands:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/iot bluetooth advertisers print
+Flags: X - DISABLED
+Columns: DEVICE, MIN-INTERVAL, MAX-INTERVAL, OWN-ADDRESS-TYPE, CHANNEL-MAP, AD-SIZE
+#   DEVICE  MIN-INTERVAL  MAX-INTERVAL  OWN-ADDRESS-TYPE  CHANNEL-MAP  AD-SIZE
+0 X bt1     1280ms        2560ms        random-static              37        0
+                                                                   38         
+                                                                   39         
+/iot bluetooth advertisers set</pre>
+</div></div><p>Configurable settings are shown below:</p><div class="table-wrap"><table class="relative-table wrapped confluenceTable" style="width: 97.4122%;"><colgroup class=""><col class="" style="width: 25.1458%;"/><col class="" style="width: 74.9778%;"/></colgroup><tbody class=""><tr class=""><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr class=""><td class="confluenceTd"><strong>ad-structures </strong>(<em>string</em>; Default: )</td><td class="confluenceTd">Choose a pre-configured structure for the advertisement packets. For more information see the &quot;AD structures&quot; section.</td></tr><tr class=""><td colspan="1" class="confluenceTd"><strong>channel-map </strong>(<em>37 | 38 | 39</em>; Default: 37, 38, 39)</td><td colspan="1" class="confluenceTd">Channels used for advertising.</td></tr><tr class=""><td colspan="1" class="confluenceTd"><p><strong>disabled </strong>(<em>yes | no</em>; Default: <strong>yes</strong>)</p></td><td colspan="1" class="confluenceTd">An option to disable or enable the Bluetooth chip to broadcast advertising packets.</td></tr><tr class=""><td colspan="1" class="confluenceTd"><p><strong>max-interval</strong> (<em>integer:<em style="text-align: left;">20..10240;</em></em> Default: <strong>2560</strong><strong> ms</strong>)</p></td><td colspan="1" class="confluenceTd">The maximal interval for broadcasting advertising packets.</td></tr><tr class=""><td colspan="1" class="confluenceTd"><p><strong>min-interval</strong> (<em>integer:<em style="text-align: left;">20..10240;</em></em> Default: <strong>1280 ms</strong>)</p></td><td colspan="1" class="confluenceTd">The minimal interval for broadcasting advertising packets.</td></tr><tr class=""><td colspan="1" class="confluenceTd"><p><strong>own-address-type</strong> (<em>public | random-static | rpa-fallback-to-public | rpa-fallback-to-random</em>; Default: <strong>random-static</strong>)</p></td><td colspan="1" class="confluenceTd"><p>The MAC address that is going to be used in the advertising packet's payload:<strong><em><br/></em></strong></p><ul><li>public →  To use the IEEE registered, permanent address.</li><li>random-static →  To use user-configurable address (will be changed on the next power-cycle).</li><li>rpa-fallback-to-public → To use Resolvable Random Private Address (RPA) that can only be resolved if the receiver has our Identity Resolving Key (IRK). If RPA can not be generated, the public address will be used instead.</li><li>rpa-fallback-to-random → Same as &quot;rpa-fallback-to-public&quot; but if RPA can not be generated, the random-static address will be used instead.</li></ul></td></tr></tbody></table></div><p><em><strong>note</strong>: </em>Advertising packets will be broadcasted each <em>min-interval</em> &lt;= <strong>X</strong> &lt;= <em>max-interval</em> milliseconds.<em><br/></em></p><h2 id="Bluetooth-ADstructures">AD structures</h2><p>This section allows you to define the payload for the advertising packets that are going to be broadcasted by the Bluetooth chip.</p><p>Currently, only 4 types are supported: 0x08 &quot;Shortened Local Name&quot;; 0x09 &quot;Complete Local Name&quot;; 0xFF &quot;Manufacturer Specific Data&quot;; &quot;Service Data&quot;</p><p>You can check and set &quot;AD structures&quot; settings with the commands:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/iot bluetooth advertisers ad-structures print
+Columns: NAME, TYPE, DATA
+#  NAME  TYPE              DATA
+0  test  short-local-name  TEST
+/iot bluetooth advertisers ad-structures set </pre>
+</div></div><p class="auto-cursor-target">Configurable properties are shown below:</p><div class="table-wrap"><table class="relative-table wrapped confluenceTable" style="width: 95.4353%;"><colgroup class=""><col class="" style="width: 30.6738%;"/><col class="" style="width: 69.3262%;"/></colgroup><tbody class=""><tr class=""><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr class=""><td class="confluenceTd"><strong>data </strong>(<em>string</em>; Default: )</td><td class="confluenceTd">Define advertising packet's AdvData part of the payload</td></tr><tr class=""><td class="confluenceTd"><strong>name </strong>(<em>string</em>; Default: )</td><td class="confluenceTd">Descriptive name of AD structure</td></tr><tr class=""><td class="confluenceTd"><p><strong>type </strong>(complete-local-name | manufacturer-data | short-local-name | service-data; Default: )</p></td><td class="confluenceTd"><p>An option to set AD structure's type:</p><ul><li>0x08 &quot;Shortened Local Name&quot;</li><li>0x09 &quot;Complete Local Name&quot;</li><li>0xFF &quot;Manufacturer Specific Data&quot;</li><li>0x20 &quot;Service Data 32-bit&quot;</li></ul></td></tr></tbody></table></div><p>If, for example, the &quot;Shortened Local Name&quot; type is chosen and the &quot;data&quot; field is configured with &quot;TEST&quot; → AdvData part of the payload is going to look like this:</p><p>05 08 54 45 53 54 (hexadecimal format)</p><p>, where the first octet (05) shows the number of bytes to follow (5 bytes) and the second octet (08) shows the type (Shortened Local Name). 3d, 4th, 5th and 6th (and etc) octets are the &quot;data&quot; [54 (hex)=<strong>T</strong> (ASCII), 45 (hex)=<strong>E </strong>(ASCII), 53 (hex)=<strong>S </strong>(ASCII), 54 (hex)=<strong>T</strong> (ASCII)].</p><p>The same applies to the &quot;Complete Local Name&quot; type. Only the second octet in the AdvData payload is going to differ and will be set to 09.</p><p>For the &quot;Manufacturer Specific Data&quot; type, you will need to configure the &quot;data&quot; field in the hexadecimal format. The second octet for this type is going to be set to FF.</p><h2 id="Bluetooth-Connections">Connections</h2><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Availible starting with v<strong>7.12beta9</strong>.</p></div></div><p>Currenetly, only &quot;<code>central</code>&quot; role is supported. &quot;<code>Pheriperal device</code>&quot; role, &quot;p<code>airing</code>&quot; and &quot;<code>encryption</code>&quot; options are not supported.</p><p>Availible sections are:</p><div class="table-wrap"><table class="relative-table wrapped confluenceTable" style="width: 39.4664%;"><colgroup class=""><col class="" style="width: 25.7433%;"/><col class="" style="width: 74.2214%;"/></colgroup><tbody class=""><tr class=""><th class="confluenceTh">Section</th><th class="confluenceTh">Description</th></tr><tr class=""><td class="confluenceTd">async-data</td><td class="confluenceTd">used to view subscribed data.</td></tr><tr class=""><td class="confluenceTd">characteristics</td><td class="confluenceTd">used to view all supported characteristics of the device.</td></tr><tr class=""><td class="confluenceTd">connect</td><td class="confluenceTd">used to connect to the device that is in the <code>connactable</code> state.</td></tr><tr class=""><td class="confluenceTd">disconnect</td><td class="confluenceTd">used to disconnect from the device.</td></tr><tr class=""><td class="confluenceTd">read</td><td class="confluenceTd">used to read characteristics values.</td></tr><tr class=""><td class="confluenceTd">write</td><td class="confluenceTd">used to write characteristics values.</td></tr><tr class=""><td class="confluenceTd">subscribe</td><td class="confluenceTd">used to subscribe to a charasteristic value.</td></tr><tr class=""><td class="confluenceTd">unsubscribe</td><td class="confluenceTd">used to unsubscribe from a charasteristic value.</td></tr></tbody></table></div><p>In order to connect to a Bluetooth device that is in the <code>connactable</code> state, use the command (where <code>pdev</code> is the device address):</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/iot bluetooth connections connect pdev=DC:2C:6E:0F:C0:3D</pre>
+</div></div><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>To connect to TG-BT5-IN/OUT tags, make sure to put it into the <code>connactable</code> state by applying a magnet to the magnetic switch.</p></div></div><p>To view an already established connection:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/iot bluetooth connections print</pre>
+</div></div><p>To view device characteristics:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/iot bluetooth connections characteristics print
+Columns: PDEV, NAME, UUID
+ #  PDEV               NAME                              UUID                            
+ 0  DC:2C:6E:0F:C0:3D  Service Changed                   2a05                            
+ 1  DC:2C:6E:0F:C0:3D  Database Hash                     2b2a                            
+ 2  DC:2C:6E:0F:C0:3D  Client Supported Features         2b29                            
+ 3  DC:2C:6E:0F:C0:3D  Device Name                       2a00                            
+ 4  DC:2C:6E:0F:C0:3D  Appearance                        2a01                            
+...
+...
+...</pre>
+</div></div><p>To read a specific characteristic, specify the <code>pdev</code> address and the <code>uuid</code>:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/iot bluetooth connections read pdev=DC:2C:6E:0F:C0:3D uuid=2a00</pre>
+</div></div><h2 id="Bluetooth-Scanners">Scanners</h2><p>In this menu, you can set up the scanner settings for the Bluetooth chip. When disabled, the device is no longer able to receive advertising reports. When enabled, you can monitor advertising reports in the &quot;Advertising reports&quot; tab (which will be explained later in the guide). You can check and set scanner settings with the commands:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/iot bluetooth scanners print
+Flags: X - DISABLED
+Columns: DEVICE, TYPE, INTERVAL, WINDOW, OWN-ADDRESS-TYPE, FILTER-POLICY, FILTER-DUPL
+ICATES
+#   DEVICE  TYPE     INTERVAL  WINDOW  OWN-ADDRESS-TYPE  FILTER-POLICY  FIL
+0 X bt1     passive  10ms      10ms    random-static     default        off
+/iot bluetooth scanners set</pre>
+</div></div><p class="auto-cursor-target">Configurable properties are shown below:</p><div class="table-wrap"><table class="relative-table wrapped confluenceTable" style="width: 97.4122%;"><colgroup class=""><col class=""/><col class=""/></colgroup><tbody class=""><tr class=""><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr class=""><td class="confluenceTd"><strong>disabled </strong>(<em>yes | no</em>; Default: <strong>no</strong>)</td><td class="confluenceTd">An option to disable or enable the Bluetooth chip to receive advertising reports.</td></tr><tr class=""><td class="confluenceTd"><strong>filter-duplicates </strong>(keep-newest | keep-oldest | keep-unique | off; Default: <strong>off</strong>)</td><td class="confluenceTd"><div class="content-wrapper"><p>An option to discard duplicate advertisements from the same advertiser:</p><ul><li>keep-newest → Keeps the newest report (discards the oldest). Only the newest PDU from a single AdvA will be kept.</li><li>keep-oldest → Keeps the oldest report (discards the newest). Only the oldest PDU from a single AdvA will be kept. This type of PDU filtering happens at the controller level and as such it's the most efficient (energy/bandwidth-wise) method of duplicate filtering.</li><li>keep-unique → Only displays advertisements that have a unique payload. Meaning, if 1+ identical payloads (AdvData) are found, only the first payload is going to be displayed, while the &quot;clones&quot; are discarded/ignored.</li><li>off → Duplicates are not discarded. All PDUs with the same AdvA will be kept.</li></ul><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p><span>A <span class="highlight appended">duplicate</span> advertising report is an advertising report sent from the same </span><span>device address. The actual data (&quot;AdvData&quot; part of the payload) may change/differ and it is not considered significant when determining <span class="highlight appended">duplicate</span> advertising reports. Meaning that, for example, if the Bluetooth interface receives 10 payloads (payload after payload with a 1-second interval) from the same tag:</span></p><ul><li><span> if you are using the &quot;keep-oldest&quot; setting → Bluetooth interface will only display the first payload received (9 follow-up payloads will be filtered out) from that tag.<br/></span></li><li><span>if you are using the &quot;keep-newest&quot; setting → Bluetooth interface will only display the last payload received (each follow-up payload will rewrite the previous one) from that tag.</span></li></ul></div></div></div></td></tr><tr class=""><td class="confluenceTd"><p><strong>filter-policy </strong>(default | whitelist<em> | no</em>; Default: <strong>default</strong>)</p></td><td class="confluenceTd"><p>An option to set up a filtering policy (controller-level advertisement filtering):</p><ul><li>default → When this policy is enabled, the scanner will only accept ADV_IND, ADV_NOCONN_IND, ADV_SCAN_IND, SCAN_RSP, and ADV_DIRECT_IND (where TargetA is the scanner's own Bluetooth address) PDU types.</li><li>whitelist → When this policy is enabled, the scanner will only accept ADV_IND, ADV_NOCONN_IND, ADV_SCAN_IND, SCAN_RSP PDU types that are broadcasted by the advertiser, whose address is configured in the &quot;Whitelist&quot; section, and ADV_DIRECT_IND type PDU (where TargetA is the scanner's own Bluetooth address).</li></ul></td></tr><tr class=""><td class="confluenceTd"><p><strong>interval</strong> (<em>integer:3..10240<em style="text-align: left;">;</em></em> Default: <strong>10 ms</strong>)</p></td><td class="confluenceTd">Time after which scanner will start scanning the next advertisement channel.</td></tr><tr class=""><td class="confluenceTd"><p><strong>own-address-type</strong> (<em>public | random-static | rpa-fallback-to-public | rpa-fallback-to-random</em>; Default: <strong>random-static</strong>)</p></td><td class="confluenceTd"><p>Address type used in scan requests (if active scanning type is used):</p><ul><li>public →  To use the IEEE registered, permanent address.</li><li>random-static →  To use user-configurable address (will be changed on the next power-cycle).</li><li>rpa-fallback-to-public → To use Resolvable Random Private Address (RPA) that can only be resolved with our Identity Resolving Key (IRK). If RPA can not be generated, the public address will be used instead.</li><li>rpa-fallback-to-random → Same as &quot;rpa-fallback-to-public&quot; but if RPA can not be generated, the random-static address will be used instead.</li></ul></td></tr><tr class=""><td class="confluenceTd"><p><strong>type</strong> (<em>active | passive; </em>Default: <strong>passive</strong>)</p></td><td class="confluenceTd"><p>Defines the scanner's type:</p><ul><li>active → Scanner can send scan requests if it receives a scannable advertisement. The scanner can send a SCAN_REQ in order to acquire a SCAN_RSP response.</li><li>passive → Scanner will only listen for advertisements, no data (e.g. scan requests) will be sent.</li></ul></td></tr><tr class=""><td colspan="1" class="confluenceTd"><strong>window</strong> (<em>integer:3..10240; </em>Default: <strong>10 ms</strong>)</td><td colspan="1" class="confluenceTd">The time that the scanner will spend scanning a single advertisement channel.</td></tr></tbody></table></div><p>For example, if the scanner interval is set to 20ms, it means that only after 20ms, the device will begin scanning the next channel in line. If the scanner window is set to 10ms, it means that the device will scan each channel only during that 10ms window. Meaning, it will scan channel 37 for 10ms (window time) and begin scanning the next channel after 10 more ms (20ms[interval]-10ms[window]). It will take 10ms to scan channel 38, and after 10 more ms, the device will begin scanning channel 39.</p><h2 class="auto-cursor-target" id="Bluetooth-Advertisingreports">Advertising reports</h2><p>In this section, it is possible to monitor Bluetooth advertising reports (from the nearby broadcasters). The list is limited to 1024 entries (if the list gets full with 1024 entries, each new payload received will overwrite the &quot;oldest&quot; one). You can monitor advertising reports with the command:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/iot bluetooth scanners advertisements print      
+Columns: DEVICE, PDU-TYPE, TIME, ADDRESS-TYPE, ADDRESS, RSSI
+ #  DEV  PDU-TYPE        TIME                  ADDRES  ADDRESS            RSSI  
+ 0  bt1  adv-noconn-ind  jul/28/2021 09:30:56  public  2C:C8:1B:93:16:49  -24dBm
+ 1  bt1  adv-noconn-ind  jul/28/2021 09:30:56  random  0B:16:17:9E:7B:EF  -60dBm</pre>
+</div></div><p>It is possible to set up a filter for the reports with the command:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/iot bluetooth scanners advertisements print where  </pre>
+</div></div><p>For example, to print reports that are broadcasted by a specific Bluetooth address, use the command:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/iot bluetooth scanners advertisements print where address=XX:XX:XX:XX:XX:XX
+ # DEVICE    PDU-TYPE       TIME                 ADD... ADDRESS                    RSSI     LENGTH DATA    
+79 bt1       adv-noconn-ind jul/28/2021 09:46:38 public XX:XX:XX:XX:XX:XX        -70dBm         30 02010...
+80 bt1       adv-noconn-ind jul/28/2021 09:46:43 public XX:XX:XX:XX:XX:XX        -67dBm         30 02010...
+81 bt1       adv-noconn-ind jul/28/2021 09:46:44 public XX:XX:XX:XX:XX:XX        -70dBm         28 1bff0...
+82 bt1       adv-noconn-ind jul/28/2021 09:46:48 public XX:XX:XX:XX:XX:XX        -75dBm         30 02010...</pre>
+</div></div><p><br/></p><p>To show only advertising reports that have RSSI stronger than -30 dBm, use the command:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/iot bluetooth scanners advertisements print where rssi &gt; -30
+ # DEVICE         PDU-TYPE       TIME                 ADDRESS-TYPE ADDRESS                    RSSI     LENGTH DATA       
+307 bt1            adv-noconn-ind jul/29/2021 10:11:31 public       2C:C8:1B:93:16:49        -24dBm         22 15ff4f09.&gt;
+308 bt1            adv-noconn-ind jul/29/2021 10:11:31 public       2C:C8:1B:93:16:49        -26dBm         22 15ff4f09.&gt;</pre>
+</div></div><p class="auto-cursor-target">Possible filters (you can filter the list of advertising reports with the help of the following parameters):</p><div class="table-wrap"><table class="relative-table wrapped confluenceTable" style="width: 42.4575%;"><colgroup class=""><col class="" style="width: 33.5058%;"/><col class="" style="width: 66.4942%;"/></colgroup><tbody class=""><tr class=""><th class="confluenceTh">Filter</th><th class="confluenceTh">Description</th></tr><tr class=""><td class="confluenceTd"><strong>address</strong></td><td class="confluenceTd">Bluetooth advertisers address</td></tr><tr class=""><td class="confluenceTd"><strong>address-type</strong></td><td class="confluenceTd">Advertisers address type (for example, public or random)</td></tr><tr class=""><td class="confluenceTd"><p><strong>data</strong></p></td><td class="confluenceTd">Advertisement data in hex format (AdvData payload)</td></tr><tr class=""><td colspan="1" class="confluenceTd"><strong>device</strong></td><td colspan="1" class="confluenceTd">Bluetooth chip/interface name</td></tr><tr class=""><td colspan="1" class="confluenceTd"><strong>epoch</strong></td><td colspan="1" class="confluenceTd">Milliseconds since Unix Epoch</td></tr><tr class=""><td colspan="1" class="confluenceTd"><strong>filter-comment</strong></td><td colspan="1" class="confluenceTd">Comment of the matching whitelist filter</td></tr><tr class=""><td colspan="1" class="confluenceTd"><strong>length</strong></td><td colspan="1" class="confluenceTd">Advertisement data length</td></tr><tr class=""><td colspan="1" class="confluenceTd"><strong>pdu-type</strong></td><td colspan="1" class="confluenceTd">Advertisement PDU type</td></tr><tr class=""><td colspan="1" class="confluenceTd"><strong>rssi</strong></td><td colspan="1" class="confluenceTd">Signal strength</td></tr><tr class=""><td colspan="1" class="confluenceTd"><strong>time</strong></td><td colspan="1" class="confluenceTd">Time of the advertisement packet reception</td></tr></tbody></table></div><h2 id="Bluetooth-Whitelist">Whitelist</h2><p>In this tab, it is possible to configure a whitelist that is going to be used in the filter policy in the &quot;Scanners&quot; section. In other words, an option to specify which Bluetooth addresses are going to be scanned (displayed in the &quot;Advertising reports&quot;).</p><p>You can view the whitelisted entries with the command:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/iot bluetooth whitelist print
+Columns: DEVICE, ADDRESS-TYPE, ADDRESS
+# DEVICE  ADDRESS-TYPE  ADDRESS    
+0 bt1     any           *:*:*:*:*:*</pre>
+</div></div><p>You can add a new whitelist entry with the command:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/iot bluetooth whitelist add</pre>
+</div></div><p class="auto-cursor-target">Configurable properties:</p><div class="table-wrap"><table class="relative-table wrapped confluenceTable" style="width: 59.627%;"><colgroup class=""><col class="" style="width: 33.7937%;"/><col class="" style="width: 66.2063%;"/></colgroup><tbody class=""><tr class=""><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr class=""><td class="confluenceTd"><strong>address </strong>(<em>MAC address</em>; Default: )</td><td class="confluenceTd">Advertiser's address</td></tr><tr class=""><td class="confluenceTd"><strong>address-type </strong>(<em>any | public | random</em>; Default:<strong> </strong>)</td><td class="confluenceTd">Advertiser's address type</td></tr><tr class=""><td class="confluenceTd"><p><strong>comment </strong>(<em>string</em>; Default: )</p></td><td class="confluenceTd">Short description of the whitelisted entry</td></tr><tr class=""><td colspan="1" class="confluenceTd"><strong>copy-from</strong></td><td colspan="1" class="confluenceTd">An option to copy an entry - for more information check the <a class="external-link" href="https://wiki.mikrotik.com/wiki/Manual:Console#General_Commands" rel="nofollow">console documentation</a></td></tr><tr class=""><td colspan="1" class="confluenceTd"><strong>device </strong>(<em>bt1</em>; Default: )</td><td colspan="1" class="confluenceTd">Select the Bluetooth interface/chip name</td></tr><tr class=""><td colspan="1" class="confluenceTd"><strong>disabled</strong> (<em>yes | no</em>; Default: )</td><td colspan="1" class="confluenceTd">An option to disable or to enable the entry</td></tr></tbody></table></div><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body">Only 8 whitelisted entries can be added prior to <strong>7.14beta8</strong> version.<br/>Starting with <strong>7.14beta8</strong> version, whitelist is no longer limited to 8 entries and address field supports asterisk wildcards.</div></div><p>If, for example, you want to whitelist all MAC addresses that begin with &quot;DC:2C:...&quot; octets, add an entry using wildcard asterisk characters:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/iot bluetooth whitelist add address=DC:2C:*:*:*:*</pre>
+</div></div><p>Wildcard asterisk can not be used in-between specific octets, like &quot;<span class="codespan__pre-wrap"><code>AA:*:*:BB:*:*</code></span>&quot; (it is an invaldi entry).</p><p>Valid entries would be:</p><ul><li><span class="codespan__pre-wrap"><code>AA:BB:CC:DD:*:*</code></span></li><li><span class="codespan__pre-wrap"><code>AA:BB:CC:DD:EE:*</code></span></li><li><span class="codespan__pre-wrap"><code>AA:*:*:*:*:*</code></span></li></ul><h2 id="Bluetooth-PeripheralDevices">Peripheral Devices</h2><p>This section displays decoded Eddystone TLM, Eddystone UID, iBeacon and MikroTik Bluetooth payloads. If the &quot;Peripheral Devices&quot; captures other beacon types, they will not be decoded.</p><p>You can view a decoded list with a <code>print detail</code> command:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/iot bluetooth peripheral-devices print detail 
+ 0 address-type=public address=60:C0:BF:87:E2:1C name=&quot;60:C0:BF:87:E2:1C&quot; persist=no 
+   mtik-key=&quot;&quot; rssi=-64 
+   last-data=&quot;0201041BFFCD0960C0BF87E21C025B1F198B21AC62CDAE0045FAFEFE057D7B&quot; 
+   last-seen=2023-08-22 11:20:09 beacon-types=&quot;&quot; 
+
+ 1 address-type=public address=DC:2C:6E:0F:C0:3D name=&quot;DC:2C:6E:0F:C0:3D&quot; persist=no 
+   mtik-key=&quot;&quot; rssi=-47 
+   last-data=&quot;0303AAFE1716AAFE00E5B2B98DE4C81C47C2B14E7500000000000000&quot; 
+   last-seen=2023-08-22 11:20:05 beacon-types=mikrotik,ibeacon,eddystone-uid 
+   mtik-version=1 mtik-encrypted=no mtik-acc-x=-0.007G mtik-acc-y=-0.015G 
+   mtik-acc-z=-0.007G mtik-temperature=23.808C mtik-battery=100% 
+   mtik-uptime=14342160s mtik-flags=&quot;&quot; 
+   ibeacon-uuid=&quot;55555555-5555-5555-5555-222222222222&quot; ibeacon-major=1280 
+   ibeacon-minor=512 ibeacon-rssi-at-1m=-68dBm eddy-rssi-at-1m=-27dBm 
+   eddy-namespace=&quot;b2b98de4c81c47c2b14e&quot; eddy-instance=&quot;750000000000&quot; 
+
+ 2 address-type=public address=DC:2C:6E:F6:54:7D name=&quot;DC:2C:6E:F6:54:7D&quot; persist=no 
+   mtik-key=&quot;&quot; rssi=-74 
+   last-data=&quot;0201060303AAFE1116AAFE20000B701549023532D802384F46&quot; 
+   last-seen=2023-08-22 11:20:13 beacon-types=eddystone-tlm eddy-version=0 
+   eddy-battery-voltage=2.928V eddy-temperature=21.285C eddy-packet-count=37040856 
+   eddy-uptime=3724474.2s 
+
+ 3 address-type=public address=DC:2C:6E:0F:C0:3E name=&quot;DC:2C:6E:0F:C0:3E&quot; persist=no 
+   mtik-key=&quot;&quot; rssi=-72 last-data=&quot;15FF4F0901000214FFFF0200FDFF4F1774E00F000064&quot; 
+   last-seen=2023-08-22 11:20:06 beacon-types=mikrotik mtik-version=1 
+   mtik-encrypted=no mtik-acc-x=-0.003G mtik-acc-y=0.007G mtik-acc-z=-0.011G 
+   mtik-temperature=23.308C mtik-battery=100% mtik-uptime=1040500s mtik-flags=&quot;&quot; 
+
+ 4 address-type=public address=60:C0:BF:20:9A:50 name=&quot;60:C0:BF:20:9A:50&quot; persist=no 
+   mtik-key=&quot;&quot; rssi=-66 
+   last-data=&quot;0201041BFF4160C0BF209A50FFA4CA8906E48C0377DCFDD2DF7AF02FFC6AC5&quot; 
+   last-seen=2023-08-22 11:20:11 beacon-types=&quot;&quot; </pre>
+</div></div><p>You can filter the list, for example, based on the &quot;address&quot; of the device (knowing MAC-address of the tag):</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/iot bluetooth peripheral-devices print detail where address=&quot;DC:2C:6E:0F:C0:3E&quot;
+ 0 address-type=public address=DC:2C:6E:0F:C0:3E name=&quot;my_tag&quot; persist=yes 
+   mtik-key=&quot;&quot; rssi=-60 last-data=&quot;15FF4F090100669DFCFF0600FCFF6117F1E50F000064&quot; 
+   last-seen=2023-08-22 11:43:31 beacon-types=mikrotik mtik-version=1 
+   mtik-encrypted=no mtik-acc-x=-0.015G mtik-acc-y=0.023G mtik-acc-z=-0.015G 
+   mtik-temperature=23.378C mtik-battery=100% mtik-uptime=1041905s mtik-flags=&quot;&quot;
+
+/iot bluetooth peripheral-devices print value-list where address=&quot;DC:2C:6E:0F:C0:3E&quot;
+      address-type: public
+           address: DC:2C:6E:0F:C0:3E
+              name: my_tag
+           persist: yes
+          mtik-key: 
+              rssi: -71
+         last-data: 15FF4F0901002AC60400000004004F17D4E90F000064
+         last-seen: 2023-08-22 12:00:06
+      beacon-types: mikrotik
+      mtik-version: 1
+    mtik-encrypted: no
+        mtik-acc-x: 0.015G
+        mtik-acc-y: 0G
+        mtik-acc-z: 0.015G
+  mtik-temperature: 23.308C
+      mtik-battery: 100%
+       mtik-uptime: 1042900s
+        mtik-flags: </pre>
+</div></div><p>Or, for example, filter the list based on the beacon type:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/iot bluetooth peripheral-devices print detail where beacon-types=mikrotik 
+ 0 address-type=public address=DC:2C:6E:0F:C0:3E name=&quot;my_tag&quot; persist=yes 
+   mtik-key=&quot;&quot; rssi=-69 last-data=&quot;15FF4F0901000747020002000100611778E60F000064&quot; 
+   last-seen=2023-08-22 11:45:46 beacon-types=mikrotik mtik-version=1 
+   mtik-encrypted=no mtik-acc-x=0.007G mtik-acc-y=0.007G mtik-acc-z=0.003G 
+   mtik-temperature=23.378C mtik-battery=100% mtik-uptime=1042040s mtik-flags=&quot;&quot; 
+
+ 7 address-type=public address=2C:C8:1B:4B:BB:0A name=&quot;2C:C8:1B:4B:BB:0A&quot; persist=no 
+   mtik-key=&quot;&quot; rssi=-44 last-data=&quot;15FF4F09010077090000FCFFFDFFD519BF9EFF00005B&quot; 
+   last-seen=2023-08-22 11:45:53 beacon-types=mikrotik mtik-version=1 
+   mtik-encrypted=no mtik-acc-x=0G mtik-acc-y=-0.015G mtik-acc-z=-0.011G 
+   mtik-temperature=25.832C mtik-battery=91% mtik-uptime=16752319s mtik-flags=&quot;&quot; </pre>
+</div></div><p>Additionally, you have the option to set &quot;<code>persist=yes</code>&quot;, which will make sure that the device/tag stays on the list forever (because devices that stop broadcasting payloads will be timed-out after one minute and removed from the list until new payloads start appearing in the air):</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/iot bluetooth peripheral-devices set persist=yes address=&quot;DC:2C:6E:0F:C0:3E&quot;</pre>
+</div></div><p>You can also set a name for the device, so you can easier find it on the list, with the command:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/iot bluetooth peripheral-devices set name=&quot;my_tag&quot; address=&quot;DC:2C:6E:0F:C0:3E&quot;
+</pre>
+</div></div><h2 id="Bluetooth-Decode-ad">Decode-ad</h2><p>In this menu, you can decode static MikroTik, Eddystone TLM, Eddystone UID and iBeacon payloads.</p><p>To decode a payload, just input it into the &quot;data&quot; field:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/iot bluetooth decode-ad data=0201060303AAFE1116AAFE20000B6E158402353AF20238576B 
+             type: eddystone-tlm
+          version: 0
+  battery-voltage: 2.926V
+      temperature: 21.515C
+     packet-count: 37042930
+           uptime: 3724682.7s
+
+/iot bluetooth decode-ad data=15FF4F090100032E0100FFFF00004F17C1E80F000064      
+         type: mikrotik
+      version: 1
+    encrypted: no
+        acc-x: 0.003G
+        acc-y: -0.003G
+        acc-z: 0G
+  temperature: 23.308C
+       uptime: 1042625s
+        flags: 
+      battery: 100%
+</pre>
+</div></div>
+                    </div>
+
+                                        
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

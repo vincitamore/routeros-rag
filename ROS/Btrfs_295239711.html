@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : Btrfs</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Hardware_13500445.html">Hardware</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Disks_91193346.html">Disks</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="ROSE-storage_259031065.html">ROSE-storage</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : Btrfs
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Artūrs Z.</span>, last updated on Apr 02, 2025
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <ol><li data-uuid="9ca6dc04-0bc1-482a-b096-b8f8a977961d"><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742044383 {padding: 0px;}
+div.rbtoc1747742044383 ul {margin-left: 0px;}
+div.rbtoc1747742044383 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742044383'>
+<ul class='toc-indentation'>
+<li><a href='#Btrfs-Summary'>Summary</a></li>
+<li><a href='#Btrfs-Examples'>Examples</a>
+<ul class='toc-indentation'>
+<li><a href='#Btrfs-TwodiskBtrfs-RAID(RAID1)'>Two disk Btrfs-RAID (RAID1)</a></li>
+<li><a href='#Btrfs-CreatingBtrfs-RAIDcheck'>Creating Btrfs-RAID check</a></li>
+<li><a href='#Btrfs-Creatingsubvolumes'>Creating subvolumes</a></li>
+<li><a href='#Btrfs-Creatingsnapshots'>Creating snapshots</a></li>
+<li><a href='#Btrfs-Transferyoursnapshots'>Transfer your snapshots</a></li>
+<li><a href='#Btrfs-FourdiskBtrfs-RAID(RAID10)'>Four disk Btrfs-RAID (RAID10)</a></li>
+</ul>
+</li>
+<li><a href='#Btrfs-Maintenance'>Maintenance</a>
+<ul class='toc-indentation'>
+<li><a href='#Btrfs-Periodicscrubbing'>Periodic scrubbing</a></li>
+<li><a href='#Btrfs-Periodicbalance'>Periodic balance</a></li>
+<li><a href='#Btrfs-Freespace'>Free space</a></li>
+</ul>
+</li>
+</ul>
+</div></li></ol><h1 id="Btrfs-Summary">Summary</h1><p>Btrfs is a feature-rich copy-on-write file system that has been around since 2007, it is the default file system for some popular Linux distributions such as <a class="external-link" href="https://en.wikipedia.org/wiki/Fedora_Linux" rel="nofollow">Fedora</a> and is used by many large companies such as <a class="external-link" href="https://en.wikipedia.org/wiki/Meta_Platforms" rel="nofollow">Meta</a> in their datacenters. Over the years it has proven itself to be stable and more flexible than other popular file systems. Most significant features are the following:</p><ul style="list-style-type: square;"><li data-uuid="29346a42-5773-49f5-8ce6-5de263c17432">Birot protection (when used in Btrfs-RAID mode)</li><li data-uuid="969ba0eb-4143-4e39-bb4d-9aca5d5b037d">Subvolumes</li><li data-uuid="5110dfa5-d4fe-44d7-8213-ce9145250f3a">Snapshots</li><li data-uuid="9e583768-5c05-4878-adf5-9cba9933835e">Transfer</li></ul><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Features described in this page are only available starting from RouterOS v7.18beta2!</p></div></div><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Btrfs features require the <a href="https://help.mikrotik.com/docs/spaces/ROS/pages/259031065/ROSE-storage" rel="nofollow">ROSE-storage</a> package.</p></div></div><h1 id="Btrfs-Examples">Examples</h1><h2 id="Btrfs-TwodiskBtrfs-RAID(RAID1)">Two disk Btrfs-RAID (RAID1)</h2><p>In case you want to create a reliable data storage solution with just two disks (for example, NAS), then you can follow this these steps to successfully create a RAID1 array with Btrfs:</p><ol><li data-uuid="eec20683-9598-476e-8369-cbb6dbd76717">Find the names of the disks you want to use for setting up a Btrfs-RAID:<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/disk print</pre>
+</div></div><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>In this example, the disks used are going to be called <code>&lt;disk-name-1&gt;</code>  and <code>&lt;disk-name-2&gt;</code> , make sure you replace these placeholders with your actual disk names!</p></div></div></li><li data-uuid="7db99d35-07dd-4e43-965d-3ae0c7b51bcc">Format one of your disks to Btrfs, in this case <code>&lt;disk-name-1&gt;</code> :<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/disk format-drive &lt;disk-name-1&gt; file-system=btrfs</pre>
+</div></div></li><li data-uuid="7710d752-ecb9-47cb-8f0b-ca62ad80f53c">You can check the current status of Btrfs disks using the following command:<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/disk/btrfs/filesystem print</pre>
+</div></div><br/><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body">In case there was an existing RAID on your disks and you want to remove any obsolete configuration for simplicity, then you can wipe the disks with <code>/disk format-drive &lt;disk-name-x&gt; file-system=wipe-quick</code> . This is useful when you have unwanted entries under <code>/disk/btrfs/filesystem print</code> </div></div></li><li data-uuid="dc36126d-28a7-4542-9cc7-879e012bb0ff">Add a label for the Btrfs drive for simplicity:<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/disk/btrfs/filesystem set [find where present-devs=&lt;disk-name-1&gt;] label=BtrfsRAID</pre>
+</div></div></li><li data-uuid="448a9511-fc39-4c04-a53c-fcb4a18d55fb">Add a disk to an existing Btrfs disk:<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/disk/btrfs/filesystem/add-device [find where present-devs=&lt;disk-name-1&gt;] device=&lt;disk-name-2&gt;</pre>
+</div></div></li><li data-uuid="db0df6c2-fa80-437e-afa6-7da56ac17ff5">Start Btrfs balance process to create a Btrfs-RAID with RAID1 configuration:<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/disk/btrfs/filesystem balance-start [find where label=BtrfsRAID] data-profile=raid1 metadata-profile=raid1 system-profile=raid1</pre>
+</div></div></li><li data-uuid="f1f1d7dd-f441-4a7b-8c1c-cb6dbb065f0e">Set <code>mount-filesystem=no</code> for second disk to prevent the files showing up twice:<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/disk set &lt;disk-name-2&gt; mount-filesystem=no</pre>
+</div></div><br/><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Btrfs has feature that allows you to mount any of the Btrfs-RAID members and you will still be able to access the whole Btrfs-RAID array. A downside of this feature is that if you have mounted the same array twice, then your files will appear twice as well. To prevent this, you can simply disable mounting one of the Btrfs-RAID members automatically.</p></div></div></li><li data-uuid="898ab9b9-4cdf-497a-9c50-8ef2536641e7">You can also change the mount point's name for simplicity:<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/disk set &lt;disk-name-1&gt; mount-point-template=BtrfsRAID</pre>
+</div></div></li><li data-uuid="6260954a-5741-4731-82dc-80ab752048ac">Your newly created Btrfs-RAID array is now accessible through <code>/BtrsRAID/</code> folder.</li></ol><p>With a reliable storage solution such as Btrfs-RAID consider adding useful features to your RouterOS device by following the suggested guides below:</p><ul style="list-style-type: square;"><li data-uuid="8ba39d3d-07bf-4475-9b8e-014a0724f6d2">running your own <a href="https://help.mikrotik.com/docs/spaces/ROS/pages/84901929/Container" rel="nofollow">Containers</a></li><li data-uuid="6f730471-a974-4f5a-92cc-fe4cec50368e"><a href="https://help.mikrotik.com/docs/spaces/ROS/pages/237699479/DLNA+Media+server" rel="nofollow">DLNA Media Server</a></li><li data-uuid="9f3da9a0-9d29-4df9-9ecb-316f92254044"><a href="https://help.mikrotik.com/docs/spaces/ROS/pages/117145608/SMB" rel="nofollow">Samba server</a></li><li data-uuid="f94b80c0-4614-41c1-a896-df00843dbc73"><a href="https://help.mikrotik.com/docs/spaces/ROS/pages/259031065/ROSE-storage#ROSEstorage-NFS" rel="nofollow">NFS server</a></li></ul><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>When regular <a href="https://help.mikrotik.com/docs/spaces/ROS/pages/259031065/ROSE-storage#ROSEstorage-RAID" rel="nofollow">RAID</a> is used with Btrfs filesystem, then your RAID array will not be able to heal itself from Bitrot, your RAID array can only detect Bitrot with regular RAID. It is recommended to use Btrfs-RAID (the configuration described in this section) when possible.</p></div></div><h2 id="Btrfs-CreatingBtrfs-RAIDcheck">Creating Btrfs-RAID check</h2><p>It is extremely important for you to monitor the Btrfs-RAID array's health. One way you can do this is by using the script below as a working example:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/system scheduler
+add interval=2w1d30s name=BraidBalanceStartCall on-event=BraidBalanceStart policy=ftp,read,write,policy,test,sniff start-time=startup
+add interval=1w30s name=BraidScrubStartCall on-event=BraidScrubStart policy=ftp,read,write,policy,test,sniff start-time=startup
+add interval=2m name=BraidBalanceStatusCheckCall on-event=BraidBalanceStatus policy=ftp,read,write,policy,test,sniff start-time=startup
+add interval=2m name=BraidScrubStatusCheckCall on-event=BraidScrubStatus policy=ftp,read,write,policy,test,sniff start-time=startup
+add interval=30s name=BraidHealthCheckCall on-event=BraidHealthCheck policy=ftp,read,write,policy,test,sniff start-time=startup
+
+/system script
+add dont-require-permissions=no name=BraidScrubStart owner=admin policy=ftp,read,write,policy,test,sniff source=&quot;:global btrfsscrubstatuscheck;\
+    \nif (\$btrfsscrubstatuscheck != \&quot;started\&quot;) do={\
+    \n  :set \$btrfsscrubstatuscheck (\$btrfsscrubstatuscheck \&quot;started\&quot;);\
+    \n  foreach i in=[/disk/btrfs/filesystem/find] do={ /disk/btrfs/filesystem/scrub-start \$i;\
+    \n    :local temp [ /disk btrfs filesystem/get value-name=label \$i;]\
+    \n    /log info message=\&quot;INFO: Btrfs scrub process started on  \$temp\&quot;;\
+    \n    :delay 3; \
+    \n  }\
+    \n}\
+    \n&quot;
+add dont-require-permissions=no name=BraidBalanceStart owner=admin policy=ftp,read,write,policy,test,sniff source=&quot;:global btrfsbalancestatuscheck;\
+    \nif (\$btrfsbalancestatuscheck != \&quot;started\&quot;) do={\
+    \n:set \$btrfsbalancestatuscheck (\$btrfsbalancestatuscheck \&quot;started\&quot;);\
+    \n:local percentage;\
+    \n:set \$percentage (\$percentage 50);\
+    \n  foreach i in=[/disk/btrfs/filesystem/find] do={ /disk/btrfs/filesystem/balance-start data-usage=\$percentage \$i;\
+    \n    :local temp [ /disk btrfs filesystem/get value-name=label \$i;]\
+    \n    /log info message=\&quot;INFO: Btrfs balance process started on  \$temp\&quot;;\
+    \n    :delay 3; \
+    \n  }\
+    \n}&quot;
+add dont-require-permissions=no name=BraidHealthCheck owner=admin policy=ftp,read,write,policy,test,sniff source=&quot;foreach i in=[/disk/btrfs/filesystem/find] do={ \
+    \n\
+    \n:local sysadmin; \
+    \n:set  \$sysadmin \&quot;sysadmin@domain.tld\&quot;;\
+    \n\
+    \n:local temp [ /disk btrfs filesystem/get value-name=label \$i;]\
+    \n:local haserror [/disk btrfs filesystem/get value-name=about \$i ];\
+    \n  if (!([:len \$haserror] = 0)) do= {\
+    \n    /log info message=\&quot;ERROR: BtrfsHealthCheck found errors on \$temp\&quot;;\
+    \n    /tool e-mail send to= \$sysadmin  subject=([/system identity get name].\&quot; BtrfsHealthCheck found errors\&quot;) body=(\&quot;Btrfs array where found errors on \&quot; .\$temp . \&quot;   \&quot;);\
+    \n    :delay 9; \
+    \n  }\
+    \n}&quot;
+add dont-require-permissions=no name=BraidBalanceStatus owner=admin policy=ftp,read,write,policy,test,sniff source=&quot;:global btrfsbalancestatuscheck;\
+    \nif (\$btrfsbalancestatuscheck = \&quot;started\&quot;) do={\
+    \n:local arraycnt [/disk/btrfs/filesystem/print count-only as-value];\
+    \n:local counter [:set \$counter (\$counter 0)];\
+    \n:local counterdiff [:set \$counterdiff (\$counterdiff 0)];\
+    \n  foreach i in=[/disk/btrfs/filesystem/find] do={ \
+    \n    :local barray [ /disk btrfs filesystem/get value-name=balance-status  \$i;]\
+    \n    :local temp [ /disk btrfs filesystem/get value-name=label \$i;]\
+    \n    if ( \$barray != \&quot;done\&quot; and \$btrfsbalancestatuscheck = \&quot;started\&quot;) do={\
+    \n        /log info message=\&quot;INFO: Btrfs current balance status on  \$temp is \$barray\&quot;;\
+    \n    }\
+    \n    if ( \$barray = \&quot;done\&quot; and \$btrfsbalancestatuscheck = \&quot;started\&quot;) do={\
+    \n      :set \$counter (\$counter +1);\
+    \n      :set \$counterdiff (\$arraycnt - \$counter);\
+    \n      if (\$counterdiff =1) do={\
+    \n        /log info message=\&quot;INFO: Btrfs balancing already done on \$counter arrays\&quot;;\
+    \n      }\
+    \n    }\
+    \n    if ( \$counter = \$arraycnt) do={\
+    \n      /log info message=\&quot;INFO: Btrfs array balance status on  \$temp is \$barray \&quot;;\
+    \n      :set \$btrfsbalancestatuscheck (\$btrfsbalancestatuscheck \&quot;done\&quot;);\
+    \n    }\
+    \n  } \
+    \n}&quot;
+add dont-require-permissions=no name=BraidScrubStatus owner=admin policy=ftp,read,write,policy,test,sniff source=&quot;:global btrfsscrubstatuscheck;\
+    \nif (\$btrfsscrubstatuscheck = \&quot;started\&quot;) do={\
+    \n:local arraycnt [/disk/btrfs/filesystem/print count-only as-value];\
+    \n:local counter [:set \$counter (\$counter 0)];\
+    \n:local counterdiff [:set \$counterdiff (\$counterdiff 0)];\
+    \n  foreach i in=[/disk/btrfs/filesystem/find] do={ \
+    \n    :local barray [ /disk btrfs filesystem/get value-name=scrub-status  \$i;]\
+    \n    :local temp [ /disk btrfs filesystem/get value-name=label \$i;]\
+    \n    if ( \$barray != \&quot;done\&quot; and \$btrfsscrubstatuscheck = \&quot;started\&quot;) do={\
+    \n      /log info message=\&quot;INFO: Btrfs current scrub status on  \$temp is \$barray\&quot;;\
+    \n    }\
+    \n    if ( \$barray = \&quot;done\&quot; and \$btrfsscrubstatuscheck = \&quot;started\&quot;) do={\
+    \n      :set \$counter (\$counter +1);\
+    \n      :set \$counterdiff (\$arraycnt - \$counter);\
+    \n      if (\$counterdiff =1) do={\
+    \n        /log info message=\&quot;INFO: Btrfs scrubbing already done on \$counter arrays\&quot;;\
+    \n      }\
+    \n    }\
+    \n    if ( \$counter = \$arraycnt ) do={\
+    \n      /log info message=\&quot;INFO: Btrfs array scrub status on  \$temp is \$barray \&quot;;\
+    \n      :set \$btrfsscrubstatuscheck (\$btrfsscrubstatuscheck \&quot;done\&quot;);\
+    \n    }\
+    \n  } \
+    \n}&quot;</pre>
+</div></div><p>You also need to adjust e-mail server settings on your RouterOS device:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/tool e-mail
+set from=&lt;raidcheck@domain.com&gt; port=587 server=smtp.domain.com tls=starttls</pre>
+</div></div><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Make sure you adjust the e-mail settings with the required settings on your e-mail server. Remember to adjust the e-mail address in the script above.</p></div></div><p><br/></p><h2 id="Btrfs-Creatingsubvolumes">Creating subvolumes</h2><p>The main benefit of creating subvolumes is to organize data on your Btrfs main (root) subvolume. Consider subvolumes as folders with features of a partition, while still sharing the total disk space between all subvolumes. You can later use these subvolumes for much more advanced tasks and it is recommended to create subvolumes when you have large amounts of different types of data, especially that requires frequent backups. Follow the guide to setup a few example subvolumes:</p><div role="region" aria-label="Tip" class="confluence-information-macro  confluence-information-macro-tip" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-approve confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Subvolumes are most useful when used together with snapshots. Be sure to check out the snapshot feature as well.</p></div></div><p><br/></p><ol><li data-uuid="2fe9e8c3-d4c8-47bb-8eda-71acaaa182aa">Find the disk name of your disk that you want to use as your Btrfs disk:<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/disk print</pre>
+</div></div><br/><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>In this example, the disk used is going to be called <code>&lt;disk-name-1&gt;</code> , make sure you replace the placeholder with your actual disk name!</p></div></div></li><li data-uuid="45764080-b865-4a6c-9240-9600950ea722">Format the disk to Btrfs, in this case <code>&lt;disk-name-1&gt;</code> :<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/disk format-drive &lt;disk-name-1&gt; file-system=btrfs</pre>
+</div></div></li><li data-uuid="c8381765-569a-4f7f-bc3d-fc9f73dd71ca">Add a label for the Btrfs disk for simplicity:<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/disk/btrfs/filesystem set [find where present-devs=&lt;disk-name-1&gt;] label=BtrfsDisk</pre>
+</div></div></li><li data-uuid="07e4246b-2832-4cda-a0c2-c46f54f0eded">You can also change the Btrfs disk mount point for simplicity:<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/disk set &lt;disk-name-1&gt; mount-point-template=BtrfsDisk</pre>
+</div></div></li><li data-uuid="abc749de-f3a0-4b10-8a07-8dba9126ee3f">Create a new subvolume called <code>Documents</code> to <code>BtrfsDisk</code> :<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/disk/btrfs/subvolume/add name=Documents fs=BtrfsDisk</pre>
+</div></div><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Subvolumes are also snapshots. You might encounter both of these names in various menus. In simple terms, snapshots are subvolumes created at a specific time and contains data from that time point.</p></div></div></li><li data-uuid="eca5fd55-3e40-43d8-af72-33408bfdfed3">Create another subvolume called <code>Photos</code> to <code>BtrfsDisk</code> :<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/disk/btrfs/subvolume/add name=Photos fs=BtrfsDisk</pre>
+</div></div></li><li data-uuid="53f47d3a-4c9e-462f-89d8-2fc7e958c674">You can view the currently available subvolumes:<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/disk/btrfs/subvolume/print</pre>
+</div></div></li><li data-uuid="675fc349-412b-44d2-a409-6c5f19453940">You can now access these subvolumes as <code>/BtrfsDisk/Documents</code> and <code>/BtrfsDisk/Photos</code> </li></ol><h2 id="Btrfs-Creatingsnapshots">Creating snapshots</h2><p>Snapshots are space efficient way to create backups for your data. By creating a snapshot you save the current state of your data which you can later access.</p><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Snapshots don't create a copy of your data, they save the current state of your data while allowing to make changes to your current data. Snapshots contain the information on how to revert the current data to a state that was present at the time when the snapshot was created. Snapshots don't create multiple copies of your data like, for example, a full backup does.</p></div></div><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>While you can create snapshots of a root subvolume, it is recommended to create a new subvolume for your data and then use the snapshot feature. This is only a preference when managing many snapshots.</p></div></div><ol><li data-uuid="18991679-16ac-41c6-9629-29586e66fc20">Create subvolumes (or use the root subvolume, see above) and put data inside these subvolumes, for example:<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">[admin@MikroTik] &gt; /file print 
+ # NAME   
+ 0 BtrfsDisk
+ 1 BtrfsDisk/Documents
+ 2 BtrfsDisk/Photos 
+ 3 BtrfsDisk/Documents/document1.txt
+ 4 BtrfsDisk/Photos/photo1.jpg</pre>
+</div></div></li><li data-uuid="c8ef7602-ddbc-459d-9a21-abe2940128ea">In this example, we have created <code>/Btrfs/Documents</code> and <code>/Btrfs/Photos/</code> subvolumes and you can view them with:<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/disk/btrfs/subvolume/print</pre>
+</div></div></li><li data-uuid="b99bb5d0-e526-4a44-bb8c-549c56a3aaae">In order to make snapshots more organized, create a new subvolume called <code>Snapshots</code> :<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/disk/btrfs/subvolume/add name=Snapshots fs=BtrfsDisk</pre>
+</div></div></li><li data-uuid="a81f9884-ccfd-4766-ab2e-0c98080d5ed9">Create a snapshot for <code>Documents</code> and <code>Photos</code> :<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/disk/btrfs/subvolume/add read-only=yes parent=Documents fs=BtrfsDisk  name=Snapshots/Documents-22012025
+/disk/btrfs/subvolume/add read-only=yes parent=Photos fs=BtrfsDisk  name=Snapshots/Photos-22012025</pre>
+</div></div></li><li data-uuid="46c4c8a8-ee56-4522-92e6-4b88902959b0">You should now have new subvolumes that are read-only and contain your files:<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">[admin@MikroTik] &gt; /file print 
+ # NAME      
+ 0 BtrfsDisk
+ 1 BtrfsDisk/Documents
+ 2 BtrfsDisk/Photos
+ 3 BtrfsDisk/Snapshots
+ 4 BtrfsDisk/Documents/document1.txt
+ 5 BtrfsDisk/Photos/photo1.jpg
+ 6 BtrfsDisk/Snapshots/Documents-22012025
+ 7 BtrfsDisk/Snapshots/Photos-22012025
+ 8 BtrfsDisk/Snapshots/Documents-22012025/document1.txt
+ 9 BtrfsDisk/Snapshots/Photos-22012025/photo1.jpg</pre>
+</div></div></li><li data-uuid="4f6d8e72-c077-4370-814d-36a5b75857f2">For testing purposes, you can add more data to your subvolumes and you should notice that newly added files do not appear in the snapshots, but only in the subvolumes:<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">[admin@infra1.mikrotikls.lv] &gt; /file print 
+ # NAME   
+ 0 BtrfsDisk
+ 1 BtrfsDisk/Documents
+ 2 BtrfsDisk/Photos
+ 3 BtrfsDisk/Snapshots
+ 4 BtrfsDisk/Documents/document1.txt
+ 5 BtrfsDisk/Documents/document2.txt
+ 6 BtrfsDisk/Photos/photo1.jpg
+ 7 BtrfsDisk/Photos/photo2.jpg 
+ 8 BtrfsDisk/Snapshots/Photos-22012025
+ 9 BtrfsDisk/Snapshots/Documents-22012025
+10 BtrfsDisk/Snapshots/Documents-22012025/document1.txt
+11 BtrfsDisk/Snapshots/Photos-22012025/photo1.jpg</pre>
+</div></div></li><li data-uuid="abc18e12-f346-4cd9-b543-33969b727737">You can now create a new snapshot:<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/disk/btrfs/subvolume/add read-only=yes parent=Documents fs=BtrfsDisk  name=Snapshots/Documents-23012025 
+/disk/btrfs/subvolume/add read-only=yes parent=Photos fs=BtrfsDisk  name=Snapshots/Photos-23012025 </pre>
+</div></div></li><li data-uuid="340c79f7-9099-4c41-b526-7e15d4962bb1">After a new snapshot, you will have 2 snapshots for each subvolume. One contains older files and another one contains older and newer files:<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">[admin@MikroTik] &gt; /file print 
+ # NAME   
+ 0 BtrfsDisk
+ 1 BtrfsDisk/Documents
+ 2 BtrfsDisk/Photos
+ 3 BtrfsDisk/Snapshots
+ 4 BtrfsDisk/Documents/document1.txt
+ 5 BtrfsDisk/Documents/document2.txt
+ 6 BtrfsDisk/Photos/photo1.jpg
+ 7 BtrfsDisk/Photos/photo2.jpg
+ 8 BtrfsDisk/Snapshots/Photos-22012025
+ 9 BtrfsDisk/Snapshots/Documents-22012025
+10 BtrfsDisk/Snapshots/Documents-23012025
+11 BtrfsDisk/Snapshots/Photos-23012025
+12 BtrfsDisk/Snapshots/Documents-22012025/document1.txt 
+13 BtrfsDisk/Snapshots/Documents-23012025/document1.txt
+14 BtrfsDisk/Snapshots/Documents-23012025/document2.txt
+15 BtrfsDisk/Snapshots/Photos-22012025/photo1.jpg
+16 BtrfsDisk/Snapshots/Photos-23012025/photo1.jpg
+17 BtrfsDisk/Snapshots/Photos-23012025/photo2.jpg</pre>
+</div></div><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Multiple snapshots do not create multiple copies of each file, but if a file has been deleted and it still exists in a snapshot, then the deleted file will take up space. If a file exists in multiple snapshots, then it will take up space for only 1 file.</p></div></div></li><li data-uuid="ad2f3585-f15b-4f2e-8f37-195caf7f4629">In case you don't need an older snapshot, you can delete it:<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/disk/btrfs/subvolume/remove [find where name=Documents-22012025]
+/disk/btrfs/subvolume/remove [find where name=Photos-22012025]</pre>
+</div></div></li></ol><h2 id="Btrfs-Transferyoursnapshots">Transfer your snapshots</h2><p>Btrfs allows to easily send a snapshot between two devices that is using Btrfs. In this example we will use two RouterOS devices running ROSE-storage package. The RouterOS device containing snapshots that need to be backed up is going to be called <code>RouterA</code> and the RouterOS device that is going to receive backups is going to be called <code>RouterB</code> .</p><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>This guide only shows an example how to use Btrfs transfer between RouterOS devices, but you can transfer snapshots between RouterOS and Linux devices as well. If you require such functionality, then make sure to check the documentation of your Linux distribution on how to use Btrfs transfer on it.</p></div></div><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body">This guide will use the SSH host key for a SSH user key on the same RouterOS device. If you wish to use your own key for the SSH user, then you can use these commands on a Linux computer and later import the key pair under <code>/user/ssh-keys</code> :<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">openssl genpkey -outform PEM -out btrfstransfer_key.pem -algorithm ED25519
+openssl pkey -in btrfstransfer_key.pem -pubout -out btrfstransfer_key_pub.pem</pre>
+</div></div></div></div><ol><li data-uuid="ad3fd05a-802b-4ef7-9819-fc11434d7cf1">OPTIONAL: Increase the security level of your SSH server, run the following commands on <code>RouterA</code> and <code>RouterB</code> :<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/ip ssh/set host-key-type=ed25519 strong-crypto=yes
+/ip/ssh/regenerate-host-key</pre>
+</div></div><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Regenerating the host key will create a error message next time you try to connect to the RouterOS device using SSH. You will need to adjust your SSH client's configuration (usually in <code>~/.ssh/known_hosts</code> ) to trust the new host key.</p></div></div></li><li data-uuid="5ee28301-f5da-409c-b116-57819accde08">On <code>RouterA</code> exports the SSH private and public key:<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/ip/ssh/export-host-key key-file-prefix=admin</pre>
+</div></div></li><li data-uuid="36525cab-a21e-4ac4-8497-e2203d080070">On <code>RouterA</code> import the SSH private key for user <code>admin</code> :<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/user/ssh-keys/private/import private-key-file=admin_ed25519.pem user=admin</pre>
+</div></div></li><li data-uuid="14034633-5307-46d2-a5c7-7a18b6f5f0e0">Upload the SSH public key from <code>RouterA</code> to <code>RouterB</code> :<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/file/sync/add local-path=admin_ed25519_pub.pem remote-address=RouterB user=admin mode=upload
+/file/sync/remove [find where local-path=admin_ed25519_pub.pem]</pre>
+</div></div></li><li data-uuid="60aa036b-e31d-4498-975e-18c2d0c64208">On <code>RouterB</code> create a new user, for example <code>btrsfstransfer</code>  and set a secure password for it:<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/user/add name=btrfstransfer group=write</pre>
+</div></div><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>While the password is not going to be used for the Btrfs transfer feature, you still need to use a secure password to prevent unauthorized access to your device.</p></div></div></li><li data-uuid="61f05204-5fca-482f-b8b0-bd1e8fdcc971">On <code>RouterB</code> import the uploaded SSH public key and set it for user <code>btrfstransfer</code> :<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/user/ssh-keys/import public-key-file=admin_ed25519_pub.pem user=btrfstransfer</pre>
+</div></div></li><li data-uuid="8348a58e-6009-4532-a349-4fb8b5551d95">On <code>RouterA</code> setup type <code>send</code> :<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/disk/btrfs/transfer add type=send fs=BtrfsDisk ssh-address=RouterB send-subvolumes=Documents-23012025 ssh-user=btrfstransfer ssh-receive-mount=BackupBtrfsDisk/Snapshots</pre>
+</div></div>Where:<br/>- <code>BtrfsDisk</code> is the Btrfs disk label found under <code>/disk/btrfs/filesystem print</code> on <code>RouterA</code> <br/>- <code>Documents-23012025</code> is the snapshots name (not the path)<br/>- <code>btrsfstransfer</code> is the SSH user on <code>RouterB</code> <br/>- <code>BackupBtrfsDisk</code> is the Btrfs disk label found under <code>/disk/btrfs/filesystem print</code> on <code>RouterB</code> <br/>- <code>Snapshots</code> is the subvolumes under for your snapshots under <code>BackupBtrfsDisk</code> </li><li data-uuid="f69175fe-86f5-4cd4-94f5-f198c2e0e166">On <code>RouterB</code>  setup type <code>receive</code> :<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/disk/btrfs/transfer/add fs=BackupBtrfsDisk type=receive file=BackupBtrfsDisk/Snapshots</pre>
+</div></div>Where:<br/>- <code>BackupBtrfsDisk</code> is the Btrfs disk label found under <code>/disk/btrfs/filesystem print</code> on <code>RouterB</code> <br/>- <code>BackupBtrfsDisk/Snapshots</code> is the mount path for <code>Snapshots</code> subvolume</li></ol><h2 id="Btrfs-FourdiskBtrfs-RAID(RAID10)">Four disk Btrfs-RAID (RAID10)</h2><p>In case you want to create redundant and high capacity RAID10 array using Btrfs, follow the commands below.</p><ol><li data-uuid="2a77ec5a-702b-419e-b3a2-42bd60febb89">Find the names of the disks you want to use for setting up a Btrfs-RAID:<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/disk print</pre>
+</div></div><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>In this example, the disks used are going to be called <code>&lt;disk-name-1&gt;<span>, </span></code><code>&lt;disk-name-2&gt;, <code>&lt;disk-name-3&gt;</code> and <code>&lt;disk-name-4&gt;</code> </code>, make sure you replace these placeholders with your actual disk names!</p></div></div></li><li data-uuid="02073000-2c38-4ad4-a566-de67c5ae0ad7">Format one of your disks to Btrfs, in this case <code>&lt;disk-name-1&gt;</code> :<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/disk format-drive &lt;disk-name-1&gt; file-system=btrfs</pre>
+</div></div></li><li data-uuid="6136ab9d-0420-4a9c-b25d-7ed49abc996e">You can check the current status of Btrfs disks using the following command:<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/disk/btrfs/filesystem print</pre>
+</div></div><br/><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body">In case there was an existing RAID on your disks and you want to remove any obsolete configuration for simplicity, then you can wipe the disks with <code>/disk format-drive &lt;disk-name-x&gt; file-system=wipe-quick</code> . This is useful when you have unwanted entries under <code>/disk/btrfs/filesystem print</code> </div></div></li><li data-uuid="e3cf811a-0f88-4cdd-b39c-e79f0d225f6f">Add a label for the Btrfs drive for simplicity:<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/disk/btrfs/filesystem set [find where present-devs=&lt;disk-name-1&gt;] label=BtrfsRAID</pre>
+</div></div></li><li data-uuid="122ec225-b0e6-4428-867a-2f76690d97a7">Add other disks to an existing Btrfs disk:<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/disk/btrfs/filesystem/add-device [find where present-devs=&lt;disk-name-1&gt;] device=&lt;disk-name-2&gt;
+/disk/btrfs/filesystem/add-device [find where present-devs=&lt;disk-name-1&gt;] device=&lt;disk-name-3&gt;
+/disk/btrfs/filesystem/add-device [find where present-devs=&lt;disk-name-1&gt;] device=&lt;disk-name-4&gt;</pre>
+</div></div></li><li data-uuid="b49f3e28-ef84-4da7-8eb7-40089889f316">Start Btrfs balance process to create a Btrfs-RAID with RAID1 configuration:<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/disk/btrfs/filesystem balance-start [find where label=BtrfsRAID] data-profile=raid10 metadata-profile=raid1c4 system-profile=raid1c4</pre>
+</div></div><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>There are many possible configurations of <code>data-profile</code> , <code>metadata-profile</code> and <code>system-profile</code> . For a RAID10 array it is recommended to use either <code>raid1c3</code> or <code>raid1c4</code> for both <code>system-profile</code> and <code>metadata-profile. The <code>raid1c4</code> profile is going to store 4 copies of the data on different disks, this makes the data more redundant, but uses more disk space.</code></p></div></div><div role="region" aria-label="Warning" class="confluence-information-macro  confluence-information-macro-warning" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-error confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Btrfs RAID5 and RAID6 is not supported. Use <a href="https://help.mikrotik.com/docs/spaces/ROS/pages/259031065/ROSE-storage#ROSEstorage-RAID" rel="nofollow">regular RAID</a> if you need such RAID configurations. Be aware that when using <a href="https://help.mikrotik.com/docs/spaces/ROS/pages/259031065/ROSE-storage#ROSEstorage-RAID" rel="nofollow">regular RAID</a> with Btrfs you will not have bit-rot protection.</p></div></div><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>For most use cases set <code>metadata-profile</code> to the same value as <code>system-profile</code> . Avoid using different values for both of these profiles.</p></div></div></li><li data-uuid="ebeeb241-cd8d-42a3-81db-3a2a8263a908">Set <code>mount-filesystem=no</code> for other disks to prevent the files showing up twice:<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/disk set &lt;disk-name-2&gt; mount-filesystem=no
+/disk set &lt;disk-name-3&gt; mount-filesystem=no
+/disk set &lt;disk-name-4&gt; mount-filesystem=no</pre>
+</div></div><br/><br/></li><li data-uuid="3e5dd469-ea8c-49a9-af77-fe456b7b4194">You can also change the mount point's name for simplicity:<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/disk set &lt;disk-name-1&gt; mount-point-template=BtrfsRAID</pre>
+</div></div></li><li data-uuid="dc19d62a-8b4d-43c1-a867-379a92ff2105">Your newly created Btrfs-RAID array is now accessible through <code>/BtrsRAID/</code> folder.</li></ol><h1 id="Btrfs-Maintenance">Maintenance</h1><p>Similar to other feature-rich filesystems, Btrfs needs periodic maintenance. This section will guide you through various procedures that are relevant to Btrfs.</p><h2 id="Btrfs-Periodicscrubbing">Periodic scrubbing</h2><p>In a RAID array, you data is stored on multiple disks or multiple disks contain information how to reassemble the data. Without RAID your disks in rare events might corrupt a few bytes of your data and you might not even notice that the data has been corrupted. With RAID arrays your data is compared with other copies of data (or checked on assembly) when you read a file and will alert you that data is corrupted. With <a href="https://help.mikrotik.com/docs/spaces/ROS/pages/259031065/ROSE-storage#ROSEstorage-RAID" rel="nofollow">regular RAID</a> and, for example, in RAID1 configuration the RAID array is not able to tell which copy of the file is correct, it will only inform you that the data corruption has been detected. With Btrfs RAID you are not only able to detect the data corruption, but you are also able to distinguish which copy of the file is the correct one by using checksums and restore it automatically.</p><p>Scrubbing is a process that re-reads the whole RAID array and, in case of Btrfs RAID, corrects any data corruption. While Btrfs RAID will correct the data on file read operations, for example, you want to download a file from your RouterOS device, avoiding scrubbing is highly <strong>NOT</strong> recommended. In rare events it is possible that, for example, in RAID1 configuration both disks have corrupted data and Btrfs RAID might not be to restore the data. To avoid such situations and protect valuable data, consider running scrubbing on a regular basis.</p><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Excessive detected data corruption usually indicated a failing storage device. Consider checking the storage device when you notice many data corruption warnings.</p></div></div><p>The interval of how often to run scrubbing is going to depend on each use case. Scrubbing is an intensive task on your storage devices, it re-reads the whole RAID array and performs additional checks. During scrubbing you can experience noticeable performance drop since the disks until the scrubbing has finished. If you are worried about the performance during scrubbing, consider running scrubbing less often. If you are more worried about data integrity, consider running scrubbing more often.</p><ul><li data-uuid="c3a8a48f-9d23-49ae-bb43-bd7e6e52b705">Summary: Used to detect and correct data corruption</li><li data-uuid="9761ac66-8033-4b07-a101-5ed2b259b43b">Recommended interval: 1 week</li><li data-uuid="8a46d228-b3a0-48ed-bd6a-5582ba0a02f5"><a href="https://help.mikrotik.com/docs/spaces/ROS/pages/295239711/Btrfs#Btrfs-CreatingBtrfs-RAIDcheck" rel="nofollow">Working example</a></li></ul><p>Example command:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/disk/btrfs/filesystem/print
+/disk/btrfs/filesystem/scrub-start 0</pre>
+</div></div><p>You can also cancel scrubbing using the following command:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/disk/btrfs/filesystem/scrub-cancel</pre>
+</div></div><h2 id="Btrfs-Periodicbalance">Periodic balance</h2><p>In Btrfs data is stored in allocated chunks, which then allows storing your data in blocks. Over time due to various data activities, the chunks can become partially full and distributed between many chunks in a sub optimal way. Balancing a Btrfs file system means re-arranging the data in these chunks and restoring the unallocated space. As a result you can restore lost usable free space and performance of the Btrfs file system. This is somewhat similar to a defragmentation operation on other file systems.</p><p>An important parameter for balancing is the <code>data-usage</code> parameter. This is a filter that prevents the balancing function to process chunks that are above a certain usage percentage. For example, <code>data-usage=50</code> will only process chunks that are 50% full or less. You can run the balancing command multiple times with different values and therefore reduce the amount of time each balancing operation requires. Balancing can be an intensive task depending on your free space available and how data has been written since last balancing action therefore you might benefit of running the balance command with different <code>data-usage</code> values on separately to reduce the time window when balancing causes a performance drop due to intensive disk reads and writes.</p><p>In case you want to run balancing commands separately, you should use <code>data-usage</code> values of 25, 50, 75 and 90. It is not recommended to go above 90%. For most users running balance command separately is not required and running it once per interval with <code>data-usage</code> of 50% is sufficient.</p><ul><li data-uuid="5ef19f34-8cb4-4470-98e0-cfd5bf9274de">Summary: Used to restore free space and improve performance</li><li data-uuid="e275c7e9-75ca-4b8e-aad2-130e9713fddf">Recommended interval: twice a month</li><li data-uuid="091882bc-f1a2-489b-93ff-6715881dc40e">Recommended <code>data-usage</code> : 50</li><li data-uuid="3ac846c0-7b19-4ff3-9ee5-02d71d191016"><a href="https://help.mikrotik.com/docs/spaces/ROS/pages/295239711/Btrfs#Btrfs-CreatingBtrfs-RAIDcheck" rel="nofollow">Working example</a></li></ul><p>Example command:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/disk/btrfs/filesystem/print
+/disk/btrfs/filesystem/balance-start data-usage=50 0</pre>
+</div></div><p>You can also cancel balance using the following command:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/disk/btrfs/filesystem/balance-cancel</pre>
+</div></div><h2 id="Btrfs-Freespace">Free space</h2><p>In Btrfs due to how data is stored in chunks, it is important to make sure there is enough free space in order for not just regular maintenance tasks to run properly, but also for the performance of the file system to be optimal. To make sure your Btrfs file system is working properly, consider checking that there is enough free space on your Btrfs file system. An optimal value of free space is 10%, but should not allow your Btrfs file system to fill up to 5% free space.</p><ul><li data-uuid="6b2e5db1-daa0-4c8d-995f-0276e69edc6d">Summary: Do not allow Btrfs file system to be full</li><li data-uuid="64db3dad-9d61-456d-ac3c-19282eee1ed5">Recommended free space: 5-10%</li></ul><p>Example command:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/disk/btrfs/filesystem/print</pre>
+</div></div><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>In case you require more space, consider adding the disk to a Btrfs RAID array with one or more disks.</p></div></div><p><br/></p>
+                    </div>
+
+                                        
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:54</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : Queue size</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Firewall-and-Quality-of-Service_119144601.html">Firewall and Quality of Service</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Queues_328088.html">Queues</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : Queue size
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Artūrs C.</span>, last updated by <span class='editor'> Druvis Timma</span> on May 20, 2025
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742027890 {padding: 0px;}
+div.rbtoc1747742027890 ul {margin-left: 0px;}
+div.rbtoc1747742027890 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742027890'>
+<ul class='toc-indentation'>
+<li><a href='#Queuesize-Example'>Example</a>
+<ul class='toc-indentation'>
+<li><a href='#Queuesize-100%Shaper'>100% Shaper</a></li>
+<li><a href='#Queuesize-100%Scheduler'>100% Scheduler</a></li>
+<li><a href='#Queuesize-Default-smallqueuetype'>Default-small queue type</a></li>
+<li><a href='#Queuesize-Defaultqueuetype'>Default queue type</a></li>
+</ul>
+</li>
+</ul>
+</div></p><p>The maximum permissible queue size could be specified as a maximum memory limit, but a lot of algorithms simplify it as a maximum number of packets, so the actual memory used varies depending on the size of the packets. </p><p>The rest of this page demonstrates how this works with queue types like PFIFO, BFIFO, PCQ and RED, that deal with packet count.</p><h1 id="Queuesize-Example"><span class="mw-headline">Example</span></h1><p>This example was created to highlight the queue size impact on traffic that was queued by a specific queue.</p><p>For a simplified visualization, let's assume we are processing data in steps and we know exactly how many packets will be received/transited in every step and there will be no dropped packet retransmission taking place.</p><p><span class="confluence-embedded-file-wrapper image-center-wrapper"><img class="confluence-embedded-image image-center" draggable="false" src="attachments/137986083/137986084.jpg" data-image-src="attachments/137986083/137986084.jpg" data-unresolved-comment-count="0" data-linked-resource-id="137986084" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="700px-Queue_size_No_Limit.jpg" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/jpeg" data-linked-resource-container-id="137986083" data-linked-resource-container-version="3" tabindex="0" alt=""></span></p><p>As you can see in the picture above there are<span> </span><strong>25 steps</strong><span> </span>and there are a total of<span> </span><strong>1610 incoming packets</strong><span> </span>over this time frame.</p><h2 id="Queuesize-100%Shaper"><span class="mw-headline">100% Shaper</span></h2><p>A queue is 100% shaper when every packet that is over the allowed limits will be dropped immediately. This way all packages that are not dropped will be sent out without any delay.</p><p>Let's apply<span> </span><strong><span style="color:var(--ds-icon-success,#22A06B);">max-limit=100</span> packets per step</strong><span> </span>limitation to our example:</p><p><span class="confluence-embedded-file-wrapper image-center-wrapper"><img class="confluence-embedded-image image-center" draggable="false" src="attachments/137986083/137986085.jpg" data-image-src="attachments/137986083/137986085.jpg" data-unresolved-comment-count="0" data-linked-resource-id="137986085" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="700px-Queue_size_0_packets.jpg" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/jpeg" data-linked-resource-container-id="137986083" data-linked-resource-container-version="3" tabindex="0" alt=""></span></p><p><br/>With this type of limitation, only 1250 out of 1610 packets were able to pass the queue (<strong>22,4% packet drop</strong>), but all packets arrive without delay.</p><h2 id="Queuesize-100%Scheduler"><span class="mw-headline">100% Scheduler</span></h2><p>A queue is 100% Scheduler when there are no packet drops at all, all packets are queued and will be sent out at the first possible moment.</p><p>In each step, the queue must send out queued packets from previous steps first and only then send out packets from this step, this way it is possible to keep the right sequence of packets.</p><p>We will again use the same limit (<strong>100 packets per step</strong>).</p><p><span class="confluence-embedded-file-wrapper image-center-wrapper"><img class="confluence-embedded-image image-center" draggable="false" src="attachments/137986083/137986086.jpg" data-image-src="attachments/137986083/137986086.jpg" data-unresolved-comment-count="0" data-linked-resource-id="137986086" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="700px-Queue_size_Unlimited_Packets.jpg" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/jpeg" data-linked-resource-container-id="137986083" data-linked-resource-container-version="3" tabindex="0" alt=""></span></p><p>There was no packet loss, but 630<span> </span><strong>(39,1%) packets had 1 step delay</strong>, and the other 170<span> </span><strong>(10,6%) packets had 2 step delay</strong>. (delay = latency)</p><h2 id="Queuesize-Default-smallqueuetype"><span class="mw-headline">Default-small queue type</span></h2><p>It is also possible to choose the middle way when the queue uses both of these queuing aspects (shaping and scheduling). By default, most of the queues in RouterOS have a queue size of 10.</p><p><span class="confluence-embedded-file-wrapper image-center-wrapper"><img class="confluence-embedded-image image-center" draggable="false" src="attachments/137986083/137986087.jpg" data-image-src="attachments/137986083/137986087.jpg" data-unresolved-comment-count="0" data-linked-resource-id="137986087" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="700px-Queue_size_10_packets.jpg" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/jpeg" data-linked-resource-container-id="137986083" data-linked-resource-container-version="3" tabindex="0" alt=""></span></p><p><br/>There were 320<span> </span><strong>(19,9%) packets dropped</strong><span> </span>and 80<span> </span><strong>(5,0%) packets had 1 step delay</strong>.</p><h2 id="Queuesize-Defaultqueuetype"><span class="mw-headline">Default queue type</span></h2><p>Another popular queue size in RouterOS is 50.</p><p><span class="confluence-embedded-file-wrapper image-center-wrapper"><img class="confluence-embedded-image image-center" draggable="false" src="attachments/137986083/137986088.jpg" data-image-src="attachments/137986083/137986088.jpg" data-unresolved-comment-count="0" data-linked-resource-id="137986088" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="700px-Queue_size_50_packets.jpg" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/jpeg" data-linked-resource-container-id="137986083" data-linked-resource-container-version="3" tabindex="0" alt=""></span></p><p>There were 190<span> </span><strong>(11,8%) packets dropped</strong><span> </span>and 400<span> </span><strong>(24,8%) packets had 1 step delay</strong>.</p>
+                    </div>
+
+                                                            <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/137986083/137986084.jpg">700px-Queue_size_No_Limit.jpg</a> (image/jpeg)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/137986083/137986085.jpg">700px-Queue_size_0_packets.jpg</a> (image/jpeg)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/137986083/137986086.jpg">700px-Queue_size_Unlimited_Packets.jpg</a> (image/jpeg)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/137986083/137986087.jpg">700px-Queue_size_10_packets.jpg</a> (image/jpeg)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/137986083/137986088.jpg">700px-Queue_size_50_packets.jpg</a> (image/jpeg)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

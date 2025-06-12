@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : Address-lists</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Firewall-and-Quality-of-Service_119144601.html">Firewall and Quality of Service</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Firewall_250708066.html">Firewall</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : Address-lists
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Artūrs C.</span>, last updated by <span class='editor'> Guntis G.</span> on Apr 23, 2024
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <h1 id="Addresslists-Summary"><span class="mw-headline"><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742026611 {padding: 0px;}
+div.rbtoc1747742026611 ul {margin-left: 0px;}
+div.rbtoc1747742026611 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742026611'>
+<ul class='toc-indentation'>
+<li><a href='#Addresslists-Summary'>Summary</a></li>
+<li><a href='#Addresslists-Properties'>Properties</a></li>
+</ul>
+</div>Summary</span></h1><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip firewall address-list</pre>
+</div></div><p>Firewall address lists allow a user to create lists of IP addresses grouped together under a common name. Firewall filter, mangle, and NAT facilities can then use those address lists to match packets against them.</p><p>The address list records can also be updated dynamically via the<span> </span><span style="color:var(--ds-background-accent-green-bolder,#1f845a);"><code>action=add-src-to-address-list</code></span><span> </span>or<span> </span><code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">action=add-dst-to-address-list</span></code><span> </span>items found in<span> </span>NAT,<span> </span>Mangle,<span> </span>and<span> </span>Filter<span> </span>facilities.</p><p>Firewall rules with action <code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">add-src-to-address-list</span></code><em> </em>or <code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">add-dst-to-address-list</span></code> work in passthrough mode, which means that the matched packets will be passed to the next firewall rules.</p><h1 id="Addresslists-Properties"><span class="mw-headline">Properties</span></h1><div class="table-wrap"><table class="wrapped relative-table confluenceTable" style="margin-left: 20.8665px;width: 98.4978%;"><colgroup><col style="width: 15.6734%;"/><col style="width: 84.3266%;"/></colgroup><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>address</strong><span> </span>(<em>DNS Name | IP address/netmask | IP-IP</em>; Default:<span> </span>)</td><td class="confluenceTd">A single IP address or range of IPs to add to the address list or DNS name. You can input for example, '192.168.0.0-192.168.1.255' and it will auto modify the typed entry to 192.168.0.0/23 on saving.</td></tr><tr><td class="confluenceTd"><strong>dynamic</strong><span> </span>(<em>yes, </em>no)</td><td class="confluenceTd">Allows creating data entry with dynamic form.</td></tr><tr><td class="confluenceTd"><strong>list</strong><span> </span>(<em>string</em>; Default:<span> </span>)</td><td class="confluenceTd">Name for the address list of the added IP address.</td></tr><tr><td class="confluenceTd"><strong>timeout</strong><span> </span>(<em>time</em>; Default:<span> </span>)</td><td class="confluenceTd">Time after address will be removed from the address list. If the timeout is not specified, the address will be stored in the address list permanently.</td></tr><tr><td class="confluenceTd"><strong>creation-time<span> </span></strong>(<em>time</em>; Default:<span> </span>)</td><td class="confluenceTd">The time when the entry was created.</td></tr></tbody></table></div><p><br/></p><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>If the timeout parameter is not specified, then the address will be saved to the list permanently on the disk. If a timeout is specified, the address will be stored on the RAM and will be removed after a system's reboot.</p></div></div><p class="auto-cursor-target"><span style="font-size: 24.0px;font-weight: normal;letter-spacing: -0.01em;">Example</span></p><p>The following example creates a dynamic address list of people who are connecting to port 23 (telnet) on the router and drops all further traffic from them for 5 minutes. Additionally, the address list will also contain one static address list entry of 192.0.34.166/32 (<a class="external-link" href="http://www.example.com" rel="nofollow">www.example.com</a>):</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip firewall address-list add list=drop_traffic address=192.0.34.166/32</pre>
+</div></div><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip firewall address-list print
+Flags: X - disabled, D - dynamic
+ #   LIST         ADDRESS
+ 0   drop_traffic 192.0.34.166</pre>
+</div></div><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip firewall mangle add action=add-src-to-address-list address-list=drop_traffic address-list-timeout=5m chain=prerouting dst-port=23 protocol=tcp
+/ip firewall filter add action=drop chain=input src-address-list=drop_traffic</pre>
+</div></div><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip firewall address-list print
+Flags: X - disabled, D - dynamic
+ #   LIST         ADDRESS
+ 0   drop_traffic 192.0.34.166
+ 1 D drop_traffic 1.1.1.1
+ 2 D drop_traffic 10.5.11.8</pre>
+</div></div><p>As seen in the output of the last print command, two new dynamic entries appeared in the address list (marked with a status of 'D'). Hosts with these IP addresses tried to initialize a telnet session to the router and were then subsequently dropped by the filter rule.</p>
+                    </div>
+
+                                        
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

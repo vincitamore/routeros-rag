@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : WMM and VLAN priority</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Bridging-and-Switching_328068.html">Bridging and Switching</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Bridging-and-Switching-Case-Studies_119144611.html">Bridging and Switching Case Studies</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : WMM and VLAN priority
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Edgars P.</span>, last updated by <span class='editor'> Guntis G.</span> on Apr 17, 2024
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742025885 {padding: 0px;}
+div.rbtoc1747742025885 ul {margin-left: 0px;}
+div.rbtoc1747742025885 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742025885'>
+<ul class='toc-indentation'>
+<li><a href='#WMMandVLANpriority-HowWMMworks'>How WMM works</a></li>
+<li><a href='#WMMandVLANpriority-HowVLANpriorityworks'>How VLAN priority works</a></li>
+<li><a href='#WMMandVLANpriority-Howtosetpriority'>How to set priority</a>
+<ul class='toc-indentation'>
+<li><a href='#WMMandVLANpriority-SetVLANorWMMprioritybasedonspecificmatchers'>Set VLAN or WMM priority based on specific matchers</a></li>
+<li><a href='#WMMandVLANpriority-Customprioritymapping'>Custom priority mapping</a></li>
+<li><a href='#WMMandVLANpriority-TranslatingWMMprioritytoVLANpriorityinsideabridge'>Translating WMM priority to VLAN priority inside a bridge</a></li>
+</ul>
+</li>
+<li><a href='#WMMandVLANpriority-PriorityfromDSCP'>Priority from DSCP</a>
+<ul class='toc-indentation'>
+<li><a href='#WMMandVLANpriority-SetVLANorWMMpriorityfromDSCP'>Set VLAN or WMM priority from DSCP</a></li>
+</ul>
+</li>
+<li><a href='#WMMandVLANpriority-DSCPfromPriority'>DSCP from Priority</a>
+<ul class='toc-indentation'>
+<li><a href='#WMMandVLANpriority-SetDSCPfromVLANorWMMpriority'>Set DSCP from VLAN or WMM priority</a></li>
+</ul>
+</li>
+<li><a href='#WMMandVLANpriority-Combiningprioritysettingandhandlingsolutions'>Combining priority setting and handling solutions</a></li>
+<li><a href='#WMMandVLANpriority-Seealso'>See also</a></li>
+</ul>
+</div></p><h1 id="WMMandVLANpriority-HowWMMworks"><span class="mw-headline">How WMM works</span></h1><hr/><p>WMM works by dividing traffic into 4 access categories: background, best effort, video, voice. QoS policy (different handling of access categories) is applied on transmitted packets, therefore the transmitting device is treating different packets differently, e.g. AP does not have control over how clients are transmitting packets, and clients do not have control over how AP transmits packets.</p><p>Mikrotik AP and client classify packets based on the priority assigned to them, according to the table (as per WMM specification): 1,2 - background 0,3 - best effort 4,5 - video 6,7 - voice.</p><p>To be able to use multiple WMM access categories, not just the best effort where all packets with default priority 0 go, priority must be set for those packets. By default, all packets (incoming and locally generated) inside the router have priority 0.</p><p>The &quot;Better&quot; access category for a packet does not necessarily mean that it will be sent over the air before all other packets with the &quot;worse&quot; access category. WMM works by executing the DCF method for medium access with different settings for each access category (EDCF), which means that the &quot;better&quot; access category has a higher probability of getting access to medium - WMM enabled station can be considered to be 4 stations, one per access category, and the ones with &quot;better&quot; access category use settings that make them more likely to get chance to transmit (by using shorter backoff timeouts) when all are contending for medium. Details can be studied in 802.11e and WMM specifications.</p><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>WMM support can be enabled using the <span style="color:var(--ds-background-accent-green-bolder,#1f845a);"><code>wmm-support</code></span> setting. It o<span style="color:var(--ds-text,#172b4d);">nly applies to bands B and G. Other bands will have it enabled regardless of this setting </span></p></div></div><h1 id="WMMandVLANpriority-HowVLANpriorityworks"><span class="mw-headline">How VLAN priority works</span></h1><hr/><p><span class="mw-headline">The VLAN priority is a 3-bit field called Priority Code Point (PCP) within a VLAN-tagged header and values are between 0 and 7. It is used for implementing QoS on bridges and switches. MikroTik devices by default are sending VLAN packets (locally generated or encapsulated) with a priority of 0. The RouterOS bridge forwards VLAN tagged packets unaltered, which means that received VLAN tagged packets with a certain VLAN priority will leave the bridge with the same VLAN priority. The only exception is when the bridge untags the packet, in this situation VLAN priority is not preserved due to the missing VLAN header. </span></p><p><span class="mw-headline">More details can be studied in the IEEE 802.1p specification.</span></p><h1 id="WMMandVLANpriority-Howtosetpriority"><span class="mw-headline">How to set priority</span></h1><hr/><p>Priority of packets can be set using <code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">action=set-priority</span></code> in IP firewall mangle rules or bridge filter/nat rules. Priority can be set to a specific value or taken from the ingress priority using the <code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">from-ingress</span></code> setting. Ingress priority is the priority value that was detected on the incoming packet, if available. Currently, there are 2 sources of ingress priority - priority in the VLAN header and priority from the WMM packet received over a wireless interface. For all other packets ingress priority is 0.</p><p>Note that ingress priority value is not automatically copied to IP mangle <code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">priority</span></code> value, the correct rule needs to be set up to do this.</p><p>There are 2 ways to control priority - assign priority with rules with particular matchers (protocol, addresses, etc.) or set it from ingress priority. Both options require setting up correct rules.</p><p>This essentially means that if it is not possible or wanted to classify packets by rules, the configuration of the network must be such that the router can extract ingress priority from incoming frames. Remember there are currently 2 sources for this - VLAN tag in packets and received WMM packets.</p><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Do not mix the priority of queues with the priority assigned to packets. Priorities of queues work separately and specify the &quot;importance&quot; of the queue and have meaning only within a particular queue setup. Think of packet priority as some kind of mark, that gets attached to the packet by rules. Also, take into account that this mark currently is only used for outgoing packets when going over WMM enabled link, and in case VLAN tagged packet is sent out (no matter if that packet is tagged locally or bridged).</p></div></div><h2 id="WMMandVLANpriority-SetVLANorWMMprioritybasedonspecificmatchers"><span class="mw-headline">Set VLAN or WMM priority based on specific matchers</span></h2><p><span class="mw-headline">It is possible to change the VLAN and WMM priorities based on specific matchers in IP mangle or bridge filter/nat rules. In this example, all outgoing ICMP packets will be sent with a VLAN or WMM priority using the IP mangle rule:</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip firewall mangle
+add action=set-priority chain=output new-priority=2 protocol=icmp</pre>
+</div></div><h2 id="WMMandVLANpriority-Customprioritymapping">Custom priority mapping</h2><p>Sometimes certain VLAN or WMM priorities need to be changed or cleared to a default value. We can use the <code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">ingress-priority</span></code> matcher in IP mangle or bridge firewall/nat rules to filter only the needed priorities and change them to a different value using the <code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">new-priority</span></code> action setting. For example, forwarded VLAN tagged packets over a bridge with a priority of 5, need to be changed to 0.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface bridge filter
+add action=set-priority chain=forward ingress-priority=5 new-priority=0</pre>
+</div></div><h2 id="WMMandVLANpriority-TranslatingWMMprioritytoVLANpriorityinsideabridge"><span class="mw-headline">Translating WMM priority to VLAN priority inside a bridge</span></h2><p><span class="mw-headline">When a wireless packet is received with an already set WMM priority, the RouterOS bridge does not automatically translate it to a VLAN header. It means, that received wireless packets with WMM priority that get VLAN tagged by the bridge will be forwarded with a VLAN priority of 0. However, we can use a bridge filter rule with <code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">from-ingress</span></code> setting to keep the priority in VLAN packets. For example, we would like to forward wireless packets over ether2 with a VLAN 10 header and keep the already set WMM priority (set by the wireless client).</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface bridge
+add name=bridge1 vlan-filtering=yes
+/interface bridge port
+add bridge=bridge1 interface=ether2
+add bridge=bridge1 interface=wlan2 pvid=10
+/interface bridge vlan
+add bridge=bridge1 tagged=ether2 vlan-ids=10
+
+# translates WMM priority to VLAN priority 
+/interface bridge filter
+add action=set-priority chain=forward new-priority=from-ingress out-interface=ether2</pre>
+</div></div><p>The same situation applies when wireless packets are VLAN tagged by the wireless interface using the <code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">vlan-mode=use-tag</span></code> and <code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">vlan-id</span></code> settings. You still need to use the same bridge filter rule to translate WMM priority to VLAN priority:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface wireless
+set [ find default-name=wlan2 ] vlan-mode=use-tag vlan-id=10
+
+/interface bridge
+add name=bridge1
+/interface bridge port
+add bridge=bridge1 interface=ether2
+add bridge=bridge1 interface=wlan2
+
+ # translates WMM priority to VLAN priority 
+/interface bridge filter
+add action=set-priority chain=forward new-priority=from-ingress out-interface=ether2</pre>
+</div></div><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>The same principles apply in the other direction. RouterOS does not automatically translate VLAN priority to WMM priority. The same rule <code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">new-priority=from-ingress</span></code> can be used to translate VLAN priority to WMM priority. </p></div></div><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p><span class="mw-headline">The RouterOS bridge forwards VLAN tagged packets unaltered, which means that received VLAN tagged packets with a certain VLAN priority will leave the bridge with the same VLAN priority. The only exception is when the bridge untags the packet, in this situation VLAN priority is not preserved due to the missing VLAN header. </span></p></div></div><h1 id="WMMandVLANpriority-PriorityfromDSCP"><span class="mw-headline">Priority from DSCP</span></h1><hr/><p>Another way of setting VLAN or WMM priority is by using the DSCP field in the IP header, this can only be done by the IP firewall mangle rule with <code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">new-priority=</span></code><code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">from-dscp</span></code> or <code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">new-priority=from-dscp-high-3-bits</span></code> settings and <code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">set-priority</span></code> action property. Note that DSCP in the IP header can have values 0-63, but priority only 0-7. When using the <code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">new-priority=</span></code><code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">from-dscp</span></code> setting, the priority will be 3 low bits of the DSCP value, but when using <code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">new-priority=from-dscp-high-3-bits</span></code> the priority will be 3 high bits of DSCP value.</p><p>Remember that DSCP can only be accessed on IP packets and the DSCP value in the IP header should be set somewhere (either by client devices or IP mangle rules).</p><p>It is best to set the DSCP value in the IP header of packets on some border router (e.g. main router used for connection to the Internet), based on traffic type e.g. set DSCP value for packets coming from the Internet belonging to SIP connections to 7, and 0 for the rest. This way packets must be marked only in one place. Then all APs on the network can set packet priority from the DSCP value with just one rule.</p><h2 id="WMMandVLANpriority-SetVLANorWMMpriorityfromDSCP">Set VLAN or WMM priority from DSCP</h2><p>In this example, the AP device will set WMM priority from DSCP when packets are routed through the wireless interface.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip firewall mangle
+add action=set-priority chain=forward new-priority=from-dscp out-interface=wlan2</pre>
+</div></div><p><br/></p><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>When packets are forwarded through a bridge, it is possible to pass packets through IP mangle rules with <code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">use-ip-firewall=yes</span></code> under the bridge settings.</p></div></div><h1 id="WMMandVLANpriority-DSCPfromPriority">DSCP from Priority</h1><hr/><p><span class="mw-headline">Similarly, the DSCP value can be set if the received packet contains VLAN or WMM priority. This can be achieved with IP mangle rules with <code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">new-dscp=from-priority</span></code> or <code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">new-dscp=from-priority-to-high-3-bits</span></code> settings and <code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">change-dscp</span></code> action property. Note that priority in VLAN or WMM packets can have values 0-7, but DSCP in IP headers are 0-63. When using the <code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">new-dscp=from-priority</span></code> setting, the value of priority will set the 3 low bits of the DSCP, but when using <code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">new-dscp=from-priority-to-high-3-bits</span></code>  the value of priority will set the 3 high bits of the DSCP. </span></p><p><span class="mw-headline">However, this setting cannot directly use ingress priority from received VLAN or WMM packets. You first need to set priority using IP mangle or bridge filter/nat rules (ingress priority can be used in this case), and only then apply the DSCP rule. </span></p><h2 id="WMMandVLANpriority-SetDSCPfromVLANorWMMpriority"><span class="mw-headline">Set DSCP from VLAN or WMM priority</span></h2><p><span class="mw-headline">In this example, the AP device needs to set DSCP from WMM priority when packets are routed. First, add a rule to set priority, it will be needed for the DSCP rule to correctly change the DSCP value. This rule can take priority from ingress. Then add the DSCP rule to change its value.</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip firewall mangle
+add action=set-priority chain=prerouting in-interface=wlan2 new-priority=from-ingress
+add action=change-dscp chain=prerouting in-interface=wlan2 new-dscp=from-priority</pre>
+</div></div><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>When packets are forwarded through a bridge, it is possible to pass packets through IP mangle rules with <code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">use-ip-firewall=yes</span></code> under the bridge settings.</p></div></div><h1 id="WMMandVLANpriority-Combiningprioritysettingandhandlingsolutions"><span class="mw-headline">Combining priority setting and handling solutions</span></h1><hr/><p>Complex networks and different situations can be handled by combining different approaches of carrying priority information to ensure QoS and optimize the use of resources, based on the &quot;building blocks&quot; described above. Several suggestions:</p><ul><li><span style="letter-spacing: 0.0px;">The fewer number of filter rules in the whole network, the better (faster). Try classifying packets only when necessary, prefer to do that on fast routers as most probably connection tracking will be required.</span></li><li><span style="letter-spacing: 0.0px;">Use DSCP to carry priority information in IP packets forwarded in your network, this way you can use it when needed.</span></li><li><span style="letter-spacing: 0.0px;">Use VLANs where necessary, as they also carry priority information, make sure Ethernet bridges and switches in the way are not clearing priority information in the VLAN tag.</span></li><li>Remember that QoS does not improve the throughput of links, it just treats different packets differently, and also that WMM traffic over the wireless link will discriminate regular traffic in the air.</li></ul><h1 id="WMMandVLANpriority-Seealso">See also</h1><hr/><ul><li><a href="https://help.mikrotik.com/docs/display/ROS/Packet+Flow+in+RouterOS" rel="nofollow">Packet Flow in RouterOS</a></li><li><a href="https://help.mikrotik.com/docs/display/ROS/Mangle" rel="nofollow">IP mangle</a></li><li><a href="https://help.mikrotik.com/docs/display/ROS/Bridging+and+Switching#BridgingandSwitching-BridgeFirewall" rel="nofollow">Bridge firewall</a></li></ul>
+                    </div>
+
+                                        
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

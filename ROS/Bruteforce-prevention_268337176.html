@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : Bruteforce prevention</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Firewall-and-Quality-of-Service_119144601.html">Firewall and Quality of Service</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Firewall-and-QoS-Case-Studies_120324137.html">Firewall and QoS Case Studies</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : Bruteforce prevention
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Gļebs K.</span>, last updated by <span class='editor'> Unknown User (elvijsi)</span> on Nov 25, 2024
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p style="text-align: left;">Here is an example of how to defend against bruteforce attacks on an SSH port. Please note, that ssh allows 3 login attempts per connection, and the address lists are not cleared upon a successful login, so it is possible to blacklist yourself accidentally.</p><div class="table-wrap"><table class="wrapped confluenceTable" style="text-align: left;"><tbody class="" style="text-align: left;"><tr class="" style="text-align: left;"><td style="text-align: left;vertical-align: baseline;" class="confluenceTd"><p style="text-align: left;"><code class="java plain" style="text-align: left;">/ip firewall filter</code><br/><code class="java plain" style="text-align: left;">add action=add-src-to-address-list address-list=bruteforce_blacklist address-list-timeout=1d chain=input comment=Blacklist connection-state=</code><code class="java keyword" style="text-align: left;">new</code><span> </span><code class="java plain" style="text-align: left;">dst-port=</code><code class="java value" style="text-align: left;">22</code><span> </span><code class="java plain" style="text-align: left;">protocol=tcp src-address-list=connection3</code><br/><code class="java plain" style="text-align: left;">add action=add-src-to-address-list address-list=connection3 address-list-timeout=1h chain=input comment=</code><code class="java string" style="text-align: left;">&quot;Third attempt&quot;</code><span> </span><code class="java plain" style="text-align: left;">connection-state=</code><code class="java keyword" style="text-align: left;">new</code><span> </span><code class="java plain" style="text-align: left;">dst-port=</code><code class="java value" style="text-align: left;">22</code><span> </span><code class="java plain" style="text-align: left;">protocol=tcp src-address-list=connection2</code><br/><code class="java plain" style="text-align: left;">add action=add-src-to-address-list address-list=connection2 address-list-timeout=15m chain=input comment=</code><code class="java string" style="text-align: left;">&quot;Second attempt&quot;</code><span> </span><code class="java plain" style="text-align: left;">connection-state=</code><code class="java keyword" style="text-align: left;">new</code><span> </span><code class="java plain" style="text-align: left;">dst-port=</code><code class="java value" style="text-align: left;">22</code><span> </span><code class="java plain" style="text-align: left;">protocol=tcp src-address-list=connection1</code><br/><code class="java plain" style="text-align: left;">add action=add-src-to-address-list address-list=connection1 address-list-timeout=5m chain=input comment=</code><code class="java string" style="text-align: left;">&quot;First attempt&quot;</code><span> </span><code class="java plain" style="text-align: left;">connection-state=</code><code class="java keyword" style="text-align: left;">new</code><span> </span><code class="java plain" style="text-align: left;">dst-port=</code><code class="java value" style="text-align: left;">22</code><span> </span><code class="java plain" style="text-align: left;">protocol=tcp</code><br/><code class="java plain" style="text-align: left;">add action=accept chain=input dst-port=</code><code class="java value" style="text-align: left;">22</code><span> </span><code class="java plain" style="text-align: left;">protocol=tcp src-address-list=!bruteforce_blacklist</code></p></td></tr></tbody></table></div><p style="text-align: left;">If the timeouts were kept at 1min for all three lists - connection1/2/3 - then someone could perform 9 guesses every minute, with the above structure they can do a maximum of 3 guesses per 5min.</p><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Address list naming is following the naming of the <a href="https://help.mikrotik.com/docs/display/ROS/Port+knocking" rel="nofollow">Port knocking</a> article. Similar naming scheme is used, trusted address list is named as &quot;secured&quot;.</p></div></div><p style="text-align: left;"><br/></p>
+                    </div>
+
+                                        
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

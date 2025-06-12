@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : ARP</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Network-Management_119144613.html">Network Management</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : ARP
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Edgars P.</span>, last updated by <span class='editor'> Druvis Timma</span> on Jul 10, 2024
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742029998 {padding: 0px;}
+div.rbtoc1747742029998 ul {margin-left: 0px;}
+div.rbtoc1747742029998 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742029998'>
+<ul class='toc-indentation'>
+<li><a href='#ARP-Summary'>Summary</a></li>
+<li><a href='#ARP-'></a></li>
+<li><a href='#ARP-Properties'>Properties</a></li>
+<li><a href='#ARP-ARPModes'>ARP Modes</a>
+<ul class='toc-indentation'>
+<li><a href='#ARP-Disabled'>Disabled</a></li>
+<li><a href='#ARP-Enabled'>Enabled</a></li>
+<li><a href='#ARP-ProxyARP'>Proxy ARP</a></li>
+<li><a href='#ARP-ReplyOnly'>Reply Only</a></li>
+<li><a href='#ARP-LocalProxyArp'>Local Proxy Arp</a></li>
+</ul>
+</li>
+<li><a href='#ARP-GratuitousARP'>Gratuitous ARP</a></li>
+</ul>
+</div></p><h1 id="ARP-Summary"><span class="mw-headline">Summary</span></h1><p><strong>Sub-menu:</strong> <span style="color:var(--ds-background-accent-green-bolder,#1f845A);"><code>/ip arp</code></span></p><p>Even though IP packets are addressed using<span> </span>IP addresses, hardware addresses must be used to transport data from one host to another. Address Resolution Protocol is used to map OSI level 3 IP addresses to OSI level 2 MAC addresses. A router has a table of currently used ARP entries. Normally the table is built dynamically, but to increase network security, it can be partially or completely built statically by adding static entries.</p><h1 id="ARP-"><span class="mw-headline"><iframe class="youtube-player" type="text/html" style="width: 400px; height: 300px"
+	src="//www.youtube.com/embed/Hudi5Ncs8EQ?wmode=opaque" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen>
+</iframe>
+    
+<iframe class="youtube-player" type="text/html" style="width: 400px; height: 300px"
+	src="//www.youtube.com/embed/z3QYRc-ga0U?wmode=opaque" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen>
+</iframe>
+    
+</span></h1><h1 id="ARP-Properties"><span class="mw-headline">Properties</span></h1><p>This section describes the ARP table configuration options.</p><div class="table-wrap"><table class="wrapped confluenceTable" style="margin-left: 16.2031px;"><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>address</strong><span> </span>(<em>IP</em>; Default:<span> </span>)</td><td class="confluenceTd">IP address to be mapped</td></tr><tr><td class="confluenceTd"><strong>interface</strong><span> </span>(<em>string</em>; Default:<span> </span>)</td><td class="confluenceTd">Interface name the IP address is assigned to</td></tr><tr><td class="confluenceTd"><strong>mac-address</strong><span> </span>(<em>MAC</em>; Default:<span> </span><strong>00:00:00:00:00:00</strong>)</td><td class="confluenceTd">MAC address to be mapped to</td></tr><tr><td class="confluenceTd"><strong>published</strong><span> </span>(<em>yes | no</em>; Default:<span> </span><strong>no</strong>)</td><td class="confluenceTd">Static proxy-arp entry for individual IP addresses. When an ARP query is received for the specific IP address, the device will respond with its own MAC address. No need to set proxy-arp on the interface itself for all the MAC addresses to be proxied. The interface will respond to an ARP request only when the device has an active route towards the destination</td></tr></tbody></table></div><p><br/><strong>Read-only properties:</strong></p><div class="table-wrap"><table class="wrapped confluenceTable" style="margin-left: 16.2031px;"><colgroup><col/><col/></colgroup><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>complete</strong><span> </span>(<em>yes | no</em>)</td><td class="confluenceTd"><span style="color:var(--ds-text,#172b4d);">Complete flag is included in ARP entries when the ARP <code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">status</span></code> is permanent, reachable, stale, probe, or delay</span></td></tr><tr><td class="confluenceTd"><strong>dhcp<span> </span></strong>(<em>yes | no</em>)</td><td class="confluenceTd">Whether the ARP entry is added by DHCP server</td></tr><tr><td class="confluenceTd"><strong>disabled<span> </span></strong>(<em>yes | no</em>)</td><td class="confluenceTd">Whether the ARP entry is disabled</td></tr><tr><td class="confluenceTd"><strong>dynamic</strong><span> </span>(<em>yes | no</em>)</td><td class="confluenceTd">Whether the entry is dynamically created</td></tr><tr><td class="confluenceTd"><strong>invalid</strong><span> </span>(<em>yes | no</em>)</td><td class="confluenceTd">Whether the entry is not valid</td></tr><tr><td class="confluenceTd"><strong>status<span> </span></strong>(<em>delay | failed | incomplete | permanent | probe | reachable | stale </em>)</td><td class="confluenceTd"><p>Shows the ARP entry state:</p><ul><li><code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">delay</span></code> - neighbor entry validation is currently delayed</li><li><code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">failed</span></code> - ARP resolution has failed, the system was not able to obtain the MAC address for the given IP address</li><li><code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">incomplete</span></code> - system does not have the MAC address information for the IP address, it has not yet been resolved</li><li><code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">permanent</span></code> - ARP entry is considered permanent and will not be removed from the table, even if it is not actively being used. This is set for manually configured ARP entries</li><li><code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">probe</span></code> - neighbor is being probed</li><li><code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">reachable</span></code> - ARP resolution is successful, and the MAC address associated with the IP address is know, the entry is valid until the reachability timeout expires</li><li><code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">stale</span></code> - entry is still valid, but it is aged. This means that the system has not recently communicated with the device associated with the IP address.</li></ul></td></tr></tbody></table></div><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>The default maximum number of ARP entries depends on the installed amount of RAM. It can be adjusted with the command &quot;<code><span style="color:var(--ds-background-accent-green-bolder,#1f845A);">/ip settings set max-neighbor-entries=</span></code>x&quot;, see more details on <a href="https://help.mikrotik.com/docs/display/ROS/IP+Settings#IPSettings-IPv4Settings" rel="nofollow">IPv4 Settings</a>.</p></div></div><h1 id="ARP-ARPModes"><span class="mw-headline">ARP Modes</span></h1><p>It is possible to set several ARP modes on the interface configuration.</p><ul style="text-align: left;"><li><span style="color:var(--ds-background-accent-green-bolder,#1f845a);"><code>disabled</code> </span>- the interface will not use ARP</li><li><span style="color:var(--ds-background-accent-green-bolder,#1f845a);"><code>enabled</code> </span>- the interface will use ARP</li><li><span style="color:var(--ds-background-accent-green-bolder,#1f845a);"><code>local-proxy-arp</code></span><span> </span>-<span> </span><span style="color:var(--ds-text-accent-lime-bolder,#37471f);"><span> </span>the router performs proxy ARP on the interface and sends replies to the same interface</span></li><li><span style="color:var(--ds-background-accent-green-bolder,#1f845a);"><code>proxy-arp</code></span><span> </span>-<span> </span><span style="color:var(--ds-text-accent-lime-bolder,#37471f);">the router performs proxy ARP on the interface and sends replies to other interfaces</span></li><li><span style="color:var(--ds-background-accent-green-bolder,#1f845a);"><code>reply-only</code></span><span> </span>- the interface will only reply to requests originated from matching IP address/MAC address combinations which are entered as static entries in the<span> </span>IP/ARP<span> </span>table. No dynamic entries will be automatically stored in the<span> </span>IP/ARP<span> </span>table. Therefore for communications to be successful, a valid static entry must already exist.</li></ul><h2 id="ARP-Disabled"><span class="mw-headline">Disabled</span></h2><p>If the ARP feature is turned off on the<span> </span>interface, i.e., <code><span style="color:var(--ds-background-accent-green-bolder,#1f845A);">arp=disabled</span></code> is used, ARP requests from clients are not answered by the router. Therefore, a static ARP entry should be added to the clients as well. For example, the router's IP and MAC addresses should be added to the Windows workstations using the arp command:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: text; gutter: false">C:\&gt; arp -s 10.5.8.254  00-aa-00-62-c6-09</pre>
+</div></div><h2 id="ARP-Enabled"><span class="mw-headline">Enabled</span></h2><p>This mode is enabled by default on all interfaces. ARPs will be discovered automatically and new dynamic entries will be added to the ARP table.</p><h2 id="ARP-ProxyARP"><span class="mw-headline">Proxy ARP</span></h2><p>A router with a properly configured proxy ARP feature acts as a transparent ARP proxy between different networks.</p><p>This behavior can be useful, for example, if you want to assign dial-in (ppp, pppoe, pptp) clients' IP addresses from the same address space as used on the connected LAN.</p><p>Proxy ARP can be enabled on each interface individually with the command<span> </span><code><span style="color:var(--ds-background-accent-green-bolder,#1f845A);">arp=proxy-arp</span></code>:</p><p>Setup proxy ARP:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false"> [admin@MikroTik] /interface ethernet&gt; set 1 arp=proxy-arp
+
+ [admin@MikroTik] /interface ethernet&gt; print
+
+ Flags: X - disabled, R - running
+   #    NAME                 MTU   MAC-ADDRESS         ARP
+   0  R ether1              1500  00:30:4F:0B:7B:C1 enabled
+   1  R ether2              1500  00:30:4F:06:62:12 proxy-arp</pre>
+</div></div><h2 id="ARP-ReplyOnly"><span class="mw-headline">Reply Only</span></h2><p>If ARP property is set to<span> </span><span style="color:var(--ds-background-accent-green-bolder,#1f845A);"><code>reply-only</code></span><span> </span>on the interface, then the router only replies to ARP requests. Neighbor MAC addresses will be resolved only using statically configured entries from the &quot;<code><span style="color:var(--ds-background-accent-green-bolder,#1f845A);">/ip arp</span></code>&quot; menu, but there will be no need to add the router's MAC address to other hosts' ARP tables like in case if ARP is<span> </span>disabled.</p><h2 id="ARP-LocalProxyArp"><span class="mw-headline">Local Proxy Arp</span></h2><p>If the ARP property is set to<span> </span><span style="color:var(--ds-background-accent-green-bolder,#1f845A);"><code>local-proxy-arp</code></span><span> </span>on an interface, then the router performs proxy ARP to/from this interface only. i.e. for traffic that comes in and goes out of the same interface. In a normal LAN, the default behavior is for two network hosts to communicate directly with each other, without involving the router.</p><p>With<span> </span><span style="color:var(--ds-background-accent-green-bolder,#1f845A);"><code>local-proxy-arp</code></span><span> </span>enabled, the router will respond to all client hosts with the router's own interface MAC address instead of the other host's MAC address.</p><p>E.g. If Host A (192.168.88.2/24) queries for the MAC address of Host B (192.168.88.3/24), the router would respond with its own MAC address. In other words, if<span> </span><span style="color:var(--ds-background-accent-green-bolder,#1f845A);"><code>local-proxy-arp</code></span><span> </span>is enabled, the router would assume responsibility for forwarding traffic between Host A 192.168.88.2 and Host B 192.168.88.3. All the ARP cache entries on Hosts A and B will reference the router's MAC address. In this case, the router is performing <code><span style="color:var(--ds-background-accent-green-bolder,#1f845A);">local-proxy-arp </span></code>for the entire subnet 192.168.88.0/24.</p><p>An example for RouterOS <code><span style="color:var(--ds-background-accent-green-bolder,#1f845A);">local-proxy-arp</span></code> could be a bridge setup with a DHCP server and isolated bridge ports where hosts from the same subnet can reach each other only at Layer3 through bridge IP.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface bridge
+add arp=local-proxy-arp name=bridge1
+/interface bridge port
+add bridge=bridge1 horizon=1 interface=ether2
+add bridge=bridge1 horizon=1 interface=ether3
+add bridge=bridge1 horizon=1 interface=ether4</pre>
+</div></div><h1 id="ARP-GratuitousARP"><span class="mw-headline">Gratuitous ARP</span></h1><p>It is possible to create Gratuitous ARP requests in RouterOS. To do so you must use the Traffic-Generator tool, below is an example of how to generate a Gratuitous ARP request to update the ARP table on a remote device:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/tool traffic-generator inject interface=ether2 \
+data=&quot;ffffffffffff4c5e0c14ef78080600010800060400014c5e0c14ef780a057a01ffffffffffff0a057a01000000000000000000000000000000000000&quot;</pre>
+</div></div><p>You must change the MAC address (4c5e0c14ef78) and the IP address (0a057a01) to your router's address. The IP address and the MAC address must be from the device that requests an ARP table update. You also need to specify through which interface (ether2) you want to send the Gratuitous ARP request. Make sure that the receiving device supports Gratuitous ARP requests.</p>
+                    </div>
+
+                                        
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

@@ -1,0 +1,575 @@
+[
+  {
+    "title": "RouterOS",
+    "level": 1,
+    "children": [
+      {
+        "title": "Getting started",
+        "level": 2,
+        "children": [
+          {
+            "title": "Software Specifications",
+            "level": 3,
+            "children": [
+              { "title": "Feature support based on architecture", "level": 4, "children": [] }
+            ]
+          },
+          { "title": "First Time Configuration", "level": 3, "children": [] },
+          { "title": "Securing your router", "level": 3, "children": [] },
+          { 
+            "title": "Upgrading and installation", 
+            "level": 3,
+            "children": [
+              { "title": "Packages", "level": 4, "children": [] }
+            ]
+          },
+          {
+            "title": "Configuration Management",
+            "level": 3,
+            "children": [
+              { "title": "Default configurations", "level": 4, "children": [] }
+            ]
+          },
+          { "title": "Console", "level": 3, "children": [] },
+          { "title": "Reset Button", "level": 3, "children": [] },
+          { "title": "Backup", "level": 3, "children": [] },
+          { "title": "Netinstall", "level": 3, "children": [] },
+          { "title": "Supout.rif", "level": 3, "children": [] },
+          { "title": "RouterOS license keys", "level": 3, "children": [] },
+          {
+            "title": "Cloud Hosted Router, CHR",
+            "level": 3,
+            "children": [
+              { "title": "CHR: installing on VirtualBox", "level": 4, "children": [] },
+              { "title": "CHR: Hetzner Cloud Installation", "level": 4, "children": [] },
+              { "title": "CHR ProxMox installation", "level": 4, "children": [] },
+              { "title": "CHR Vultr installation", "level": 4, "children": [] }
+            ]
+          },
+          { "title": "Upgrading to v7", "level": 3, "children": [] },
+          { "title": "RouterBOOT", "level": 3, "children": [] }
+        ]
+      },
+      {
+        "title": "IPv4 and IPv6 Fundamentals",
+        "level": 2,
+        "children": [
+          { "title": "IP Addressing", "level": 3, "children": [] },
+          { "title": "IPv6 Neighbor Discovery", "level": 3, "children": [] },
+          { "title": "IP Pools", "level": 3, "children": [] },
+          { "title": "IP Routing", "level": 3, "children": [] },
+          { "title": "IP Settings", "level": 3, "children": [] }
+        ]
+      },
+      {
+        "title": "Management tools",
+        "level": 2,
+        "children": [
+          { 
+            "title": "API", 
+            "level": 3,
+            "children": [
+              { "title": "Python3 Example", "level": 4, "children": [] }
+            ]
+          },
+          { "title": "Branding", "level": 3, "children": [] },
+          { "title": "Command Line Interface", "level": 3, "children": [] },
+          { "title": "MAC server", "level": 3, "children": [] },
+          { "title": "MikroTik mobile app", "level": 3, "children": [] },
+          { "title": "Quick Set", "level": 3, "children": [] },
+          { "title": "REST API", "level": 3, "children": [] },
+          { "title": "RoMON", "level": 3, "children": [] },
+          { "title": "Serial Console", "level": 3, "children": [] },
+          { "title": "SSH", "level": 3, "children": [] },
+          { "title": "TR-069", "level": 3, "children": [] },
+          { "title": "WebFig", "level": 3, "children": [] },
+          { "title": "WinBox", "level": 3, "children": [] },
+          { "title": "FlashFig", "level": 3, "children": [] }
+        ]
+      },
+      {
+        "title": "Authentication, Authorization, Accounting",
+        "level": 2,
+        "children": [
+          { "title": "Certificates", "level": 3, "children": [] },
+          { "title": "Dot1X", "level": 3, "children": [] },
+          { 
+            "title": "HotSpot - Captive portal", 
+            "level": 3,
+            "children": [
+              { "title": "Hotspot customisation", "level": 4, "children": [] }
+            ]
+          },
+          { "title": "PPP AAA", "level": 3, "children": [] },
+          { "title": "RADIUS", "level": 3, "children": [] },
+          { "title": "User", "level": 3, "children": [] },
+          { "title": "User Manager", "level": 3, "children": [] }
+        ]
+      },
+      {
+        "title": "Bridging and Switching",
+        "level": 2,
+        "children": [
+          { "title": "CRS3xx, CRS5xx, CCR2116, CCR2216 switch chip features", "level": 3, "children": [] },
+          { "title": "CRS1xx and 2xx series switches", "level": 3, "children": [] },
+          { "title": "L3 Hardware Offloading", "level": 3, "children": [] },
+          { "title": "MACsec", "level": 3, "children": [] },
+          { "title": "MACVLAN", "level": 3, "children": [] },
+          { "title": "Quality of Service", "level": 3, "children": [] },
+          { "title": "Switch Chip Features", "level": 3, "children": [] },
+          { "title": "VLAN", "level": 3, "children": [] },
+          { "title": "VXLAN", "level": 3, "children": [] },
+          {
+            "title": "Bridging and Switching Case Studies",
+            "level": 3,
+            "children": [
+              { "title": "Basic VLAN switching", "level": 4, "children": [] },
+              { "title": "Bridge IGMP/MLD snooping", "level": 4, "children": [] },
+              { "title": "Bridge VLAN Table", "level": 4, "children": [] },
+              { "title": "Controller Bridge and Port Extender", "level": 4, "children": [] },
+              { "title": "CRS1xx/2xx series switches examples", "level": 4, "children": [] },
+              { "title": "CRS3xx, CRS5xx, CCR2116, CCR2216 VLANs with Bonds", "level": 4, "children": [] },
+              { "title": "Layer2 misconfiguration", "level": 4, "children": [] },
+              { "title": "Loop Protect", "level": 4, "children": [] },
+              { "title": "QoS with Switch Chip", "level": 4, "children": [] },
+              { "title": "Spanning Tree Protocol", "level": 4, "children": [] },
+              { "title": "Wireless VLAN Trunk", "level": 4, "children": [] },
+              { "title": "WMM and VLAN priority", "level": 4, "children": [] }
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Firewall and Quality of Service",
+        "level": 2,
+        "children": [
+          { "title": "Connection tracking", "level": 3, "children": [] },
+          { 
+            "title": "Firewall", 
+            "level": 3,
+            "children": [
+                { "title": "Filter", "level": 4, "children": [] },
+                { "title": "Mangle", "level": 4, "children": [] },
+                { "title": "NAT", "level": 4, "children": [] },
+                { "title": "Common Firewall Matchers and Actions", "level": 4, "children": [] },
+                { "title": "Layer7", "level": 4, "children": [] },
+                { "title": "Address-lists", "level": 4, "children": [] }
+            ]
+          },
+          { "title": "Packet Flow in RouterOS", "level": 3, "children": [] },
+          { 
+            "title": "Queues", 
+            "level": 3,
+            "children": [
+                { "title": "HTB (Hierarchical Token Bucket)", "level": 4, "children": [] },
+                { "title": "Queue size", "level": 4, "children": [] },
+                { "title": "Queue Burst", "level": 4, "children": [] },
+                { "title": "PCQ example", "level": 4, "children": [] },
+                { 
+                  "title": "Queue types", 
+                  "level": 4,
+                  "children": [
+                    { "title": "CAKE", "level": 5, "children": [] },
+                    { "title": "PFIFO,BFIFO", "level": 5, "children": [] }
+                  ]
+                }
+            ]
+          },
+          { 
+            "title": "Firewall and QoS Case Studies", 
+            "level": 3,
+            "children": [
+                { "title": "Building Advanced Firewall", "level": 4, "children": [] },
+                { "title": "Port knocking", "level": 4, "children": [] },
+                { "title": "Building Your First Firewall", "level": 4, "children": [] },
+                { "title": "DDoS Protection", "level": 4, "children": [] },
+                { "title": "Connection rate", "level": 4, "children": [] },
+                { "title": "Bruteforce prevention", "level": 4, "children": [] }
+            ]
+          },
+          { "title": "Kid Control", "level": 3, "children": [] },
+          { "title": "UPnP", "level": 3, "children": [] },
+          { "title": "NAT-PMP", "level": 3, "children": [] },
+          { "title": "IP Services", "level": 3, "children": [] }
+        ]
+      },
+      {
+        "title": "High Availability Solutions",
+        "level": 2,
+        "children": [
+          {
+            "title": "Load Balancing",
+            "level": 3,
+            "children": [
+              { "title": "Failover (WAN Backup)", "level": 4, "children": [] },
+              { "title": "Per connection classifier", "level": 4, "children": [] }
+            ]
+          },
+          { "title": "Bonding", "level": 3, "children": [] },
+          { "title": "Bonding Examples", "level": 3, "children": [] },
+          { "title": "HA Case Studies", "level": 3, "children": [] },
+          { "title": "Multi-chassis Link Aggregation Group", "level": 3, "children": [] },
+          { "title": "VRRP", "level": 3, "children": [] },
+          { "title": "VRRP Configuration Examples", "level": 3, "children": [] }
+        ]
+      },
+      {
+        "title": "Mobile Networking",
+        "level": 2,
+        "children": [
+          {
+            "title": "GPS",
+            "level": 3,
+            "children": [
+              { "title": "GPS-tracking using HTTP POST", "level": 4, "children": [] },
+              { "title": "GPS-tracking using MQTT and ThingsBoard", "level": 4, "children": [] }
+            ]
+          },
+          { "title": "LTE", "level": 3, "children": [] },
+          { "title": "PPP", "level": 3, "children": [] },
+          { "title": "SMS", "level": 3, "children": [] },
+          { "title": "Dual SIM Application", "level": 3, "children": [] }
+        ]
+      },
+      {
+        "title": "Multi Protocol Label Switching - MPLS",
+        "level": 2,
+        "children": [
+          { "title": "MPLS Overview", "level": 3, "children": [] },
+          { "title": "MPLS MTU, Forwarding and Label Bindings", "level": 3, "children": [] },
+          { "title": "EXP bit and MPLS Queuing", "level": 3, "children": [] },
+          { "title": "LDP", "level": 3, "children": [] },
+          { 
+            "title": "VPLS",
+            "level": 3,
+            "children": [
+              { "title": "VPLS Control Word", "level": 4, "children": [] }
+            ]
+          },
+          { "title": "Traffic Eng", "level": 3, "children": [] },
+          { "title": "MPLS Reference", "level": 3, "children": [] },
+          { "title": "MPLS Case Studies", "level": 3, "children": [] }
+        ]
+      },
+      {
+        "title": "Network Management",
+        "level": 2,
+        "children": [
+          { "title": "ARP", "level": 3, "children": [] },
+          { 
+            "title": "Cloud",
+            "level": 3,
+            "children": [
+              { "title": "Back To Home", "level": 4, "children": [] },
+              { "title": "File share", "level": 4, "children": [] }
+            ]
+          },
+          { "title": "DHCP", "level": 3, "children": [] },
+          { "title": "DNS", "level": 3, "children": [] },
+          { "title": "SOCKS", "level": 3, "children": [] },
+          { "title": "Proxy", "level": 3, "children": [] },
+          { "title": "Openflow", "level": 3, "children": [] }
+        ]
+      },
+      {
+        "title": "Routing",
+        "level": 2,
+        "children": [
+          { "title": "Routing Protocol Overview", "level": 3, "children": [] },
+          { "title": "Moving from ROSv6 to v7 with examples", "level": 3, "children": [] },
+          { "title": "Routing Protocol Multi-core Support", "level": 3, "children": [] },
+          { "title": "Policy Routing", "level": 3, "children": [] },
+          { "title": "Virtual Routing and Forwarding - VRF", "level": 3, "children": [] },
+          { "title": "OSPF", "level": 3, "children": [] },
+          { "title": "RIP", "level": 3, "children": [] },
+          { "title": "BGP", "level": 3, "children": [] },
+          { "title": "RPKI", "level": 3, "children": [] },
+          { "title": "Route Selection and Filters", "level": 3, "children": [] },
+          { 
+            "title": "Multicast",
+            "level": 3,
+            "children": [
+              { "title": "Group Management Protocol", "level": 4, "children": [] },
+              { "title": "IGMP Proxy", "level": 4, "children": [] },
+              { "title": "PIM-SM", "level": 4, "children": [] }
+            ]
+          },
+          {
+            "title": "Routing Debugging Tools",
+            "level": 3,
+            "children": [
+              { "title": "/routing/fantasy", "level": 4, "children": [] },
+              { "title": "/routing/route", "level": 4, "children": [] }
+            ]
+          },
+          {
+            "title": "Routing Reference",
+            "level": 3,
+            "children": [
+              { "title": "/routing/id", "level": 4, "children": [] }
+            ]
+          },
+          { "title": "BFD", "level": 3, "children": [] },
+          { "title": "IS-IS", "level": 3, "children": [] }
+        ]
+      },
+      {
+        "title": "Scripting",
+        "level": 2,
+        "children": [
+          { "title": "Scripting examples", "level": 3, "children": [] },
+          { "title": "Scripting Tips and Tricks", "level": 3, "children": [] }
+        ]
+      },
+      {
+        "title": "System Information and Utilities",
+        "level": 2,
+        "children": [
+          { "title": "Clock", "level": 3, "children": [] },
+          { "title": "Device-mode", "level": 3, "children": [] },
+          { "title": "E-mail", "level": 3, "children": [] },
+          { "title": "Fetch", "level": 3, "children": [] },
+          { "title": "Files", "level": 3, "children": [] },
+          { "title": "Identity", "level": 3, "children": [] },
+          { "title": "Interface Lists", "level": 3, "children": [] },
+          { "title": "Neighbor discovery", "level": 3, "children": [] },
+          { "title": "Note", "level": 3, "children": [] },
+          { "title": "NTP", "level": 3, "children": [] },
+          { "title": "Partitions", "level": 3, "children": [] },
+          { "title": "Precision Time Protocol", "level": 3, "children": [] },
+          { "title": "Scheduler", "level": 3, "children": [] },
+          { "title": "Services", "level": 3, "children": [] },
+          { "title": "TFTP", "level": 3, "children": [] }
+        ]
+      },
+      {
+        "title": "Virtual Private Networks",
+        "level": 2,
+        "children": [
+          { "title": "6to4", "level": 3, "children": [] },
+          { "title": "EoIP", "level": 3, "children": [] },
+          { "title": "GRE", "level": 3, "children": [] },
+          { "title": "IPIP", "level": 3, "children": [] },
+          {
+            "title": "IPsec",
+            "level": 3,
+            "children": [
+              { "title": "IKEv2 EAP between NordVPN and RouterOS", "level": 4, "children": [] }
+            ]
+          },
+          {
+            "title": "L2TP",
+            "level": 3,
+            "children": [
+              { "title": "LAC and LNS setup with Cisco as LAC", "level": 4, "children": [] }
+            ]
+          },
+          { "title": "OpenVPN", "level": 3, "children": [] },
+          {
+            "title": "PPPoE",
+            "level": 3,
+            "children": [
+              { "title": "IPv6 PD over PPP", "level": 4, "children": [] },
+              { "title": "MLPPP over single and multiple links", "level": 4, "children": [] }
+            ]
+          },
+          { "title": "PPTP", "level": 3, "children": [] },
+          { "title": "SSTP", "level": 3, "children": [] },
+          { "title": "WireGuard", "level": 3, "children": [] },
+          { "title": "ZeroTier", "level": 3, "children": [] }
+        ]
+      },
+      {
+        "title": "Wired Connections",
+        "level": 2,
+        "children": [
+          { "title": "Ethernet", "level": 3, "children": [] },
+          { "title": "MikroTik wired interface compatibility", "level": 3, "children": [] },
+          { "title": "PWR Line", "level": 3, "children": [] }
+        ]
+      },
+      {
+        "title": "Wireless",
+        "level": 2,
+        "children": [
+          {
+            "title": "WiFi",
+            "level": 3,
+            "children": [
+              { "title": "Configuring outdoor CPE to AP links", "level": 4, "children": [] },
+              { "title": "Configuring repeater", "level": 4, "children": [] },
+              { "title": "Configuring standalone access point", "level": 4, "children": [] }
+            ]
+          },
+          { "title": "Wireless Interface", "level": 3, "children": [] },
+          {
+            "title": "W60G",
+            "level": 3,
+            "children": [
+              { "title": "Distance guide", "level": 4, "children": [] },
+              { "title": "Fail-over PtMP CLI example", "level": 4, "children": [] },
+              { "title": "Fail-over PtP CLI example", "level": 4, "children": [] },
+              { "title": "Fail-over PtP GUI example", "level": 4, "children": [] },
+              { "title": "PtP CLI example", "level": 4, "children": [] },
+              { "title": "PtP GUI example", "level": 4, "children": [] }
+            ]
+          },
+          {
+            "title": "CAPsMAN",
+            "level": 3,
+            "children": [
+              { "title": "AP Controller (CAPsMAN)", "level": 4, "children": [] }
+            ]
+          },
+          { "title": "HWMPplus mesh", "level": 3, "children": [] },
+          { "title": "Nv2", "level": 3, "children": [] },
+          { "title": "Interworking Profiles", "level": 3, "children": [] },
+          {
+            "title": "Wireless Case Studies",
+            "level": 3,
+            "children": [
+              { "title": "Enterprise wireless security with User Manager v5", "level": 4, "children": [] },
+              { "title": "VLANs on Wireless", "level": 4, "children": [] },
+              { "title": "Wireless Station Modes", "level": 4, "children": [] },
+              { "title": "Wireless Troubleshooting", "level": 4, "children": [] },
+              { "title": "CAPsMAN with VLANs", "level": 4, "children": [] }
+            ]
+          },
+          { "title": "Spectral scan", "level": 3, "children": [] }
+        ]
+      },
+      {
+        "title": "Internet of Things",
+        "level": 2,
+        "children": [
+          {
+            "title": "Bluetooth",
+            "level": 3,
+            "children": [
+              { "title": "Bluetooth tag-tracking using MQTT and ThingsBoard", "level": 4, "children": [] }
+            ]
+          },
+          { "title": "GPIO", "level": 3, "children": [] },
+          {
+            "title": "Lora",
+            "level": 3,
+            "children": [
+              { "title": "General Properties", "level": 4, "children": [] },
+              { 
+                "title": "Setup", 
+                "level": 4,
+                "children": [
+                  { "title": "AWS LoRaWAN configuration", "level": 5, "children": [] },
+                  { "title": "Step by step installation", "level": 5, "children": [] },
+                  { "title": "The Things Network", "level": 5, "children": [] },
+                  { "title": "The Things Stack", "level": 5, "children": [] }
+                ]
+              }
+            ]
+          },
+          {
+            "title": "MQTT",
+            "level": 3,
+            "children": [
+              { "title": "Kaa IoT setup", "level": 4, "children": [] },
+              { "title": "MQTT and ThingsBoard configuration", "level": 4, "children": [] }
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Hardware",
+        "level": 2,
+        "children": [
+          {
+            "title": "Disks",
+            "level": 3,
+            "children": [
+              { 
+                "title": "ROSE-storage", 
+                "level": 4,
+                "children": [
+                  { "title": "Btrfs", "level": 5, "children": [] }
+                ]
+              }
+            ]
+          },
+          { "title": "Grounding", "level": 3, "children": [] },
+          { "title": "LCD Touchscreen", "level": 3, "children": [] },
+          { "title": "LEDs", "level": 3, "children": [] },
+          { "title": "MTU in RouterOS", "level": 3, "children": [] },
+          { "title": "Peripherals", "level": 3, "children": [] },
+          { "title": "PoE-Out", "level": 3, "children": [] },
+          { "title": "Ports", "level": 3, "children": [] },
+          { "title": "Product Naming", "level": 3, "children": [] },
+          { "title": "RouterBOARD", "level": 3, "children": [] },
+          { "title": "USB Features", "level": 3, "children": [] }
+        ]
+      },
+      {
+        "title": "Diagnostics, monitoring and troubleshooting",
+        "level": 2,
+        "children": [
+          { "title": "Bandwidth Test", "level": 3, "children": [] },
+          { "title": "Detect Internet", "level": 3, "children": [] },
+          { "title": "Dynamic DNS", "level": 3, "children": [] },
+          { "title": "Graphing", "level": 3, "children": [] },
+          { "title": "Health", "level": 3, "children": [] },
+          { "title": "Interface stats and monitor-traffic", "level": 3, "children": [] },
+          { "title": "IP Scan", "level": 3, "children": [] },
+          { 
+            "title": "Log",
+            "level": 3,
+            "children": [
+              { "title": "Syslog with Elasticsearch", "level": 4, "children": [] }
+            ]
+          },
+          { "title": "Netwatch", "level": 3, "children": [] },
+          { "title": "Packet Sniffer", "level": 3, "children": [] },
+          { "title": "Ping", "level": 3, "children": [] },
+          { "title": "Profiler", "level": 3, "children": [] },
+          { "title": "Resource", "level": 3, "children": [] },
+          { "title": "S+RJ10 general guidance", "level": 3, "children": [] },
+          { "title": "SNMP", "level": 3, "children": [] },
+          { "title": "Speed Test", "level": 3, "children": [] },
+          { "title": "Torch", "level": 3, "children": [] },
+          { "title": "Traceroute", "level": 3, "children": [] },
+          {
+            "title": "Traffic Flow",
+            "level": 3,
+            "children": [
+              { "title": "NetFlow analysis with Elasticsearch", "level": 4, "children": [] }
+            ]
+          },
+          { "title": "Traffic Generator", "level": 3, "children": [] },
+          { "title": "Watchdog", "level": 3, "children": [] }
+        ]
+      },
+      {
+        "title": "Extended features",
+        "level": 2,
+        "children": [
+          {
+            "title": "Container",
+            "level": 3,
+            "children": [
+              { "title": "Container - freeradius server", "level": 4, "children": [] },
+              { "title": "Container - HAProxy", "level": 4, "children": [] },
+              { "title": "Container - HomeAssistant", "level": 4, "children": [] },
+              { "title": "Container - Matrix", "level": 4, "children": [] },
+              { "title": "Container - mosquitto MQTT server", "level": 4, "children": [] },
+              { "title": "Container - Postgres", "level": 4, "children": [] },
+              { "title": "Container - ThingsBoard MQTT/HTTP server", "level": 4, "children": [] }
+            ]
+          },
+          { "title": "DLNA Media server", "level": 3, "children": [] },
+          { "title": "ROSE-storage-old", "level": 3, "children": [] },
+          { "title": "SMB", "level": 3, "children": [] },
+          { "title": "UPS", "level": 3, "children": [] },
+          { "title": "Wake on LAN", "level": 3, "children": [] },
+          { "title": "IP packing", "level": 3, "children": [] }
+        ]
+      }
+    ]
+  }
+]

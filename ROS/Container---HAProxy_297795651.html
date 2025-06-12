@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : Container - HAProxy</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Extended-features_120324125.html">Extended features</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Container_84901929.html">Container</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : Container - HAProxy
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Artūrs Z.</span>, last updated on Mar 18, 2025
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742047151 {padding: 0px;}
+div.rbtoc1747742047151 ul {margin-left: 0px;}
+div.rbtoc1747742047151 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742047151'>
+<ul class='toc-indentation'>
+<li><a href='#ContainerHAProxy-Introduction'>Introduction</a></li>
+<li><a href='#ContainerHAProxy-Configuration'>Configuration</a></li>
+<li><a href='#ContainerHAProxy-Advanced:HAProxywithCertbot'>Advanced: HAProxy with Certbot</a></li>
+</ul>
+</div></p><h1 id="ContainerHAProxy-Introduction">Introduction</h1><p>HAProxy is a powerful reverse proxy that can be run as a Container. It is highly recommended to not expose Containers to users directly, but rather use a reverse HTTP/HTTPS proxy between your users and your Containers.</p><h1 id="ContainerHAProxy-Configuration">Configuration</h1><p>To setup a HAProxy Contaienr on your RouterOS device, follow these steps bellow.</p><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Make sure you have created a <a href="https://help.mikrotik.com/docs/spaces/ROS/pages/84901929/Container#Container-Createnetwork" rel="nofollow">Container network</a> before proceeding.</p></div></div><ol><li data-uuid="be151a4d-e03e-41d2-854d-4be154bea58e">Create HAProxy Container mount points:<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/container/mounts/add name=haproxy_etc src=disk1/haproxy-etc dst=/usr/local/etc/haproxy</pre>
+</div></div></li><li data-uuid="a05bd25a-ae6f-4d1e-a0ae-92c63ef7a4c1">Create a HAProxy Container:<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/container/add remote-image=haproxy:latest interface=veth1 root-dir=disk1/haproxy mounts=haproxy_etc user=0:0 name=haproxy</pre>
+</div></div></li><li data-uuid="ac1142c2-735c-4516-bf88-01987276af8e">Connect to your RouterOS device using a SFTP client (for example, WinSCP when using Microsoft Windows) and create a new file <code>disk1/haproxy-etc/haproxy.cfg</code> , you can use the following config as an example:<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">defaults
+  mode http
+  timeout client 10s
+  timeout connect 10s
+  timeout server 10s
+  timeout http-request 10s
+
+frontend http_synapse
+  bind *:80
+  use_backend synapse
+
+backend synapse
+  server server1 172.17.0.2:8008 maxconn 32</pre>
+</div></div></li><li data-uuid="3e84c0f9-1140-4d37-bc00-d53f350bd4aa">Start the HAProxy Container:<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/container/start [find where name=haproxy]</pre>
+</div></div></li></ol><h1 id="ContainerHAProxy-Advanced:HAProxywithCertbot">Advanced: HAProxy with Certbot</h1><p>This example shows how to configure HAProxy to serve HTTPS traffic and automatically renew the certificates by using Certbot and RFC2136.</p><ol><li data-uuid="9011336b-45be-40db-9b36-83c3309b1d98">Create HAProxy Container:<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/container/mounts/add name=MOUNT_HAPROXY src=disk1/volumes/haproxy/config dst=/usr/local/etc/haproxy
+/container/add remote-image=haproxy:latest interface=veth1 root-dir=disk1/images/haproxy mounts=MOUNT_HAPROXY name=haproxy start-on-boot=yes user=0:0 logging=yes</pre>
+</div></div></li><li data-uuid="16e558e9-0c0f-4523-b560-36d9c07e5dbd">Create a new file called <code>haproxy.cfg</code>  on your PC and upload it to <code>disk1/volumes/haproxy/config/</code> , adjust the configuration to your needs:<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">global
+  log stdout format raw local0 info
+  stats socket :9999 level admin expose-fd listeners
+  ssl-default-bind-ciphers EECDH+AESGCM:EDH+AESGCM
+  ssl-default-server-ciphers EECDH+AESGCM:EDH+AESGCM
+  ssl-default-bind-options ssl-min-ver TLSv1.2
+  ssl-default-server-options ssl-min-ver TLSv1.2
+  tune.ssl.default-dh-param 2048
+  tune.bufsize 43768
+  tune.ssl.cachesize 1000000
+  nbthread 8
+
+defaults
+  log global
+  timeout client 10s
+  timeout connect 10s
+  timeout server 10s
+  timeout http-request 10s
+
+frontend frontend_webapp
+  mode http
+  option httplog
+  option http-server-close
+  option forwardfor except 127.0.0.0/8
+  stick-table type ipv6 size 100k expire 30s store http_req_rate(10s)
+  http-request track-sc0 src
+  http-request deny deny_status 429 if { sc_http_req_rate(0) gt 10000 }
+  bind *:80
+  bind *:443 ssl crt /usr/local/etc/haproxy/certs/
+  http-request redirect scheme https unless { ssl_fc }
+  http-request set-header X-Forwarded-Host %[req.hdr(host)]
+  http-request set-header X-Forwarded-For %[src]
+  use_backend backend_webapp
+
+backend backend_webapp
+  mode http
+  balance roundrobin
+  option http-server-close
+  option forwardfor
+  server server1 172.17.0.2:8080
+
+</pre>
+</div></div></li><li data-uuid="68d783a0-9d77-461c-a437-4dae1e56ea89">Create the Certbot Container:<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/container/mounts/add name=MOUNT_CERTBOT_CONFIG src=disk1/volumes/certbot/config dst=/etc/letsencrypt
+/container/mounts/add name=MOUNT_CERTBOT_DATA src=disk1/volumes/certbot/data dst=/var/lib/letsencrypt
+/container/mounts/add name=MOUNT_CERTBOT_LOG src=disk1/volumes/certbot/log dst=/var/log/letsencrypt
+/container/mounts/add name=MOUNT_CERTBOT_HAPROXY src=disk1/volumes/haproxy/config dst=/etc/haproxy
+/container/add remote-image=certbot/dns-rfc2136 cmd=&quot;certonly -n --agree-tos --dns-rfc2136 --dns-rfc2136-credentials /etc/letsencrypt/rfc2136.ini -m admin@&lt;FQDN&gt; --deploy-hook &#39;cat /etc/letsencrypt/li\
+    ve/&lt;FQDN&gt;/fullchain.pem /etc/letsencrypt/live/&lt;FQDN&gt;/privkey.pem | tee /etc/haproxy/certs/&lt;FQDN&gt;.pem &gt; /dev/null; echo -e \&quot;set ssl cert /usr/local/e\
+    tc/haproxy/certs/&lt;FQDN&gt;.pem &lt;&lt;\
+    \n\$(cat /etc/haproxy/certs/&lt;FQDN&gt;.pem)\
+    \n\&quot; | nc 127.0.0.1:9999; echo \&quot;commit ssl cert /usr/local/etc/haproxy/certs/&lt;FQDN&gt;.pem\&quot; | nc 127.0.0.1:9999&#39; -d &lt;FQDN&gt; --cert-name &lt;FQDN&gt;&quot; \
+    interface=veth1 logging=yes mounts=MOUNT_CERTBOT_CONFIG,MOUNT_CERTBOT_DATA,MOUNT_CERTBOT_LOG,MOUNT_CERTBOT_HAPROXY name=certbot root-dir=\
+    disk1/images/certbot start-on-boot=yes workdir=/opt/certbot
+
+</pre>
+</div></div><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Make sure to replace all <code>&lt;FQDN&gt;</code> placeholders in the example above with your fully qualified domain name!</p></div></div></li><li data-uuid="64b80280-9972-4768-b300-d5e54bd0479d">Wait for the Container image to be downloaded and start the Certbot Container:<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/container start [find where name=certbot]</pre>
+</div></div></li><li data-uuid="70198e9e-47e7-4e3a-bd0e-dc7a12973a54">Check the logs to make sure you successfully received a new certificate:<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/log print follow</pre>
+</div></div></li><li data-uuid="20b8fc8d-95cb-4182-bf19-77014890f7dc">Start HAProxy Container:<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/container start [find where name=haproxy]</pre>
+</div></div></li><li data-uuid="5fd4703f-e6b9-44b1-82c4-9424a3755f71">Setup a schedule, for example, each day at 06:30 to check for a new certificate:<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/system scheduler
+add interval=1d name=SCHEDULE_RenewCertbot on-event=SCRIPT_RenewCertbot policy=ftp,reboot,read,write,policy,test,password,sniff,sensitive,romon start-date=\
+    2025-03-10 start-time=06:30:00
+/system script
+add dont-require-permissions=no name=SCRIPT_RenewCertbot owner=admin policy=ftp,reboot,read,write,policy,test,password,sniff,sensitive,romon source=\
+    &quot;/container/start [find where name=\&quot;certbot\&quot;]&quot;</pre>
+</div></div></li><li data-uuid="220c9069-fec8-472c-b9be-b6e1915cb89d">Done</li></ol><p>The certificate will automatically renew and replace old certificates in HAProxy without needing to restart the Container.</p><p><br/></p><p><br/></p>
+                    </div>
+
+                                        
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:54</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

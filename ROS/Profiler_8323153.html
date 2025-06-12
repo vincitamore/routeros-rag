@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : Profiler</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="119144606.html">Diagnostics, monitoring and troubleshooting</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : Profiler
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Artūrs C.</span>, last updated by <span class='editor'> Matīss O.</span> on May 06, 2025
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742046404 {padding: 0px;}
+div.rbtoc1747742046404 ul {margin-left: 0px;}
+div.rbtoc1747742046404 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742046404'>
+<ul class='toc-indentation'>
+<li><a href='#Profiler-Summary'>Summary</a></li>
+<li><a href='#Profiler-Classifiers'>Classifiers</a></li>
+</ul>
+</div></p><h1 id="Profiler-Summary">Summary</h1><p>The profiler tool shows CPU usage for each process running in RouterOS. It helps to identify which process is using most of the CPU resources.<br/>Watch our <a class="external-link" href="https://youtu.be/BkRaW14p8_s" rel="nofollow">video about this feature</a>.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; /tool/profile</pre>
+</div></div><p>On multi-core systems, the tool allows specifying per core CPU usage.</p><p>&quot;CPU&quot; parameter allows specifying integer number which represents a core or two of predefined values <strong>all</strong> and <strong>total:</strong></p><ul><li>total - this value sets to show the sum of all core usages;</li><li>all - value sets to show CPU usages separately for every available core</li></ul><p>In the following example we will take a look at both predefined values:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; /tool/profile cpu=all 
+NAME             CPU        USAGE       
+ethernet         1          0%          
+kvm              0          0%          
+kvm              1          4.5%        
+management       0          0%          
+management       1          0.5%        
+idle             0          100%        
+idle             1          93%         
+profiling        0          0%          
+profiling        1          2%    
+
+[admin@MikroTik] &gt; /tool profile cpu=total 
+NAME             CPU        USAGE       
+ethernet         all        0%          
+console          all        0%          
+kvm              all        2.7%        
+management       all        0%          
+idle             all        97.2%       
+profiling        all        0%          
+bridging         all        0%  </pre>
+</div></div><h1 id="Profiler-Classifiers">Classifiers</h1><p>RouterOS processes are classified by type and the CPU usage for each type is displayed separately for ease of debugging.</p><div class="table-wrap"><table class="wrapped confluenceTable"><colgroup><col/><col/></colgroup><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd">backup</td><td class="confluenceTd">Backup service</td></tr><tr><td class="confluenceTd">bfd</td><td class="confluenceTd">BFD service</td></tr><tr><td class="confluenceTd">bgp</td><td class="confluenceTd">BGP service</td></tr><tr><td class="confluenceTd">bridging</td><td class="confluenceTd">Bridging service</td></tr><tr><td class="confluenceTd">btest</td><td class="confluenceTd">Bandwidth test.</td></tr><tr><td class="confluenceTd">certificate</td><td class="confluenceTd">Certificate service</td></tr><tr><td class="confluenceTd">console</td><td class="confluenceTd">Console</td></tr><tr><td class="confluenceTd">container</td><td class="confluenceTd">combined container usage</td></tr><tr><td class="confluenceTd">dhcp</td><td class="confluenceTd">DHCP-Server and DHCP-Client services</td></tr><tr><td class="confluenceTd">disk</td><td class="confluenceTd">storage-related services</td></tr><tr><td class="confluenceTd">dns</td><td class="confluenceTd">DNS-related services</td></tr><tr><td class="confluenceTd">dude</td><td class="confluenceTd">The Dude package services</td></tr><tr><td class="confluenceTd">e-mail</td><td class="confluenceTd">e-mail tool</td></tr><tr><td class="confluenceTd">encrypting</td><td class="confluenceTd">encrypting processes</td></tr><tr><td class="confluenceTd">eoip</td><td class="confluenceTd">EoIP</td></tr><tr><td class="confluenceTd">ethernet</td><td class="confluenceTd">Ethernet-related properties like link speed, auto-negotiation, duplex mode, monitor a transceiver diagnostic information, etc.</td></tr><tr><td class="confluenceTd">fetcher</td><td class="confluenceTd">Fetch tool</td></tr><tr><td class="confluenceTd">fileman</td><td class="confluenceTd">File manager</td></tr><tr><td class="confluenceTd">firewall</td><td class="confluenceTd">Firewall-related processes</td></tr><tr><td class="confluenceTd">firewall-mgmt</td><td class="confluenceTd">Firewall Management: Filtering, NAT, Mangle</td></tr><tr><td class="confluenceTd">flash</td><td class="confluenceTd">storage-related services</td></tr><tr><td class="confluenceTd">ftp</td><td class="confluenceTd">FTP Service</td></tr><tr><td class="confluenceTd">gps</td><td class="confluenceTd">GPS Service</td></tr><tr><td class="confluenceTd">graphing</td><td class="confluenceTd">Graphing tool</td></tr><tr><td class="confluenceTd">gre</td><td class="confluenceTd">GRE</td></tr><tr><td class="confluenceTd">health</td><td class="confluenceTd">system monitoring, workd health</td></tr><tr><td class="confluenceTd">hotspot</td><td class="confluenceTd">Hotspot service</td></tr><tr><td class="confluenceTd">idle</td><td class="confluenceTd">Free CPU resources</td></tr><tr><td class="confluenceTd">igmp-proxy</td><td class="confluenceTd">IGMP Proxy service</td></tr><tr><td class="confluenceTd">internet-detect</td><td class="confluenceTd">Detect Internet tool</td></tr><tr><td class="confluenceTd">ip-pool</td><td class="confluenceTd">IP Pool service</td></tr><tr><td class="confluenceTd">ipsec</td><td class="confluenceTd"><p>IPsec service: <br/>xfrm -  set of statistics showing numbers of packets dropped by the transformation code and why. <br/>drivers/crypto - drivers that provide access to the hardware cryptographic accelerators.<br/>ipsec - processes that relate to the Internet Key Exchange (IKE) protocols, Authentication Header (AH), Encapsulating Security Payload (ESP).</p></td></tr><tr><td class="confluenceTd">kvm</td><td class="confluenceTd">KVM virtual machine functionality</td></tr><tr><td class="confluenceTd">l7-matcher</td><td class="confluenceTd">L7 matcher</td></tr><tr><td class="confluenceTd">lcd</td><td class="confluenceTd">LCD Interfaces system</td></tr><tr><td class="confluenceTd">ldp</td><td class="confluenceTd">Label Distribution Protocol (LDP)</td></tr><tr><td class="confluenceTd">logging</td><td class="confluenceTd">Logging system</td></tr><tr><td class="confluenceTd">management</td><td class="confluenceTd">different subsystems: scheduler, networking, file management, etc.</td></tr><tr><td class="confluenceTd">mpls</td><td class="confluenceTd">MPLS-related features</td></tr><tr><td class="confluenceTd">neighbour-discovery</td><td class="confluenceTd">Neighbour discovery service</td></tr><tr><td class="confluenceTd">networking</td><td class="confluenceTd">common set of services included in the networking</td></tr><tr><td class="confluenceTd">ntp</td><td class="confluenceTd">NTP service</td></tr><tr><td class="confluenceTd">ospf</td><td class="confluenceTd">OSPF service</td></tr><tr><td class="confluenceTd">ovpn</td><td class="confluenceTd">OVPN service</td></tr><tr><td class="confluenceTd">pim</td><td class="confluenceTd">Protocol Independent Multicast</td></tr><tr><td class="confluenceTd">profiling</td><td class="confluenceTd">Profiler service</td></tr><tr><td class="confluenceTd">queue-mgmt</td><td class="confluenceTd">Queues: Simple queues, Queue tree, Queue types</td></tr><tr><td class="confluenceTd">queuing</td><td class="confluenceTd">Intermediate Queuing</td></tr><tr><td class="confluenceTd">radius</td><td class="confluenceTd">RADIUS service</td></tr><tr><td class="confluenceTd">radv</td><td class="confluenceTd">IPv6 radv daemon log messages service</td></tr><tr><td class="confluenceTd">remote-access</td><td class="confluenceTd">accessing the device directly without logging into RouterOS</td></tr><tr><td class="confluenceTd">rip</td><td class="confluenceTd">Routing Information Protocol</td></tr><tr><td class="confluenceTd">routing</td><td class="confluenceTd">Routing-related services</td></tr><tr><td class="confluenceTd">serial</td><td class="confluenceTd">serial console and terminal tool</td></tr><tr><td class="confluenceTd">sniffing</td><td class="confluenceTd">packet Sniffer tool</td></tr><tr><td class="confluenceTd">snmp</td><td class="confluenceTd">SNMP</td></tr><tr><td class="confluenceTd">socks</td><td class="confluenceTd">Socket Secure</td></tr><tr><td class="confluenceTd">spi</td><td class="confluenceTd">storage-related services</td></tr><tr><td class="confluenceTd">ssh</td><td class="confluenceTd">SSH Server</td></tr><tr><td class="confluenceTd">ssl</td><td class="confluenceTd">SSL</td></tr><tr><td class="confluenceTd">supout.rif</td><td class="confluenceTd">supout.rif file generation</td></tr><tr><td class="confluenceTd">telnet</td><td class="confluenceTd">Telnet service</td></tr><tr><td class="confluenceTd">tftp</td><td class="confluenceTd">TFTP service</td></tr><tr><td class="confluenceTd">traffic-accounting</td><td class="confluenceTd">Traffic-Flow log system</td></tr><tr><td class="confluenceTd">traffic-flow</td><td class="confluenceTd">Traffic-Flow system</td></tr><tr><td class="confluenceTd">unclassified</td><td class="confluenceTd">processes or services that are not defined by this classifier</td></tr><tr><td class="confluenceTd">upnp</td><td class="confluenceTd">UPnP protocol</td></tr><tr><td class="confluenceTd">usb</td><td class="confluenceTd">USB features</td></tr><tr><td class="confluenceTd">user-manager</td><td class="confluenceTd">User Manager service</td></tr><tr><td class="confluenceTd">vrrp</td><td class="confluenceTd">VRRP</td></tr><tr><td class="confluenceTd">web-proxy</td><td class="confluenceTd">Web Proxy</td></tr><tr><td class="confluenceTd">winbox</td><td class="confluenceTd">Winbox</td></tr><tr><td class="confluenceTd">wireguard</td><td class="confluenceTd">Wireguard</td></tr><tr><td class="confluenceTd">wireless</td><td class="confluenceTd">common set of services using Wireless systems</td></tr><tr><td class="confluenceTd">www</td><td class="confluenceTd">Webfig HTTP service</td></tr><tr><td class="confluenceTd">zerotier</td><td class="confluenceTd">ZeroTier</td></tr></tbody></table></div><p><br/></p>
+                    </div>
+
+                                        
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:54</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : UPnP</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Firewall-and-Quality-of-Service_119144601.html">Firewall and Quality of Service</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : UPnP
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Guntis G.</span>, last updated on Sep 18, 2024
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <h1 id="UPnP-Introduction">Introduction</h1><p>The MikroTik RouterOS supports Universal Plug and Play architecture for transparent peer-to-peer network connectivity of personal computers and network-enabled intelligent devices or appliances.</p><p>UPnP enables data communication between any two devices under the command of any control device on the network. Universal Plug and Play is completely independent of any particular physical medium. It supports networking with automatic discovery without any initial configuration, whereby a device can dynamically join a network. DHCP and DNS servers are optional and will be used if available on the network. UPnP implements a simple yet powerful NAT traversal solution, that enables the client to get full two-way peer-to-peer network support from behind the NAT.</p><p>There are two interface types for UPnP: <strong>internal</strong> (the one local clients are connected to) and <strong>external</strong> (the one the Internet is connected to). <strong>A router may only have one active external interface with a 'public' IP address on it</strong>, and as many internal interfaces as needed, all with source-NATted 'internal' IP addresses. The protocol works by creating dynamic NAT entries.</p><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>UPnP <strong>internal</strong> interface can create NAT mapping for any subnet, not just the subnet present on the internal interface, so caution must be used when setting <strong>internal</strong> interfaces.</p></div></div><p>The UPnP protocol is used for many modern applications, like most DirectX games, as well as for various Windows Messenger features like remote assistance, application sharing, file transfer, voice, and video from behind a firewall.</p><h1 id="UPnP-Configuration">Configuration</h1><h2 id="UPnP-Generalproperties">General properties</h2><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip upnp</pre>
+</div></div><div class="table-wrap"><table class="relative-table wrapped confluenceTable" style="margin-left: 7.46875px;width: 98.913%;"><colgroup><col style="width: 20.8356%;"/><col style="width: 79.1644%;"/></colgroup><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>allow-disable-external-interface</strong><span> </span>(<em>yes | no<span> </span></em>; Default:<span> </span><strong>yes</strong>)</td><td class="confluenceTd">whether or not the users are allowed to disable the router's external interface. This functionality (for users to be able to turn the router's external interface off without any authentication procedure) is required by the standard, but as it is sometimes not expected or unwanted in UPnP deployments which the standard was not designed for (it was designed mostly for home users to establish their own local networks), you can disable this behavior</td></tr><tr><td class="confluenceTd"><strong>enabled</strong><span> </span>(<em>yes | no<span> </span></em>; Default:<span> </span><strong>no</strong>)</td><td class="confluenceTd">Enable UPnP service</td></tr><tr><td class="confluenceTd"><strong>show-dummy-rule</strong><span> </span>(<em>yes | no<span> </span></em>; Default:<span> </span><strong>yes</strong>)</td><td class="confluenceTd">Enable a workaround for some broken implementations, which are handling the absence of UPnP rules incorrectly (for example, popping up error messages). This option will instruct the server to install a dummy (meaningless) UPnP rule that can be observed by the clients, which refuse to work correctly otherwise</td></tr></tbody></table></div><div role="region" aria-label="Warning" class="confluence-information-macro  confluence-information-macro-warning" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-error confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p><span style="color:var(--ds-text-accent-lime-bolder,#37471f);">If you do not disable the <strong>allow-disable-external-interface</strong>, any user from the local network will be able (without any authentication procedures) to disable the router's external interface</span></p></div></div><h2 id="UPnP-UPnPInterfaces">UPnP Interfaces</h2><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip upnp interfaces</pre>
+</div></div><p><br/></p><div class="table-wrap"><table class="wrapped relative-table confluenceTable" style="margin-left: 7.46875px;width: 99.6752%;"><colgroup><col style="width: 20.5379%;"/><col style="width: 79.4621%;"/></colgroup><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>interface</strong><span> </span>(<em>string</em>; Default: )</td><td class="confluenceTd">Interface name on which uPnP will be running</td></tr><tr><td class="confluenceTd"><strong>type</strong><span> </span>(<em>external | internal</em>; Default:<span> </span><strong>no</strong>)</td><td class="confluenceTd">UPnP interface type:<ul><li><code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">external</span></code><span> </span>- the interface a global IP address is assigned to</li><li><code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">internal </span></code>- router's local interface the clients are connected to</li></ul></td></tr><tr><td class="confluenceTd"><strong>forced-external-ip</strong><span> </span>(<em>Ip</em>; Default: )</td><td class="confluenceTd">Allow specifying what public IP to use if the external interface has more than one IP available.</td></tr></tbody></table></div><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p><span style="color:var(--ds-text-accent-lime-bolder,#37471f);">In more complex setups with VLANs, where the VLAN interface is considered as the LAN interface, the VLAN interface itself should be specified as the internal interface for UPnP to work properly.</span></p></div></div><h1 id="UPnP-ConfigurationExample">Configuration Example</h1><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/24805490/24805494.png" data-image-src="attachments/24805490/24805494.png" data-unresolved-comment-count="0" data-linked-resource-id="24805494" data-linked-resource-version="2" data-linked-resource-type="attachment" data-linked-resource-default-alias="UPnP.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="24805490" data-linked-resource-container-version="8" tabindex="0" alt=""></span></p><p>We have masquerading already enabled on our router:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] ip upnp&gt; /ip firewall src-nat print
+Flags: X - disabled, I - invalid, D - dynamic
+  0   chain=srcnat action=masquerade out-interface=ether1
+[admin@MikroTik] ip upnp&gt;</pre>
+</div></div><p>To enable the UPnP feature:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] ip upnp&gt; set enable=yes
+[admin@MikroTik] ip upnp&gt; print
+                             enabled: yes
+    allow-disable-external-interface: yes
+                     show-dummy-rule: yes
+[admin@MikroTik] ip upnp&gt;</pre>
+</div></div><p>Now, all we have to do is to add interfaces:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] ip upnp interfaces&gt; add interface=ether1 type=external
+[admin@MikroTik] ip upnp interfaces&gt; add interface=ether2 type=internal
+[admin@MikroTik] ip upnp interfaces&gt; print
+Flags: X - disabled
+  #   INTERFACE TYPE
+  0 X ether1    external
+  1 X ether2    internal
+
+[admin@MikroTik] ip upnp interfaces&gt; enable 0,1</pre>
+</div></div><p class="auto-cursor-target">Now once the client from the internal interface side sends UPnP request, dynamic NAT rules will be created on the router, example rules could look something similar to these:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; ip firewall nat print 
+Flags: X - disabled, I - invalid, D - dynamic 
+
+0 chain=srcnat action=masquerade out-interface=ether1
+
+1 D ;;; upnp 192.168.88.10: ApplicationX
+chain=dstnat action=dst-nat to-addresses=192.168.88.10 to-ports=55000 protocol=tcp 
+dst-address=10.0.0.1 in-interface=ether1 dst-port=55000
+
+2 D ;;; upnp 192.168.88.10: ApplicationX
+chain=dstnat action=dst-nat to-addresses=192.168.88.10 to-ports=55000 protocol=udp 
+dst-address=10.0.0.1 in-interface=ether1 dst-port=55000
+
+</pre>
+</div></div>
+                    </div>
+
+                                                            <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/24805490/24805496.png">UPnP.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/24805490/24805494.png">UPnP.png</a> (image/png)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

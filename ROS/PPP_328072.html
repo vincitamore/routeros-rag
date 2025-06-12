@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : PPP</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Mobile-Networking_119144655.html">Mobile Networking</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : PPP
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Normunds R.</span>, last updated by <span class='editor'> Druvis Timma</span> on Apr 06, 2022
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p class="auto-cursor-target"><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742029780 {padding: 0px;}
+div.rbtoc1747742029780 ul {margin-left: 0px;}
+div.rbtoc1747742029780 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742029780'>
+<ul class='toc-indentation'>
+<li><a href='#PPP-Overview'>Overview</a></li>
+<li><a href='#PPP-Introduction'>Introduction</a>
+<ul class='toc-indentation'>
+<li><a href='#PPP-PPPClient'>PPP Client</a></li>
+<li><a href='#PPP-PPPClientexample'>PPP Client example</a></li>
+<li><a href='#PPP-PPPServer'>PPP Server</a></li>
+</ul>
+</li>
+</ul>
+</div></p><h1 class="auto-cursor-target" id="PPP-Overview">Overview</h1><p>The Point-to-Point Protocol (PPP) provides a standard method for transporting multi-protocol datagrams over point-to-point links. PPP in RouterOS is based on <a class="external-link" href="https://tools.ietf.org/html/rfc1661" rel="nofollow">RFC 1661 standard.</a></p><h1 id="PPP-Introduction">Introduction</h1><p class="newpage"><span>The basic purpose of PPP at this point is to transport Layer-3 packets across a Data Link layer point-to-point link. </span> Packets between both peers are assumed to deliver in order. </p><p>PPP is comprised of three main components:</p><ol><li> A method for encapsulating multi-protocol datagrams.</li><li> A Link Control Protocol (LCP) for establishing, configuring, and testing the data-link connection. </li><li>A family of Network Control Protocols (NCPs) for establishing and configuring different network-layer protocols.</li></ol><p>Detailed PPP packet processing in RouterOS you can see in the <a href="Packet-Flow-in-RouterOS_328227.html">Packet Flow Diagram</a>.</p><h2 class="newpage" id="PPP-PPPClient">PPP Client</h2><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface ppp-client</pre>
+</div></div><h2 class="newpage" id="PPP-PPPClientexample">PPP Client example</h2><p>This is an example of how to add a client using an exposed serial port from an LTE modem.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface ppp-client add apn=yourapn dial-on-demand=no disabled=no port=usb2</pre>
+</div></div><p class="auto-cursor-target">The dial-on-demand should to be set to 'no' for a continuous connection.</p><h2 class="newpage" id="PPP-PPPServer">PPP Server</h2><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface ppp-server</pre>
+</div></div>
+                    </div>
+
+                                        
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

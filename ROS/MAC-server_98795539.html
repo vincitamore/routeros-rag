@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : MAC server</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Management-tools_328121.html">Management tools</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : MAC server
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Deniss M.</span>, last updated by <span class='editor'> Dāvis Bleikšs</span> on Apr 10, 2025
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p>MAC server section allows you to configure MAC Telnet Server, MAC WinBox Server and MAC Ping Server on RouterOS device.</p><p>MAC Telnet is used to provide access to a router that has no IP address set. It works just like IP telnet. MAC telnet is possible between two MikroTik RouterOS routers only.</p><p>MAC WinBox is used to provide WinBox access to the router via MAC address.</p><p>MAC Ping is used to allow MAC pings to the router's MAC address.</p><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p><strong>MAC-server</strong> settings are included in the &quot;system&quot; package.</p></div></div><h2 id="MACserver-MACTelnetServer"><span class="mw-headline">MAC Telnet Server</span></h2><p>It is possible to set MAC Telnet access to specific interfaces that are a part of the <a href="https://help.mikrotik.com/docs/display/ROS/List" rel="nofollow">interface list</a>:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@device] /tool mac-server set allowed-interface-list=listBridge
+[admin@device] /tool mac-server print
+  allowed-interface-list: listBridge</pre>
+</div></div><p>In the example above, MAC Telnet is configured for the interface list &quot;listBridge&quot; and, as a result, MAC Telnet will only work via the interfaces that are members of the list (you can add multiple interfaces to the list).</p><p>To disable MAC Telnet access, issue the command (set &quot;allowed-interface-list&quot; to &quot;none&quot;):</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@device] /tool mac-server set allowed-interface-list=none
+[admin@device] /tool mac-server print
+  allowed-interface-list: none</pre>
+</div></div><p><span class="mw-headline">You can check active MAC Telnet sessions (that the device accepted) with the command:</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@device] &gt; tool mac-server sessions print
+Columns: INTERFACE, SRC-ADDRESS, UPTIME
+#  INTERFACE  SRC-ADDRESS        UPTIME
+0  ether5     64:D1:54:FB:E3:E6  17s </pre>
+</div></div><h3 id="MACserver-MACTelnetClient"><span class="mw-headline">MAC Telnet Client</span></h3><p><span class="mw-headline">When MAC Telnet Server is enabled, you can use another RouterOS device to connect to the server using the mac-telnet client:</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@device2] &gt; tool mac-telnet B8:69:F4:7F:F2:E7    
+Login: admin
+Password: 
+Trying B8:69:F4:7F:F2:E7...
+Connected to B8:69:F4:7F:F2:E7
+
+
+
+
+  MMM      MMM       KKK                          TTTTTTTTTTT      KKK
+  MMMM    MMMM       KKK                          TTTTTTTTTTT      KKK
+  MMM MMMM MMM  III  KKK  KKK  RRRRRR     OOOOOO      TTT     III  KKK  KKK
+  MMM  MM  MMM  III  KKKKK     RRR  RRR  OOO  OOO     TTT     III  KKKKK
+  MMM      MMM  III  KKK KKK   RRRRRR    OOO  OOO     TTT     III  KKK KKK
+  MMM      MMM  III  KKK  KKK  RRR  RRR   OOOOOO      TTT     III  KKK  KKK
+
+  MikroTik RouterOS 7.1rc3 (c) 1999-2021       https://www.mikrotik.com/
+
+Press F1 for help
+  
+[admin@device] &gt; </pre>
+</div></div><p><span class="mw-headline">Change the MAC address accordingly (to your setup) and you should get into the server's CLI (as shown in the example above).<br/></span></p><h3 class="auto-cursor-target" id="MACserver-MACScan">MAC Scan</h3><p>Mac scan feature discovers all devices, which support MAC telnet protocol on the given network. The command requires you to select an interface that should be scanned:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@Sw_Denissm] &gt; tool mac-scan interface=all           
+MAC-ADDRESS       ADDRESS                AGE
+B8:69:F4:7F:F2:E7 192.168.69.1            26
+2C:C8:1B:FD:F2:C3 192.168.69.3            56</pre>
+</div></div><p>In the example, above, all interfaces are chosen, and the scan will run infinitely unless stopped (by pressing &quot;q&quot;).</p><p>You can also add a &quot;duration&quot; parameter that will dictate for how long the scan should go on:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@Sw_Denissm] &gt; tool mac-scan interface=all duration=1
+MAC-ADDRESS       ADDRESS                AGE
+B8:69:F4:7F:F2:E7 192.168.69.1            48
+2C:C8:1B:FD:F2:C3 192.168.69.3            17</pre>
+</div></div><p>In the example above, we set the &quot;duration&quot; parameter to 1 second.</p><h2 id="MACserver-MACWinBoxServer"><span class="mw-headline">MAC WinBox Server</span></h2><p><span class="mw-headline">Same as with MAC Telnet, it is possible to set MAC WinBox access to specific interfaces that are a part of the <a href="https://help.mikrotik.com/docs/display/ROS/List" rel="nofollow">interface list</a>:</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@device] &gt; tool mac-server mac-winbox set allowed-interface-list=listBridge 
+[admin@device] &gt; tool mac-server mac-winbox print                   
+  allowed-interface-list: listBridge</pre>
+</div></div><p>In the example above, MAC WinBox access is configured for the interface list &quot;listBridge&quot; and, as a result, MAC WinBox will only work via the interfaces that are members of the list.</p><p>To disable MAC WinBox access, issue the command (set &quot;allowed-interface-list&quot; to &quot;none&quot;):</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@device] &gt; tool mac-server mac-winbox set allowed-interface-list=none
+[admin@device] &gt; tool mac-server mac-winbox print                   
+  allowed-interface-list: none</pre>
+</div></div><h2 id="MACserver-MACPingServer">MAC Ping Server</h2><p>MAC Ping Server can be either set to be &quot;disabled&quot; or &quot;enabled&quot;:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@device] &gt; tool mac-server ping print
+  enabled: yes</pre>
+</div></div><p>You can enable or disable MAC ping with the help of the commands (<strong>enable=yes</strong> → to enable the feature; <strong>enable=no</strong> → to disable the feature):</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@device] &gt; tool mac-server ping set enabled=yes
+[admin@device] &gt; tool mac-server ping set enabled=no</pre>
+</div></div><p>When MAC Ping is enabled, other hosts on the same broadcast domain can use ping tool to ping the mac address. For example, you can issue the following command to check MAC ping results:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@device] &gt; /ping 00:0C:42:72:A1:B0
+HOST                                    SIZE  TTL TIME  STATUS                                         
+00:0C:42:72:A1:B0                       56        0ms  
+00:0C:42:72:A1:B0                       56        0ms  
+    sent=2 received=2 packet-loss=0% min-rtt=0ms avg-rtt=0ms max-rtt=0ms </pre>
+</div></div>
+                    </div>
+
+                                        
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

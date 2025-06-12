@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : Container - mosquitto MQTT server</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Extended-features_120324125.html">Extended features</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Container_84901929.html">Container</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : Container - mosquitto MQTT server
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Deniss M.</span>, last updated by <span class='editor'> Ingus Raudiņš</span> on Apr 30, 2025
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742047307 {padding: 0px;}
+div.rbtoc1747742047307 ul {margin-left: 0px;}
+div.rbtoc1747742047307 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742047307'>
+<ul class='toc-indentation'>
+<li><a href='#ContainermosquittoMQTTserver-Introduction'>Introduction</a></li>
+<li><a href='#ContainermosquittoMQTTserver-Summary'>Summary</a></li>
+<li><a href='#ContainermosquittoMQTTserver-Containerconfiguration'>Container configuration</a>
+<ul class='toc-indentation'>
+<li><a href='#ContainermosquittoMQTTserver-Containermode'>Container mode</a></li>
+<li><a href='#ContainermosquittoMQTTserver-Networking'>Networking</a></li>
+<li><a href='#ContainermosquittoMQTTserver-Environmentvariablesandmounts'>Environment variables and mounts</a></li>
+<li><a href='#ContainermosquittoMQTTserver-Gettingimage'>Getting image</a></li>
+<li><a href='#ContainermosquittoMQTTserver-Settingupmosquittoconfigurationfile'>Setting up mosquitto configuration file</a></li>
+<li><a href='#ContainermosquittoMQTTserver-Startingthecontainer'>Starting the container</a></li>
+</ul>
+</li>
+<li><a href='#ContainermosquittoMQTTserver-MQTTpublishandsubscribe'>MQTT publish and subscribe</a></li>
+<li><a href='#ContainermosquittoMQTTserver-SSLMQTT'>SSL MQTT</a>
+<ul class='toc-indentation'>
+<li><a href='#ContainermosquittoMQTTserver-Serverconfiguration'>Server configuration</a></li>
+<li><a href='#ContainermosquittoMQTTserver-Testingtheconnection'>Testing the connection</a></li>
+</ul>
+</li>
+</ul>
+</div></p><h1 id="ContainermosquittoMQTTserver-Introduction">Introduction</h1><p>The introduction of the container feature into the RouterOS made it possible to run all kinds of servers for all sorts of tasks inside the router. This is especially relevant for people, who want to reduce the number of devices in their network. Instead of running a server on a separate device/machine, why not run it inside the router?</p><p>In this guide, we will showcase how to install a basic MQTT broker (or in other words, server) called <a class="external-link" href="https://mosquitto.org/" rel="nofollow">eclipse-mosquitto</a>. MQTT protocol is a very popular choice, especially in IoT topologies. It is an open OASIS and ISO standard lightweight, publish-subscribe network protocol that transports messages between devices. A typical topology consists of an MQTT publisher (a device that sends information), an MQTT broker (a server where the data is stored), and an MQTT subscriber (a device that listens to the data published on the server).</p><p>RouterOS supports <a href="https://help.mikrotik.com/docs/display/ROS/MQTT" rel="nofollow">MQTT publish, subscribe</a> feature, and, now, we can also run the MQTT broker as well.</p><p>The image that we are going to use, can be found by following the hub.docker <a class="external-link" href="https://hub.docker.com/_/eclipse-mosquitto" rel="nofollow">link</a>.</p><h1 id="ContainermosquittoMQTTserver-Summary">Summary</h1><p>Make sure to study our <a href="https://help.mikrotik.com/docs/display/ROS/Container" rel="nofollow">container</a> guide before proceeding with the configuration. Make sure to check the <a href="https://help.mikrotik.com/docs/display/ROS/Container#Container-Disclaimer" rel="nofollow">disclaimer</a> and <a href="https://help.mikrotik.com/docs/display/ROS/Container#Container-Requirements" rel="nofollow">requirements</a> sections to understand all the risks and necessary steps you might be required to do.</p><p>You can find supported architectures by following the <a class="external-link" href="https://hub.docker.com/_/eclipse-mosquitto/tags" rel="nofollow">link</a>.</p><p>At the time, when the guide was published, <strong>eclipse-mosquitto</strong> image was available for ARM32, ARM64, and AMD64 (CHR and x86) devices. In this example, we will run it on an ARM32 architecture device → <a class="external-link" href="https://mikrotik.com/product/rb1100ahx4" rel="nofollow">RB1100AHx4</a>.</p><div role="region" aria-label="Warning" class="confluence-information-macro  confluence-information-macro-warning" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-error confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p><strong>A very basic</strong> and <strong>quick</strong> configuration will be shown. Make sure to check<strong> </strong><a class="external-link" href="https://mosquitto.org/documentation/" rel="nofollow">mosquitto documentation</a> page for more information about additional options and settings you can implement. If you want to use it for production, please <strong>make sure to harden the security</strong> in any way possible:</p><ul><li><a href="https://help.mikrotik.com/docs/display/ROS/Firewall+and+Quality+of+Service" rel="nofollow">Firewall</a>, so that access to the container is allowed only from your trusted IP addresses;</li><li>Increasing security from the mosquitto broker/server-side → use strong passwords, non-standard ports ...etc;</li><li>Use SSL MQTT.</li></ul></div></div><h1 id="ContainermosquittoMQTTserver-Containerconfiguration">Container configuration</h1><p><strong>Sub-menu:</strong><span> </span><code>/container</code></p><p><em><strong>note</strong>: </em><strong>container</strong> package is required.</p><h2 id="ContainermosquittoMQTTserver-Containermode">Container mode</h2><p>Enable container mode:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/system/device-mode/update container=yes</pre>
+</div></div><p>You will need to confirm the device-mode with a press of the reset button, or a cold reboot, if using container on X86.</p><h2 class="auto-cursor-target" id="ContainermosquittoMQTTserver-Networking">Networking</h2><p>Add veth interface for the container:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface/veth/add name=veth2 address=172.19.0.2/24 gateway=172.19.0.1</pre>
+</div></div><p class="auto-cursor-target">Create a bridge for containers and add veth to it:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface/bridge/add name=msqt
+/ip/address/add address=172.19.0.1/24 interface=msqt
+/interface/bridge/port add bridge=msqt interface=veth2</pre>
+</div></div><p class="auto-cursor-target">Forward TCP 1883 for non-SSL MQTT (where 192.168.88.1 is the device's LAN IP address) for testing purposes if NAT is required (optional):</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip firewall nat add action=dst-nat chain=dstnat dst-address=192.168.88.1 dst-port=1883 protocol=tcp to-addresses=172.19.0.2 to-ports=1883</pre>
+</div></div><h2 id="ContainermosquittoMQTTserver-Environmentvariablesandmounts">Environment variables and mounts</h2><p>Per the eclipse-mosquitto docker hub, define a mount for the configuration file. We will mount not just the configuration file, but the whole folder, because, for SSL MQTT, we will need to upload certificates into the folder as well:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/container mounts add src=/mosquitto_mounted dst=/mosquitto/config name=msqt_config</pre>
+</div></div><h2 class="auto-cursor-target" id="ContainermosquittoMQTTserver-Gettingimage">Getting image</h2><p>To simplify the configuration, we will get the image from an external library but you can also import it via the <a href="https://help.mikrotik.com/docs/display/ROS/Container#Container-b)importimagefromPC" rel="nofollow">.tar</a> file.</p><p>In this example, we will use the device's own storage. RB1100AHx4 has 128 MB disk space and a basic mosquitto installation should not take up more than ~15 MB.</p><p>Make sure that you have &quot;Registry URL&quot; set accordingly, limit RAM usage (if necessary), and set up a directory for the image:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/container/config/set registry-url=https://registry-1.docker.io tmpdir=pull</pre>
+</div></div><p class="auto-cursor-target">Pull image:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/container/add remote-image=library/eclipse-mosquitto:latest interface=veth2 root-dir=mosquitto mounts=msqt_config logging=yes</pre>
+</div></div><p class="auto-cursor-target">After running the command, RouterOS should start &quot;extracting&quot; the package. Check &quot;File System&quot; for newly created folders and monitor container status with the command <code>/container/print</code>.</p><h2 class="auto-cursor-target" id="ContainermosquittoMQTTserver-Settingupmosquittoconfigurationfile">Setting up mosquitto configuration file</h2><p>To get the <strong>mosquttio.conf</strong> file, we will need to use SFTP (file transfer over SSH) protocol, so make sure that SSH <a href="https://help.mikrotik.com/docs/display/ROS/Services" rel="nofollow">service</a> is enabled. You can also use FTP.</p><p>Open your command terminal (&quot;CMD&quot;, as Administrator, for Windows users, or &quot;Linux Shell or Command Terminal&quot; for Linux users) and navigate it to the directory where you want to download the configuration file. For example, to the &quot;Container&quot; folder on your &quot;Desktop&quot;:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: powershell; gutter: false">C:\WINDOWS\system32&gt;cd C:\Users\Administrator\Desktop\Container
+
+C:\Users\Administrator\Desktop\Container&gt;</pre>
+</div></div><p>Initiate SFTP to the device's IP address:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: powershell; gutter: false">C:\Users\Administrator\Desktop\Container&gt;sftp admin@192.168.88.1
+The authenticity of host &#39;192.168.88.1 (192.168.88.1)&#39; can&#39;t be established.
+RSA key fingerprint is SHA256:lfxxs+xMrXlvP7hiHi9ZAEZlPi6/c5US+r6J7ljhkaA.
+Are you sure you want to continue connecting (yes/no/[fingerprint])?yes
+Warning: Permanently added &#39;192.168.88.1&#39; (RSA) to the list of known hosts.
+Connected to 192.168.88.1.
+sftp&gt;</pre>
+</div></div><p class="auto-cursor-target">Go to the mosquitto configuration file folder (use <code>dir</code> or <code>ls</code> command to see the content of the folder you are in and <code>cd</code> command to go to the folder of our choice). By default, the configuration is loaded from the &quot;/mosquitto/config/mosquitto.conf&quot;, so, navigate there and use <code>get</code> command to download it:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: powershell; gutter: false">sftp&gt; cd mosquitto/mosquitto/config
+sftp&gt; dir
+mosquitto.conf
+sftp&gt; get mosquitto.conf
+Fetching /mosquitto/mosquitto/config/mosquitto.conf to mosquitto.conf
+/mosquitto/mosquitto/config/mosquitto.conf</pre>
+</div></div><p class="auto-cursor-target">Open &quot;<strong>mosquitto.conf</strong>&quot; via your preferred text editor (notepad or any other), and just overwrite it with two lines shown below:</p><div role="region" aria-label="Warning" class="confluence-information-macro  confluence-information-macro-warning" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-error confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>In this section, we will configure a basic non-SSL MQTT setup for testing purposes. Non-SSL MQTT is not secure for a production environment unless you are certain the required security/restrictions are in place.</p><p>For a production environment, topologies where the MQTT traffic can be captured/sniffed and/or topologies where the MQTT traffic is routed directly via the internet (not locally), use SSL MQTT. Check the <a href="https://help.mikrotik.com/docs/pages/viewpage.action?pageId=169246787#id-(unpublishedwaitingfor7.11alpha203)ContainermosquittoMQTTserver-SSLMQTT" rel="nofollow">SSL MQTT section</a> for more information.</p></div></div><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: text; gutter: false">listener 1883
+allow_anonymous true
+</pre>
+</div></div><ul><li class="auto-cursor-target">The first line, <strong>listener 1883</strong>, will make the installation listen for incoming network connection on the specified port.</li><li class="auto-cursor-target">The second line, <strong>allow_anonymous true</strong>, determines whether clients that connect without providing a username are allowed to connect.</li></ul><p class="auto-cursor-target">Overwrite the file using the same <strong>mosquitto.conf</strong> name.</p><p class="auto-cursor-target">After you have created your own custom configuration file, upload it into the mounted directory/folder &quot;<strong>mosquitto_mounted</strong>&quot;. If you have not run the container yet, you will not have the &quot;<strong>mosquitto_mounted</strong>&quot; folder and you can create it manually. If you did run it (<code>/container start 0</code>), it should have been created automatically:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: powershell; gutter: false">sftp&gt; dir
+mosquitto           mosquitto_mounted   pub                 pull                skins</pre>
+</div></div><p class="auto-cursor-target">Use SFTP from the directory where the edited mosquitto.conf file is located and <code>put</code> it into the mounted directory:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: powershell; gutter: false">C:\Users\Administrator\Desktop\Container&gt;dir
+ Directory of C:\Users\Administrator\Desktop\Container
+
+02/03/2023  12:09 PM    &lt;DIR&gt;          .
+02/03/2023  12:09 PM    &lt;DIR&gt;          ..
+02/03/2023  12:09 PM            40,449 mosquitto.conf
+               1 File(s)         40,449 bytes
+               2 Dir(s)  76,166,430,720 bytes free
+
+C:\Users\Administrator\Desktop\Container&gt;sftp admin@192.168.88.1
+Connected to 192.168.88.1.
+sftp&gt; dir
+mosquitto           mosquitto_mounted   pub                 pull                skins
+sftp&gt; cd mosquitto_mounted
+sftp&gt; put mosquitto.conf
+Uploading mosquitto.conf to /mosquitto_mounted/mosquitto.conf
+mosquitto.conf                                                                        100%  162    40.5KB/s   00:00</pre>
+</div></div><p class="auto-cursor-target">Restart the container:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; /container/stop 0
+[admin@MikroTik] &gt; /container/start 0</pre>
+</div></div><p class="auto-cursor-target">Make sure to wait for the container to stop (<code>status=stopped</code> should be shown after using <code>/container/print</code> command) before initiating it again.</p><h2 class="auto-cursor-target" id="ContainermosquittoMQTTserver-Startingthecontainer">Starting the container</h2><p>After you make sure that the container has been added and the status changed to <code>status=stopped</code> after using <code>/container/print</code> → you can initiate it:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/container/start 0</pre>
+</div></div><p class="auto-cursor-target">If you have enabled container logging, you would see something like this in the<a href="https://help.mikrotik.com/docs/display/ROS/Log" rel="nofollow"> Logs </a> section:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: text; gutter: false"> 12:12:46 container,info,debug 1707214366: mosquitto version 2.0.18 starting
+ 12:12:46 container,info,debug 1707214366: Config loaded from /mosquitto/config/mosquitto.conf.
+ 12:12:46 container,info,debug 1707214366: Opening ipv4 listen socket on port 1883.
+ 12:12:46 container,info,debug 1707214366: Opening ipv6 listen socket on port 1883.
+ 12:12:46 container,info,debug 1707214366: mosquitto version 2.0.18 running</pre>
+</div></div><h1 class="auto-cursor-target" id="ContainermosquittoMQTTserver-MQTTpublishandsubscribe">MQTT publish and subscribe</h1><p><strong>Sub-menu:</strong><span> </span><code>/iot mqtt</code></p><p><em><strong>note</strong>: </em><strong>iot </strong>package is required.</p><p>Add an MQTT broker:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/iot/mqtt/brokers/add name=mosquitto username=test address=172.19.0.2</pre>
+</div></div><p>Subscribe to the MQTT broker and the required topic:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/iot/mqtt/subscribe broker=mosquitto topic=test/topic</pre>
+</div></div><p class="auto-cursor-target">Publish a static MQTT message:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/iot/mqtt/publish broker=&quot;mosquitto&quot; topic=&quot;test/topic&quot; message=&quot;{\&quot;test\&quot;:\&quot;123\&quot;}&quot;</pre>
+</div></div><p class="auto-cursor-target">Check subscriptions for received messages:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/iot/mqtt/subscriptions/recv/print
+ 0 broker=mosquitto topic=&quot;test/topic&quot; data=&quot;{&quot;test&quot;:&quot;123&quot;}&quot; 
+   time=2023-07-12 10:01:40 </pre>
+</div></div><p>You can also check the container logs (if enabled), to confirm the mosquitto is operational:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: text; gutter: false"> 12:47:28 container,info,debug 1675421248: New connection from 172.19.0.1:42240 on port 1883.
+ 12:47:28 container,info,debug 1675421248: New client connected from 172.19.0.1:42240 as MTD8580EC793C4 (p2, c1, k60, u&#39;test&#39;).
+ 12:47:38 container,info,debug 1675421258: Client MTD8580EC793C4 disconnected.</pre>
+</div></div><h1 class="auto-cursor-target" id="ContainermosquittoMQTTserver-SSLMQTT">SSL MQTT</h1><p class="auto-cursor-target">Using <strong>non-SSL MQTT</strong> for a production environment <strong>is not secure</strong>. One can easily <a href="https://help.mikrotik.com/docs/display/ROS/Packet+Sniffer" rel="nofollow">capture/sniff</a> the packet exchange between the broker and the publisher and, as a result, will be able to obtain user credentials and other sensitive information.</p><p class="auto-cursor-target">To increase security, use SSL MQTT.</p><p class="auto-cursor-target">The first step is to generate the certificates. In this example, we will use a simple Root CA scenario (with no device/client certificate requirement).</p><p class="auto-cursor-target">Use the official <a class="external-link" href="https://mosquitto.org/man/mosquitto-tls-7.html" rel="nofollow">mosquitto-tls user guide</a> for the step-by-step.</p><h2 class="auto-cursor-target" id="ContainermosquittoMQTTserver-Serverconfiguration">Server configuration</h2><p class="auto-cursor-target">You should have generated ca.crt (Certificate Authority file), server.crt (server certificate) and server.key (server's key):</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: powershell; gutter: false">C:\Users\Administrator\Desktop\Container&gt;dir
+ Directory of C:\Users\Administrator\Desktop\Container
+
+07/12/2023  10:58 AM    &lt;DIR&gt;          .
+07/12/2023  10:58 AM    &lt;DIR&gt;          ..
+07/12/2023  10:56 AM             1,322 ca.crt
+07/12/2023  10:56 AM             1,854 ca.key
+07/12/2023  09:57 AM                35 mosquitto.conf
+07/12/2023  10:58 AM             1,164 server.crt
+07/12/2023  10:57 AM               960 server.csr
+07/12/2023  10:56 AM             1,704 server.key
+               6 File(s)          7,039 bytes
+               2 Dir(s)  52,401,184,768 bytes free
+</pre>
+</div></div><p class="auto-cursor-target">Open mounted &quot;<strong>mosquitto.conf</strong>&quot; via your preferred text editor (notepad or any other), and just overwrite it with the lines shown below:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: text; gutter: false">tls_version tlsv1.2
+port 8883
+allow_anonymous true
+cafile /mosquitto/config/ca.crt
+keyfile /mosquitto/config/server.key
+certfile /mosquitto/config/server.crt
+</pre>
+</div></div><ul><li class="auto-cursor-target"><strong>tls_version</strong> line sets minimal TLS version;</li><li class="auto-cursor-target"><strong>listener 8883</strong>, will make the installation listen for incoming network connection on the specified port;</li><li class="auto-cursor-target"><strong>allow_anonymous true</strong>, determines whether clients that connect without providing a username are allowed to connect;</li></ul><div role="region" aria-label="Warning" class="confluence-information-macro  confluence-information-macro-warning" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-error confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>We are using a basic SSL configuration for testing purposes. <strong>allow_anonymous true </strong>is not a secure setting for the production environment.</p></div></div><ul><li><strong>cafile /mosquitto/config/ca.crt</strong> line specifies a path to the CA certificate file;<strong><br/></strong></li><li><strong>keyfile /mosquitto/config/server.key </strong>line specifies a path to the server key file;</li><li><strong>certfile /mosquitto/config/server.crt </strong>line specifies a path to the server certificate file.</li></ul><p class="auto-cursor-target">Upload the certificate files, and updated SSL-ready mosquitto.conf file into the mounted folder &quot;<strong>mosquitto_mounted</strong>&quot;:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: powershell; gutter: false">C:\Users\Administrator\Desktop\Container&gt;sftp admin@192.168.88.1
+Connected to 192.168.88.1.
+sftp&gt; cd mosquitto_mounted
+sftp&gt; dir
+mosquitto.conf
+sftp&gt; put ca.crt
+Uploading ca.crt to /mosquitto_mounted/ca.crt
+ca.crt                                                                                100% 1322   323.0KB/s   00:00
+sftp&gt; put server.crt
+Uploading server.crt to /mosquitto_mounted/server.crt
+server.crt                                                                            100% 1164   227.3KB/s   00:00
+sftp&gt; put server.key
+Uploading server.key to /mosquitto_mounted/server.key
+server.key                                                                            100% 1704   415.7KB/s   00:00
+sftp&gt; dir
+ca.crt           mosquitto.conf   server.crt       server.key
+sftp&gt; put mosquitto.conf
+Uploading mosquitto.conf to /mosquitto_mounted/mosquitto.conf
+mosquitto.conf                                                                        100%  162    32.2KB/s   00:00</pre>
+</div></div><p class="auto-cursor-target">Restart the container:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; /container/stop 0
+[admin@MikroTik] &gt; /container/start 0</pre>
+</div></div><p class="auto-cursor-target">Confirm that the broker listens on port 8883 using the logs:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: text; gutter: false"> 11:20:41 container,info,debug 1689160841: mosquitto version 2.0.15 starting
+ 11:20:41 container,info,debug 1689160841: Config loaded from /mosquitto/config/mosquitto.conf.
+ 11:20:41 container,info,debug 1689160841: Opening ipv4 listen socket on port 8883.
+ 11:20:41 container,info,debug 1689160841: Opening ipv6 listen socket on port 8883.
+ 11:20:41 container,info,debug 1689160841: mosquitto version 2.0.15 running
+ 11:22:24 system,info,account user admin logged in from 10.5.217.34 via local</pre>
+</div></div><h2 class="auto-cursor-target" id="ContainermosquittoMQTTserver-Testingtheconnection">Testing the connection</h2><p class="auto-cursor-target">Upload CA certificate (<strong>ca.crt</strong>) into RouterOS, into the device's &quot;File List&quot;:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/file print
+Columns: NAME, TYPE, SIZE, CREATION-TIME
+#  NAME                TYPE             SIZE  CREATION-TIME      
+0  skins               directory              1970-01-01 03:00:02
+1  pub                 directory              2023-01-04 11:05:04
+2  disk7               disk                   2023-07-12 09:52:07
+3  mosquitto           container store        2023-07-12 09:52:09
+4  mosquitto_mounted   container store        2023-07-25 16:38:37
+5  pull                directory              2023-07-12 09:52:09
+6  ca.crt              .crt file        1322  2023-07-12 11:28:23</pre>
+</div></div><p>Import the certificate:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/certificate/import file-name=ca.crt passphrase=&quot;&quot;</pre>
+</div></div><p>Add MQTT broker for SSL connection:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/iot/mqtt/brokers/add name=mosquittoSSL username=test address=172.19.0.2 port=8883 ssl=yes</pre>
+</div></div><p>Subscribe to the MQTT broker and the required topic:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/iot/mqtt/subscribe broker=mosquittoSSL topic=test/topic</pre>
+</div></div><p class="auto-cursor-target">Publish a static MQTT message:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/iot/mqtt/publish broker=&quot;mosquittoSSL&quot; topic=&quot;test/topic&quot; message=&quot;{\&quot;test\&quot;:\&quot;123\&quot;}&quot;</pre>
+</div></div><p class="auto-cursor-target">Check subscriptions for received messages:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/iot/mqtt/subscriptions/recv/print
+ 0 broker=mosquittoSSL topic=&quot;test/topic&quot; data=&quot;{&quot;test&quot;:&quot;123&quot;}&quot; 
+   time=2023-07-12 10:20:40 </pre>
+</div></div>
+                    </div>
+
+                                                            <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/169246787/197033987.png">image-2023-6-19_11-33-24.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/169246787/197033988.png">image-2023-6-19_11-34-43.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/169246787/197033989.png">image-2023-6-19_11-35-7.png</a> (image/png)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:54</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

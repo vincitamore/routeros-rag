@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : First Time Configuration</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Getting-started_328119.html">Getting started</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : First Time Configuration
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Māris B.</span>, last updated by <span class='editor'> Guntis G.</span> on Jan 10, 2025
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p class="auto-cursor-target"><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742017830 {padding: 0px;}
+div.rbtoc1747742017830 ul {margin-left: 0px;}
+div.rbtoc1747742017830 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742017830'>
+<ul class='toc-indentation'>
+<li><a href='#FirstTimeConfiguration-ConnectingtotheRouter'>Connecting to the Router</a></li>
+<li><a href='#FirstTimeConfiguration-RouterwithoutDefaultConfiguration'>Router without Default Configuration</a></li>
+<li><a href='#FirstTimeConfiguration-ConfiguringIPAccess'>Configuring IP Access</a></li>
+<li><a href='#FirstTimeConfiguration-ConfiguringInternetConnection'>Configuring Internet Connection</a>
+<ul class='toc-indentation'>
+<li><a href='#FirstTimeConfiguration-DynamicPublicIP'>Dynamic Public IP</a></li>
+<li><a href='#FirstTimeConfiguration-StaticPublicIP'>Static Public IP</a></li>
+<li><a href='#FirstTimeConfiguration-PPPoEConnection'>PPPoE Connection</a></li>
+<li><a href='#FirstTimeConfiguration-VerifyConnectivity'>Verify Connectivity</a></li>
+</ul>
+</li>
+<li><a href='#FirstTimeConfiguration-ProtectingtheRouter'>Protecting the Router</a>
+<ul class='toc-indentation'>
+<li><a href='#FirstTimeConfiguration-UserPasswordAccess'>User Password Access</a></li>
+<li><a href='#FirstTimeConfiguration-MACConnectivityAccess'>MAC Connectivity Access</a></li>
+<li><a href='#FirstTimeConfiguration-NeighborDiscovery'>Neighbor Discovery</a></li>
+<li><a href='#FirstTimeConfiguration-IPConnectivityAccess'>IP Connectivity Access</a></li>
+<li><a href='#FirstTimeConfiguration-AdministrativeServices'>Administrative Services</a></li>
+<li><a href='#FirstTimeConfiguration-OtherServices'>Other Services</a></li>
+</ul>
+</li>
+<li><a href='#FirstTimeConfiguration-NATConfiguration'>NAT Configuration</a>
+<ul class='toc-indentation'>
+<li><a href='#FirstTimeConfiguration-PortForwarding'>Port Forwarding</a></li>
+</ul>
+</li>
+<li><a href='#FirstTimeConfiguration-SettingupWireless'>Setting up Wireless</a></li>
+<li><a href='#FirstTimeConfiguration-ProtectingtheClients'>Protecting the Clients</a></li>
+<li><a href='#FirstTimeConfiguration-BlockingUnwantedWebsites'>Blocking Unwanted Websites</a></li>
+<li><a href='#FirstTimeConfiguration-Troubleshooting'>Troubleshooting</a>
+<ul class='toc-indentation'>
+<li><a href='#FirstTimeConfiguration-Troubleshootifpingfails'>Troubleshoot if ping fails</a></li>
+</ul>
+</li>
+</ul>
+</div></p><h1 class="auto-cursor-target" id="FirstTimeConfiguration-ConnectingtotheRouter"><span>Connecting to the Router</span></h1><p>There are two types of routers:</p><ul><li>Routers with default configuration.</li><li>Routers without default configuration. In cases where no specific configuration is present, the IP address 192.168.88.1/24 is assigned to ether1, combo1, sfp1, or <span style="color:var(--ds-text,#333333);">MGMT/BOOT</span>.</li></ul><p><span style="color:var(--ds-text,#333333);">For additional details regarding the current default configuration, please refer to the Quick Guide document provided with your device. This document outlines which ports to initially utilize for connection and instructions on device setup.</span></p><p>This document describes <span style="color:var(--ds-text,#333333);">the step-by-step process for configuring the device from scratch. Therefore, we recommend clearing all defaults when initiating the setup.</span></p><p>When connecting the first time to the router with the default username <strong>admin</strong> and <strong>no password </strong>(<span style="color:var(--ds-text,#333333);">or, for some models, check user and wireless passwords on the sticker</span><span style="color:var(--ds-text,#333333);">). </span><span>Upon the initial boot, a notification will appear, offering you the choice </span><span>to either remove the default configuration </span><span>(even if the default config has only an IP address), leading to a reboot with no configuration applied, or to &quot;Show Script&quot; and retain the current default configuration, applying it accordingly.</span> Since this article assumes that there is no configuration on the router, you should remove it by pressing &quot;r&quot; on the keyboard when prompted or click on the <span>&quot;Remove Configuration&quot;</span> button in WinBox.</p><h1 id="FirstTimeConfiguration-RouterwithoutDefaultConfiguration">Router without Default Configuration</h1><p>If the router doesn't have a default configuration, there are multiple options to consider. However, in this case, we'll opt for a method that best fits our requirements.</p><p><span style="color:var(--ds-text,#333333);">Connect the ISP cable to </span>the router's ether1 port and connect your PC <span style="color:var(--ds-text,#172B4D);">to any port except ether1</span>. <span style="color:var(--ds-text,#333333);">Then, launch WinBox and search for your router using the neighbor discovery feature.</span> See detailed example in <a href="WinBox_328129.html#WinBox-StartingWinbox">Winbox article</a>.</p><p><span style="color:var(--ds-text,#333333);">If the router appears in the list, select its MAC address and click </span><strong>Connect</strong>.</p><p><span style="color:var(--ds-text,#333333);">The easiest method to ensure a completely clean router is to run the CLI command</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/system reset-configuration no-defaults=yes skip-backup=yes</pre>
+</div></div><p class="auto-cursor-target">Or from WinBox:</p><p class="auto-cursor-target"><span class="confluence-embedded-file-wrapper image-center-wrapper"><img class="confluence-embedded-image image-center" draggable="false" src="attachments/328151/248512595.png" data-image-src="attachments/328151/248512595.png" data-unresolved-comment-count="0" data-linked-resource-id="248512595" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="reset_config_no_def.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="328151" data-linked-resource-container-version="145" tabindex="0" alt=""></span></p><h1 id="FirstTimeConfiguration-ConfiguringIPAccess">Configuring IP Access</h1><p><span style="color:var(--ds-text,#333333);">As MAC connection can sometimes be unreliable, our first step is to configure the router to enable IP connectivity:</span></p><ul><li>Create a bridge interface and assign bridge ports;</li><li>Assign an <span style="color:var(--ds-text,#333333);">IP address to the bridge interface</span>;</li><li>Configure a DHCP server.</li></ul><p><span style="color:var(--ds-text,#333333);">Setting up the bridge and assigning an IP address are straightforward processes:</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface bridge add name=bridge1
+/interface bridge port add interface=ether2 bridge=bridge1
+/ip address add address=192.168.88.1/24 interface=bridge1</pre>
+</div></div><p class="auto-cursor-target">If you prefer WinBox/WebFig as configuration tools:</p><ul><li>Open <strong>Bridge</strong> window, <strong>Bridge</strong> tab should be selected;</li><li>Click on the <strong>+</strong> button <span style="color:var(--ds-text,#333333);">to open a new dialog box. You can either enter a custom bridge name or retain the default <strong>bridge1</strong>, then click <strong>OK</strong> to proceed</span>;</li><li><span style="color:var(--ds-text,#333333);">Switch to the </span><strong>Ports</strong> tab and click on the <strong>+</strong> button <span style="color:var(--ds-text,#333333);">to open another dialog box</span>;</li><li>Select interface <strong>ether2</strong> and bridge <strong>bridge1 </strong>form drop-down lists and click on the <strong>OK</strong> button to apply settings;</li><li>You may close the bridge dialog.</li></ul><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" draggable="false" width="470" src="attachments/328151/248512601.png" data-image-src="attachments/328151/248512601.png" data-unresolved-comment-count="0" data-linked-resource-id="248512601" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="add_bridge_port.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="328151" data-linked-resource-container-version="145" tabindex="0" alt=""></span><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" draggable="false" width="500" src="attachments/328151/248512600.png" data-image-src="attachments/328151/248512600.png" data-unresolved-comment-count="0" data-linked-resource-id="248512600" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="add_bridge.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="328151" data-linked-resource-container-version="145" tabindex="0" alt=""></span></p><ul><li><span style="color:var(--ds-text,#333333);">Access the<strong> IP</strong> menu and navigate to the <strong>Addresses </strong>dialog</span>;</li><li>Select the <strong>+</strong> button <span style="color:var(--ds-text,#333333);">to open a new dialog box</span>;</li><li>Enter IP address <strong>192.168.88.1/24</strong> select interface <strong>bridge1 </strong>from the drop-down list;</li><li>Click <strong>OK</strong> to confirm the settings.</li></ul><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" draggable="false" width="600" src="attachments/328151/248512613.png" data-image-src="attachments/328151/248512613.png" data-unresolved-comment-count="0" data-linked-resource-id="248512613" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="ip_addr_add.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="328151" data-linked-resource-container-version="145" tabindex="0" alt=""></span></p><p class="auto-cursor-target"><span style="color:var(--ds-text,#333333);">Next, proceed with setting up a DHCP server.</span> To simplify and expedite this process, we'll execute the <strong>setup </strong>command.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; ip dhcp-server/ setup [enter]
+Select interface to run DHCP server on 
+
+dhcp server interface: bridge1 [enter]
+Select network for DHCP addresses 
+
+dhcp address space: 192.168.88.0/24 [enter]
+Select gateway for given network 
+
+gateway for dhcp network: 192.168.88.1 [enter]
+Select pool of ip addresses given out by DHCP server 
+
+addresses to give out: 192.168.88.2-192.168.88.254 [enter]
+Select DNS servers 
+
+dns servers: 192.168.88.1 [enter]               
+Select lease time 
+
+lease time: 1800 [enter]</pre>
+</div></div><p class="auto-cursor-target">Notice that most of the configuration options are automatically determined and you just simply need to hit the enter key.</p><p class="auto-cursor-target"><span style="color:var(--ds-text,#333333);">The setup tool is also accessible in WinBox/WebFig</span>:</p><ul><li><span style="color:var(--ds-text,#333333);">Navigate to <strong>IP -&gt; DHCP Server</strong> window, ensuring the <strong>DHCP </strong>tab is selected;</span></li><li><span style="color:var(--ds-text,#333333);">Click on the <strong>DHCP Setup</strong> button to open a new dialog;</span></li><li><span style="color:var(--ds-text,#333333);">Select the <strong>bridge1 </strong>as the <strong>DHCP Server Interface</strong> and click <strong>Next</strong>;</span></li><li><span style="color:var(--ds-text,#333333);">Follow the wizard to complete the setup.</span></li></ul><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" draggable="false" width="600" src="attachments/328151/248512602.png" data-image-src="attachments/328151/248512602.png" data-unresolved-comment-count="0" data-linked-resource-id="248512602" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="dhcp_setup.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="328151" data-linked-resource-container-version="145" tabindex="0" alt=""></span></p><p>Following these steps, the connected PC should now obtain a dynamic IP address. You can then close Winbox and reconnect to the router using the IP address (192.168.88.1).</p><h1 id="FirstTimeConfiguration-ConfiguringInternetConnection">Configuring Internet Connection</h1><p><span style="color:var(--ds-text,#333333);">To enable internet access for the router, you'll need to configure one of the following common types of internet connections:</span></p><ul><li>Dynamic public IP address.</li><li>Static public IP address.</li><li>PPPoE connection.</li></ul><h2 id="FirstTimeConfiguration-DynamicPublicIP">Dynamic Public IP</h2><p><span style="color:var(--ds-text,#333333);">Dynamic address configuration is the easiest option. Simply set up a DHCP client on the public interface. The DHCP client will obtain information from your Internet Service Provider (ISP), such as an IP address, DNS servers, NTP servers, and default route, making the setup process straightforward for you.</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip dhcp-client add disabled=no interface=ether1</pre>
+</div></div><p class="auto-cursor-target">After adding the client you should see the assigned address and status should be bound</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; ip dhcp-client print
+Columns: INTERFACE, USE-PEER-DNS, ADD-DEFAULT-ROUTE, STATUS, ADDRESS
+# INTERFACE  USE-PEER-DNS  ADD-DEFAULT-ROUTE  STATUS  ADDRESS        
+0 ether1     yes           yes                bound   1.2.3.100/24</pre>
+</div></div><h2 id="FirstTimeConfiguration-StaticPublicIP">Static Public IP</h2><p>When configuring a static address, your ISP provides specific parameters, such as:</p><ul><li>IP: 1.2.3.100/24</li><li>Gateway: 1.2.3.1</li><li>DNS: 8.8.8.8</li></ul><p>These are three basic parameters that you need to get the internet connection working.</p><p><span style="color:var(--ds-text,#333333);">To configure this in RouterOS, we'll manually </span>add an IP address, add a default route with a provided gateway, and set up a DNS server</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip address add address=1.2.3.100/24 interface=ether1
+/ip route add gateway=1.2.3.1
+/ip dns set servers=8.8.8.8</pre>
+</div></div><h2 id="FirstTimeConfiguration-PPPoEConnection">PPPoE Connection</h2><p>PPPoE connection also gives you a dynamic IP address and can configure dynamically DNS and default gateway. Typically service provider (ISP) gives you a username and password for the connection</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface pppoe-client
+  add disabled=no interface=ether1 user=me password=123 \
+    add-default-route=yes use-peer-dns=yes</pre>
+</div></div><p class="auto-cursor-target">Winbox/WebFig actions:</p><ul><li><span style="color:var(--ds-text,#333333);">In the <strong>PPP </strong>window, select the <strong>Interfaces </strong>tab and click the &quot;+&quot; button;</span></li><li><span style="color:var(--ds-text,#333333);">Choose <strong>PPPoE Client</strong> from the dropdown list;</span></li><li><span style="color:var(--ds-text,#333333);">Set the name and select <strong>ether1</strong> as the interface;</span></li><li><span style="color:var(--ds-text,#333333);">Go to the <strong>Dial Out</strong> tab, configure the username, password, and other parameters;</span></li><li><span style="color:var(--ds-text,#333333);">Click <strong>OK</strong> to save the settings.</span></li></ul><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" draggable="false" width="900" src="attachments/328151/248512603.png" data-image-src="attachments/328151/248512603.png" data-unresolved-comment-count="0" data-linked-resource-id="248512603" data-linked-resource-version="2" data-linked-resource-type="attachment" data-linked-resource-default-alias="pppoe_client_01.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="328151" data-linked-resource-container-version="145" tabindex="0" alt=""></span></p><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image confluence-thumbnail" draggable="false" width="290" src="attachments/328151/248512605.png" data-image-src="attachments/328151/248512605.png" data-unresolved-comment-count="0" data-linked-resource-id="248512605" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="pppoe_client_02.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="328151" data-linked-resource-container-version="145" tabindex="0" alt=""></span></p><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Further in configuration, the <strong>WAN </strong>interface is now the <strong>pppoe-out1</strong> interface, not <strong>ether1</strong>.</p></div></div><h2 id="FirstTimeConfiguration-VerifyConnectivity">Verify Connectivity</h2><p><span style="color:var(--ds-text,#333333);">Once the configuration is complete, you should be able to access the internet from the router. </span><span style="color:var(--ds-text,#333333);">To verify IP connectivity, try pinging a known IP address, such as a Google DNS server.</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; /ping 8.8.8.8
+  SEQ HOST                                     SIZE TTL TIME       STATUS             
+    0 8.8.8.8                                    56  55 14ms399us 
+    1 8.8.8.8                                    56  55 18ms534us 
+    2 8.8.8.8                                    56  55 14ms384us </pre>
+</div></div><p class="auto-cursor-target">Verify DNS request</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; /ping google.com
+  SEQ HOST                                     SIZE TTL TIME       STATUS             
+    0 142.250.74.14                              56  55 14ms475us 
+    1 142.250.74.14                              56  55 14ms308us 
+    2 142.250.74.14                              56  55 14ms238us</pre>
+</div></div><p><span style="letter-spacing: 0.0px;"><span style="color:var(--ds-text,#333333);">If all settings are configured correctly, both pings should succeed. <br/>If there's a failure, please refer to the </span> </span><a href="#FirstTimeConfiguration-Troubleshooting">Troubleshooting</a><span style="letter-spacing: 0.0px;"> section <span style="color:var(--ds-text,#333333);">for assistance.</span></span></p><h1 id="FirstTimeConfiguration-ProtectingtheRouter">Protecting the Router</h1><p><span style="color:var(--ds-text,#333333);">As the router is now accessible worldwide, it's important to protect it from potential intruders and basic attacks.</span></p><h2 id="FirstTimeConfiguration-UserPasswordAccess">User Password Access</h2><p><span style="color:var(--ds-text,#333333);">For MikroTik routers, it's essential to set up passwords. We recommend using a password generator tool to create robust passwords that meet the following criteria:</span></p><ul><li>At least 12 characters long;</li><li>Consist of numbers, symbols, uppercase, and lowercase letters;</li><li>Avoid using dictionary words or combinations thereof.</li></ul><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/user set 0 password=&quot;!={Ba3N!40TуX+GvKBzjTLIUcx/,&quot;</pre>
+</div></div><p><span style="color:var(--ds-text,#333333);">Another method to set a password for the current user:</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/password</pre>
+</div></div><p><span style="color:var(--ds-text,#333333);">We highly recommend using a secondary method or the Winbox interface to update your router's password, as an added measure to safeguard against unauthorized access.</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; /password 
+old-password: ********
+new-password: ****************************
+confirm-new-password: ****************************</pre>
+</div></div><p><span style="color:var(--ds-text,#333333);">Ensure you remember the password</span>! <span style="color:var(--ds-text,#333333);">If it's forgotten, there's no way to recover it. You'll have to reset the configuration or reinstall the router system</span>!</p><p><span style="color:var(--ds-text,#333333);">You can also add additional users with full or limited router access in the </span><strong>/user</strong> menu</p><div role="region" aria-label="Tip" class="confluence-information-macro  confluence-information-macro-tip" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-approve confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>The best practice is to <span style="color:var(--ds-text,#333333);">create </span>a new user with a strong password and disable or remove the default <strong>admin</strong> user.</p></div></div><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/user add name=myname password=mypassword group=full
+/user remove admin</pre>
+</div></div><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><strong>Note:</strong> <span style="color:var(--ds-text,#333333);">Log in to the router using the new credentials to verify that the username and password are functioning correctly.</span></div></div><h2 id="FirstTimeConfiguration-MACConnectivityAccess">MAC Connectivity Access</h2><p><span style="color:var(--ds-text,#333333);">By default, the MAC server runs on <strong>all </strong>interfaces. To restrict MAC connectivity from the WAN port, we'll disable the default all entry and add a LAN interface.</span></p><p>First, create an interface list:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; /interface list add name=LAN</pre>
+</div></div><p class="auto-cursor-target"><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" draggable="false" width="500" src="attachments/328151/248512606.png" data-image-src="attachments/328151/248512606.png" data-unresolved-comment-count="0" data-linked-resource-id="248512606" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="interface_list.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="328151" data-linked-resource-container-version="145" tabindex="0" alt=""></span></p><p class="auto-cursor-target">Then, add your previously created bridge named &quot;bridge1&quot; to the interface list:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; /interface list member add list=LAN interface=bridge1</pre>
+</div></div><p class="auto-cursor-target"><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" draggable="false" width="300" src="attachments/328151/248512607.png" data-image-src="attachments/328151/248512607.png" data-unresolved-comment-count="0" data-linked-resource-id="248512607" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="int_list_port.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="328151" data-linked-resource-container-version="145" tabindex="0" alt=""></span></p><p class="auto-cursor-target">Apply newly created interface list to the MAC server:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; /tool mac-server set allowed-interface-list=LAN</pre>
+</div></div><p class="auto-cursor-target"><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" draggable="false" width="600" src="attachments/328151/248512608.png" data-image-src="attachments/328151/248512608.png" data-unresolved-comment-count="0" data-linked-resource-id="248512608" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="mac_telnet_server.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="328151" data-linked-resource-container-version="145" tabindex="0" alt=""></span></p><p class="auto-cursor-target">Do the same for Winbox MAC access</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; /tool mac-server mac-winbox set allowed-interface-list=LAN  </pre>
+</div></div><p class="auto-cursor-target">Winbox/Webfig actions:</p><ul><li>Navigate to <strong>Interfaces </strong>→ <strong>Interface List</strong> → <strong>Lists </strong>window;</li><li>Click on the &quot;+&quot; button to add a new list;</li><li>Enter &quot;<strong>LAN</strong>&quot; into the <strong>Name </strong>field and click <strong>OK</strong>;</li><li>Return to the <strong>Interfaces </strong>→ <strong>Interface List</strong> section;</li><li>Click on the &quot;+&quot; button;</li><li>Select &quot;<strong>LAN</strong>&quot; from the dropdown <strong>List </strong>options;</li><li>Choose &quot;<strong>bridge1</strong>&quot; from the dropdown Interface options;</li><li>Click <strong>OK </strong>to confirm;</li><li>Open <strong>Tools </strong>-&gt;<strong> Mac Server</strong> window;</li><li>Click on the <strong>MAC Telnet Server</strong> button;</li><li>In the new dialog, select the newly created list &quot;<strong>LAN</strong>&quot; from the dropdown list;</li><li>Click <strong>OK </strong>to apply settings.</li></ul><p><span>Do the same in the <strong>MAC </strong></span><strong>Winbox Server </strong><span>tab to block Mac Winbox connections from the internet.</span></p><h2 id="FirstTimeConfiguration-NeighborDiscovery"><span>Neighbor Discovery</span></h2><p>MikroTik Neighbor discovery protocol is used to show and recognize other MikroTik routers in the network. Disable neighbor discovery on public interfaces:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip neighbor discovery-settings set discover-interface-list=LAN</pre>
+</div></div><h2 id="FirstTimeConfiguration-IPConnectivityAccess">IP Connectivity Access</h2><p><span style="color:var(--ds-text,#333333);">While the firewall protects your router from unauthorized access by external networks, it's also possible to restrict username access based on specific IP addresses</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/user set 0 address=x.x.x.x/yy</pre>
+</div></div><p><em>x.x.x.x/yy - your IP or network subnet that is allowed to access your router.</em></p><p>IP connectivity on the public interface must be limited in the firewall. We will accept only ICMP(ping/traceroute), IP Winbox, and ssh access.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip firewall filter
+  add chain=input action=accept connection-state=established,related,untracked comment=&quot;accept established,related,untracked&quot;
+  add chain=input action=drop connection-state=invalid comment=&quot;drop invalid&quot;
+  add chain=input in-interface=ether1 action=accept protocol=icmp comment=&quot;accept ICMP&quot;
+  add chain=input in-interface=ether1 action=accept protocol=tcp port=8291 comment=&quot;allow Winbox&quot;;
+  add chain=input in-interface=ether1 action=accept protocol=tcp port=22 comment=&quot;allow SSH&quot;;
+  add chain=input in-interface=ether1 action=drop comment=&quot;block everything else&quot;;</pre>
+</div></div><div role="region" aria-label="Warning" class="confluence-information-macro  confluence-information-macro-warning" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-error confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>If the public interface is PPPoE, LTE, or any other type, the 'in-interface' should be set to that interface.</p></div></div><p class="auto-cursor-target"><span style="color:var(--ds-text,#333333);">The first rule accepts packets from already established connections, assuming they are safe to not overload the CPU. The second rule drops any packet that connection tracking identifies as invalid.</span> After that, we set up typical accept rules for specific protocols.</p><p class="auto-cursor-target">If you are using Winbox/WebFig for configuration, here is an example of how to add an established/related/untracked rule:</p><ul><li>Open the <strong>IP </strong>-&gt; <strong>Firewall </strong>window and navigate to the <strong>Filter Rules</strong> tab;</li><li>Click on the &quot;+&quot; button to open a new dialog;</li><li>Select &quot;<strong>input</strong>&quot; for the chain.</li><li>Click on &quot;<strong>Connection state</strong>&quot; and check the boxes for &quot;<strong>established</strong>,&quot; &quot;<strong>related</strong>,&quot; and &quot;<strong>untracked</strong>.&quot;</li><li>Go to the <strong>Action </strong>tab and ensure that &quot;<strong>accept</strong>&quot; is selected.</li><li>Click on <strong>OK </strong>to apply the settings.</li></ul><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" draggable="false" width="860" src="attachments/328151/248512619.png" data-image-src="attachments/328151/248512619.png" data-unresolved-comment-count="0" data-linked-resource-id="248512619" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="firewall_filter_add.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="328151" data-linked-resource-container-version="145" tabindex="0" alt=""></span></p><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" draggable="false" width="860" src="attachments/328151/248512620.png" data-image-src="attachments/328151/248512620.png" data-unresolved-comment-count="0" data-linked-resource-id="248512620" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="firewall_filter_add_wb.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="328151" data-linked-resource-container-version="145" tabindex="0" alt=""></span></p><p>To add additional rules, click on the &quot;+&quot; button for each new rule and fill in the same parameters as provided in the console example.</p><h2 id="FirstTimeConfiguration-AdministrativeServices">Administrative Services</h2><p>Although the firewall protects the router from the public interface, you may still want to disable RouterOS services.</p><p>Most of RouterOS administrative tools are configured at  the <span style="color:var(--ds-icon-accent-blue,#1D7AFC);">/ip service</span> menu</p><p>Keep only secure ones,</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip service disable telnet,ftp,www,api</pre>
+</div></div><p><br/></p><p>Change default service ports, this will immediately stop most of the random SSH brute force login attempts:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip service set ssh port=2200</pre>
+</div></div><p><br/></p><p>Additionally, each service can be secured by allowed IP address or address range(the address service will reply to), although more preferred method is to block unwanted access in firewall because the firewall will not even allow to open socket</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip service set winbox address=192.168.88.0/24</pre>
+</div></div><h2 id="FirstTimeConfiguration-OtherServices">Other Services</h2><p>A bandwidth server is used to test throughput between two MikroTik routers. Disable it in the production environment.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/tool bandwidth-server set enabled=no </pre>
+</div></div><p>A router might have DNS cache enabled, which decreases resolving time for DNS requests from clients to remote servers. In case DNS cache is not required on your router or another router is used for such purposes, disable it.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip dns set allow-remote-requests=no</pre>
+</div></div><p><br/>Some RouterBOARDs have an LCD module for informational purposes, set pin or disable it.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/lcd set enabled=no</pre>
+</div></div><p><br/>It is good practice to disable all unused interfaces on your router, in order to decrease unauthorized access to your router.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface print 
+/interface set x disabled=yes</pre>
+</div></div><p>Where &quot;X&quot; is a number of the <u>unused interfaces</u>.</p><p>RouterOS utilizes stronger crypto for SSH, most newer programs use it, to turn on SSH strong crypto:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip ssh set strong-crypto=yes</pre>
+</div></div><p><br/></p><p>Following services are disabled by default,  nevertheless, it is better to make sure that none of then were enabled accidentally:</p><ul><li>MikroTik caching proxy,</li></ul><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip proxy set enabled=no</pre>
+</div></div><ul><li>MikroTik socks proxy,</li></ul><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip socks set enabled=no</pre>
+</div></div><ul><li>MikroTik UPNP service,</li></ul><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip upnp set enabled=no</pre>
+</div></div><ul><li>MikroTik dynamic name service or IP cloud,</li></ul><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip cloud set ddns-enabled=no update-time=no</pre>
+</div></div><p><br/></p><h1 id="FirstTimeConfiguration-NATConfiguration">NAT Configuration</h1><p>At this point, PC is not yet able to access the Internet, because locally used addresses are not routable over the Internet. Remote hosts simply do not know how to correctly reply to your local address.</p><p>The solution for this problem is to change the source address for outgoing packets to routers public IP. This can be done with the NAT rule:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip firewall nat
+  add chain=srcnat out-interface=ether1 action=masquerade</pre>
+</div></div><div role="region" aria-label="Warning" class="confluence-information-macro  confluence-information-macro-warning" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-error confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>If the public interface is PPPoE, LTE, or any other type, the 'out-interface' should be set to that interface.</p></div></div><p>Another benefit of such a setup is that NATed clients behind the router are not directly connected to the Internet, that way additional protection against attacks from outside mostly is not required.</p><h2 id="FirstTimeConfiguration-PortForwarding">Port Forwarding</h2><p>Some client devices may need direct access to the internet over specific ports. For example, a client with an IP address 192.168.88.254 must be accessible by Remote desktop protocol (RDP).</p><p>After a quick search on Google, we find out that RDP runs on TCP port 3389. Now we can add a destination NAT rule to redirect RDP to the client's PC.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip firewall nat
+  add chain=dstnat protocol=tcp port=3389 in-interface=ether1 \
+    action=dst-nat to-address=192.168.88.254</pre>
+</div></div><div role="region" aria-label="Tip" class="confluence-information-macro  confluence-information-macro-tip" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-approve confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p><strong> </strong>If you have set up strict firewall rules then RDP protocol must be allowed in the firewall filter forward chain.</p></div></div><h1 id="FirstTimeConfiguration-SettingupWireless">Setting up Wireless</h1><p>For ease of use bridged wireless setup will be made so that your wired hosts are in the same Ethernet broadcast domain as wireless clients.</p><p>The important part is to make sure that our wireless is protected, so the first step is the security profile.</p><p>Security profiles are configured from <code>/interface wireless security-profiles</code> menu in a terminal.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface wireless security-profiles
+  add name=myProfile authentication-types=wpa2-psk mode=dynamic-keys \
+    wpa2-pre-shared-key=1234567890</pre>
+</div></div><div class="sectionMacro"><div class="sectionMacroRow"><p>in Winbox/Webfig click on <strong>Wireless</strong> to open wireless windows and choose the <strong>Security Profile</strong> tab.</p><p><span class="confluence-embedded-file-wrapper image-left-wrapper"><img class="confluence-embedded-image image-left" draggable="false" confluence-query-params="effects=drop-shadow" src="attachments/328151/328183.png?effects=drop-shadow" data-image-src="attachments/328151/328183.png" data-unresolved-comment-count="0" data-linked-resource-id="328183" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="winbox_wlan_sec_profile.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="328151" data-linked-resource-container-version="145" tabindex="0" alt=""></span></p></div></div><p class="auto-cursor-target">If there are legacy devices that do not support WPA2 (like Windows XP), you may also want to allow WPA protocol.</p><div role="region" aria-label="Warning" class="confluence-information-macro  confluence-information-macro-warning" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-error confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>WPA and WPA2 pre-shared keys should not be the same.</p></div></div><p class="auto-cursor-target">Now when the security profile is ready we can enable the wireless interface and set the desired parameters</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface wireless
+  enable wlan1;
+  set wlan1 band=2ghz-b/g/n channel-width=20/40mhz-Ce distance=indoors \
+    mode=ap-bridge ssid=MikroTik-006360 wireless-protocol=802.11 \
+    security-profile=myProfile frequency-mode=regulatory-domain \
+    set country=latvia antenna-gain=3</pre>
+</div></div><div class="sectionColumnWrapper"><div class="sectionMacro"><p>To do the same from Winbox/Webfig:</p><div class="sectionMacroRow"><div class="columnMacro" style="width:450px;min-width:450px;max-width:450px;"><ul><li>Open Wireless window, select wlan1 interface, and click on the <em>enable</em> button;</li><li>Double click on the wireless interface to open the configuration dialog;</li><li>In the configuration dialog click on the <strong>Wireless</strong> tab and click the <strong>Advanced mode</strong> button on the right side. When you click on the button additional configuration parameters will appear and the description of the button will change to <strong>Simple mode</strong>;</li><li>Choose parameters as shown in the screenshot, except for the country settings and SSID. You may want to also choose a different frequency and antenna gain;</li><li>Next, click on the <strong>HT</strong> tab and make sure both chains are selected;</li><li>Click on the <strong>OK</strong> button to apply settings.</li></ul></div><p class="auto-cursor-target"><span class="confluence-embedded-file-wrapper image-left-wrapper"><img class="confluence-embedded-image image-left" draggable="false" confluence-query-params="effects=drop-shadow" src="attachments/328151/328184.png?effects=drop-shadow" data-image-src="attachments/328151/328184.png" data-unresolved-comment-count="0" data-linked-resource-id="328184" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="winbox_wlan_iface.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="328151" data-linked-resource-container-version="145" tabindex="0" alt=""></span></p></div></div></div><p class="auto-cursor-target">The last step is to add a wireless interface to a local bridge, otherwise connected clients will not get an IP address:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface bridge port
+  add interface=wlan1 bridge=bridge1</pre>
+</div></div><p class="auto-cursor-target">Now wireless should be able to connect to your access point, get an IP address, and access the internet.</p><h1 id="FirstTimeConfiguration-ProtectingtheClients">Protecting the Clients</h1><p>Now it is time to add some protection for clients on our LAN. We will start with a basic set of rules.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip firewall filter
+  add chain=forward action=fasttrack-connection connection-state=established,related \
+    comment=&quot;fast-track for established,related&quot;;
+  add chain=forward action=accept connection-state=established,related \
+    comment=&quot;accept established,related&quot;;
+  add chain=forward action=drop connection-state=invalid
+  add chain=forward action=drop connection-state=new connection-nat-state=!dstnat \
+    in-interface=ether1 comment=&quot;drop access to clients behind NAT from WAN&quot;</pre>
+</div></div><p class="auto-cursor-target">A ruleset is similar to input chain rules (accept established/related and drop invalid), except the first rule with <code>action=fasttrack-connection</code>. This rule allows established and related connections to bypass the firewall and significantly reduce CPU usage.</p><p>Another difference is the last rule which drops all new connection attempts from the WAN port to our LAN network (unless DstNat is used). Without this rule, if an attacker knows or guesses your local subnet, he/she can establish connections directly to local hosts and cause a security threat.</p><p>For more detailed examples on how to build firewalls will be discussed in the firewall section.</p><h1 id="FirstTimeConfiguration-BlockingUnwantedWebsites">Blocking Unwanted Websites</h1><p>Sometimes you may want to block certain websites, for example, deny access to entertainment sites for employees, deny access to porn, and so on. This can be achieved by redirecting HTTP traffic to a proxy server and use an access-list to allow or deny certain websites.</p><p>First, we need to add a NAT rule to redirect HTTP to our proxy. We will use RouterOS built-in proxy server running on port 8080.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip firewall nat
+  add chain=dst-nat protocol=tcp dst-port=80 src-address=192.168.88.0/24 \
+    action=redirect to-ports=8080</pre>
+</div></div><p class="auto-cursor-target">Enable web proxy and drop some websites:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip proxy set enabled=yes
+/ip proxy access add dst-host=www.facebook.com action=deny
+/ip proxy access add dst-host=*.youtube.* action=deny
+/ip proxy access add dst-host=:vimeo action=deny</pre>
+</div></div><div class="sectionColumnWrapper"><div class="sectionMacro"><p>Using Winbox:</p><div class="sectionMacroRow"><div class="columnMacro" style="width:450px;min-width:450px;max-width:450px;"><ul><li>On the left menu navigate to IP -&gt; Web Proxy</li><li>Web proxy settings dialog will appear.</li><li>Check the &quot;Enable&quot; checkbox and click on the &quot;Apply&quot; button</li><li>Then click on the &quot;Access&quot; button to open the &quot;Web Proxy Access&quot; dialog</li></ul></div><div class="columnMacro"><p><span class="confluence-embedded-file-wrapper image-left-wrapper"><img class="confluence-embedded-image image-left" draggable="false" confluence-query-params="effects=drop-shadow" src="attachments/328151/328185.png?effects=drop-shadow" data-image-src="attachments/328151/328185.png" data-unresolved-comment-count="0" data-linked-resource-id="328185" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="winbox_ip_web_proxy.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="328151" data-linked-resource-container-version="145" tabindex="0" alt=""></span></p></div></div></div></div><div class="sectionColumnWrapper"><div class="sectionMacro"><div class="sectionMacroRow"><div class="columnMacro" style="width:450px;min-width:450px;max-width:450px;"><ul><li>In the &quot;Web Proxy Access&quot; dialog click on &quot;+&quot; to add a new Web-proxy rule</li><li>Enter Dst hostname that you want to block, in this case, &quot;<a class="external-link" href="https://www.facebook.com" rel="nofollow">www.facebook.com</a>&quot;, choose the action &quot;deny&quot;</li><li>Then click on the &quot;Ok&quot; button to apply changes.</li><li>Repeat the same to add other rules.</li></ul></div><div class="columnMacro"><p><span class="confluence-embedded-file-wrapper image-left-wrapper"><img class="confluence-embedded-image image-left" draggable="false" confluence-query-params="effects=drop-shadow" src="attachments/328151/328186.png?effects=drop-shadow" data-image-src="attachments/328151/328186.png" data-unresolved-comment-count="0" data-linked-resource-id="328186" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="winbox_ip_web_proxy_access.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="328151" data-linked-resource-container-version="145" tabindex="0" alt=""></span></p></div></div></div></div><h1 id="FirstTimeConfiguration-Troubleshooting">Troubleshooting</h1><p>RouterOS has built-in various troubleshooting tools, like ping, traceroute, torch, packet sniffer, bandwidth test, etc.</p><p>We already used the ping tool in this article to <a href="#FirstTimeConfiguration-VerifyConnectivity">verify internet connectivity</a>.</p><h2 id="FirstTimeConfiguration-Troubleshootifpingfails">Troubleshoot if ping fails</h2><p>The problem with the ping tool is that it says only that destination is <strong>unreachable</strong>, but no more detailed information is available. Let's overview the basic mistakes.</p><p>You cannot reach <a class="external-link" href="https://www.google.com" rel="nofollow">www.google.com</a> from your computer which is connected to a MikroTik device:</p><p><span class="confluence-embedded-file-wrapper image-center-wrapper"><img class="confluence-embedded-image image-center" draggable="false" src="attachments/328151/17498155.jpg" data-image-src="attachments/328151/17498155.jpg" data-unresolved-comment-count="0" data-linked-resource-id="17498155" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="troubleshoot_if_ping_fails.jpg" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/jpeg" data-linked-resource-container-id="328151" data-linked-resource-container-version="145" tabindex="0" alt=""></span></p><div role="region" aria-label="Tip" class="confluence-information-macro  confluence-information-macro-tip" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-approve confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>If you are not sure how exactly configure your gateway device, please reach MikroTik's official <a class="external-link" href="https://mikrotik.com/consultants" rel="nofollow">consultants</a> for configuration support.</p></div></div><p><br/></p>
+                    </div>
+
+                                                            <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328151/328174.png">winbox_reset.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328151/328175.png">winbox_add_bridge.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328151/328177.png">winbox_add_ip.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328151/328178.png">winbox_dhcp_setup.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328151/328179.png">winbox_add_pppoe.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328151/328180.png">winbox_mac_server.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328151/328181.png">winbox_ip_fw.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328151/328182.png">winbox_ip_fw_add_est.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328151/328183.png">winbox_wlan_sec_profile.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328151/328184.png">winbox_wlan_iface.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328151/328185.png">winbox_ip_web_proxy.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328151/328186.png">winbox_ip_web_proxy_access.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328151/8323075">Tests NR</a> (application/vnd.jgraph.mxfile)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328151/8323076.png">Tests NR.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328151/17498152.jpg">Basic.jpg</a> (image/jpeg)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328151/17498155.jpg">troubleshoot_if_ping_fails.jpg</a> (image/jpeg)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328151/18350252.png">winbox-safe-mode.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328151/18350253.png">reset_config.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328151/98795535.png">image2021-12-7_9-59-33.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328151/98795536.png">image2021-12-7_10-4-32.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328151/98795541.png">image2021-12-7_11-2-26.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328151/98795543.png">image2021-12-7_11-3-20.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328151/225312908.png">image-2023-11-28_10-40-10.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328151/225312909.png">image-2023-11-28_10-53-30.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328151/225312910.png">image-2023-11-28_10-53-46.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328151/225312911.png">image-2023-11-28_10-55-43.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328151/225312912.png">image-2023-11-28_10-57-22.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328151/225312913.png">image-2023-11-28_10-57-47.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328151/225312914.png">image-2023-11-28_10-59-20.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328151/225312915.png">image-2023-11-28_10-59-33.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328151/225312916.png">image-2023-11-28_11-1-34.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328151/225312917.png">image-2023-11-28_11-2-20.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328151/225312918.png">image-2023-11-28_11-3-23.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328151/225312922.png">image-2023-11-28_12-43-14.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328151/225312924.png">image-2023-11-28_12-45-10.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328151/248512595.png">reset_config_no_def.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328151/248512600.png">add_bridge.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328151/248512601.png">add_bridge_port.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328151/248512602.png">dhcp_setup.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328151/248512604.png">pppoe_client_01.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328151/248512603.png">pppoe_client_01.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328151/248512605.png">pppoe_client_02.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328151/248512606.png">interface_list.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328151/248512607.png">int_list_port.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328151/248512608.png">mac_telnet_server.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328151/248512613.png">ip_addr_add.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328151/248512619.png">firewall_filter_add.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328151/248512620.png">firewall_filter_add_wb.png</a> (image/png)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

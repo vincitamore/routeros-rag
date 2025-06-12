@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : Securing your router</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Getting-started_328119.html">Getting started</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : Securing your router
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Normunds R.</span>, last updated on Jan 06, 2025
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <h1 id="Securingyourrouter-Overview"><span class="mw-headline">Overview</span></h1><p>The following steps are a recommendation on how to additionally protect your device with already configured <a href="Filter_48660574.html">strong firewall rules</a>.</p><h1 id="Securingyourrouter-RouterOSversion"><span class="mw-headline">RouterOS version</span></h1><p>Start by upgrading your RouterOS version. Some older releases have had certain weaknesses or vulnerabilities, that have been fixed. Keep your device up to date, to be sure it is secure. Click &quot;check for updates&quot; in WinBox or WebFig, to upgrade. We suggest you follow announcements on our <a class="external-link" href="https://blog.mikrotik.com" rel="nofollow">security announcement blog</a> to be informed about any new security issues.</p><h1 id="Securingyourrouter-Accesstoarouter"><span class="mw-headline">Access to a router</span></h1><h2 id="Securingyourrouter-Accessusername"><span class="mw-headline">Access username</span></h2><p>Change the default username <em>admin</em> to a different name. A custom name helps to protect access to your router if anybody has direct access to your router: </p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/user add name=myname password=mypassword group=full
+/user disable admin</pre>
+</div></div><h2 id="Securingyourrouter-Accesspassword"><span class="mw-headline">Access password</span></h2><p>MikroTik routers require password configuration, we suggest using a password generator tool to create secure and non-repeating passwords. With a secure password, we mean:</p><ul><li>Minimum 12 characters;</li><li>Include numbers, Symbols, Capital and lowercase letters;</li><li class="auto-cursor-target">Is not a Dictionary Word or a Combination of Dictionary Words;</li><li class="auto-cursor-target" data-uuid="7b98f08a-de6f-4a61-a1ac-75bde32e95bb">Note that quotes in the password require escaping;</li></ul><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/user set myname password=&quot;!={Ba3N!40TуX+GvKBz?jTLIUcx/,&quot;</pre>
+</div></div><h2 id="Securingyourrouter-Securingaccesstothedevice"><span>Securing access to the device</span></h2><p><span>To prevent remote access to your device, there is a pre-configured firewall that blocks WAN (internet side) connections. This is intentional, please do not remove these rules unless you're absolutely certain that the connection is secure.<strong><br/></strong></span></p><p>If you intend to open remote access to your device, we recommend securing the connection using a Virtual Private Network (VPN) such as WireGuard.</p><p>A configuration guide for<a href="https://help.mikrotik.com/docs/spaces/ROS/pages/69664792/WireGuard" rel="nofollow"> WireGuard VPN </a>is available here.</p><h2 id="Securingyourrouter-RouterOSMAC-access"><span style="font-size: 20.0px;letter-spacing: -0.008em;">RouterOS MAC-access</span></h2><p>RouterOS has built-in options for easy management access to network devices. The particular services should be shut down on production networks: <strong>MAC-Telnet, MAC-WinBox, </strong>and<strong> MAC-Ping:</strong></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/tool mac-server set allowed-interface-list=none 
+/tool mac-server mac-winbox set allowed-interface-list=none 
+/tool mac-server ping set enabled=no</pre>
+</div></div><h2 id="Securingyourrouter-NeighborDiscovery"><span style="font-size: 20.0px;font-weight: normal;letter-spacing: -0.008em;">Neighbor Discovery</span></h2><p>MikroTik Neighbor discovery protocol is used to show and recognize other MikroTik routers in the network, and disable neighbor discovery on all interfaces:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip neighbor discovery-settings set discover-interface-list=none </pre>
+</div></div><h2 id="Securingyourrouter-Bandwidthserver"><span class="mw-headline">Bandwidth server</span></h2><p>A bandwidth server is used to test throughput between two MikroTik routers. Disable it in the production environment:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/tool bandwidth-server set enabled=no </pre>
+</div></div><h2 id="Securingyourrouter-DNScache"><span class="mw-headline">DNS cache</span></h2><p>A router might have DNS cache enabled, which decreases the resolving time for DNS requests from clients to remote servers. In case DNS cache is not required on your router or another router is used for such purposes, disable it:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip dns set allow-remote-requests=no</pre>
+</div></div><h2 id="Securingyourrouter-Otherclientsservices"><span class="mw-headline">Other clients services</span></h2><p>RouterOS might have other services enabled (they are disabled by default RouterOS configuration). MikroTik caching proxy, socks, UPnP, and cloud services:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip proxy set enabled=no
+/ip socks set enabled=no
+/ip upnp set enabled=no
+/ip cloud set ddns-enabled=no update-time=no</pre>
+</div></div><p><span style="font-size: 20.0px;letter-spacing: -0.008em;">More Secure SSH access</span></p><p>It is possible to enable more strict SSH settings (add aes-128-ctr and disallow hmac sha1 and groups with sha1) with this command:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip ssh set strong-crypto=yes</pre>
+</div></div><h1 id="Securingyourrouter-Routerinterface"><span class="mw-headline">Router interface</span></h1><h2 id="Securingyourrouter-Ethernet/SFPinterfaces"><span class="mw-headline">Ethernet/SFP interfaces</span></h2><p>It is good practice to disable all unused interfaces on your router, to decrease unauthorized access to your router:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface print 
+/interface set X disabled=yes</pre>
+</div></div><p>Where <strong>X</strong> numbers of unused interfaces.</p><h2 id="Securingyourrouter-LCD"><span class="mw-headline">LCD</span></h2><p>Some RouterBOARDs have an LCD module for informational purposes, set a pin:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/lcd/pin/set pin-number=3659 hide-pin-number=yes</pre>
+</div></div><p>or disable it:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/lcd/set enabled=no</pre>
+</div></div>
+                    </div>
+
+                                                            <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328353/328354.png">secure-mode.png</a> (image/png)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

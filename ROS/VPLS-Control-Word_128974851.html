@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : VPLS Control Word</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Multi-Protocol-Label-Switching---MPLS_328082.html">Multi Protocol Label Switching - MPLS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="VPLS_40992798.html">VPLS</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : VPLS Control Word
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Māris B.</span> on May 27, 2022
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <h1 id="VPLSControlWord-Summary">Summary</h1><p style="">VPLS allows remote sites to share an Ethernet broadcast domain by connecting sites through <strong>pseudo-wires(PW)</strong> tunnels over a packet switching network (PSN). Since VPLS encapsulation adds additional overhead, each interface in LSP should be able to transmit a large enough packet.</p><p style="">Each ethernet chipset has hardware limitations on the maximum packet size that it can transmit. Even now there are Ethernets that support only one Vlan tag, meaning that the maximum packet size without Ethernet header and checksum (L2MTU) is 1504 bytes. Obviously, it is not enough to forward VPLS encapsulated Ethernet frame without fragmentation (at least 1524 L2MTU support is required). See <a href="MTU-in-RouterOS_21725296.html">MTU in RouterOS</a> for maximum supported L2MTUs on RouterBOADs.</p><p style="">Since not even all RouterBOARDs support enough L2MTU to transmit VPLS encapsulated packet without fragmentation, RouterOS has added Pseudowire Fragmentation and Reassembly (PWE3) support according to RFC 4623 using 4-byte <strong>Control Word (CW)</strong>.</p><h1 style="" id="VPLSControlWord-ControlWordUsage">Control Word Usage</h1><p style=""><span style="text-decoration: none;color:var(--ds-text-accent-lime-bolder,#37471f);">In RouterOS, Control Word is used for packet fragmentation and reassembly inside the VPLS tunnel and is done by utilizing optional </span><strong style="text-decoration: none;">Control Word (CW)</strong><span style="text-decoration: none;color:var(--ds-text-accent-lime-bolder,#37471f);">. CW is added between PW label (demultiplexor) and packet payload and adds an additional 4-byte overhead.</span></p><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p><span style="text-decoration: none;color:var(--ds-text-accent-lime-bolder,#37471f);">Reordering OOO packets are not implemented, out of order fragments will be dropped</span></p></div></div><p style=""><span style="text-decoration: none;color:var(--ds-text-accent-lime-bolder,#37471f);">CW usage is controlled by the of <span style="color:var(--ds-text-accent-green,#216e4e);"><code>use-control-word</code></span> parameter in VPLS configuration.</span></p><p style=""><span style="text-decoration: none;color:var(--ds-text-accent-lime-bolder,#37471f);"><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/128974851/128974852.png" data-image-src="attachments/128974851/128974852.png" data-unresolved-comment-count="0" data-linked-resource-id="128974852" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="VPLS_CW.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="128974851" data-linked-resource-container-version="1" tabindex="0" alt=""></span></span></p><p style="">As you can see <strong>Control Word</strong> is divided into 5 fields:</p><ul style="text-decoration: none;"><li>0000 - 4-bits identifies that the packet is PW (not IP)</li><li>Flags - 4bits</li><li>Frag - 2bits value that indicates payload fragmentation.</li><li>Len - 6bits</li><li>Seq - 16bits sequence number used to detect packet loss / misordering.</li></ul><p style="">According to RFC generation and processing of sequence numbers is optional.</p>
+                    </div>
+
+                                                            <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/128974851/128974852.png">VPLS_CW.png</a> (image/png)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

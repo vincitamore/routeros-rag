@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : VPLS</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Multi-Protocol-Label-Switching---MPLS_328082.html">Multi Protocol Label Switching - MPLS</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : VPLS
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Unknown User (olga)</span>, last updated by <span class='editor'> Edgars P.</span> on Jan 24, 2025
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <h1 id="VPLS-Summary"><span class="mw-headline">Summary</span></h1><p>The virtual Private Lan Service (VPLS) interface can be considered a tunnel interface just like<span> the </span><a href="EoIP_24805521.html">EoIP</a><span> </span>interface. To achieve transparent ethernet segment forwarding between customer sites.</p><p><span style="text-decoration: none;color:var(--ds-text,#333333);">Negotiation of VPLS tunnels can be done by LDP protocol or MP-BGP - both endpoints of tunnel exchange labels they are going to use for the tunnel.</span></p><p><span style="text-decoration: none;color:var(--ds-text,#333333);"> Data forwarding in the tunnel happens by imposing 2 labels on packets: tunnel label and transport label - a label that ensures traffic delivery to the other endpoint of the tunnel.</span></p><p><br/>MikroTik RouterOS implements the following VPLS features:</p><ul style="text-decoration: none;text-align: left;"><li>VPLS LDP signaling (RFC 4762)</li><li>Cisco style static VPLS pseudowires (RFC 4447 FEC type 0x80)</li><li>VPLS pseudowire fragmentation and reassembly (RFC 4623)</li><li>VPLS MP-BGP based autodiscovery and signaling (RFC 4761)</li><li>Cisco VPLS BGP-based auto-discovery (draft-ietf-l2vpn-signaling-08)</li><li>support for multiple import/export route-target extended communities for BGP based VPLS (both, RFC 4761 and draft-ietf-l2vpn-signaling-08)</li></ul><p><br/></p><h1 id="VPLS-VPLSPrerequisities">VPLS Prerequisities</h1><p>For VPLS to be able to transport MPLS packets, one of the label distribution protocols should be already running on the backbone, it can be LDP, RSVP-TE, or static bindings.</p><p>Before moving forward, familiarize yourself with the <a href="https://help.mikrotik.com/docs/display/ROS/LDP#LDP-PrerequisitesforMPLS" rel="nofollow">prerequisites required for LDP</a> and prerequisites for RSVP-TE.</p><p>In case, if BGP should be used as a VPLS discovery and signaling protocol, the backbone should be running iBGP preferably with route reflector/s.</p><p><br/></p><h1 id="VPLS-ExampleSetup">Example Setup</h1><p>Let's consider that we already have a working LDP setup from the <a href="https://help.mikrotik.com/docs/display/ROS/LDP#LDP-ExampleSetup" rel="nofollow">LDP configuration example</a>.</p><p>Routers R1, R3, and R4 have connected Customer A sites, and routers R1 and R3 have connected Customer B sites. Customers require transparent L2 connectivity between the sites.</p><p><br/></p><p><br/></p><h1 id="VPLS-Reference"><span class="mw-headline">Reference</span></h1><h2 id="VPLS-General"><span class="mw-headline">General</span></h2><p><strong>Sub-menu:</strong><span> </span><code>/interface vpls</code></p><p><br/>List of all VPLS interfaces. This menu shows also dynamically created BGP-based VPLS interfaces.</p><h3 id="VPLS-Properties"><span class="mw-headline">Properties</span></h3><div class="table-wrap"><table class="wrapped confluenceTable" style="margin-left: 14.4318px;"><colgroup><col/><col/></colgroup><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>arp</strong><span> </span>(<em>disabled | enabled | proxy-arp | reply-only</em>; Default:<span> </span><strong>enabled</strong>)</td><td class="confluenceTd">Address Resolution Protocol</td></tr><tr><td class="confluenceTd"><strong>arp-timeout </strong>(<em>time interval | auto</em>; Default: auto)</td><td class="confluenceTd"><br/></td></tr><tr><td class="confluenceTd"><strong>bridge</strong><span> </span>(<em>name</em>; Default:)</td><td class="confluenceTd"><br/></td></tr><tr><td class="confluenceTd"><strong>bridge-cost</strong><span> </span>(<em>integer [1..<em style="text-align: left;">200000000</em>]</em>; Default:<span> </span>)</td><td class="confluenceTd">Cost of the bridge port.</td></tr><tr><td class="confluenceTd"><strong>bridge-horizon</strong><span> </span>(<em>none | integer</em>; Default:<span> </span><strong>none</strong>)</td><td class="confluenceTd">If set to<span> </span><strong>none</strong><span> </span>bridge horizon will not be used.</td></tr><tr><td style="text-align: left;vertical-align: top;" class="confluenceTd"><strong>bridge-pvid</strong><span> </span>(<em>integer 1..4094</em>; Default: <strong>1</strong>)</td><td style="text-align: left;vertical-align: top;" class="confluenceTd">Used to assign port VLAN ID (pvid) for dynamically bridged interface. This property only has an effect when bridge vlan-filtering is set to yes.</td></tr><tr><td class="confluenceTd"><strong>cisco-static-id</strong><span> </span>(<em>integer [0..4294967295]</em>; Default:<span> </span><strong>0</strong>)</td><td class="confluenceTd">Cisco-style VPLS tunnel ID.</td></tr><tr><td class="confluenceTd"><strong>comment</strong><span> </span>(<em>string</em>; Default: )</td><td class="confluenceTd">Short description of the item</td></tr><tr><td class="confluenceTd"><strong>disable-running-check</strong><span> </span>(<em>yes | no</em>; Default:<span> </span><strong>no</strong>)</td><td class="confluenceTd">Specifies whether to detect if an interface is running or not. If set to<span> </span><strong>no</strong><span> </span>interface will always have<span> the </span><code>running</code><span> </span>flag.</td></tr><tr><td class="confluenceTd"><strong>disabled</strong><span> </span>(<em>yes | no</em>; Default:<span> </span><strong>yes</strong>)</td><td class="confluenceTd">Defines whether an item is ignored or used. By default VPLS interface is disabled.</td></tr><tr><td class="confluenceTd"><strong>mac-address</strong><span> </span>(<em>MAC</em>; Default: )</td><td class="confluenceTd"><br/></td></tr><tr><td class="confluenceTd"><strong>mtu</strong><span> </span>(<em>integer [32..65536]</em>; Default:<span> </span><strong>1500</strong>)</td><td class="confluenceTd"><br/></td></tr><tr><td class="confluenceTd"><strong>name</strong><span> </span>(<em>string</em>; Default: )</td><td class="confluenceTd">Name of the interface</td></tr><tr><td class="confluenceTd"><strong>pw-l2mtu</strong><span> </span>(<em>integer [0..65536]</em>; Default:<span> </span><strong>1500</strong>)</td><td class="confluenceTd">L2MTU value advertised to a remote peer.</td></tr><tr><td class="confluenceTd"><strong>pw-type</strong><span> </span>(<em>raw-ethernet | tagged-ethernet | vpls</em>; Default:<span> </span><strong>raw-ethernet</strong>)</td><td class="confluenceTd">Pseudowire type.</td></tr><tr><td class="confluenceTd"><strong>peer</strong><span> </span>(<em>IP</em>; Default: )</td><td class="confluenceTd">The IP address of the remote peer.</td></tr><tr><td class="confluenceTd"><strong>pw-control-word</strong><span> </span>(<em>disabled | enabled | default</em>; Default:<span> </span><strong>default</strong>)</td><td class="confluenceTd">Enables/disables Control Word usage. Default values for regular and cisco style VPLS tunnels differ. Cisco style by default has control word usage disabled. Read more in the <a href="VPLS-Control-Word_128974851.html">VPLS Control Word</a> article.</td></tr><tr><td class="confluenceTd"><strong>vpls-id</strong><span> </span>(<em>AsNum | AsIp</em>; Default: )</td><td class="confluenceTd">A unique number that identifies the VPLS tunnel. Encoding is 2byte+4byte or 4byte+2byte number.</td></tr></tbody></table></div><p><br/><strong>Read-only properties</strong></p><div class="table-wrap"><table class="wrapped confluenceTable" style="margin-left: 14.4318px;"><colgroup><col/><col/></colgroup><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>cisco-bgp-signaled</strong><span> </span>(<em>yes | no</em>)</td><td class="confluenceTd"><br/></td></tr><tr><td class="confluenceTd"><strong>vpls</strong><span> </span>(<em>string</em>)</td><td class="confluenceTd">name of the<span> </span><a class="external-link" href="https://wiki.mikrotik.com/wiki/Manual:Interface/VPLS#BGP_VPLS" rel="nofollow" style="text-decoration: none;">bgp-vpls instance</a><span> </span>used to create dynamic vpls interface</td></tr><tr><td class="confluenceTd"><strong>bgp-signaled</strong></td><td class="confluenceTd"><br/></td></tr><tr><td class="confluenceTd"><strong>bgp-vpls</strong></td><td class="confluenceTd"><br/></td></tr><tr><td class="confluenceTd"><strong>bgp-vpls-prfx</strong></td><td class="confluenceTd"><br/></td></tr><tr><td class="confluenceTd"><strong>dynamic </strong>(<em>yes | no</em>)</td><td class="confluenceTd"><br/></td></tr><tr><td class="confluenceTd"><strong>l2mtu </strong>(integer)</td><td class="confluenceTd"><br/></td></tr><tr><td class="confluenceTd"><strong>running </strong>(<em>yes | no</em>)</td><td class="confluenceTd"><br/></td></tr></tbody></table></div><h3 id="VPLS-Monitoring"><span class="mw-headline">Monitoring</span></h3><p>Command<span> </span><code>/interface vpls monitor [id]</code><span> </span>will display the current VPLS interface status</p><p>For example:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@10.0.11.23] /interface vpls&gt; monitor vpls2
+remote-label: 800000
+local-label: 43
+remote-status: 
+transport: 10.255.11.201/32
+transport-nexthop: 10.0.11.201
+imposed-labels: 800000
+
+</pre>
+</div></div><p style="margin-left: 20.0px;"><span style="letter-spacing: 0.0px;">Available read-only properties:</span></p><div class="table-wrap"><table class="wrapped confluenceTable" style="margin-left: 14.4318px;"><colgroup><col/><col/></colgroup><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>imposed-label</strong><span> </span>(<em>integer</em>)</td><td class="confluenceTd">VPLS imposed label</td></tr><tr><td class="confluenceTd"><strong>local-label</strong><span> </span>(<em>integer</em>)</td><td class="confluenceTd">Local VPLS label</td></tr><tr><td class="confluenceTd"><strong>remote-group</strong><span> </span>()</td><td class="confluenceTd"><br/></td></tr><tr><td class="confluenceTd"><strong>remote-label</strong><span> </span>(<em>integer</em>)</td><td class="confluenceTd">Remote VPLS label</td></tr><tr><td class="confluenceTd"><strong>remote-status</strong><span> </span>(<em>integer</em>)</td><td class="confluenceTd"><br/></td></tr><tr><td class="confluenceTd"><strong>transport-nexthop</strong><span> </span>(<em>IP prefix</em>)</td><td class="confluenceTd">Shows used transport address (typically Loopback address).</td></tr><tr><td class="confluenceTd"><strong>transport</strong><span> </span>(<em>string</em>)</td><td class="confluenceTd">Name of the transport interface. Set if VPLS is running over the Traffic Engineering tunnel.</td></tr></tbody></table></div><p><br/></p>
+                    </div>
+
+                                        
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

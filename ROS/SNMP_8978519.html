@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : SNMP</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="119144606.html">Diagnostics, monitoring and troubleshooting</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : SNMP
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Māris B.</span>, last updated by <span class='editor'> Sergejs B.</span> on Nov 12, 2024
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><span class="mw-headline"><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742046577 {padding: 0px;}
+div.rbtoc1747742046577 ul {margin-left: 0px;}
+div.rbtoc1747742046577 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742046577'>
+<ul class='toc-indentation'>
+<li><a href='#SNMP-Overview'>Overview</a></li>
+<li><a href='#SNMP-QuickConfiguration'>Quick Configuration</a></li>
+<li><a href='#SNMP-GeneralProperties'>General Properties</a></li>
+<li><a href='#SNMP-CommunityProperties'>Community Properties</a>
+<ul class='toc-indentation'>
+<li><a href='#SNMP-Properties'>Properties</a></li>
+</ul>
+</li>
+<li><a href='#SNMP-Managementinformationbase(MIB)'>Management information base (MIB)</a></li>
+<li><a href='#SNMP-Objectidentifiers(OID)'>Object identifiers (OID)</a></li>
+<li><a href='#SNMP-Traps'>Traps</a></li>
+<li><a href='#SNMP-SNMPwrite'>SNMP write</a>
+<ul class='toc-indentation'>
+<li><a href='#SNMP-SystemIdentity'>System Identity</a></li>
+<li><a href='#SNMP-Reboot'>Reboot</a></li>
+<li><a href='#SNMP-RunScript'>Run Script</a></li>
+<li><a href='#SNMP-RunningscriptswithGET'>Running scripts with GET</a></li>
+</ul>
+</li>
+</ul>
+</div></span></p><h1 id="SNMP-Overview"><span class="mw-headline">Overview</span></h1><p>Simple Network Management Protocol (SNMP) is an Internet-standard protocol for managing devices on IP networks. SNMP can be used to graph various data with tools such as CACTI, MRTG, or The Dude.</p><p>SNMP write support is only available for some OIDs. For supported OIDs SNMP v1, v2 or v3 write is supported.</p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/8978519/47579255.png" data-image-src="attachments/8978519/47579255.png" data-unresolved-comment-count="0" data-linked-resource-id="47579255" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="Total-download-cacti.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="8978519" data-linked-resource-container-version="19" tabindex="0" alt=""></span></p><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p> SNMP will respond to the query on the interface SNMP request was received from forcing responses to have same source address as request destination sent to the router</p></div></div><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>SNMP tool collects data from different services running on the system. If, for some reason, communication between SNMP and some service is taking longer time than expected (30 seconds per service, 5 minutes for routing service), you will see a warning in the log stating &quot;timeout while waiting for program&quot; or &quot;SNMP did not get OID data within expected time, ignoring OID&quot;. After that, this service will deny SNMP requests for a while before even trying to get requested data again.</p><p>This error has nothing to do with SNMP service itself. In most cases, such an error is printed when some slow or busy service is monitored through SNMP, and quite often, it is a service that should not be monitored through SNMP, and proper solution in such cases is to skip such OIDs on your monitoring tool.</p></div></div><h1 id="SNMP-QuickConfiguration"><span class="mw-headline">Quick Configuration</span></h1><p><span class="mw-headline">To enable SNMP in RouterOS: </span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] /snmp&gt; print 
+enabled: no
+contact: 
+location: 
+engine-id: 
+trap-community: (unknown)
+trap-version: 1
+[admin@MikroTik] /snmp&gt; set enabled yes</pre>
+</div></div><p>You can also specify administrative contact information in the above settings. All SNMP data will be available to communities configured in the <em>community</em> menu.</p><h1 id="SNMP-GeneralProperties"><span class="mw-headline">General Properties</span></h1><div class="table-wrap"><table class="wrapped confluenceTable"><colgroup><col/></colgroup><tbody><tr><th class="confluenceTh"><p><strong>Sub-menu:</strong> <code>/snmp</code></p></th></tr></tbody></table></div><p class="auto-cursor-target"> This sub menu allows to enable SNMP and to configure general settings. </p><div class="table-wrap"><table class="wrapped confluenceTable"><colgroup><col/><col/></colgroup><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>contact</strong> (<em>string</em>; Default: <strong>&quot;&quot;</strong>)</td><td class="confluenceTd">Contact information</td></tr><tr><td class="confluenceTd"><strong>enabled</strong> (<em>yes | no</em>; Default: <strong>no</strong>)</td><td class="confluenceTd">Used to disable/enable SNMP service</td></tr><tr><td class="confluenceTd"><strong>engine-id</strong> (<em>string</em>; Default: <strong>&quot;&quot;</strong>)</td><td class="confluenceTd">For SNMP v3, used as part of the identifier. You can configure the suffix part of the engine id using this argument. If the SNMP client is not capable to detect set engine-id value then this prefix hex has to be used 0x80003a8c04</td></tr><tr><td class="confluenceTd"><strong>location</strong> (<em>string</em>; Default: <strong>&quot;&quot;</strong>)</td><td class="confluenceTd">Location information</td></tr><tr><td class="confluenceTd"><strong>trap-community</strong> (<em>string</em>; Default: <strong>public</strong>)</td><td class="confluenceTd">Which communities configured in the <em>community</em> menu to use when sending out the trap.</td></tr><tr><td class="confluenceTd"><strong>trap-generators</strong> (<em>interfaces | start-trap</em>; Default: )</td><td class="confluenceTd">What action will generate traps:<ul><li>interfaces - interface changes;</li><li>start-trap - SNMP server starting on the router</li><li data-uuid="d590818a-99db-458c-a90a-86b49da087d1">temp-exception - send trap when temperature reached 100c (or value configured for cpu-overtemp-temperature at /system health )</li></ul></td></tr><tr><td class="confluenceTd"><strong>trap-interfaces</strong> (<em>string | all</em>; Default: )</td><td class="confluenceTd">List of interfaces that traps are going to be sent out.</td></tr><tr><td class="confluenceTd"><strong>trap-target</strong> (<em>list of IP/IPv6</em>; Default: <strong>0.0.0.0</strong>)</td><td class="confluenceTd">IP (IPv4 or IPv6) addresses of SNMP data collectors that have to receive the trap</td></tr><tr><td class="confluenceTd"><strong>trap-version</strong> (<em>1|2|3</em>; Default: <strong>1</strong>)</td><td class="confluenceTd">A version of SNMP protocol to use for trap</td></tr><tr><td class="confluenceTd"><p><strong>src-address</strong> (<em>IPv4 or IPv6 address</em>; Default: <strong>::</strong>)</p></td><td class="confluenceTd">Force the router to always use the same IP source address for all of the SNMP messages</td></tr><tr><td class="confluenceTd"><p><strong>vrf</strong> (<em>VRF name</em>; default value: <strong>main</strong>)</p></td><td class="confluenceTd">Set VRF on which service is listening for incoming connections</td></tr></tbody></table></div><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>the engine-id field holds the suffix value of engine-id, usually, SNMP clients should be able to detect the value, as SNMP values, as read from the router. However, there is a possibility that this is not the case. In which case, the engine-ID value has to be set according to this rule: &lt;engine-id prefix&gt; + &lt;hex-dump suffix&gt;, so as an example, if you have set 1234 as suffix value you have to provide 80003a8c04 + 31323334, combined hex (the result) is 80003a8c0431323334 </p></div></div><h1 id="SNMP-CommunityProperties"><span class="mw-headline">Community Properties</span></h1><div class="table-wrap"><table class="wrapped confluenceTable"><tbody><tr><th class="confluenceTh"><p><strong>Sub-menu:</strong> <code>/snmp community</code></p></th></tr></tbody></table></div><p>This sub-menu allows to set up access rights for the SNMP data.</p><p>There is little security in v1 and v2c, just Clear text community string („username“) and the ability for Limiting access by IP address.</p><p>In the production environment, SNMP v3 should be used as that provides security - Authorization (User + Pass) with MD5/SHA1, Encryption with DES and AES). </p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] /snmp community&gt; print value-list 
+name: public
+address: 0.0.0.0/0
+security: none
+read-access: yes
+write-access: no
+authentication-protocol: MD5
+encryption-protocol: DES
+authentication-password: *****
+encryption-password: *****</pre>
+</div></div><div role="region" aria-label="Warning" class="confluence-information-macro  confluence-information-macro-warning" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-error confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Default settings only have one community named <em>public</em> without any additional security settings. These settings should be considered insecure and should be adjusted according to the required security profile.</p></div></div><h2 id="SNMP-Properties"><strong>Properties</strong></h2><div class="table-wrap"><table class="wrapped confluenceTable"><colgroup><col/><col/></colgroup><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>address</strong> (<em>IP/IPv6 address</em>; Default: <strong>0.0.0.0/0</strong>)</td><td class="confluenceTd">Addresses from which connections to SNMP server is allowed</td></tr><tr><td class="confluenceTd"><strong>authentication-password</strong> (<em>string</em>; Default: <strong>&quot;&quot;</strong>)</td><td class="confluenceTd">Password used to authenticate the connection to the server (SNMPv3)</td></tr><tr><td class="confluenceTd"><strong>authentication-protocol</strong> (<em>MD5 | SHA1</em>; Default: <strong>MD5</strong>)</td><td class="confluenceTd">The protocol used for authentication (SNMPv3)</td></tr><tr><td class="confluenceTd"><strong>encryption-password</strong> (<em>string</em>; Default: <strong>&quot;&quot;</strong>)</td><td class="confluenceTd">the password used for encryption (SNMPv3)</td></tr><tr><td class="confluenceTd"><strong>encryption-protocol</strong> (<em>DES | AES</em>; Default: <strong>DES</strong>)</td><td class="confluenceTd">encryption protocol to be used to encrypt the communication (SNMPv3). AES (see rfc3826) available since v6.16.</td></tr><tr><td class="confluenceTd"><strong>name</strong> (<em>string</em>; Default: )</td><td class="confluenceTd"><br/></td></tr><tr><td class="confluenceTd"><strong>read-access</strong> (<em>yes | no</em>; Default: <strong>yes</strong>)</td><td class="confluenceTd">Whether read access is enabled for this community</td></tr><tr><td class="confluenceTd"><strong>security</strong> (<em>authorized | none | private</em>; Default: <strong>none</strong>)</td><td class="confluenceTd"><br/></td></tr><tr><td class="confluenceTd"><strong>write-access</strong> (<em>yes | no</em>; Default: <strong>no</strong>)</td><td class="confluenceTd">Whether write access is enabled for this community</td></tr></tbody></table></div><h1 id="SNMP-Managementinformationbase(MIB)"><span class="mw-headline">Management information base (MIB)</span></h1><p>The Management Information Base (MIB) is the database of information maintained by the agent that the manager can query. You can download the latest MikroTik RouterOS MIB file from here: <a class="external-link" href="http://www.mikrotik.com/downloads" rel="nofollow">www.mikrotik.com/downloads</a></p><p>Used MIBs in RouterOS:</p><ul><li>MIKROTIK-MIB</li><li>MIB-2</li><li>HOST-RESOURCES-MIB</li><li>IF-MIB</li><li>IP-MIB</li><li>IP-FORWARD-MIB</li><li>IPV6-MIB</li><li>BRIDGE-MIB</li><li>DHCP-SERVER-MIB</li><li>CISCO-AAA-SESSION-MIB</li><li>ENTITY-MIB</li><li>UPS-MIB</li><li>SQUID-MIB</li></ul><h1 id="SNMP-Objectidentifiers(OID)"><span class="mw-headline">Object identifiers (OID)</span></h1><p>Each OID identifies a variable that can be read via SNMP. Although the MIB file contains all the needed OID values, you can also print individual OID information in the console with the <strong>print oid</strong> command at any menu level:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] /interface&gt; print oid
+
+Flags: D - dynamic, X - disabled, R - running, S - slave 
+0 R name=.1.3.6.1.2.1.2.2.1.2.1 mtu=.1.3.6.1.2.1.2.2.1.4.1 
+mac-address=.1.3.6.1.2.1.2.2.1.6.1 admin-status=.1.3.6.1.2.1.2.2.1.7.1 
+oper-status=.1.3.6.1.2.1.2.2.1.8.1 bytes-in=.1.3.6.1.2.1.2.2.1.10.1 
+packets-in=.1.3.6.1.2.1.2.2.1.11.1 discards-in=.1.3.6.1.2.1.2.2.1.13.1 
+errors-in=.1.3.6.1.2.1.2.2.1.14.1 bytes-out=.1.3.6.1.2.1.2.2.1.16.1 
+packets-out=.1.3.6.1.2.1.2.2.1.17.1 discards-out=.1.3.6.1.2.1.2.2.1.19.1 
+errors-out=.1.3.6.1.2.1.2.2.1.20.1 </pre>
+</div></div><h1 id="SNMP-Traps"><span class="mw-headline">Traps</span></h1><p>SNMP traps enable the router to notify the data collector of interface changes and SNMP service status changes by sending traps. It is possible to send out traps with security features to support SNMPv1 (no security). SNMPv2 and variants and SNMPv3 with encryption and authorization.</p><p>For SNMPv2 and v3 you have to set up an appropriately configured community as a <em>trap-community</em> to enable required features (password or encryption/authorization).</p><h1 id="SNMP-SNMPwrite"><span class="mw-headline">SNMP write</span></h1><p>SNMP write allows changing router configuration with SNMP requests. Consider securing access to the router or to router's SNMP, when SNMP and write-access are enabled.</p><p>To change settings by SNMP requests, use the command below to allow SNMP to write for the selected community.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/snmp community set &lt;number&gt; write-access=yes</pre>
+</div></div><h2 id="SNMP-SystemIdentity"><span class="mw-headline">System Identity</span></h2><p><span class="mw-headline">It's possible to change router system identity by SNMP set command.</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: bash; gutter: false">$ snmpset -c public -v 1 192.168.0.0 1.3.6.1.2.1.1.5.0 s New_Identity</pre>
+</div></div><ul><li><em>snmpset</em> - SNMP application used for SNMP SET requests to set information on a network entity;</li><li><em>public</em> - router's community name;</li><li><em>192.168.0.0</em> - IP address of the router;</li><li><em>1.3.6.1.2.1.1.5.0</em> - SNMP value for router's identity;</li></ul><p>SNMPset command above is equal to the RouterOS command:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/system identity set identity=New_Identity</pre>
+</div></div><h2 id="SNMP-Reboot"><span class="mw-headline">Reboot</span></h2><p>It's possible to reboot the router with SNMP set command, you need to set the value for reboot SNMP settings, which is not equal to 0.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: bash; gutter: false">$ snmpset -c public -v 1 192.168.0.0 1.3.6.1.4.1.14988.1.1.7.1.0 s 1</pre>
+</div></div><ul><li><strong>1.3.6.1.4.1.14988.1.1.7.1.0</strong>, SNMP value for the router reboot;</li><li><strong>s 1</strong>, snmpset command to set value, value should not be equal to 0;</li></ul><p>Reboot SNMPset command is equal to the RouterOS command:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/system reboot</pre>
+</div></div><h2 id="SNMP-RunScript"><span class="mw-headline">Run Script</span></h2><p>SNMP write allows running scripts on the router from the <strong>system script</strong> menu when you need to set value for the SNMP setting of the script.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: bash; gutter: false">$ snmpset -c public -v 1 192.168.0.0 1.3.6.1.4.1.14988.1.1.8.1.1.3.X s 1</pre>
+</div></div><ul><li><strong>X</strong>, script number, numeration starts from 1;</li><li><strong>s 1</strong>, snmpset command to set value, the value should not be equal to 0;</li></ul><p>The same command on RouterOS:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/system script&gt; print 
+Flags: I - invalid 
+0 name=&quot;test&quot; owner=&quot;admin&quot; policy=ftp,reboot,read,write,policy,
+test,winbox,password,sniff last-started=jan/01/1970
+01:31:57 run-count=23 source=:beep 
+
+/system script run 0</pre>
+</div></div><h2 id="SNMP-RunningscriptswithGET"><span class="mw-headline">Running scripts with GET</span></h2><p>It is possible to run <strong>/system scripts</strong> via SNMP GET request of the script OID (since 6.37). For this to work SNMP community with write permission is required. OIDs for scripts can be retrieved via the SNMPWALK command as the table is dynamic.</p><p>Add script:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/system script
+add name=script1 owner=admin policy=ftp,reboot,read,write,policy,test,password,sniff,sensitive,romon source=&quot;/sy reboot &quot;
+add name=script2 owner=admin policy=ftp,reboot,read,write,policy,test,password,sniff,sensitive,romon source=&quot;[:put output]&quot;</pre>
+</div></div><p> Get the script OID table </p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: bash; gutter: false">$ snmpwalk -v2c -cpublic 192.168.88.1 1.3.6.1.4.1.14988.1.1.8
+iso.3.6.1.4.1.14988.1.1.8.1.1.2.1 = STRING: &quot;script1&quot;
+iso.3.6.1.4.1.14988.1.1.8.1.1.2.2 = STRING: &quot;script2&quot;
+iso.3.6.1.4.1.14988.1.1.8.1.1.3.1 = INTEGER: 0
+iso.3.6.1.4.1.14988.1.1.8.1.1.3.2 = INTEGER: 0</pre>
+</div></div><p>To run the script use table 18</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: bash; gutter: false">$ snmpget -v2c -cpublic 192.168.88.1 1.3.6.1.4.1.14988.1.1.18.1.1.2.2
+iso.3.6.1.4.1.14988.1.1.18.1.1.2.2 = STRING: &quot;output&quot;</pre>
+</div></div>
+                    </div>
+
+                                                            <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/8978519/47579255.png">Total-download-cacti.png</a> (image/png)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:54</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

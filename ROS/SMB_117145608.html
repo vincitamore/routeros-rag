@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : SMB</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Extended-features_120324125.html">Extended features</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : SMB
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Deniss M.</span>, last updated by <span class='editor'> Matīss O.</span> on Apr 09, 2024
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <h2 id="SMB-Summary">Summary</h2><p><strong>Sub-menu: </strong><code>/ip smb</code><strong><br/>Packages required: </strong><code>system</code></p><p style="text-align: left;">SMB server provides file sharing access to configured folders of the router.</p><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>RouterOS only supports S<span style="color:var(--ds-text,#172b4d);">MB2.1 SMB3.0, SMB3.1.1. SMB1 is not supported due to security vulnerabilities.</span></p></div></div><div role="region" aria-label="Warning" class="confluence-information-macro  confluence-information-macro-warning" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-error confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>SMB is not supported on SMIPS devices</p></div></div><h2 id="SMB-Serversettings">Server settings</h2><div class="table-wrap"><table class="wrapped confluenceTable"><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>comment</strong> (<em>string</em>; Default: <strong>MikrotikSMB</strong>)</td><td class="confluenceTd">Set comment for the server</td></tr><tr><td class="confluenceTd"><strong>domain</strong> (<em>string</em>; Default: <strong>MSHOME</strong>)</td><td style="text-align: left;vertical-align: top;" class="confluenceTd">Name of Windows Workgroup</td></tr><tr><td class="confluenceTd"><strong style="text-align: left;">enabled</strong><span style="color:var(--ds-text,#172b4d);"><span> </span>(</span><em style="text-align: left;">yes | no | auto</em><span style="color:var(--ds-text,#172b4d);"> Default:<span> </span></span><strong style="text-align: left;">auto</strong><span style="color:var(--ds-text,#172b4d);">)</span></td><td style="text-align: left;vertical-align: top;" class="confluenceTd">The default value is 'auto.' This means that the SMB server will automatically be enabled when the first non-disabled SMB share is configured under '/ip smb share'</td></tr><tr><td class="confluenceTd"><strong>interface</strong> (<em>string</em>; Default: <strong>all</strong>)</td><td class="confluenceTd">List of interfaces on which SMB service will be running. all - SMB will be available on all interfaces.</td></tr></tbody></table></div><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body">Starting from version 7.14, the 'allow-guest' option has been replaced by a default guest user located in 'ip/smb/users'. This default guest user can now be disabled or enabled in this section.</div></div><h2 class="auto-cursor-target" id="SMB-Sharesettings">Share settings</h2><p style="text-align: left;"><strong>Sub-menu:</strong><span> </span><code>/ip smb shares</code></p><p style="text-align: left;">Allows configuring share names and directories that will be accessible by SMB.</p><p style="text-align: left;">If the directory provided in the configuration does not exist it will be created automatically.</p><div class="table-wrap"><table class="wrapped confluenceTable"><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>comment </strong>(<em>string</em>; Default: <strong>default share</strong>)</td><td class="confluenceTd">Set a comment for the share</td></tr><tr><td class="confluenceTd"><strong>disabled</strong> (<em>yes | no</em>; Default: <strong>no</strong>)</td><td class="confluenceTd">If disabled, the share will not be accessible.</td></tr><tr><td style="text-align: left;vertical-align: top;" class="confluenceTd"><p><strong>valid-users<span> </span></strong>(list of<span> </span><em>strings</em>; | Default:)</p></td><td style="text-align: left;vertical-align: top;" class="confluenceTd">Specifies which users are allowed to access the Samba share. If it is left empty, all users will be able to access the share, once user or users are defined here, only they will be able to access the share</td></tr><tr><td style="text-align: left;vertical-align: top;" class="confluenceTd"><p><strong>invalid-users<span> </span></strong>(list of<span> </span><em>strings</em>; | Default: )</p></td><td style="text-align: left;vertical-align: top;" class="confluenceTd">Used to specify users who are explicitly denied access to the Samba share.</td></tr><tr><td style="text-align: left;vertical-align: top;" class="confluenceTd"><p><strong>require-encryption</strong><span> </span>(<em>yes<span> </span></em>|<span> </span><em>no</em>; Default:<span> </span><strong><em>no</em></strong>)</p></td><td style="text-align: left;vertical-align: top;" class="confluenceTd">Enforces the use of encryption for all connections to a particular Samba share</td></tr><tr><td class="confluenceTd"><strong>name</strong> (<em>string</em>; Default: )</td><td class="confluenceTd">Name of the SMB share</td></tr><tr><td class="confluenceTd"><strong>directory</strong> (<em>string</em>; Default: )</td><td style="text-align: left;vertical-align: top;" class="confluenceTd">Directory on router assigned to SMB share. If left empty value of the<span> </span><em>name</em><span> </span>argument will be used from the root folder.</td></tr></tbody></table></div><h2 id="SMB-Usersetup">User setup</h2><p><strong>Sub-menu:</strong> <code>/ip smb user</code></p><p>Set up users that can access SMB shares of the router. </p><div class="table-wrap"><table class="wrapped confluenceTable"><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>comment </strong>(<em>string</em>; Default: )</td><td style="text-align: left;vertical-align: top;" class="confluenceTd">Set a description for the user</td></tr><tr><td class="confluenceTd"><strong>disabled</strong> (<em>yes | no</em>; Default: <strong>no</strong>)</td><td class="confluenceTd">Defines whether the user is enabled or disabled</td></tr><tr><td class="confluenceTd"><strong>name</strong> (<em>string</em>; Default: )</td><td class="confluenceTd">Login name of the SMB service user</td></tr><tr><td class="confluenceTd"><strong>password</strong> (<em>string</em>; Default: )</td><td class="confluenceTd">Password for SMB user to connect to SMB service</td></tr><tr><td class="confluenceTd"><strong>read-only</strong> (<em>yes | no</em>; Default: <strong>yes</strong>)</td><td class="confluenceTd">Sets if the user has only read-only rights when accessing shares or full access rights.</td></tr></tbody></table></div><h2 id="SMB-Example">Example</h2><p style="text-align: left;">To make RouterOS folder available through SMB service follow these steps: </p><ul><li>create user:</li></ul><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip/smb/users/add read-only=no name=mtuser password=mtpasswd</pre>
+</div></div><ul><li class="auto-cursor-target">add shared folder:</li></ul><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip/smb/shares/add directory=backup name=backup</pre>
+</div></div><ul><li class="auto-cursor-target">enable SMB service:</li></ul><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">#this step is optional, as the default is &quot;enabled=auto&quot;
+/ip/smb/set enabled=yes</pre>
+</div></div><p class="auto-cursor-target">Now check for results: </p><ul><li class="auto-cursor-target">Check general service settings:</li></ul><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip/smb/print
+      enabled: yes
+       domain: MSHOME
+      comment: MikrotikSMB
+   interfaces: all</pre>
+</div></div><ul><li class="auto-cursor-target">SMB user settings:</li></ul><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip smb/users/print
+Flags: X - DISABLED; * - DEFAULT; r - READ-ONLY
+Columns: NAME, PASSWORD
+#     NAME    PASSWORD
+0 X*r guest          
+1     mtuser  mtpasswd</pre>
+</div></div><ul><li class="auto-cursor-target">And finally SMB shares settings:</li></ul><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip/smb/shares/print
+Flags: X - DISABLED; * - DEFAULT
+Columns: NAME, DIRECTORY, REQUIRE-ENCRYPTION
+#    NAME    DIRECTORY  REQUIRE-ENCRYPTION
+;;; default share
+0 X* pub     /pub       no               
+1    backup  backup     no</pre>
+</div></div><p class="auto-cursor-target">Now, additional configuration changes can be done, like disabling the default user and share, etc. </p><p><br/></p>
+                    </div>
+
+                                        
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:54</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

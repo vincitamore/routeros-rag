@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : Branding</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Management-tools_328121.html">Management tools</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : Branding
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Normunds R.</span>, last updated by <span class='editor'> Serhii T.</span> on Jan 22, 2025
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p>RouterOS allows slight system customization with the help of a branding package (modify default configuration, LCD logo, WebFig homepage, etc.).</p><p>This is a special system package, which you can generate from within your <a class="external-link" href="http://mikrotik.com" rel="nofollow">mikrotik.com</a> account, in the account section &quot;Branding maker&quot;. The resulting file will have a .dpk extension and can be installed by all the same means as an .npk package.</p><p>To install the package on a router, branding package has to upload to it and then a router has to reboot, Netinstall tool can be used for the same effect.</p><p>The generated package can be installed in any RouterOS version.</p><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Note that specific branding features are available starting from specific RouterOS versions.</p></div></div><h1 id="Branding-"><iframe class="youtube-player" type="text/html" style="width: 400px; height: 300px"
+	src="//www.youtube.com/embed/EE5EwwgHZ6A?wmode=opaque" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen>
+</iframe>
+    
+</h1><h1 id="Branding-Options">Options</h1><p>Options that can be configured using a branding package:</p><ul><li><strong>Router name</strong> - branding package name, device identity and <a href="https://help.mikrotik.com/docs/display/ROS/Resource" rel="nofollow">platform name</a> in RouterOS, can only be one word, don't use spaces or special characters;</li><li><strong>Company URL </strong>- <span style="color:var(--ds-text,#172b4d);">value that appears in the console when you connect to RouterOS device;</span></li><li><span style="color:var(--ds-text,#172b4d);"><strong>Manual URL </strong>- documentation link, which can be opened in <a href="https://help.mikrotik.com/docs/display/ROS/WebFig" rel="nofollow">WebFig</a>;</span></li><li><span style="color:var(--ds-text,#172b4d);"><strong>ASCII Logo</strong> - <span>a text logo that is shown when logging into the command line interface, i.e. Telnet, SSH, WinBox Terminal. A logo can be created in the <a class="external-link" href="https://mikrotik.com/client/branding" rel="nofollow">branding maker</a> or copied from any other plaintext editor. A logo height cannot be larger than 8 lines, width is not limited, but note that in a</span></span><span style="color:var(--ds-text,#172b4d);"><span> narrow terminal window a logo might be distorted.</span></span></li><li><span style="color:var(--ds-text,#172b4d);"><span><strong>Hide &quot;Mikrotik&quot; from SNMP information </strong>-<strong> </strong>MikroTik name will be hidden in SNMP information;</span></span></li><li><span style="color:var(--ds-text,#172b4d);"><span><strong>Do not run script on install</strong> - do not run Default configuration script on branding package install;</span></span></li><li><span style="color:var(--ds-text,#172b4d);"><span><strong style="text-align: left;">Hide Default configuration prompt </strong>- hide Default configuration prompt after configuration reset <em>(available starting from RouterOS 7.15)</em></span></span></li><li><span style="color:var(--ds-text,#172b4d);"><span><strong style="text-align: left;">Hide default caps-mode-script </strong>- hide default caps-mode-script <em>(available starting from RouterOS 7.15)</em></span></span></li></ul><h1 id="Branding-Customfiles">Custom files</h1><p>Custom files such as the WebFig login page, WebFig logo, hotspot, skins, Default configuration, LCD logo, Custom files and CAPs mode script can be included in the branding package.</p><h3 id="Branding-WebFigloginpage">WebFig login page</h3><p>The WebFig login page is a customized default RouterOS login interface that appears when accessing the router's IP address. This page can be customized to meet branding or functional requirements.</p><ul><li data-uuid="475f8f2f-9d48-4079-aea5-469a9891acfc"><p><strong>Customization Files:</strong></p><ul><li data-uuid="37b78af5-af66-445f-9e21-fb5175f73dd8"><strong><code>/index2.html</code></strong>: Main template for the login page.</li><li data-uuid="e97473a7-c72d-4413-872c-efed12441429"><strong><code>/assets/style.css</code></strong>:  MikroTik RouterOS stylesheet.</li><li data-uuid="afbdab4e-18fa-47ee-b6aa-5cb7166b02a2"><strong><code>/assets/script.js</code></strong> is responsible for handling the login functionality and <span class="ryNqvb">contains code that gives the button interactivity.</span></li></ul></li><li data-uuid="2aa7e912-b1a9-4174-83f4-f09dc4658282"><p><strong>Required Elements for the <span class="codespan__pre-wrap"><code>script.js</code></span>:</strong></p><ol><li data-uuid="59ada64a-e7c7-4417-9580-fbcec9c306f4"><strong>Form for Login:</strong><br/><code>&lt;form id=&quot;login&quot;&gt;</code></li><li data-uuid="3aa3f3c8-6f1f-46b6-94e0-af28ba6747dd"><strong>Username Field:</strong><br/><code>&lt;input id=&quot;name&quot; data-defaultuser=&quot;admin&quot;&gt;</code><ul><li>The <code>admin</code> value can be changed to another username or left blank.</li></ul></li><li data-uuid="e98c71c2-6618-4938-baa1-b35baacc49a4"><strong>Password Field:</strong><br/><code>&lt;input id=&quot;password&quot;&gt;</code></li><li data-uuid="60d925f9-7c17-4ac2-af55-c5f2e694c1a9"><strong>Error Display Section:</strong><br/><code>&lt;div id=&quot;error&quot;&gt;</code></li></ol></li><li data-uuid="d5ced2bf-a3df-4d13-8c9a-e1bddb36f2fb">Here is an example of a user-customized login page with a &quot;Show Password&quot; button, achieved using a modified <strong><span class="codespan__pre-wrap"><code><a href="attachments/69664784/295239801.html" data-linked-resource-id="295239801" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="index2.html" data-nice-type="HTML Document" data-linked-resource-content-type="text/html" data-linked-resource-container-id="69664784" data-linked-resource-container-version="30">index2.html</a></code></span></strong> along with additional <a href="attachments/69664784/295239803.css" data-linked-resource-id="295239803" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="toggle_button.css" data-nice-type="CSS File" data-linked-resource-content-type="text/css" data-linked-resource-container-id="69664784" data-linked-resource-container-version="30"> css </a>and <a href="attachments/69664784/295239802.js" data-linked-resource-id="295239802" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="show_password.js" data-nice-type="JavaScript File" data-linked-resource-content-type="text/javascript" data-linked-resource-container-id="69664784" data-linked-resource-container-version="30">js</a> files.<br/>The HTML file must be named &quot;index2.html&quot; and should use properly nested HTML to ensure compatibility with all browsers.</li><li data-uuid="56ddbce9-0297-4581-ad07-bdfc077ba52b"><span>The uploaded images or JavaScript files must reference to the same path as the index file, no custom folder names can be used.</span></li></ul><hr/><h3 id="Branding-WebFiglogo">WebFig logo</h3><p><span>RouterOS WebFig page (configuration page) logo. To overwrite the MikroTik logo on the WebFig login page, upload your custom logo named &quot;mikrotik_logo.png&quot;.</span></p><h3 id="Branding-hotspot">hotspot</h3><p>Hotspot login page logo. The file must be named &quot;logobottom.png&quot;.</p><h3 id="Branding-skins">skins</h3><p>A skin file with name &quot;your_file_name.json&quot;. To apply a particular skin to a specific user group, you don't need to log into the router. You can do it with branding by uploading a Default configuration file.</p><h3 id="Branding-Defaultconfiguration">Default configuration</h3><p>A RouterOS default configuration file that will override RouterOS default configuration. This configuration will persist even after a RouterOS reset. Factory passwords can be reapplied using the read-only variables <em>$defconfPassword</em> and <em>$defconfWifiPassword </em>(access to factory passwords is available starting RouterOS 7.10).</p><h3 id="Branding-LCDlogo">LCD logo</h3><p>LCD logo will be displayed on devices equipped with LCD screen. A Logo size cannot be larger than 160px width and 72px height. CCR1xxx series has white (0xffffff) background, 2011 series have black (0x000000) background.</p><h3 id="Branding-Customfiles.1">Custom files </h3><p><span style="color:var(--ds-text,#172b4d);">Custom files will be copied into a folder named &quot;branding&quot; and will be accessible from within RouterOS.</span></p><h3 id="Branding-CAPsmodescript"><span style="color:var(--ds-text,#172b4d);">CAPs mode script<br/></span></h3><p><span style="color:var(--ds-text,#172b4d);"> A RouterOS CAPs mode script that will override RouterOS default CAPs mode script. It is possible to reapply the factory passwords by utilizing the read-only variables <em>$defconfPassword</em> and <em>$defconfWifiPassword </em>(available starting from RouterOS 7.15).</span></p><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>If a Default configuration or CAPs mode script execution takes more than 2 minutes, a script will fail, and LOG will contain <em>&quot;runtime limit exceeded&quot;</em> or in rare cases <em>&quot;std failure: timeout&quot;</em> error.</p></div></div><p><br/></p>
+                    </div>
+
+                                                            <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/69664784/242909390.png">macro_browser_note.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/69664784/295239801.html">index2.html</a> (text/html)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/69664784/295239802.js">show_password.js</a> (text/javascript)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/69664784/295239803.css">toggle_button.css</a> (text/css)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/69664784/295239804.json">status.json</a> (application/octet-stream)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

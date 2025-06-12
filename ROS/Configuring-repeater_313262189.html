@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : Configuring repeater</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Wireless_1409138.html">Wireless</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="WiFi_224559120.html">WiFi</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : Configuring repeater
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Deniss M.</span>, last updated on May 20, 2025
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742035663 {padding: 0px;}
+div.rbtoc1747742035663 ul {margin-left: 0px;}
+div.rbtoc1747742035663 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742035663'>
+<ul class='toc-indentation'>
+<li><a href='#Configuringrepeater-Overview'>Overview</a></li>
+<li><a href='#Configuringrepeater-Repeatersetup'>Repeater setup</a>
+<ul class='toc-indentation'>
+<li><a href='#Configuringrepeater-2.4GHzinterfaceconfiguration'>2.4 GHz interface configuration</a></li>
+<li><a href='#Configuringrepeater-5GHzinterfaceconfiguration'>5 GHz interface configuration</a></li>
+<li><a href='#Configuringrepeater-Optionalstep-addingvirtualinterface'>Optional step - adding virtual interface</a></li>
+<li><a href='#Configuringrepeater-Bridgingandlisting'>Bridging and listing</a></li>
+<li><a href='#Configuringrepeater-DHCP'>DHCP</a></li>
+</ul>
+</li>
+</ul>
+</div></p><h1 id="Configuringrepeater-Overview">Overview</h1><p><strong>Package:</strong> <code>wifi-qcom</code></p><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>This guide is meant for 802.11 AX devices running <code><strong>wifi-qcom</strong></code> package/drivers.</p></div></div><p>WiFi range is limited. APs (devices that broadcast Wi-Fi networks) run on 2.4 and/or 5 GHz frequency. 5 GHz networks enable a much better throughput, but with reduced range. 2.4 GHz networks ensure a better coverage, but with less throughput.</p><p>Indoor APs are, usually, equipped with omnidirectional antennas (which allow broadcasting the signal in a &quot;donut&quot; shape around the AP, 360°). For indoor and short distance outdoor installations, it is a perfect antenna to use. Using a simple home AP with omnidirection antennas, you can achieve a distance of up to ±100 meters in an &quot;ideal&quot; interference-free line of sight setup. Which is reduced much further inside buildings. Concrete, pipes, metal, water...and all kinds of other different materials affect WiFi indoors. Some items can absorb, some deflect, some diffract and some can scatter the signal.</p><p>With that in mind, it is not always possible to cover the required range with a single AP/router, and additional APs need to be installed.</p><p>For the best possible throughput, each AP should be connected to the main network via an ethernet cable. However! It is not always possible to pass the cable from the AP to the main router for whatever reason...most likely, a<span class="hgKElc">esthetics.</span></p><p><span class="hgKElc">This is where, &quot;<strong>repeaters</strong>&quot; or &quot;<strong>extenders</strong>&quot; can help.</span></p><p><span class="hgKElc">Extender's/Repeater's job is to establish a Wi-Fi connection with your main router as a &quot;client&quot; or a &quot;station&quot;, use this connection as an uplink connection, and also broadcast extender's own WiFi network at the same time.</span></p><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><p class="title conf-macro-render">Throughput!</p><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>When a device is used as an extender, the throughput you get from it is reduced, at least, in half.</p><p>This is because half of the device's WiFi resources are used to keep an ongoing connection with the main router, while the extender is left with the other half for its own &quot;broadcasting&quot;.</p><p>Also! Since you are installing the extender at a distance from the main router... with distance, WiFi throughput is reduced further.</p></div></div><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><p class="title conf-macro-render">Roaming!</p><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>If you copy SSID name from your router settings and configure the extender to broadcast the same SSID name →  roaming will be purely client dependent.</p><p>Roaming is when your client device transitions between different APs which use the same WiFi name. There are standards that can help &quot;accelerate&quot; and &quot;smoothen&quot; the transition (like 802.11 r/k/v) but, unfortunately, they can not be used in this setup and so, the decision, &quot;to roam&quot; or &quot;not to roam&quot; is up to the client fully. Different vendors have different algorithms implemented that decide how and when your client device should switch.</p><p>Keep that in mind! Some devices, that have a good algorithm (decision-making), will roam properly, while others might stick to a poor signal (furthest) AP.</p></div></div><h1 id="Configuringrepeater-Repeatersetup">Repeater setup</h1><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><p class="title conf-macro-render">Which frequency to use?</p><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Dual-band routers and access points, from the get-go, should have two Wi-Fi interfaces → wifi1 and wifi2, each representing a certain frequency, 5 and 2.4 GHz respectively. For repeater setup, x1 of the interfaces needs to be turned into a <strong>station</strong> interface (which will act as a client to another network), while, the other, should be set in <strong>ap</strong> mode (which will allow the device to broadcast its own network).</p><p>If we use 2.4 GHz as a <strong>station</strong> interface, it would increase the distance at which we can install the repeater, but it would also reduce the throughput we can get from it. If we use 5 GHz as <strong>station </strong>interface, we reduce the range but increase the throughput.</p></div></div><div role="region" aria-label="Warning" class="confluence-information-macro  confluence-information-macro-warning" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-error confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Because we will be changing Wi-Fi and port-related configurations, it is advised to connect to the device's settings via Ethernet port/cable, using MAC-address. You can use <a href="https://help.mikrotik.com/docs/spaces/ROS/pages/328129/WinBox" rel="nofollow">Winbox</a> &quot;Neighbors&quot; tab and double-click on the MAC-address of the device in the list. This way, you will not lose access later on when changing interface-related settings.</p></div></div><p>In our example, we want to use wifi2 (2.4 GHz), as a &quot;station&quot; interface, while having wifi1 (5 GHz) broadcast repeater's own SSID (and also, potentially re-broadcast router's SSID over 2.4 GHz as well):</p><p><span style="color:var(--ds-background-accent-red-subtle,#f87168);"><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/313262189/314671160.png" data-image-src="attachments/313262189/314671160.png" data-unresolved-comment-count="0" data-linked-resource-id="314671160" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2025-5-7_13-38-26.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="313262189" data-linked-resource-container-version="42" tabindex="0" alt=""></span></span></p><p>Overall configuration:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface wifi
+set [ find default-name=wifi2 ] configuration.mode=station-bridge .ssid=router.ssid.2 disabled=no security.authentication-types=wpa2-psk .passphrase=router.password
+set [ find default-name=wifi1 ] configuration.mode=ap .ssid=router.ssid.5 disabled=no security.authentication-types=wpa2-psk .passphrase=router.password
+add configuration.mode=ap .ssid=router.ssid.2 disabled=no master-interface=wifi2 name=wifi3 security.authentication-types=wpa2-psk .passphrase=router.password
+/interface list
+add comment=defconf name=WAN
+add comment=defconf name=LAN
+/interface bridge
+add auto-mac=no comment=defconf name=bridge
+/interface bridge port
+add interface=all bridge=bridge 
+/interface list member
+add comment=defconf interface=bridge list=LAN
+/ip dhcp-client
+add interface=bridge</pre>
+</div></div><h2 id="Configuringrepeater-2.4GHzinterfaceconfiguration">2.4 GHz interface configuration</h2><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface wifi
+set [ find default-name=wifi2 ] configuration.mode=station-bridge .ssid=router.ssid.2 disabled=no security.authentication-types=wpa2-psk .passphrase=router.password
+</pre>
+</div></div><ul><li data-uuid="b4a88f2a-cc07-4c3f-974d-c1be10f99659"><code>configuration.mode=station-bridge</code> → selects the <a href="https://help.mikrotik.com/docs/spaces/ROS/pages/122388518/Wireless+Station+Modes" rel="nofollow">station mode</a>.</li></ul><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><p class="title conf-macro-render">Which station mode to use?</p><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>For <strong>MikroTik Wi-Fi 6 AX </strong>(router that uses <code>wifi-qcom</code> package/drivers) to<strong> MikroTik Wi-Fi 6 AX </strong>(repeater/station that uses <code>wifi-qcom</code> package/drivers) connection, use <strong><code>station-bridge</code></strong> mode.</p><p>For <strong>3d-party-vendor</strong> or <strong>MikroTik legacy WiFi 5 AC and below </strong>(router) to <strong>Wi-Fi 6 AX </strong>(repeater) connection, use <strong><code>station-pseudobridge</code></strong> mode.</p><p><code>station-pseudobridge</code> does something similar to &quot;Network Address Translation&quot; but with MAC addresses. With this mode, if you have multiple devices connected to the repeater and they all access the internet, the router would see all those attempts coming from a single MAC address. Basically, all client devices would be hidden behind one MAC address, which could potentially cause networking issues. It is not advised to use this mode, but, in such cases, there are no other options.</p></div></div><ul><li data-uuid="1350d47f-f3ea-4bbe-8d75-5c90efa22a89"><code>ssid=router.ssid.2</code> → it is the 2.4 GHz SSID network name that the router broadcasts (where the repeater should connect).</li><li data-uuid="541dbc9e-2f51-4642-88cf-89f3954091bb"><code>security.authentication-types=wpa2-psk</code> → selects, which authentication types the main router uses.</li><li data-uuid="e6e423d8-3a07-47a3-bbfa-988f3352dd43"><code>passphrase=router.password</code> → configures the password from the main router network. The password configured in your router's settings.</li></ul><h2 id="Configuringrepeater-5GHzinterfaceconfiguration">5 GHz interface configuration</h2><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface wifi
+set [ find default-name=wifi1 ] configuration.mode=ap .ssid=router.ssid.5 disabled=no security.authentication-types=wpa2-psk .passphrase=router.password
+</pre>
+</div></div><ul><li data-uuid="9590c91b-5ad9-4c3f-ae2f-131102f8d858"><code>configuration.mode=ap</code> → configures interface to work in &quot;access point&quot; mode.</li><li data-uuid="e894cd3b-1299-4131-a157-716569125617"><code>ssid=router.ssid5</code> → configures wireless network name (SSID), which the repeater needs to re-broadcast. It can be the same network name as the main router uses, or it can be a different name. For testing, better use a &quot;unique&quot; name so you can differentiate networks. For &quot;client roaming&quot; to happen, use the exact same WiFi name from the router settings.</li><li data-uuid="104d635f-cf42-4f51-bbbd-8a9c2508ddf5"><code>security.authentication-types=wpa2-psk</code> → select which authentication types to use. For &quot;client roaming&quot; to happen, use the exact same authentication type from the router settings.</li><li data-uuid="bb01ea27-f000-418e-bca8-1658d6ae027e"><code>passphrase=router.password</code> → sets password from the repeaters WiFi network. For &quot;client roaming&quot; to happen, use the exact same password from the router settings.</li></ul><h2 id="Configuringrepeater-Optionalstep-addingvirtualinterface">Optional step - adding virtual interface</h2><p>In case, you want to make the extender re-broadcast wireless networks using both frequencies (e.g. <code>wifi2</code> is reserved for &quot;<code>mode=station-bridg</code>e&quot;, and you are left only with <code>wifi1 </code>for &quot;<code>mode=ap</code>&quot;), create a virtual interface on-top of the <code>station</code> interface:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface wifi
+add configuration.mode=ap .ssid=router.ssid.2 disabled=no master-interface=wifi2 name=wifi3 security.authentication-types=wpa2-psk .passphrase=router.password
+</pre>
+</div></div><ul><li data-uuid="509b4020-0a4c-4914-a549-01e8ab47a86b"><code>configuration.mode=ap</code> → ensures that it will act as an &quot;access point&quot; interface.</li><li data-uuid="dd002fb6-8fa9-4bf7-974a-251a2565fa9c"><code>ssid=router.ssid2</code> → configures wireless network name (SSID), which the repeater needs to re-broadcast. For &quot;client roaming&quot; to happen, use the exact same WiFi name from the router settings.</li><li data-uuid="d5f63e5b-fa2c-4c84-ba57-7bc181691c1e"><code>master-interface=wifi2</code> → specify, which interface to &quot;base&quot; the &quot;virtual&quot; interface on (specify on-top of which interface to create it). Select the interface, which is used as a &quot;<code>station</code>&quot; interface.</li><li data-uuid="6cf5cd2c-dcda-456b-af31-8ef993e6549f"><code>name=wifi3</code> → name the virtual interface.</li><li data-uuid="d14708eb-56ef-48ea-b2b4-f04b5af2f7d3"><code>security.authentication-types=wpa2-psk</code> → select which authentication types to use. For &quot;client roaming&quot; to happen, use the exact same authentication type from the router settings.</li><li data-uuid="f4cebc74-cbb4-46cb-adc3-03df558dfeff"><code>passphrase=router.password</code> → sets password from the repeater's WiFi network. For &quot;client roaming&quot; to happen, use the exact same password from the router settings.</li></ul><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>The virtual interface will use the exact same frequency channel, which is used by the <code>station</code> interface to connect to the router. Wi-Fi frequency channel for this interface can not be changed.</p></div></div><h2 id="Configuringrepeater-Bridgingandlisting">Bridging and listing</h2><p><a href="https://help.mikrotik.com/docs/spaces/ROS/pages/328068/Bridging+and+Switching#BridgingandSwitching-Example.1" rel="nofollow">Bridge all ports</a>:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface bridge
+add auto-mac=no comment=defconf name=bridge
+/interface bridge port
+add interface=all bridge=bridge </pre>
+</div></div><p>And, ensure, that the bridge is <a class="external-link" href="https://help.mikrotik.com/interface list member add comment=defconf interface=bridge list=LAN" rel="nofollow">listed as &quot;LAN&quot; interface</a>, so that the firewall rules do not block access to extender's management:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface list member
+add comment=defconf interface=bridge list=LAN</pre>
+</div></div><p>That is, of course, if you have proper firewall and access restrictions added on the main router. Otherwise, restrict it.</p><h2 id="Configuringrepeater-DHCP">DHCP</h2><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip dhcp-client
+add interface=bridge</pre>
+</div></div><p>Apply <a href="https://help.mikrotik.com/docs/spaces/ROS/pages/24805500/DHCP#DHCP-ConfigurationExamples" rel="nofollow">DHCP-client</a> on top of the bridge interface, so that the repeater itself and all its connected clients get IP addresses from the main router.</p>
+                    </div>
+
+                                                            <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/313262189/314671160.png">image-2025-5-7_13-38-26.png</a> (image/png)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

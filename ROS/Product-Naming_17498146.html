@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : Product Naming</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Hardware_13500445.html">Hardware</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : Product Naming
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Artūrs C.</span>, last updated by <span class='editor'> Toms Filatovs</span> on Dec 11, 2024
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742045842 {padding: 0px;}
+div.rbtoc1747742045842 ul {margin-left: 0px;}
+div.rbtoc1747742045842 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742045842'>
+<ul class='toc-indentation'>
+<li><a href='#ProductNaming-Introduction'>Introduction</a></li>
+<li><a href='#ProductNaming-RouterBOARDproductsnamingdetails'>RouterBOARD products naming details</a>
+<ul class='toc-indentation'>
+<li><a href='#ProductNaming-BoardName'>Board Name</a></li>
+<li><a href='#ProductNaming-BoardFeatures'>Board Features</a></li>
+<li><a href='#ProductNaming-Built-inwirelessdetails'>Built-in wireless details</a></li>
+<li><a href='#ProductNaming-Enclosuretype'>Enclosure type</a></li>
+<li><a href='#ProductNaming-Example'>Example</a></li>
+</ul>
+</li>
+<li><a href='#ProductNaming-CloudCoreRouternamingdetails'>CloudCoreRouter naming details</a></li>
+<li><a href='#ProductNaming-CloudRouterSwitchandCloudSmartSwitchnamingdetails'>CloudRouterSwitch and CloudSmartSwitch naming details</a></li>
+</ul>
+</div></p><h1 id="ProductNaming-Introduction">Introduction</h1><p>MikroTik product naming can be confusing at first glance, but all the product codes have a logical explanation and follow a code.</p><h1 id="ProductNaming-RouterBOARDproductsnamingdetails"><span class="mw-headline">RouterBOARD products </span><span class="mw-headline">naming details</span></h1><p><span class="mw-headline"><span style="color:var(--ds-text,#333333);">RouterBOARD (short version RB)</span></span></p><p><span style="color:var(--ds-text,#333333);">&lt;board name&gt; &lt;board features&gt;-&lt;built-in wireless&gt; &lt;wireless card features&gt;-&lt;connector type&gt;</span><span style="color:var(--ds-text,#333333);">-&lt;enclosure type&gt;</span></p><h2 id="ProductNaming-BoardName"><span class="mw-headline">Board Name</span></h2><p>Currently, there can be three types of board names:</p><ul><li><strong>3-symbol name</strong><ul><li>1st symbol stands for series (this can either be a number or a letter); New additions: D - Dakota; C - Cypress; S - Chateau; L - Maple; </li><li>2nd digit for indicating the number of potential wired interfaces (Ethernet, SFP, SFP+)</li><li>3rd digit for indicating the number of potential wireless interfaces (built-in and mPCI and mPCIe slots)</li></ul></li></ul><ul><li><strong>Word</strong><span> </span>- currently used names are:<span> </span><strong>OmniTIK, Groove, SXT, SEXTANT, Metal, LHG, DynaDish, cAP, wAP, LDF, DISC, mANTBox, QRT, DynaDish, cAP, hAP, hEX</strong>. If the board has fundamental changes in hardware (such as completely different CPU) revision version will be added at the end</li></ul><ul><li><strong>Exceptional naming</strong><span> </span>- 600, 800, 1000, 1100, 1200, 2011, 3011, 4011 boards are standalone representatives of the series or have more than 9 wired interfaces, so the name was simplified to full hundreds or development year.</li></ul><h2 id="ProductNaming-BoardFeatures"><span class="mw-headline">Board Features</span></h2><p>Board features follow immediately after board name section (no spaces or dashes), except when board name is a word, then board features are separated by space.</p><p>Currently used features (listed in the order they are used):</p><ul><li><strong>U</strong><span> </span>- USB</li><li><strong>P</strong><span> </span>- power injection with a controller</li><li><strong>i</strong><span> </span>- single port power injector without a controller</li><li><strong>A</strong><span> </span>- more memory and (or) higher license level</li><li><strong>H</strong><span> </span>- more powerful CPU</li><li><strong>G</strong><span> </span>- Gigabit (may include &quot;U&quot;,&quot;A&quot;,&quot;H&quot;, if not used with &quot;L&quot;)</li><li><strong>L</strong><span> </span>- Lite edition</li><li><strong>D</strong> - <span style="color:var(--ds-text,#172b4d);">addition Disk for storage (SSD or M.2)</span></li><li><strong>S</strong><span> </span>- SFP port (legacy usage - SwitchOS devices)</li><li><strong>e</strong><span> </span>- PCIe interface extension card</li><li><strong>x&lt;N&gt;</strong><span> </span>- where N is number of CPU cores ( x2, x16, x36, etc)</li><li><strong>R</strong><span> </span>- MiniPCIe slot with both USB and PCIe lines</li><li><strong>M</strong><span> </span>- M.2 slot with both USB and PCIe lines</li></ul><h2 id="ProductNaming-Built-inwirelessdetails"><span class="mw-headline">Built-in wireless details</span></h2><p>If the board has built-in wireless, then all its features are represented in the following format:</p><p><code>&lt;band&gt;&lt;power_per_chain&gt;&lt;protocol&gt;&lt;number_of_chains&gt;</code></p><ul><li><strong>band</strong><ul><li><strong>5</strong><span> </span>- 5Ghz</li><li><strong>2</strong><span> </span>- 2.4Ghz</li><li><strong>52</strong><span> </span>- dual-band 5Ghz and 2.4Ghz</li></ul></li></ul><ul><li><strong>power per chain</strong><ul><li>(not used) - &quot;Normal&quot; - &lt;23dBm at 6Mbps 802.11a; &lt;24dBm at 6Mbps 802.11g</li><li><strong>H</strong><span> </span>- &quot;High&quot; - 23-24dBm at 6Mbps 802.11a; 24-27dBm at 6Mbps 802.11g</li><li><strong>HP</strong><span> </span>- &quot;High Power&quot; - 25-26dBm 6Mbps 802.11a; 28-29dBm at 6Mbps 802.11g</li><li><strong>SHP</strong><span> </span>- &quot;Super High Power&quot; - 27+dBm at 6Mbps 802.11a; 30+dBm at 6Mbps 802.11g</li></ul></li></ul><ul><li><strong>protocol</strong><ul><li>(not used) - for cards with only 802.11a/b/g support</li><li><strong>n</strong><span> </span>- for cards with 802.11n support</li><li><strong>ac</strong><span> </span>- for cards with 802.11ac support</li><li><strong>ax</strong><span> </span>- for cards with 802.11ax support</li></ul></li></ul><ul><li><strong>number_of_chains</strong><ul><li>(not used) - single chain</li><li><strong>D</strong><span> </span>- dual chain</li><li><strong>T</strong><span> </span>- triple chain</li></ul></li></ul><ul><li><strong>connector type</strong><ul><li>(not used) - only one connector option on the model</li><li><strong>MMCX</strong><span> </span>- MMCX connector type</li><li><strong>u.FL</strong><span> </span>- u.FL connector type</li></ul></li></ul><h2 id="ProductNaming-Enclosuretype"><span class="mw-headline">Enclosu</span><span class="mw-headline">re </span><span class="mw-headline">type</span></h2><ul><li>(not used) - the main type of enclosure for a product</li><li><strong>BU</strong><span> </span>- board unit (no enclosure) - for a situation when a board-only option is required, but the main product already comes in the case</li><li><strong>RM</strong><span> </span>- rack-mount enclosure</li><li><strong>IN</strong><span> </span>- indoor enclosure</li><li><strong>EM</strong><span> </span>- extended memory</li><li><strong>LM</strong><span> </span>- lite memory</li><li><strong>BE</strong><span> </span>- black edition case</li><li><strong>TC</strong><span> </span>- Tower (vertical) case</li><li><strong>PC</strong><span> </span>- PassiveCooling enclosure (for CCR)</li><li><strong>TC</strong><span> </span>- Tower (vertical) Case enclosure (for hEX, hAP and other home routers.)</li><li><strong>OUT</strong><span> </span>- outdoor enclosure</li></ul><p><strong><span class="mw-headline">More Specific types OUT enclosures are:</span></strong></p><ul><li><strong>SA</strong><span> </span>- sector antenna enclosure (for SXT)</li><li><strong>HG</strong><span> </span>- high gain antenna enclosure (for SXT)</li><li><strong>BB</strong><span> </span>- Basebox enclosure (for RB911)</li><li><strong>NB</strong><span> </span>- NetBox enclosure (for RB911)</li><li><strong>NM</strong><span> </span>- NetMetal enclosure (for RB911)</li><li><strong>QRT</strong><span> </span>- QRT enclosure (for RB911)</li><li><strong>SX</strong><span> </span>- Sextant enclosure (for RB911,RB711)</li><li><strong>SXTsq -<span> </span></strong>SXTsq enclosure</li><li><strong>PB</strong><span> </span>- PowerBOX enclosure (for RB750P, RB950P)</li><li><strong>XL</strong><span> </span>- extra large enclosure (bigger size LHG for example)</li><li><strong>LTm</strong><span> </span>- LtAP mini case,</li><li><strong>LT</strong><span> </span>- LtAP case</li><li><strong>KN<span> </span></strong>- KNOT case</li></ul><h2 id="ProductNaming-Example"><span class="mw-headline">Example</span></h2><p>#1 decode<span> </span><a class="external-link" href="https://routerboard.com/RB912UAG-5HPnD" rel="nofollow" style="text-decoration: none;">RB912UAG-5HPnD</a><span> </span>naming:</p><ul><li>RB (RouterBOARD)</li><li>912 - 9th series board with 1 wired (ethernet) interface and two wireless interfaces (built-in and mini PCIe)</li><li>UAG - has a USB port, more memory, and gigabit ethernet port</li><li>5HPnD - has built-in 5GHz high power dual chain wireless card with 802.11n support.</li></ul><p>#2 decode <a class="external-link" href="https://mikrotik.com/product/hap_ac2" rel="nofollow">RBD52G-5HacD2HnD-TC</a> naming:</p><ul><li>RouterBOARD (deprecated in new)</li><li>D - Dakota series CPU</li><li>5 - wired interfaces</li><li>2 - wireless interfaces</li><li>G - gigabit</li><li>5HacD - has built-in 5GHz high power dual chain wireless card with 802.11ac support.</li><li>2HnD  - has built-in 2.4GHz high power dual chain wireless card with 802.11n support.</li><li>TC - tower case</li></ul><p>#3 decode <a class="external-link" href="https://mikrotik.com/product/hap_ax2" rel="nofollow">C52iG-5HaxD2HaxD-TC</a> naming:</p><ul><li>C - Cypress series CPU</li><li>5 - wired interfaces</li><li>2 - wireless interfaces</li><li><p>i - single port power injector without controller</p></li><li>G - gigabit</li><li>5HaxD - has built-in 5GHz high power dual chain wireless card with 802.11ax support.</li><li>2HaxD - has built-in 2.4GHz high power dual chain wireless card with 802.11ax support.</li><li>TC - tower case</li></ul><h1 id="ProductNaming-CloudCoreRouternamingdetails"><span class="mw-headline">CloudCoreRouter naming details</span></h1><p>CloudCoreRouter (short version CCR) naming consists of:</p><p><code>&lt;4 digit number&gt;-&lt;list of ports&gt;-&lt;enclosure type&gt;</code></p><ul><li><strong>4 digit number</strong><ul><li>1st digit stands for series</li><li>2nd (reserved)</li><li>3rd-4th digit indicates the number of total CPU cores on the device</li></ul></li></ul><ul><li><strong>list of ports</strong><ul><li>-&lt;n&gt;<strong>G</strong> number of 1G Ethernet ports</li><li>-&lt;n&gt;<strong>P </strong>number of 1G Ethernet ports with PoE-out</li><li>-&lt;n&gt;<strong>C</strong> number of combo 1G Ethernet/SFP ports</li><li>-&lt;n&gt;<strong>S</strong> number of 1G SFP ports</li><li>-&lt;n&gt;<strong>G+</strong> number of 2.5G Ethernet ports</li><li>-&lt;n&gt;<strong>P+</strong> number of 2.5G Ethernet ports with PoE-out</li><li>-&lt;n&gt;<strong>C+</strong> number of combo 10G Ethernet/SFP+ ports</li><li>-&lt;n&gt;<strong>S+</strong> number of 10G SFP+ ports</li><li>-&lt;n&gt;<strong>XG</strong> number of 5G/10G Ethernet ports</li><li>-&lt;n&gt;<strong>XP</strong> number of 5G/10G Ethernet ports with PoE-out</li><li>-&lt;n&gt;<strong>XC</strong> number of combo 10G/25G SFP+ ports</li><li>-&lt;n&gt;<strong>XS</strong> number of 25G SFP+ ports</li><li>-&lt;n&gt;<strong>Q+</strong> number of 40G QSFP+ ports</li><li>-&lt;n&gt;<strong>XQ</strong> number of 100G QSFP+ ports</li></ul></li></ul><ul><li><strong>enclosure type</strong><span> </span>- same as for<span> </span>RouterBOARD products.</li></ul><h1 id="ProductNaming-CloudRouterSwitchandCloudSmartSwitchnamingdetails"><span class="mw-headline">CloudRouterSwitch and CloudSmartSwitch naming details</span></h1><p>CloudRouterSwitch (short version CRS, RouterOS device) CloudSmartSwitch (short version CSS, SwOS device) naming consists of:</p><p><code>&lt;3 digit number&gt;-&lt;list of ports&gt;-&lt;built-in wireless card&gt;-&lt;enclosure type&gt;</code></p><ul><li><strong>3 digit number</strong><ul><li>1st digit stands for series</li><li>2nd-3rd digit - total number of wired interfaces (Ethernet, SFP, SFP+)</li></ul></li></ul><ul><li><strong>list of ports</strong><ul><li>-&lt;n&gt;<strong>F</strong> number of 100M Ethernet ports</li><li>-&lt;n&gt;<strong>Fi</strong> number of 100M Ethernet ports with PoE-out injector</li><li>-&lt;n&gt;<strong>Fp</strong> number of 100M Ethernet ports with controlled PoE-out</li><li>-&lt;n&gt;<strong>Fr</strong> number of 100M Ethernet ports with Reverse PoE (PoE-in)</li><li>-&lt;n&gt;<strong>G</strong> number of 1G Ethernet ports</li><li>-&lt;n&gt;<strong>P</strong> number of 1G Ethernet ports with PoE-out</li><li>-&lt;n&gt;<strong>C</strong> number of combo 1G Ethernet/SFP ports</li><li>-&lt;n&gt;<strong>S</strong> number of 1G SFP ports</li><li>-&lt;n&gt;<strong>G+</strong> number of 2.5G Ethernet ports</li><li>-&lt;n&gt;<strong>P+</strong> number of 2.5G Ethernet ports with PoE-out</li><li>-&lt;n&gt;<strong>C+</strong> number of combo 10G Ethernet/SFP ports</li><li>-&lt;n&gt;<strong>S+</strong> number of 10G SFP+ ports</li><li>-&lt;n&gt;<strong>XG</strong> number of 5G/10G Ethernet ports</li><li>-&lt;n&gt;<strong>XP</strong> number of 5G/10G Ethernet ports with PoE-out</li><li>-&lt;n&gt;<strong>XC</strong> number of combo 10G/25G SFP+ ports</li><li>-&lt;n&gt;<strong>XS</strong> number of 25G SFP+ ports</li><li>-&lt;n&gt;<strong>Q+</strong> number of 40G QSFP+ ports</li><li>-&lt;n&gt;<strong>XQ</strong> number of 100G QSFP+ ports</li></ul></li></ul><ul><li><strong>built-in wireless card</strong><span> </span>- same as for<span> </span>RouterBOARD products.</li></ul><ul><li><strong>enclosure type</strong><span> </span>- same as for<span> </span>RouterBOARD products.</li></ul>
+                    </div>
+
+                                        
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:54</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

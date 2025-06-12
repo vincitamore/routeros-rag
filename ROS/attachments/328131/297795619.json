@@ -1,0 +1,69 @@
+{
+    "Status": {
+        "Status": {
+            "0": {
+                "alias": "IP:Cloud:Cloud:Public Address",
+                "name": "WAN IP Address",
+                "tab": "IP Cloud Public Address"
+            },
+            "1": {
+                "alias": "IP:DHCP Client:DHCP Client:*4:Status:IP Address",
+                "name": "DHCP Client IP Address"
+            },
+            "2": {
+                "alias": "System:Identity:Identity:Identity",
+                "tab": "System Information",
+                "name": "System Identity"
+            },
+            "3": {
+                "alias": "System:Resources:Resources:Uptime",
+                "name": "System Resources Uptime"
+            },
+            "4": {
+                "alias": "System:RouterBOARD:RouterBOARD:Current Firmware",
+            },
+            "5": {
+                "alias": "System:Clock:Clock:Time:Time",
+            },
+            "6": {
+                "alias": "System:Resources:Resources:CPU Count",
+                "separator": 1
+            },
+            "7": {
+                "alias": "System:Resources:CPU:*0:Load",
+                "name": "CPU 1 Load",
+            },
+			"8": {
+                "alias": "System:Resources:CPU:*1:Load",
+                "name": "CPU 2 Load",
+            },
+			"9": {
+                "alias": "System:Resources:CPU:*2:Load",
+                "name": "CPU 3 Load",
+            },
+			"10": {
+                "alias": "System:Resources:CPU:*3:Load",
+                "name": "CPU 4 Load",
+            },
+            "11": {
+                "alias": "System:Health:System Health:*17:Value",
+                "tab": "Health information",
+                "name": "CPU temperature",
+                "note": "in C°"
+            },
+            "12": {
+                "alias": "IP:Firewall:Filter Rules:*1:Statistics:Rate Graph",
+                "tab": "Traffic Byte Graph"
+            },
+            "13": {
+                "alias": "IP:Firewall:Filter Rules:*1:Statistics:Packet Rate Graph",
+            },
+            "&": {
+                "undefined": {
+                    "title": "Router name for Status Page"
+                }
+            },
+        },
+        "name": "Status Page Example"
+    }
+}

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : CHR ProxMox installation</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Getting-started_328119.html">Getting started</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="18350234.html">Cloud Hosted Router, CHR</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : CHR ProxMox installation
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Oskars K.</span>, last updated by <span class='editor'> Guntis G.</span> on Feb 08, 2024
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <ul><li>Create a new guest with the system disk and other devices as required.</li></ul><ul><li>Then you have to manually upload the CHR disk (in qcow format) on the ProxMox host.</li></ul><ul><li>Use<span> </span><em>scp</em><span> </span>or any other comparable tool as that will use SSH for the upload and it does not require any additional configuration.</li></ul><ul><li>Either copy the file to the server and then manually edit the VM's .conf file or replace the previously created system image file used for booting the guest.</li></ul><ul><li>Local storage on ProxMox is in<span> </span><em>/var/lib/vz</em><span> </span>directory. There should be a subdirectory called<span> </span><em>images</em><span> </span>with a directory for each VM (named by the VM number). You can copy the files directly there.</li></ul><ul><li>To add the existing file to the VM, edit the VM's .conf file directly. Look in<span> </span><em>/etc/pve/qemu-server/</em><span> </span>for a file with the VM number followed by .conf.</li></ul><p><strong>Note:</strong><span> </span>It's a good idea to create a second test VM so you can refer to it's.conf file to make sure you get the syntax right</p><h4 id="CHRProxMoxinstallation-Alternativeapproach"><span class="mw-headline">Alternative approach</span></h4><ul><li>Create Basic VM via ProxMox web GUI.</li><li>Make sure that VM storage is on local storage (this way there will be no need to work with the LVM config side, and the disk image can be moved later on to LVM or other desired storage if needed).</li><li>Log into ProxMox host via SSH and navigate to the VM image directory. Default local storage is located in:<span> </span><em>var/lib/vz/images/(VM_ID)</em></li><li>Via scp, wget or any other tool download CHR raw image (.img file) into this directory.</li><li>Now convert the CHR raw image to qcow2 format using qemu-img tool:</li></ul><pre style="margin-left: 20.0px;">qemu-img convert -f raw -O qcow2 chr-6.40.3.img vm-(VM_ID)-disk-1.qcow2</pre><h4 id="CHRProxMoxinstallation-Bashscriptapproach"><span class="mw-headline">Bash script approach</span></h4><p>If you have access to the ProxMox host then CHR VM can also be created quickly via BASH script. Below is an example of one such script.</p><p>What this script does:</p><ul><li>Stores tmp files in:<span> </span><em>/root/temp</em><span> </span>dir.</li><li>Downloads raw image archive from MikroTik download page.</li><li>Converts image file to qcow format.</li><li>Creates a basic VM that is attached to the MGMT bridge.</li></ul><pre style="margin-left: 20.0px;">#!/bin/bash
+
+#vars
+version=&quot;nil&quot;
+vmID=&quot;nil&quot;
+
+echo &quot;############## Start of Script ##############
+
+## Checking if temp dir is available...&quot;
+if [ -d /root/temp ] 
+then
+    echo &quot;-- Directory exists!&quot;
+else
+    echo &quot;-- Creating temp dir!&quot;
+    mkdir /root/temp
+fi
+# Ask user for version
+echo &quot;## Preparing for image download and VM creation!&quot;
+read -p &quot;Please input CHR version to deploy (6.38.2, 6.40.1, etc):&quot; version
+# Check if image is available and download if needed
+if [ -f /root/temp/chr-$version.img ] 
+then
+    echo &quot;-- CHR image is available.&quot;
+else
+    echo &quot;-- Downloading CHR $version image file.&quot;
+    cd  /root/temp
+    echo &quot;---------------------------------------------------------------------------&quot;
+    wget https://download.mikrotik.com/routeros/$version/chr-$version.img.zip
+    unzip chr-$version.img.zip
+    echo &quot;---------------------------------------------------------------------------&quot;
+fi
+# List already existing VM's and ask for vmID
+echo &quot;== Printing list of VM's on this hypervisor!&quot;
+qm list
+echo &quot;&quot;
+read -p &quot;Please Enter free vm ID to use:&quot; vmID
+echo &quot;&quot;
+# Create storage dir for VM if needed.
+if [ -d /var/lib/vz/images/$vmID ] 
+then
+    echo &quot;-- VM Directory exists! Ideally try another vm ID!&quot;
+    read -p &quot;Please Enter free vm ID to use:&quot; vmID
+else
+    echo &quot;-- Creating VM image dir!&quot;
+    mkdir /var/lib/vz/images/$vmID
+fi
+# Creating qcow2 image for CHR.
+echo &quot;-- Converting image to qcow2 format &quot;
+qemu-img convert \
+    -f raw \
+    -O qcow2 \
+    /root/temp/chr-$version.img \
+    /var/lib/vz/images/$vmID/vm-$vmID-disk-1.qcow2
+# Creating VM
+echo &quot;-- Creating new CHR VM&quot;
+qm create $vmID \
+  --name chr-$version \
+  --net0 virtio,bridge=vmbr0 \
+  --bootdisk virtio0 \
+  --ostype l26 \
+  --memory 256 \
+  --onboot no \
+  --sockets 1 \
+  --cores 1 \
+  --virtio0 local:$vmID/vm-$vmID-disk-1.qcow2
+echo &quot;############## End of Script ##############&quot;
+</pre><h4 id="CHRProxMoxinstallation-Usefultips"><span class="mw-headline">Useful tips</span></h4><ul><li>Useful snippet to clean up the BASH script from Windows formatting that may interfere with the script if it's edited on a Windows workstation:</li></ul><pre style="margin-left: 20.0px;">sed -i -e 's/\r$//' *.sh</pre>
+                    </div>
+
+                                        
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

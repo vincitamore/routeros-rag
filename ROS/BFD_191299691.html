@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : BFD</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Routing_328222.html">Routing</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : BFD
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Māris B.</span>, last updated on Jun 16, 2023
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <h1 id="BFD-Summary">Summary</h1><p>Bidirectional Forwarding Detection (BFD) is a low-overhead and short-duration protocol intended to detect faults in the bidirectional path between two forwarding engines, including physical interfaces, sub-interfaces, data link(s), and to the extent possible the forwarding engines themselves, with potentially very low latency. It operates independently of media, data protocols, and routing protocols.</p><p>BFD is basically a hello protocol for checking bidirectional neighbor reachability. It provides sub-second link failure detection support. BFD is not routing protocol specific, unlike protocol hello timers or such.</p><p>BFD Control packets are transmitted in UDP packets with destination port 3784, BFD also uses port 4784 for multihop paths. The source port is in the range 49152 through 65535. And BFD Echo packets are encapsulated in UDP packets with destination port 3785.</p><p>Standards and Technologies:</p><ul class="bullets" style="text-decoration: none;"><li>RFC 5880 Bidirectional Forwarding Detection (BFD)</li><li>RFC 5881 BFD for IPv4 and IPv6</li><li>RFC 5882 Generic Application of BFD</li><li>RFC 5883 <span class="h1">Bidirectional Forwarding Detection (BFD) for Multihop Paths</span></li></ul><p><br/></p><h1 id="BFD-Featuresnotyetsupported">Features not yet supported</h1><ul><li>echo mode</li><li>enabling BFD for ip route gateways</li><li>authentication</li></ul><p><br/></p><h1 id="BFD-Configuration">Configuration</h1><p>Allowing or forbidding BFD sessions can be done from the <span style="color:var(--ds-text-accent-blue,#0055cc);"><code>/routing bfd configuration </code></span>menu. For example:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/routing bfd configuration
+add interfaces=sfp12 forbid-bfd=yes
+add interfaces=static</pre>
+</div></div><p>Configuration entries are order sensitive, which means that in the example above we are forbidding BFD sessions explicitly on the &quot;sfp12&quot; interface and allowing on the rest of the interfaces belonging to the &quot;static&quot; interface list.</p><p><br/></p><p>To be able to filter multi-hop sessions, <span style="color:var(--ds-text-accent-green,#216e4e);"><code>addresses</code></span> or <code><span style="color:var(--ds-text-accent-green,#216e4e);">address-list</span></code> properties can be used to match the destination, as well as the appropriate VRF, if a session is not running in the &quot;main&quot; VRF.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip firewall address-list
+add address=10.155.255.183 list=bgp_allow_bfd
+add address=10.155.255.217 list=bgp_allow_bfd
+
+/routing bfd configuration
+add addresses=111.111.0.0/16 vrf=vrf1
+add address-list=bgp_allow_bfd</pre>
+</div></div><p><br/></p><p>Everything else that is not explicitly listed in the configuration by default is forbidden.</p><h1 id="BFD-BFDwithBGP">BFD with BGP</h1><p>To enable the use of BFD for BGP sessions, enable <code><span style="color:var(--ds-text-accent-green,#216e4e);">use-bfd</span></code> for required entries in <span style="color:var(--ds-text-accent-blue,#0055cc);"><code>/routing bgp connection</code></span> menu.</p><p>A useful feature is that the BGP session will show that the BFD session for that particular BGP session is down:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@dr_02_BGP_MUM] /routing/bgp/session&gt; print 
+Flags: E - established 
+ 0 E ;;; BFD session down
+     name=&quot;ovpn_test1-1&quot; 
+     remote.address=111.111.11.11@vrf1 .as=65530 .id=10.155.101.217 
+     .capabilities=mp,rr,as4 .hold-time=infinity .messages=40717 
+     .bytes=3436281 .eor=&quot;&quot; 
+     local.address=111.111.11.12@vrf1 .as=555 .id=111.111.11.12 
+     .capabilities=mp,rr,gr,as4 .messages=1 .bytes=19 .eor=&quot;&quot; 
+     output.procid=20 
+     input.procid=20 .filter=bgp-in ebgp 
+     hold-time=infinity use-bfd=yes uptime=3s210ms 
+     last-started=2023-05-19 09:54:04 prefix-count=3853 </pre>
+</div></div><h1 id="BFD-BFDwithOSPF">BFD with OSPF</h1><p>To enable the use of BFD for OSPF neighbors, enable <code><span style="color:var(--ds-text-accent-green,#216e4e);">use-bfd</span></code> for required entries in <span style="color:var(--ds-text-accent-blue,#0055cc);"><code>/routing ospf interface-template</code></span> menu.</p><h1 id="BFD-SessionStatus">Session Status</h1><p>The status of the currently available sessions can be observed from <code><span style="color:var(--ds-text-accent-blue,#0055cc);">/</span><span style="color:var(--ds-text-accent-blue,#0055cc);">routing bfd session</span></code> menu:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@dr_02_BGP_MUM] /routing/bfd/session&gt; print 
+Flags: U - up, I - inactive 
+ 0 I ;;; BFD forbidden for destination address
+     multihop=yes remote-address=10.155.101.183 local-address=&quot;&quot; desired-tx-interval=0ms required-min-rx=0ms 
+     multiplier=0 
+
+ 1   multihop=no remote-address=111.111.11.11%ovpn-out1@vrf1 local-address=111.111.11.12@vrf1 state=down 
+     state-changes=0 desired-tx-interval=200ms required-min-rx=200ms remote-min-rx=1us multiplier=5 
+     packets-rx=0 packets-tx=7674 </pre>
+</div></div><p><br/></p><p>BFD is picking the highest value between the local tx interval and remote minimum rx interval as desired transmit interval. If the session is not established then desired minimum tx interval is set to 1 second.</p><p><br/></p>
+                    </div>
+
+                                        
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : Graphing</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="119144606.html">Diagnostics, monitoring and troubleshooting</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : Graphing
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Guntis G.</span>, last updated by <span class='editor'> Matīss O.</span> on Nov 21, 2023
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <h2 style="" id="Graphing-/*&lt;![CDATA[*/div.rbtoc1747742045986{padding:0px;}div.rbtoc1747742045986ul{margin-left:0px;}div.rbtoc1747742045986li{margin-left:0px;padding-left:0px;}/*]]&gt;*/#Graphing-Summary#Graphing-SummaryConfiguration#Graphing-ConfigurationGeneral#Graphing-Ge"><span class="mw-headline"><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742045986 {padding: 0px;}
+div.rbtoc1747742045986 ul {margin-left: 0px;}
+div.rbtoc1747742045986 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742045986'>
+<ul class='toc-indentation'>
+<li><a href='#Graphing-'></a></li>
+</ul>
+<li><a href='#Graphing-Summary'>Summary</a></li>
+<li><a href='#Graphing-Configuration'>Configuration</a>
+<ul class='toc-indentation'>
+<li><a href='#Graphing-General'>General</a></li>
+<li><a href='#Graphing-Interfacegraphing'>Interface graphing</a></li>
+<li><a href='#Graphing-Queuegraphing'>Queue graphing</a></li>
+<li><a href='#Graphing-Resourcegraphing'>Resource graphing</a></li>
+</ul>
+</li>
+<li><a href='#Graphing-GraphinginWinBox'>Graphing in WinBox</a></li>
+</ul>
+</div></span></h2><h1 id="Graphing-Summary"><span class="mw-headline">Summary</span></h1><p><span style="color:var(--ds-text-accent-lime-bolder,#37471f);">Graphing is a tool to monitor various RouterOS parameters over time and put collected data in graphs.<br/>Watch our <a class="external-link" href="https://youtu.be/FTQEnDZVHNc" rel="nofollow">video about this feature</a>.</span></p><div role="region" aria-label="Warning" class="confluence-information-macro  confluence-information-macro-warning" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-error confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>We suggest not storing graphs on disk for devices with small built-in memory.</p></div></div><p><br/></p><p>The Graphing tool can display graphics for:</p><ul><li>Resource usage (CPU, Memory, and Disk usage)</li><li>Traffic which is passed through an interface</li><li>Traffic which is passed through a simple queue</li></ul><p>Graphing consists of two parts - the first part collects information and the other part displays data on a Web page. To access the graphics, type http://[Router_IP_address]/graphs/ and choose a graphic to display in your Web browser.</p><p class="p1"><span class="s1">Alternatively, look for the menu <strong>≡</strong> (triple bar sign) in the top right corner of the WebFig interface, allowing you to find &quot;graphs&quot;:</span></p><p class="p1"><br/></p><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image confluence-thumbnail" draggable="false" height="250" src="attachments/22773810/224559127.png" data-image-src="attachments/22773810/224559127.png" data-unresolved-comment-count="0" data-linked-resource-id="224559127" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2023-11-14_8-38-7.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="22773810" data-linked-resource-container-version="7" tabindex="0" alt=""></span></p><p>Example of memory graphs:</p><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" draggable="false" height="400" src="attachments/22773810/22773811.png" data-image-src="attachments/22773810/22773811.png" data-unresolved-comment-count="0" data-linked-resource-id="22773811" data-linked-resource-version="2" data-linked-resource-type="attachment" data-linked-resource-default-alias="Graphing-mem.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="22773810" data-linked-resource-container-version="7" tabindex="0" alt=""></span></p><h1 id="Graphing-Configuration"><span class="mw-headline">Configuration</span></h1><h2 id="Graphing-General"><span class="mw-headline">General</span></h2><p><span class="mw-headline">The configuration is done under &quot;/tool graphing&quot; menu, by default, graphing is disabled. You can configure graphing for interfaces, resources, and simple queues in their respective submenus.</span></p><p style=""><strong>Sub-menu:</strong><span> </span><code>/tool graphing</code></p><div class="table-wrap"><table style="margin-left: 11.7535px;" class="confluenceTable"><tbody class=""><tr class=""><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr class=""><td style="vertical-align: top;" class="confluenceTd"><strong>store-every</strong><span> </span>(<em>24hours | 5min | hour</em>; Default:<span> </span><strong>5min</strong>)</td><td style="vertical-align: top;" class="confluenceTd">How often to write collected data to system drive.</td></tr><tr class=""><td style="vertical-align: top;" class="confluenceTd"><strong>page-refresh</strong><span> </span>(<em>integer | never</em>; Default:<span> </span><strong>300</strong>)</td><td style="vertical-align: top;" class="confluenceTd">How often graph page is refreshed</td></tr></tbody></table></div><p><span class="mw-headline"> </span></p><h2 style="" id="Graphing-Interfacegraphing"><span class="mw-headline">Interface graphing</span></h2><p style="">Sub-menu allows configuration for which interface graphing will collect bandwidth usage data.</p><p style=""><strong>Sub-menu:</strong><span> </span><code>/tool graphing interface</code></p><div class="table-wrap"><table style="margin-left: 11.7535px;" class="confluenceTable"><tbody class=""><tr class=""><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr class=""><td style="vertical-align: top;" class="confluenceTd"><strong>allow-address</strong><span> </span>(<em>IP/IPv6 prefix</em>; Default:<span> </span><strong>0.0.0.0/0</strong>)</td><td style="vertical-align: top;" class="confluenceTd">IP address range from which is allowed to access graphing information</td></tr><tr class=""><td style="vertical-align: top;" class="confluenceTd"><strong>comment</strong><span> </span>(<em>string</em>; Default:<span> </span>)</td><td style="vertical-align: top;" class="confluenceTd">Description of current entry</td></tr><tr class=""><td style="vertical-align: top;" class="confluenceTd"><strong>disabled</strong><span> </span>(<em>yes | no</em>; Default:<span> </span><strong>no</strong>)</td><td style="vertical-align: top;" class="confluenceTd">Defines whether item is used</td></tr><tr class=""><td style="vertical-align: top;" class="confluenceTd"><strong>interface</strong><span> </span>(<em>all | interface name</em>; Default:<span> </span><strong>all</strong>)</td><td style="vertical-align: top;" class="confluenceTd">Defines which interface will be monitored.<span> </span><strong>all</strong><span> </span>means that all interfaces on router will be monitored.</td></tr><tr class=""><td style="vertical-align: top;" class="confluenceTd"><strong>store-on-disk</strong><span> </span>(<em>yes | no</em>; Default:<span> </span><strong>yes</strong>)</td><td style="vertical-align: top;" class="confluenceTd">Defines whether to store collected information on system drive.</td></tr></tbody></table></div><p><br/></p><h2 style="" id="Graphing-Queuegraphing"><span class="mw-headline">Queue graphing</span></h2><p style="">Sub-menu allows configuration for which simple queue graphing will collect bandwidth usage data.</p><p style=""><strong>Sub-menu:</strong><span> </span><code>/tool graphing queue</code></p><div class="table-wrap"><table style="margin-left: 11.7535px;" class="confluenceTable"><tbody class=""><tr class=""><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr class=""><td style="vertical-align: top;" class="confluenceTd"><strong>allow-address</strong><span> </span>(<em>IP/IPv6 prefix</em>; Default:<span> </span><strong>0.0.0.0/0</strong>)</td><td style="vertical-align: top;" class="confluenceTd">IP address range from which is allowed to access graphing information</td></tr><tr class=""><td style="vertical-align: top;" class="confluenceTd"><strong>allow-target</strong><span> </span>(<em>yes | no</em>; Default:<span> </span><strong>yes</strong>)</td><td style="vertical-align: top;" class="confluenceTd">Whether to allow access to graphs from queue's target-address</td></tr><tr class=""><td style="vertical-align: top;" class="confluenceTd"><strong>comment</strong><span> </span>(<em>string</em>; Default:<span> </span>)</td><td style="vertical-align: top;" class="confluenceTd">Description of current entry</td></tr><tr class=""><td style="vertical-align: top;" class="confluenceTd"><strong>disabled</strong><span> </span>(<em>yes | no</em>; Default:<span> </span><strong>no</strong>)</td><td style="vertical-align: top;" class="confluenceTd">Defines whether item is used</td></tr><tr class=""><td style="vertical-align: top;" class="confluenceTd"><strong>simple-queue</strong><span> </span>(<em>all | queue name</em>; Default:<span> </span><strong>all</strong>)</td><td style="vertical-align: top;" class="confluenceTd">Defines which queues will be monitored.<span> </span><strong>all</strong><span> </span>means that all queues on router will be monitored.</td></tr><tr class=""><td style="vertical-align: top;" class="confluenceTd"><strong>store-on-disk</strong><span> </span>(<em>yes | no</em>; Default:<span> </span><strong>yes</strong>)</td><td style="vertical-align: top;" class="confluenceTd">Defines whether to store collected information on system drive.</td></tr></tbody></table></div><p style=""><br/></p><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p><span style="color:var(--ds-text-accent-lime-bolder,#37471f);"><span> </span>If simple queue has target-address set to 0.0.0.0/0 everyone will be able to access queue graphs even if allow address is set to specific address. This happens because by default queue graphs are accessible also from the target address.</span></p></div></div><p><br/></p><h2 style="" id="Graphing-Resourcegraphing"><span class="mw-headline">Resource graphing</span></h2><p style="">Sub-menu allows to enable graphing of system resources. Graphing collects data of:</p><ul style=""><li>CPU usage</li><li>Memory usage</li><li>Disk usage</li></ul><p><strong>Sub-menu:</strong><span> </span><code>/tool graphing resource</code></p><div class="table-wrap"><table style="margin-left: 11.7535px;" class="confluenceTable"><tbody class=""><tr class=""><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr class=""><td style="vertical-align: top;" class="confluenceTd"><strong>allow-address</strong><span> </span>(<em>IP/IPv6 prefix</em>; Default:<span> </span><strong>0.0.0.0/0</strong>)</td><td style="vertical-align: top;" class="confluenceTd">IP address range from which is allowed to access graphing information</td></tr><tr class=""><td style="vertical-align: top;" class="confluenceTd"><strong>comment</strong><span> </span>(<em>string</em>; Default:<span> </span>)</td><td style="vertical-align: top;" class="confluenceTd">Description of current entry</td></tr><tr class=""><td style="vertical-align: top;" class="confluenceTd"><strong>disabled</strong><span> </span>(<em>yes | no</em>; Default:<span> </span><strong>no</strong>)</td><td style="vertical-align: top;" class="confluenceTd">Defines whether item is used</td></tr><tr class=""><td style="vertical-align: top;" class="confluenceTd"><strong>store-on-disk</strong><span> </span>(<em>yes | no</em>; Default:<span> </span><strong>yes</strong>)</td><td style="vertical-align: top;" class="confluenceTd">Defines whether to store collected information on system drive</td></tr></tbody></table></div><h1 id="Graphing-GraphinginWinBox"><span style="font-size: 20.0px;letter-spacing: -0.008em;">Graphing in WinBox</span></h1><p>Winbox allows viewing the same collected information as on the web page. Open<span> </span><strong>Tools-&gt;Graphing</strong><span> </span>window. Double click on the entry of which you want to see graphs.</p><p>The image below shows WinBox graphs of memory usage:</p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/22773810/22773814.png" data-image-src="attachments/22773810/22773814.png" data-unresolved-comment-count="0" data-linked-resource-id="22773814" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="Graphing-mem-winbox.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="22773810" data-linked-resource-container-version="7" tabindex="0" alt=""></span></p><p><br/></p>
+                    </div>
+
+                                                            <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/22773810/22773813.png">Graphing-mem.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/22773810/22773811.png">Graphing-mem.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/22773810/22773814.png">Graphing-mem-winbox.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/22773810/224559127.png">image-2023-11-14_8-38-7.png</a> (image/png)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:54</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

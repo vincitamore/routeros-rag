@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : Disks</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Hardware_13500445.html">Hardware</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : Disks
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Deniss M.</span>, last updated by <span class='editor'> Jānis Bērziņš</span> on Apr 10, 2025
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><span class="mw-headline"><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742044143 {padding: 0px;}
+div.rbtoc1747742044143 ul {margin-left: 0px;}
+div.rbtoc1747742044143 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742044143'>
+<ul class='toc-indentation'>
+<li><a href='#Disks-Summary'>Summary</a></li>
+<li><a href='#Disks-Properties'>Properties</a></li>
+<li><a href='#Disks-Flags'>Flags</a></li>
+<li><a href='#Disks-Settings'>Settings</a></li>
+<li><a href='#Disks-Examples'>Examples</a>
+<ul class='toc-indentation'>
+<li><a href='#Disks-Formattingattachedstorageunit-Simple'>Formatting attached storage unit - Simple</a></li>
+<li><a href='#Disks-Formattingattachedstorageunit-Detailed'>Formatting attached storage unit - Detailed</a></li>
+<li><a href='#Disks-Creatingmultiplediskpartitions'>Creating multiple disk partitions</a></li>
+<li><a href='#Disks-Web-Proxycacheconfigurationexample'>Web-Proxy cache configuration example</a></li>
+<li><a href='#Disks-Logondiskconfigurationexample'>Log on disk configuration example</a></li>
+<li><a href='#Disks-AllocateRAMtofolder'>Allocate RAM to folder</a></li>
+<li><a href='#Disks-Testdiskperformance'>Test disk performance</a></li>
+<li><a href='#Disks-Swapspace'>Swap space</a>
+<ul class='toc-indentation'>
+<li><a href='#Disks-Swappartition'>Swap partition</a></li>
+<li><a href='#Disks-Swapfile'>Swap file</a></li>
+</ul>
+</li>
+<li><a href='#Disks-Mountimages'>Mount images</a></li>
+</ul>
+</li>
+</ul>
+</div></span></p><h1 id="Disks-Summary"><span class="mw-headline">Summary</span></h1><p><span class="mw-headline"><strong>Sub-menu:</strong> <code>/disk</code></span></p><p>This menu will list all attached storage devices, presuming that they are supported and in working condition. This is especially useful for RouterBOARD devices with SD/CF/USB/SATA/NVMe slots and x86 systems with additional dedicated storage drives - as the built-in storage is quite small, an external drive comes in very handy when you want a big User Manager database, proxy cache or possibly SMB shares on your router.<br/><br/></p><p>You can add as many external or secondary drives as you want, and select any number of them for each of the mentioned feature usages. For example, User Manager could be used on 3 disks, one of them would be the active database, and the rest would be backups. You can then add a fourth disk, copy the active data to it - unmount - unplug it - and move to another server, to keep using the actual database. This means migration and backup are made easy!</p><p class="auto-cursor-target">Disks carry names where they are physically connected.</p><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p><strong><a href="ROSE-storage_259031065.html">ROSE-storage</a> -</strong><span class="mw-headline"> package adds additional enterprise data center functionality to RouterOS. <br/>Current manual page does not include additional features included in </span><strong><a href="ROSE-storage_259031065.html">ROSE-storage</a></strong><span class="mw-headline"> package.<br/></span></p></div></div><div role="region" aria-label="Warning" class="confluence-information-macro  confluence-information-macro-warning" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-error confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p><strong>Always use <code>/disk eject-drive</code> before physically removing any disks from your RouterOS device to prevent data loss!</strong></p></div></div><h1 id="Disks-Properties"><span class="mw-headline">Properties</span></h1><div class="table-wrap"><table class="relative-table wrapped confluenceTable" style="width: 100.0%;"><colgroup><col style="width: 14.5765%;"/><col style="width: 85.4235%;"/></colgroup><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>eject-drive</strong> ()</td><td class="confluenceTd">Safely unmounts (ejects) drive of your selection by using &quot;slot&quot; that is assigned to it. After issuing this command it can be removed from host device.</td></tr><tr><td class="confluenceTd"><strong>format-drive</strong> ()</td><td class="confluenceTd">Command to initiate disk formatting process. Contains additional properties of its own. Such as &quot;file-system&quot; and &quot;label&quot;.<ul><li>select disk (slot) that should be formatted</li><li><em>file-system</em> ('exfat', 'ext4', 'fat32' or 'wipe') - Format disk with type ExFAT, FAT32 or EXT4 or securely wipe all data</li><li><em>label</em> </li><li>mbr-partition-table - make mbr partition table</li></ul></td></tr><tr><td class="confluenceTd"><strong>reset-counters<br/></strong></td><td class="confluenceTd">Resets disk (slot) statistics</td></tr><tr><td class="confluenceTd"><strong>monitor-traffic<br/></strong></td><td class="confluenceTd">Check real time disk performance and health stats</td></tr><tr><td class="confluenceTd"><strong>test<br/></strong></td><td class="confluenceTd"><p>allows performing performance tests of selected device (Available from RouterOS 7.16)</p><ul><li><em>disk - </em>device or devices for test</li><li><em>direction </em>- ('read','write') </li><li>duration - (int) </li><li>pattern - ('random', 'sequential')</li><li>thread-count - (int)</li><li>block-size - size of block to be used for testing</li><li>type - ('device', 'filesystem')</li></ul></td></tr><tr><td class="confluenceTd"><strong>mount-read-only</strong></td><td class="confluenceTd"><p>Sets the mounted disk in read only mode when set to <em>yes</em>. </p></td></tr><tr><td class="confluenceTd"><strong>mount-point-template</strong></td><td class="confluenceTd"><div class="content-wrapper"><p>Sets the mounting point for the file system. It is possible to set the mount point as the following parameters based on the disk:</p><ul><li data-uuid="ece52128-572b-442b-ba39-d3ed990619bf">[slot] <em>(default)</em> - sets the mount point as the slot name.</li><li data-uuid="d0c080e6-3477-4c69-9717-119fca27ef83">[model] - sets the mount point as the device's model name.</li><li data-uuid="c8e8bc86-514b-47a7-9bf4-e7eca5dc862d">[serial] - sets the mount point as the device serial</li><li data-uuid="0b37636d-1655-4d61-9d18-0a2b61175c5c">[fw-version] - sets the mount point as the device's firmware version.</li><li data-uuid="5e54e32c-fb5f-48d4-8d10-385ae53cace1">[fs-label] - sets the mount point as the device's file system label.</li><li data-uuid="f1705892-0bba-44c0-91a5-4633ef811a0c">[fs-uuid] - sets the mount point as the device's UUID</li><li data-uuid="1b9bac35-2a28-41c0-8f0d-579f1648155f">[fs] - sets the mount point as the device's file system</li></ul><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/disk set nvme1 mount-point-template=&quot;[model]&quot;</pre>
+</div></div><br/><p>Additionally, it is possible to combine multiple variables to create a single mount point:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/disk set nvme1 mount-point-template=&quot;[model]-[fs]&quot;</pre>
+</div></div><p><br/></p></div></td></tr></tbody></table></div><h1 id="Disks-Flags"><span class="mw-headline">Flags</span></h1><div class="table-wrap"><table class="relative-table wrapped confluenceTable" style="width: 100.0%;"><colgroup><col style="width: 14.5816%;"/><col style="width: 85.4184%;"/></colgroup><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>X - disabled</strong></td><td class="confluenceTd"><p>Disabled device</p></td></tr><tr><td class="confluenceTd"><strong>E - empty</strong></td><td class="confluenceTd"><p>Empty slot</p></td></tr><tr><td class="confluenceTd"><strong>B - BLOCK-DEVICE</strong></td><td class="confluenceTd"><p>The &quot;B - BLOCK-DEVICE&quot;- Flag means that this device works using blocks for input/output operations. In the context of RouterOS, its distinction is crucial, as it helps determine whether a device is functioning as a data carrier or simply providing information about the disk layout structure. This difference becomes important when considering the extender with the device behind it. If a device is marked with the letter &quot;B&quot;, this indicates its ability to be used as storage or memory. In contrast, devices that do not have a &quot;B&quot; mark are designed primarily to understand the structure of the disk.</p><p>This allows to quickly recognize the presence of a PCIe or SAS expander, as well as detect the presence of drives in the first expander. In addition, it allows you to estimate the speed of the connection to which each device is connected.</p><p>However, the most notable benefit of the &quot;B&quot; flag is its ability to instantly indicate whether a device can be formatted or used for RAID purposes.</p></td></tr><tr><td class="confluenceTd"><strong>M - mounted</strong></td><td class="confluenceTd">Mounted partition</td></tr><tr><td class="confluenceTd"><strong>F - formatting</strong></td><td class="confluenceTd">The device is currently in the formatting process</td></tr><tr><td class="confluenceTd"><strong>p - partition</strong></td><td class="confluenceTd">The device has a partition</td></tr><tr><td class="confluenceTd"><strong>f - raid-member-failed</strong></td><td rowspan="10" style="vertical-align: middle;" class="confluenceTd">These options are used with the <a href="ROSE-storage-old_158367841.html">ROSE</a> package.</td></tr><tr><td class="confluenceTd"><strong>r - raid-member</strong></td></tr><tr><td class="confluenceTd"><strong>c - encrypted</strong></td></tr><tr><td class="confluenceTd"><strong>g - guid-partition-table</strong></td></tr><tr><td class="confluenceTd"><strong>t - nvme-tcp-export</strong></td></tr><tr><td class="confluenceTd"><strong>i - iscsi-export</strong></td></tr><tr><td class="confluenceTd"><strong>s - smb-export</strong></td></tr><tr><td class="confluenceTd"><strong>n - nfs-export</strong></td></tr><tr><td class="confluenceTd"><strong>O - tcg-opal-self-encryption-enabled</strong></td></tr><tr><td class="confluenceTd"><strong>o - tcg-opal-self-encryption-supported</strong></td></tr></tbody></table></div><h1 id="Disks-Settings">Settings</h1><div class="table-wrap"><table class="wrapped confluenceTable"><colgroup><col/><col/></colgroup><tbody><tr><th scope="col" class="confluenceTh"><span style="color:var(--ds-text-accent-purple-bolder,#352c63);">Property<br/></span></th><th scope="col" class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong><span style="color:var(--ds-text-accent-purple-bolder,#352c63);">auto-smb-sharing</span></strong><span style="color:var(--ds-text-accent-purple-bolder,#352c63);"> (yes | no; Default: no)</span></td><td class="confluenceTd">Enables dynamic SMB shares <span style="color:var(--ds-text-accent-purple-bolder,#352c63);">when new disk/partition item is added in &quot;/disk&quot;</span></td></tr><tr><td class="confluenceTd"><strong><span style="color:var(--ds-text-accent-purple-bolder,#352c63);">auto-smb-user </span></strong><span style="color:var(--ds-text-accent-purple-bolder,#352c63);">(list of strings; Default: )</span><strong><span style="color:var(--ds-text-accent-purple-bolder,#352c63);"> </span></strong></td><td class="confluenceTd"><span style="color:var(--ds-text-accent-purple-bolder,#352c63);">Default value for smb-sharing/smb-user setting, when new disk/partition item is added in &quot;/disk&quot;</span></td></tr><tr><td class="confluenceTd"><strong><span style="color:var(--ds-text-accent-purple-bolder,#352c63);">auto-media-share </span></strong><span style="color:var(--ds-text-accent-purple-bolder,#352c63);">(yes | no; Default: no)</span></td><td class="confluenceTd"><span style="color:var(--ds-text-accent-purple-bolder,#352c63);">Enables media dynamically when new disk/partition item is added in &quot;/disk&quot;</span></td></tr><tr><td class="confluenceTd"><strong><span style="color:var(--ds-text-accent-purple-bolder,#352c63);">auto-media-interface </span></strong><span style="color:var(--ds-text-accent-purple-bolder,#352c63);">(list of strings; Default: )</span></td><td class="confluenceTd"><span style="color:var(--ds-text-accent-purple-bolder,#352c63);">Interface that will be used in dynamic instance for ip/media when new disk/partition item is added in &quot;/disk&quot;</span></td></tr><tr><td class="confluenceTd"><strong><span style="color:var(--ds-text-accent-purple-bolder,#352c63);">default-mount-point-template</span></strong><span style="color:var(--ds-text-accent-purple-bolder,#352c63);"> (string, Default: )</span></td><td class="confluenceTd"><span style="color:var(--ds-text-accent-purple-bolder,#352c63);">Sets the default mount point template for each item added in &quot;/disk&quot;</span></td></tr></tbody></table></div><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><p class="title conf-macro-render">Notes</p><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p><span>With &quot;auto-smb-sharing=yes&quot; and &quot;/ip smb share enabled=auto&quot; SMB server gets enabled when a storage device is physically plugged in</span></p></div></div><h1 id="Disks-Examples">Examples</h1><h2 id="Disks-Formattingattachedstorageunit-Simple"><span class="mw-headline">Formatting attached storage unit - Simple</span></h2><p><span class="mw-headline">1. Disk is attached, and already mounted automatically by the system.</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; disk print
+Flags: B - BLOCK-DEVICE; M, F - FORMATTING
+Columns: SLOT, MODEL, SERIAL, INTERFACE, SIZE, FREE, FS
+#    SLOT  MODEL           SERIAL            INTERFACE                  SIZE           FREE  FS
+0 BM usb1  USB Flash Disk  FBA0911260071572  USB 2.00 480Mbps  2 004 877 312  1 921 835 008  ext4</pre>
+</div></div><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; /file print
+ # NAME                        TYPE          SIZE CREATION-TIME
+ 0 skins                       directory          jan/01/1970 03:00:01
+ 1 pub                         directory          feb/04/1970 21:31:40
+ 2 usb1                        disk               mar/07/2022 14:05:16</pre>
+</div></div><p>2. Formatting the disk, in either of two supported file-systems (ext4 or fat32). </p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; /disk format-drive usb1 file-system=ext4 mbr-partition-table=no
+  formatted: 100%</pre>
+</div></div><p>3. It's done! Drive is formatted and should be automatically mounted after formatting process is finished. </p><h2 id="Disks-Formattingattachedstorageunit-Detailed"><span class="mw-headline">Formatting attached storage unit - Detailed</span></h2><p>Let us presume that you have added a storage device to your device that is running RouterOS. System will try to automatically mount it and in such case if storage is formatted in a supported file-system and partition record, it will be found in &quot;/files&quot; menu moments after you plugged it in to the host device.</p><p>If not, here is what you have to do.</p><p>1. Do a quick print of disk menu, to make sure that router sees the attached storage.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; disk print
+Flags: B - BLOCK-DEVICE; M, F - FORMATTING
+Columns: SLOT, MODEL, SERIAL, INTERFACE, SIZE, FREE, FS
+#    SLOT  MODEL           SERIAL            INTERFACE                  SIZE           FREE  FS
+0 BM usb1  USB Flash Disk  FBA0911260071572  USB 2.00 480Mbps  2 004 877 312  1 921 835 008  ext4</pre>
+</div></div><p>We can here see that system sees one storage drive and also that it is formatted with a known file-system type.</p><p>When running file menu print-out we also see that is mounted. </p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; file print
+ # NAME     TYPE    SIZE CREATION-TIME
+ 0 usb1     disk         mar/07/2022 14:05:16
+ 1 skins    directory    jan/01/1970 03:00:01
+ 2 pub      directory    feb/04/1970 21:31:40</pre>
+</div></div><p><br/></p><p>2. To formatting drive - we issue command with previously know id or name(slot) and with desired file-system (ext4 or fat32), we can also assign label to device as I did in this example and make mbr partition table</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; /disk format-drive usb1 file-system=ext4 label=usb-flash mbr-partition-table=yes
+  formatted: 100%</pre>
+</div></div><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p><strong>Note: </strong>In printout, you can see that there is a progress percentage counter in formatting process. For larger storage drives, it might take longer for this process to finish, so be patient.</p></div></div><h2 class="auto-cursor-target" id="Disks-Creatingmultiplediskpartitions">Creating multiple disk partitions</h2><p class="auto-cursor-target">If multiple GPT partitions are needed format drive without partition table and add them manually:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; /disk format-drive usb1 file-system=ext4 label=usb-flash mbr-partition-table=no
+  formatted: 100%</pre>
+</div></div><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; /disk add type=partition parent=usb1 partition-size=200M
+[admin@MikroTik] &gt; /disk add type=partition parent=usb1 partition-size=500M
+[admin@MikroTik] &gt; /disk add type=partition parent=usb1 slot=usb1-last-partition</pre>
+</div></div><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p><strong>Note: </strong>Slot (partition or disk name) is assumed automatically, but can be overwritten by using slot parameter. <br/>If partition size is not used all available space will be used from last partition.<br/>To offset partition start &quot;partition-offset&quot; parameter can be used.</p></div></div><h2 id="Disks-Web-Proxycacheconfigurationexample"><span class="mw-headline">Web-Proxy cache configuration example</span></h2><p><span class="mw-headline">Enter proxy cache path under IP -&gt; Proxy menu and web proxy store is automatically created in files menu. If a non-existent directory path is used, an additional sub-directory is also created automatically. </span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt;  /ip proxy set cache-path=usb1/cache-n-db/proxy/
+
+...
+
+[admin@MikroTik] &gt;  /file print
+ # NAME                                              TYPE                             SIZE CREATION-TIME       
+ 0 skins                                             directory                             mar/02/2015 18:56:23
+ 1 sys-note.txt                                      .txt file                        23   jul/03/2015 11:40:48
+ 2 usb1                                             disk                                  jul/03/2015 11:35:05
+ 3 usb1/lost+found                                  directory                             jul/03/2015 11:34:56
+ 4 usb1/cache-n-db                                  directory                             jul/03/2015 11:41:54
+ 4 usb1/cache-n-db/proxy                            web-proxy store                       jul/03/2015 11:42:09</pre>
+</div></div><h2 id="Disks-Logondiskconfigurationexample"><span class="mw-headline">Log on disk configuration example</span></h2><p><span class="mw-headline">When configuring logging on disk make sure that you create directories in which you want to store the log files manually, as non-existent directories will NOT be automatically created in this case. </span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt;  /system logging action set disk disk-file-name=/disk1/log
+
+...
+
+[admin@MikroTik] &gt;  /file print where name~&quot;disk1/log&quot;
+ # NAME                                              TYPE                             SIZE CREATION-TIME       
+ 0 disk1/log                                        directory                             jul/03/2015 12:44:09
+ 1 disk1/log/syslog.0.txt                           .txt file                         160 jul/03/2015 12:44:11</pre>
+</div></div><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p><strong>Note:</strong> Logging topics such as firewall, web-proxy and some other topics that tend to save a large amount or rapid printing of logs on system NAND disk might cause it to wear out faster, so using some attached storage or remote logging is recommended in this case or save data in RAM folder</p></div></div><h2 id="Disks-AllocateRAMtofolder"><span class="mw-headline">Allocate RAM to folder</span></h2><p><span class="mw-headline">It is possible to add folders linked to RAM. Folders will be emptied on reboot or power loss.<br/>RAM will be filled up to tmpfs-max-size and if this variable in not provided - up to 1/2 from available RAM.<br/></span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt;  /disk add type=tmpfs tmpfs-max-size=100M
+[admin@MikroTik] &gt; file print 
+Columns: NAME, TYPE, SIZE, CREATION-TIME
+#  NAME            TYPE       SIZE             CREATION-TIME       
+0  tmp1             disk     100 003 840        dec/12/2022 11:01:48</pre>
+</div></div><h2 id="Disks-Testdiskperformance"><span class="mw-headline">Test disk performance<br/></span></h2><p><br/></p><div role="region" aria-label="Warning" class="confluence-information-macro  confluence-information-macro-warning" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-error confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Disk performance tests may slowly degrade disk health</p><p>On write tests all files and file systems on disks will be destroyed</p></div></div><p><br/></p><p><span class="mw-headline">Starting from 7.16 to run disk performance tests. Disks has to be disabled or without mountable file system (unformatted).<br/>Check available disks, if disk is already mounted - disable it.<br/><br/></span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; disk print
+Flags: B - BLOCK-DEVICE; M - MOUNTED
+Columns: SLOT, MODEL, SERIAL, INTERFACE, SIZE, FREE, FS
+#    SLOT  MODEL             SERIAL         INTERFACE                    SIZE            FREE  FS
+0 BM usb1  JMicron External  DD56419883891  USB 3.10 5000Mbps  64 023 257 088  62 692 188 160  ext4
+
+[admin@MikroTik] &gt; disk disable usb1
+
+[admin@MikroTik] &gt; disk test disk=usb2 pattern=sequential  type=device thread-count=4 block-size=4K direction=write
+Columns: SEQ, RATE, IOPS, DISK, TYPE, PATTERN, DIR, BSIZE, THREADS
+SEQ  RATE          IOPS  DISK  TYPE    PATTERN     DIR    BSIZE  THREADS
+0    1622.5Mbps  49 516  usb2  device  sequential  write   4096        4
+1    26.2Mbps       800  usb2  device  sequential  write   4096        4
+2    33.0Mbps     1 008  usb2  device  sequential  write   4096        4
+3    11.7Mbps       360  usb2  device  sequential  write   4096        4
+4    28.5Mbps       872  usb2  device  sequential  write   4096        4
+5    34.6Mbps     1 056  usb2  device  sequential  write   4096        4
+6    33.8Mbps     1 032  usb2  device  sequential  write   4096        4
+TOT  255.7Mbps    7 806  usb2  device  sequential  write   4096        4
+
+
+
+</pre>
+</div></div><h2 id="Disks-Swapspace">Swap space</h2><p>It is possible to add a swap space to your RouterOS device. This is useful when using <a href="https://help.mikrotik.com/docs/spaces/ROS/pages/84901929/Container" rel="nofollow">containers</a> on RouterOS to be able to run containers that require much more RAM than you RouterOS device has. You can use a disk (or a partition) as a swap space or file as as swap space.</p><h3 id="Disks-Swappartition">Swap partition</h3><p>Swap partition requires you to have a disk (or partition) connected to your RouterOS device. All the disk (or partition) will be used as swap space and cannot be used for other purposes. Make sure you a high speed disk for your swap partition. Using a swap partition has a better performance than using a swap file.   |</p><p>To use a disk (or partition) as a swap partition, you can use the following command:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/disk set disk1 swap=yes   </pre>
+</div></div><p>Make sure you change `disk1` to your correct disk's name! </p><h3 id="Disks-Swapfile">Swap file</h3><p>Swap file requires you to have a disk that is formatted with a file system, for example, <a href="https://help.mikrotik.com/docs/spaces/ROS/pages/295239711/Btrfs" rel="nofollow">Btrfs</a>. Compared to the swap partition option, the whole disk (or partition) will not be used as swap space, only the swap file's size will be used on your disk (or partition). Using a swap file will have a lower performance than using a swap partition. </p><p>To create a swap file on your existing file system , you can use the following command:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/disk add type=file file-path=disk1/swapfile file-size=1G swap=yes</pre>
+</div></div><p>Make sure you change `disk1` to your correct path, where your disk is mounted. </p><p><br/></p><h2 id="Disks-Mountimages">Mount images</h2><p>RouterOS can also mount <strong>.iso </strong>and <strong>.squashfs</strong> images directly. To mount an image, use the following command:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/disk add type=file file-path=disk1/mycopy.iso </pre>
+</div></div><p>Make sure you change `disk1/mycopy.iso` to your correct path, where the image is located.</p>
+                    </div>
+
+                                        
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:54</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

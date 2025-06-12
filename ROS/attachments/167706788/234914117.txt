@@ -1,0 +1,238 @@
+# 2024-02-09 08:47:35 by RouterOS 7.13.4
+# software id = ES9Q-80CK
+#
+            script: #| Welcome to RouterOS!
+                    #|    1) Set a strong router password in the System > Users menu
+                    #|    2) Upgrade the software in the System > Packages menu
+                    #|    3) Enable firewall on untrusted networks
+                    #| -----------------------------------------------------------------------------
+                    #| LAN:
+                    #|     IP on ether1:    192.168.88.1/24;
+                    
+                    :global defconfMode;
+                    :log info "Starting defconf script";
+                    #-------------------------------------------------------------------------------
+                    # Apply configuration.
+                    # these commands are executed after installation or configuration reset
+                    #-------------------------------------------------------------------------------
+                    :if ($action = "apply") do={
+                      # wait for interfaces
+                      :local count 0;
+                      :while ([/interface ethernet find] = "") do={
+                        :if ($count = 30) do={
+                          :log warning "DefConf: Unable to find ethernet interfaces";
+                          /quit;
+                        }
+                        :delay 1s; :set count ($count +1); 
+                      };
+                    /ip address add address=192.168.88.1/24 interface=ether1 comment="defconf";
+                    }
+                    #-------------------------------------------------------------------------------
+                    # Revert configuration.
+                    # these commands are executed if user requests to remove default configuration
+                    #-------------------------------------------------------------------------------
+                    :if ($action = "revert") do={
+                     :if (!($keepUsers = "yes")) do={
+                       /user set admin password=""
+                       :delay 0.5
+                       /user expire-password admin 
+                     }
+                     /system routerboard mode-button set enabled=no
+                     /system routerboard mode-button set on-event=""
+                     /system script remove [find comment~"defconf"]
+                     /system health settings set fan-full-speed-temp=65C fan-target-temp=58C fan-min-speed-percent=0% fan-control-interval=30s
+                     /ip firewall filter remove [find comment~"defconf"]
+                     /ipv6 firewall filter remove [find comment~"defconf"]
+                     /ipv6 firewall address-list remove [find comment~"defconf"]
+                     /ip firewall nat remove [find comment~"defconf"]
+                     /interface list member remove [find comment~"defconf"]
+                     /interface detect-internet set detect-interface-list=none
+                     /interface detect-internet set lan-interface-list=none
+                     /interface detect-internet set wan-interface-list=none
+                     /interface detect-internet set internet-interface-list=none
+                     /interface list remove [find comment~"defconf"]
+                     /tool mac-server set allowed-interface-list=all
+                     /tool mac-server mac-winbox set allowed-interface-list=all
+                     /ip neighbor discovery-settings set discover-interface-list=!dynamic
+                       :local o [/ip dhcp-server network find comment="defconf"]
+                       :if ([:len $o] != 0) do={ /ip dhcp-server network remove $o }
+                       :local o [/ip dhcp-server find name="defconf" !disabled]
+                       :if ([:len $o] != 0) do={ /ip dhcp-server remove $o }
+                       /ip pool {
+                         :local o [find name="default-dhcp" ranges=192.168.88.10-192.168.88.254]
+                         :if ([:len $o] != 0) do={ remove $o }
+                       }
+                       :local o [/ip dhcp-client find comment="defconf"]
+                       :if ([:len $o] != 0) do={ /ip dhcp-client remove $o }
+                     /ip dns {
+                       set allow-remote-requests=no
+                       :local o [static find comment="defconf"]
+                       :if ([:len $o] != 0) do={ static remove $o }
+                     }
+                     /ip address {
+                       :local o [find comment="defconf"]
+                       :if ([:len $o] != 0) do={ remove $o }
+                     }
+                     :foreach iface in=[/interface ethernet find] do={
+                       /interface ethernet set $iface name=[get $iface default-name]
+                     }
+                     /interface bridge port remove [find comment="defconf"]
+                     /interface bridge remove [find comment="defconf"]
+                     /interface bonding remove [find comment="defconf"]
+                     /interface wireless cap set enabled=no interfaces="" caps-man-addresses=""
+                      /caps-man manager set enabled=no
+                      /caps-man manager interface remove [find comment="defconf"]
+                      /caps-man manager interface set [ find default=yes ] forbid=no
+                      /caps-man provisioning remove [find comment="defconf"]
+                      /caps-man configuration remove [find comment="defconf"]
+                      /caps-man security remove [find comment="defconf"]
+                    }
+                    :log info Defconf_script_finished;
+                    :set defconfMode;
+                    
+  caps-mode-script: #| CAP configuration
+                    #|
+                    #|   * Wireless interfaces are set to be managed by CAPsMAN.
+                    #|   * All ethernet interfaces and CAPsMAN managed interfaces are bridged.
+                    #|   * DHCP client is set on bridge interface.
+                    #|   * If printed on the sticker, "admin" user is protected by password.
+                    
+                    :global action;
+                    
+                    # bridge port name
+                    :local brName  "bridgeLocal";
+                    :local logPref "defconf:";
+                    :local wirelessMenu "wireless"
+                    :local usingWifiPack false;
+                    
+                    :if ([:len [/system package find name~"wifi" !disabled]] != 0) do={
+                      :set usingWifiPack true;
+                      :set wirelessMenu "wifi";
+                    }
+                    
+                    :if ($action = "apply") do={
+                    
+                      # wait for ethernet interfaces
+                      :local count 0;
+                      :while ([/interface ethernet find] = "") do={
+                        :if ($count = 30) do={
+                          :log warning "DefConf: Unable to find ethernet interfaces";
+                          /quit;
+                        }
+                        :delay 1s; :set count ($count + 1);
+                      }
+                    
+                      :local macSet 0;
+                      :local tmpMac "";
+                    
+                      :foreach k in=[/interface ethernet find] do={
+                        # first ethernet is found; add bridge and set mac address of the ethernet port
+                        :if ($macSet = 0) do={
+                          :set tmpMac [/interface ethernet get $k mac-address];
+                          /interface bridge add name=$brName auto-mac=no admin-mac=$tmpMac comment="defconf";
+                          :set macSet 1;
+                        }
+                        # add bridge ports
+                        /interface bridge port add bridge=$brName interface=$k comment="defconf"
+                      }
+                    
+                      # try to add dhcp client on bridge interface (may fail if already exist)
+                      :do {
+                        /ip dhcp-client add interface=$brName disabled=no comment="defconf"
+                      } on-error={ :log warning "$logPref unable to add dhcp client";}
+                    
+                    
+                      # try to configure caps (may fail if for example specified interfaces are missing)
+                    
+                    
+                      :local findWireless [:parse ":local count 0;
+                      :while ([/interface $wirelessMenu find] = \"\") do={
+                          :if (\$count = 30) do={
+                            :log warning \"DefConf: Unable to find wireless interfaces\"; /quit
+                          };
+                          :delay 1s;
+                          :set count (\$count + 1)
+                        }"]
+                      [$findWireless]
+                    
+                      :if ($usingWifiPack) do={
+                        :local addDatapath [:parse "/interface $wirelessMenu datapath
+                        add comment=\"defconf\" name=capdp disabled=no bridge=$brName"]
+                        [$addDatapath]
+                      }
+                    
+                      # delay just to make sure that all wireless interfaces are loaded
+                      :delay 5s;
+                    
+                      :do {
+                        :local setCap ""
+                        if ($usingWifiPack) do={
+                          :set setCap [:parse ":foreach i in=[/interface $wirelessMenu find] do={
+                            /interface $wirelessMenu set \$i configuration.manager=capsman datapath=capdp
+                          }
+                          /interface $wirelessMenu cap
+                          set enabled=yes discovery-interfaces=$brName slaves-datapath=capdp"]
+                        } else={
+                    
+                          :set setCap [:parse "
+                          :local interfacesList \"\";
+                          :local bFirst 1;
+                          :foreach i in=[/interface $wirelessMenu find] do={
+                            if (\$bFirst = 1) do={
+                              :set interfacesList [/interface $wirelessMenu get \$i name];
+                              :set bFirst 0;
+                            } else={
+                              :set interfacesList \"\$interfacesList,\$[/interface wireless get \$i name]\";
+                            }
+                          }
+                          /interface $wirelessMenu cap set enabled=yes interfaces=\$interfacesList \\
+                            discovery-interfaces=$brName bridge=$brName"]
+                        }
+                        [$setCap]
+                      } on-error={ :log warning "$logPref unable to configure caps";}
+                    
+                        # set admin password
+                      :if (!($keepUsers = "yes")) do={
+                        :if (!($defconfPassword = "" || $defconfPassword = nil)) do={
+                          /user set admin password=$defconfPassword
+                          :delay 0.5
+                          /user expire-password admin
+                        }
+                      }
+                    }
+                    
+                    :if ($action = "revert") do={
+                    
+                      :if (!($keepUsers = "yes")) do={
+                            /user set admin password=""
+                            :delay 0.5
+                            /user expire-password admin
+                      }
+                    
+                      :do {
+                        :local removeCap ""
+                        if ($usingWifiPack) do={
+                          :set removeCap [:parse ":foreach i in=[/interface $wirelessMenu find] do={
+                            /interface $wirelessMenu set \$i !configuration.manager !datapath }
+                          /interface $wirelessMenu cap
+                          set enabled=no !slaves-datapath !discovery-interfaces"]
+                        } else={
+                          :set removeCap [:parse "/interface $wirelessMenu cap
+                          set enabled=no interfaces=\"\" discovery-interfaces=\"\" bridge=none"]
+                        }
+                        [$removeCap]
+                      } on-error={ :log warning "$logPref unable to unset caps";}
+                    
+                      :if ($usingWifiPack) do={
+                        :local removeDatapath [:parse "/interface $wirelessMenu datapath remove [find comment=\"defconf\"]"]
+                        [$removeDatapath]
+                      }
+                    
+                      :local o [/ip dhcp-client find comment="defconf"]
+                      :if ([:len $o] != 0) do={ /ip dhcp-client remove $o }
+                    
+                      /interface bridge port remove [find comment="defconf"]
+                      /interface bridge remove [find comment="defconf"]
+                    
+                    }
+     custom-script: 

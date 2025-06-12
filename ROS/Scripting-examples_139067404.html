@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : Scripting examples</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Scripting_47579229.html">Scripting</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : Scripting examples
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Artūrs C.</span>, last updated by <span class='editor'> Jānis Bērziņš</span> on Feb 10, 2025
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742032485 {padding: 0px;}
+div.rbtoc1747742032485 ul {margin-left: 0px;}
+div.rbtoc1747742032485 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742032485'>
+<ul class='toc-indentation'>
+<li><a href='#Scriptingexamples-Introduction'>Introduction</a></li>
+<li><a href='#Scriptingexamples-Createafile'>Create a file</a></li>
+<li><a href='#Scriptingexamples-Appendtexttoafileinanewline'>Append text to a file in a new line</a></li>
+<li><a href='#Scriptingexamples-CheckifIPontheinterfacehaschanged'>Check if IP on the interface has changed</a></li>
+<li><a href='#Scriptingexamples-Stripnetmask'>Strip netmask</a></li>
+<li><a href='#Scriptingexamples-Resolvehost-name'>Resolve host-name</a></li>
+<li><a href='#Scriptingexamples-Writesimplequeuestatsinmultiplefiles'>Write simple queue stats in multiple files</a></li>
+<li><a href='#Scriptingexamples-Generatebackupandsenditbye-mail'>Generate backup and send it by e-mail</a></li>
+<li><a href='#Scriptingexamples-Checkbandwidthandaddlimitations'>Check bandwidth and add limitations</a></li>
+<li><a href='#Scriptingexamples-Blockaccesstospecificwebsites'>Block access to specific websites</a></li>
+<li><a href='#Scriptingexamples-Parsefiletoaddpppsecrets'>Parse file to add ppp secrets</a></li>
+<li><a href='#Scriptingexamples-Detectnewlogentry'>Detect new log entry</a></li>
+<li><a href='#Scriptingexamples-Allowuseofntp.orgpoolserviceforNTP'>Allow use of ntp.org pool service for NTP</a></li>
+<li><a href='#Scriptingexamples-Otherscripts'>Other scripts</a></li>
+</ul>
+</div></p><h1 id="Scriptingexamples-Introduction">Introduction</h1><p>This section contains some useful scripts and shows all available scripting features. Script examples used in this section were tested with the latest 3.x version.</p><h1 id="Scriptingexamples-Createafile"><span class="mw-headline">Create a file</span></h1><p>it is not possible to create a file directly, however, there is a workaround:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/file print file=myFile
+/file set myFile.txt contents=&quot;&quot;</pre>
+</div></div><h1 id="Scriptingexamples-Appendtexttoafileinanewline"><span class="mw-headline">Append text to a file in a new line</span></h1><p>There is no direct way to append text to a file, however you can store the old content and append to it in a new line:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">:local oldText [/file get test.txt contents as-string]
+:local addText &quot;test append&quot;
+:local newText ($oldText.&quot;\n&quot;.$addText)
+/file set myFile.txt contents=$newText</pre>
+</div></div><h1 id="Scriptingexamples-CheckifIPontheinterfacehaschanged">Check if IP on the interface has changed</h1><p>Sometimes provider gives dynamic IP addresses. This script will compare if a dynamic IP address is changed.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">:global currentIP;
+
+:local newIP [/ip address get [find interface=&quot;ether1&quot;] address];
+
+:if ($newIP != $currentIP) do={
+    :put &quot;ip address $currentIP changed to $newIP&quot;;
+    :set currentIP $newIP;
+}</pre>
+</div></div><p style="margin-left: 20.0px;"><br/></p><h1 id="Scriptingexamples-Stripnetmask"><span class="mw-headline">Strip netmask</span></h1><p>This script is useful if you need an IP address without a netmask (for example to use it in a firewall), but &quot;<code>/ip address get [id] address</code>&quot; returns the IP address and netmask.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">:global ipaddress 10.1.101.1/24
+
+:for i from=( [:len $ipaddress] - 1) to=0 do={ 
+	:if ( [:pick $ipaddress $i] = &quot;/&quot;) do={ 
+		:put [:pick $ipaddress 0 $i]
+	} 
+}</pre>
+</div></div><p style="margin-left: 20.0px;"><br/></p><p><br/>Another much more simple way:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">:global ipaddress 10.1.101.1/24
+:put [:pick $ipaddress 0 [:find $ipaddress &quot;/&quot;]]</pre>
+</div></div><h1 id="Scriptingexamples-Resolvehost-name"><span class="mw-headline">Resolve host-name</span></h1><p>Many users are asking features to use DNS names instead of IP addresses for radius servers, firewall rules, etc.</p><p>So here is an example of how to resolve the RADIUS server's IP.</p><p>Let's say we have the radius server configured:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/radius 
+add address=3.4.5.6 comment=myRad</pre>
+</div></div><p style="margin-left: 20.0px;"><br/></p><p>And here is a script that will resolve the IP address, compare resolved IP with configured one, and replace it if not equal:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/system script add name=&quot;resolver&quot; source= {
+
+:local resolvedIP [:resolve &quot;server.example.com&quot;];
+:local radiusID [/radius find comment=&quot;myRad&quot;];
+:local currentIP [/radius get $radiusID address];
+
+:if ($resolvedIP != $currentIP) do={
+   /radius set $radiusID address=$resolvedIP;
+   /log info &quot;radius ip updated&quot;;
+}
+
+}</pre>
+</div></div><p style="margin-left: 20.0px;"><br/></p><p>Add this script to the scheduler to run for example every 5 minutes</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/system scheduler add name=resolveRadiusIP on-event=&quot;resolver&quot; interval=5m</pre>
+</div></div><p style="margin-left: 20.0px;"><br/></p><h1 id="Scriptingexamples-Writesimplequeuestatsinmultiplefiles"><span style="font-size: 16.0px;font-weight: bold;letter-spacing: -0.006em;">Write simple queue stats in multiple files</span></h1><p>Let's consider queue namings are &quot;some text.1&quot; so we can search queues by the last number right after the dot.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">:local entriesPerFile 10;
+:local currentQueue 0;
+:local queuesInFile 0;
+:local fileContent &quot;&quot;;
+#determine needed file count
+:local numQueues [/queue simple print count-only] ;
+:local fileCount ($numQueues / $entriesPerFile);
+:if ( ($fileCount * $entriesPerFile) != $numQueues) do={
+   :set fileCount ($fileCount + 1);
+}
+
+#remove old files 
+/file remove [find name~&quot;stats&quot;];
+
+:put &quot;fileCount=$fileCount&quot;;
+
+:for i from=1 to=$fileCount do={
+#create file
+   /file print file=&quot;stats$i.txt&quot;;
+#clear content
+   /file set [find name=&quot;stats$i.txt&quot;] contents=&quot;&quot;;
+
+   :while ($queuesInFile &lt; $entriesPerFile) do={
+     :if ($currentQueue &lt; $numQueues) do={
+         :set currentQueue ($currentQueue +1);
+         :put $currentQueue ;
+         /queue simple
+         :local internalID [find name~&quot;\\.$currentQueue\$&quot;];
+         :put &quot;internalID=$internalID&quot;;
+         :set fileContent ($fileContent . [get $internalID target-address] . \
+           &quot; &quot; . [get $internalID total-bytes] . &quot;\r\n&quot;);
+     }
+     :set queuesInFile ($queuesInFile +1);
+     
+   }
+   /file set &quot;stats$i.txt&quot; contents=$fileContent;
+   :set fileContent &quot;&quot;;
+   :set queuesInFile 0;
+
+}
+ </pre>
+</div></div><p style="margin-left: 20.0px;"><br/></p><h1 id="Scriptingexamples-Generatebackupandsenditbye-mail"><span class="mw-headline">Generate backup and send it by e-mail</span></h1><p>This script generates a backup file and sends it to a specified e-mail address. The mail subject contains the router's name, current date, and time.</p><p>Note that the SMTP server must be configured before this script can be used. See<span> </span><a href="E-mail_24805377.html">/tool e-mail</a><span> </span>for configuration options.</p><p><br/></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/system backup save name=email_backup
+/tool e-mail send file=email_backup.backup to=&quot;me@test.com&quot; body=&quot;See attached file&quot; \
+   subject=&quot;$[/system identity get name] $[/system clock get time] $[/system clock get date] Backup&quot;)</pre>
+</div></div><p style="margin-left: 20.0px;"><br/></p><p><br/></p><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>The backup file contains sensitive information like passwords. So to get access to generated backup files, the script or scheduler must have a 'sensitive' policy.</p></div></div><p class="auto-cursor-target"><span style="font-size: 24.0px;font-weight: normal;letter-spacing: -0.01em;">Use string as a function</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">:global printA [:parse &quot;:local A; :put \$A;&quot; ];   
+$printA  </pre>
+</div></div><p><br/></p><h1 id="Scriptingexamples-Checkbandwidthandaddlimitations">Check bandwidth and add limitations</h1><p>This script checks if the download on an interface is more than 512kbps if true then the queue is added to limit the speed to 256kbps.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">:foreach i in=[/interface find] do={
+    /interface monitor-traffic $i once do={
+        :if ($&quot;received-bits-per-second&quot; &gt; 0 ) do={
+            :local tmpIP [/ip address get [/ip address find interface=$i] address] ;
+#            :log warning $tmpIP ;
+            :for j from=( [:len $tmpIP] - 1) to=0 do={
+                :if ( [:pick $tmpIP $j] = &quot;/&quot;) do={
+                    /queue simple add name=$i max-limit=256000/256000 dst-address=[:pick $tmpIP 0 $j] ;
+                } 
+            }
+        }
+    }
+}</pre>
+</div></div><p style="margin-left: 20.0px;"><br/></p><h1 id="Scriptingexamples-Blockaccesstospecificwebsites">Block access to specific websites</h1><p>This script is useful if you want to block certain websites but you don't want to use a web proxy.</p><p>This example looks at entries &quot;Rapidshare&quot; and &quot;youtube&quot; in the DNS cache and adds IPs to the address list named &quot;restricted&quot;. Before you begin, you must set up a router to catch all DNS requests:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip firewall nat
+add action=redirect chain=dstnat comment=DNS dst-port=53 protocol=tcp to-ports=53
+add action=redirect chain=dstnat dst-port=53 protocol=udp to-ports=53</pre>
+</div></div><p style="margin-left: 20.0px;"><br/></p><p>and add firewall</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip firewall filter
+add chain=forward dst-address-list=restricted action=drop</pre>
+</div></div><p style="margin-left: 20.0px;"><br/></p><p>Now we can write a script and schedule it to run, let's say, every 30 seconds.</p><p>Script Code:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">:foreach i in=[/ip dns cache find] do={
+    :local bNew &quot;true&quot;;
+    :local cacheName [/ip dns cache all get $i name] ;
+#    :put $cacheName;
+
+    :if (([:find $cacheName &quot;rapidshare&quot;] &gt;= 0) || ([:find $cacheName &quot;youtube&quot;] &gt;= 0)) do={
+
+        :local tmpAddress [/ip dns cache get $i address] ;
+#	:put $tmpAddress;
+
+# if address list is empty do not check
+        :if ( [/ip firewall address-list find list=&quot;restricted&quot; ] = &quot;&quot;) do={
+            :log info (&quot;added entry: $[/ip dns cache get $i name] IP $tmpAddress&quot;);
+            /ip firewall address-list add address=$tmpAddress list=restricted comment=$cacheName;
+        } else={
+            :foreach j in=[/ip firewall address-list find list=&quot;restricted&quot;] do={
+                :if ( [/ip firewall address-list get $j address] = $tmpAddress ) do={
+                    :set bNew &quot;false&quot;;
+                }
+            }
+            :if ( $bNew = &quot;true&quot; ) do={
+                :log info (&quot;added entry: $[/ip dns cache get $i name] IP $tmpAddress&quot;);
+                /ip firewall address-list add address=$tmpAddress list=restricted comment=$cacheName;
+            }
+        }
+    }
+}</pre>
+</div></div><p style="margin-left: 20.0px;"><br/></p><h1 id="Scriptingexamples-Parsefiletoaddpppsecrets">Parse file to add ppp secrets</h1><p>This script requires that entries inside the file are in the following format:</p><p>username,password,local_address,remote_address,profile,service</p><p>For example:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">janis,123,1.1.1.1,2.2.2.1,ppp_profile,myService
+juris,456,1.1.1.1,2.2.2.2,ppp_profile,myService
+aija,678,1.1.1.1,2.2.2.3,ppp_profile,myService</pre>
+</div></div><p style="margin-left: 20.0px;"><br/></p><p><br/></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">:global content [/file get [/file find name=test.txt] contents] ;
+:global contentLen [ :len $content ] ;
+
+:global lineEnd 0;
+:global line &quot;&quot;;
+:global lastEnd 0;
+
+
+:do {
+       :set lineEnd [:find $content &quot;\r\n&quot; $lastEnd ] ;
+       :set line [:pick $content $lastEnd $lineEnd] ;
+       :set lastEnd ( $lineEnd + 2 ) ;
+
+       :local tmpArray [:toarray $line] ;
+	:if ( [:pick $tmpArray 0] != &quot;&quot; ) do={
+	:put $tmpArray;
+         /ppp secret add name=[:pick $tmpArray 0] password=[:pick $tmpArray 1] \
+             local-address=[:pick $tmpArray 2] remote-address=[:pick $tmpArray 3] \
+             profile=[:pick $tmpArray 4] service=[:pick $tmpArray 5];
+}
+} while ($lineEnd &lt; $contentLen)</pre>
+</div></div><p style="margin-left: 20.0px;"><br/></p><h1 id="Scriptingexamples-Detectnewlogentry">Detect new log entry</h1><p>This script is checking if a new log entry is added to a particular buffer.</p><p>In this example we will use PPPoE logs:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/system logging action
+add name=&quot;pppoe&quot;
+/system logging
+add action=pppoe topics=pppoe,info,!ppp,!debug</pre>
+</div></div><p style="margin-left: 20.0px;"><br/></p><p>Log buffer will look similar to this one:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@mainGW] &gt; /log print where buffer=pppoe 
+13:11:08 pppoe,info PPPoE connection established from 00:0C:42:04:4C:EE  </pre>
+</div></div><p style="margin-left: 20.0px;"><br/></p><p>Now we can write a script to detect if a new entry is added.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">:global lastTime;
+
+:global currentBuf [ :toarray [ /log find buffer=pppoe  ] ] ;
+:global currentLineCount [ :len $currentBuf ] ;
+:global currentTime [ :totime [/log get [ :pick $currentBuf ($currentLineCount -1) ] time   ] ];
+
+:global message &quot;&quot;;
+
+:if ( $lastTime = &quot;&quot; ) do={ 
+	:set lastTime $currentTime ; 
+	:set message [/log get [ :pick $currentBuf ($currentLineCount-1) ] message];
+
+} else={
+	:if ( $lastTime &lt; $currentTime ) do={ 
+		:set lastTime $currentTime ; 
+		:set message [/log get [ :pick $currentBuf ($currentLineCount-1) ] message];
+	}
+}</pre>
+</div></div><p style="margin-left: 20.0px;"><br/></p><p>After a new entry is detected, it is saved in the &quot;message&quot; variable, which you can use later to parse log messages, for example, to get the PPPoE client's mac addresses.</p><h1 id="Scriptingexamples-Allowuseofntp.orgpoolserviceforNTP">Allow use of <a class="external-link" href="http://ntp.org" rel="nofollow">ntp.org</a> pool service for NTP</h1><p>This script resolves the hostnames of two NTP servers, compares the result with the current NTP settings, and changes the addresses if they're different. This script is required as RouterOS does not allow hostnames to be used in the NTP configuration. Two scripts are used. The first defines some system variables which are used in other scripts and the second does the grunt work:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false"># System configuration script - &quot;GlobalVars&quot;
+
+:put &quot;Setting system globals&quot;;
+
+# System name
+:global SYSname [/system identity get name];
+
+# E-mail address to send notifications to
+:global SYSsendemail &quot;mail@my.address&quot;;
+
+# E-mail address to send notifications from
+:global SYSmyemail &quot;routeros@my.address&quot;;
+
+# Mail server to use
+:global SYSemailserver &quot;1.2.3.4&quot;;
+
+# NTP pools to use (check www.pool.ntp.org)
+:global SYSntpa &quot;0.uk.pool.ntp.org&quot;;
+:global SYSntpb &quot;1.uk.pool.ntp.org&quot;;</pre>
+</div></div><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false"># Check and set NTP servers - &quot;setntppool&quot;
+
+# We need to use the following globals which must be defined here even
+# though they are also defined in the script we call to set them.
+:global SYSname;
+:global SYSsendemail;
+:global SYSmyemail;
+:global SYSmyname;
+:global SYSemailserver;
+:global SYSntpa;
+:global SYSntpb;
+
+# Load the global variables with the system defaults
+/system script run GlobalVars
+
+# Resolve the two ntp pool hostnames
+:local ntpipa [:resolve $SYSntpa];
+:local ntpipb [:resolve $SYSntpb];
+
+# Get the current settings
+:local ntpcura [/system ntp client get primary-ntp];
+:local ntpcurb [/system ntp client get secondary-ntp];
+
+# Define a variable so we know if anything&#39;s changed.
+:local changea 0;
+:local changeb 0;
+
+# Debug output
+:put (&quot;Old: &quot; . $ntpcura . &quot; New: &quot; . $ntpipa);
+:put (&quot;Old: &quot; . $ntpcurb . &quot; New: &quot; . $ntpipb);
+
+# Change primary if required
+:if ($ntpipa != $ntpcura) do={
+    :put &quot;Changing primary NTP&quot;;
+    /system ntp client set primary-ntp=&quot;$ntpipa&quot;;
+    :set changea 1;
+    }
+
+# Change secondary if required
+:if ($ntpipb != $ntpcurb) do={
+    :put &quot;Changing secondary NTP&quot;;
+    /system ntp client set secondary-ntp=&quot;$ntpipb&quot;;
+    :set changeb 1;
+    }
+
+# If we&#39;ve made a change, send an e-mail to say so.
+:if (($changea = 1) || ($changeb = 1)) do={
+    :put &quot;Sending e-mail.&quot;;
+    /tool e-mail send \
+        to=$SYSsendemail \
+        subject=($SYSname . &quot; NTP change&quot;) \
+        from=$SYSmyemail \
+        server=$SYSemailserver \
+        body=(&quot;Your NTP servers have just been changed:\n\nPrimary:\nOld: &quot; . $ntpcura . &quot;\nNew: &quot; \
+          . $ntpipa . &quot;\n\nSecondary\nOld: &quot; . $ntpcurb . &quot;\nNew: &quot; . $ntpipb);
+    }</pre>
+</div></div><p>Scheduler entry:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/system scheduler add \
+  comment=&quot;Check and set NTP servers&quot; \
+  disabled=no \
+  interval=12h \
+  name=CheckNTPServers \
+  on-event=setntppool \
+  policy=read,write,test \
+  start-date=jan/01/1970 \
+  start-time=16:00:00</pre>
+</div></div><h1 id="Scriptingexamples-Otherscripts"><span class="mw-headline">Other scripts</span></h1><ul><li><a class="external-link" href="https://wiki.mikrotik.com/wiki/Dynamic_DNS_Update_Script_for_EveryDNS" rel="nofollow" style="text-decoration: none;" title="Dynamic DNS Update Script for EveryDNS">Dynamic_DNS_Update_Script_for_EveryDNS</a></li><li><a class="external-link" href="https://wiki.mikrotik.com/wiki/Dynamic_DNS_Update_Script_for_ChangeIP.com" rel="nofollow" style="text-decoration: none;" title="Dynamic DNS Update Script for ChangeIP.com">Dynamic_DNS_Update_Script_for_ChangeIP.com</a></li><li><a class="external-link" href="https://wiki.mikrotik.com/wiki/UPS_scripts#version_for_ROS_3.x" rel="nofollow" style="text-decoration: none;" title="UPS scripts">UPS Script</a></li></ul>
+                    </div>
+
+                                        
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

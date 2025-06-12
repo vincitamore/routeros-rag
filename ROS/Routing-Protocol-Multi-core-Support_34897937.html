@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : Routing Protocol Multi-core Support</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Routing_328222.html">Routing</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : Routing Protocol Multi-core Support
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Māris B.</span>, last updated on Dec 18, 2024
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><br/></p><h2 id="RoutingProtocolMulticoreSupport-Overview">Overview</h2><p>RouterOS v7 is capable of splitting tasks between multiple processes. <br/>There is one &quot;<strong>main</strong>&quot; task, which can start/stop sub-tasks and process data between those sub-tasks. Each sub-task can allocate &quot;private&quot; (only accessible by this particular task) and &quot;shared&quot; memory (accessible by all route tasks).</p><p>List of tasks that run in separate processes (if multiprocess routing is enabled):</p><ul><li>Handling of &quot;print&quot; command;</li><li>Entire OSPF protocol handling;</li><li>Entire RIP protocol handling;</li><li data-uuid="dd879895-e55c-4469-87b7-b8557bf8c2c1">Entire ISIS protocol handling;</li><li>Static configuration handling;</li><li>Routing Policy configuration;</li><li>BGP connections and configuration handling;</li><li>BGP receive (one task per peer or grouped by specific parameters);</li><li>BGP send (one task per peer or grouped by specific parameters);</li><li>FIB update.</li></ul><h2 id="RoutingProtocolMulticoreSupport-BGPSub-Tasks">BGP Sub-Tasks</h2><p>BGP receive and send can be split into sub-tasks by specific parameters, for example, it is possible to run input per each peer or group all peer inputs and run them in the main process. This split by sub-tasks is controlled with <code><strong><span style="color:var(--ds-text-accent-green-bolder,#164b35);">input.affinity </span></strong></code>and <code><strong><span style="color:var(--ds-text-accent-green-bolder,#164b35);">output.affinity</span></strong></code> parameter configuration in <strong><span style="color:var(--ds-text-accent-blue,#0055cc);"><code>/routing/bgp/template</code></span></strong>.It is possible to boost performance by playing with affinity values on devices with fewer cores since sharing data between tasks is a bit slower than processing the same data within one task. For example, on single-core or two-core devices running input and output in the main or instance process will boost performance.</p><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>BGP can have up to 100 unique processes.</p></div></div><p><br/></p><p>All currently used tasks and their allocated private/shared memory can be monitored using the command:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/routing/stats/process/print</pre>
+</div></div><p><br/></p><p>Sample Output:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: text; gutter: false">[admin@BGP_MUM] /routing/stats/process&gt; print interval=1
+Columns: TASKS, PRIVATE-MEM-BLOCKS, SHARED-MEM-BLOCKS, PSS, RSS, VMS, RETIRED, ID, PID, RPID, PROCESS-TIME, KERNEL-TIME, CUR-BUSY, MAX-BUSY, CUR-CALC, MAX-CALC
+   #  TASKS                         PRIVATE-M  SHARED-M  PSS        RSS      VMS      R  ID       PID  R  PROCESS-  KERNEL-TI  CUR-  MAX-BUSY  CUR-  MAX-CALC
+   0  routing tables                11.8MiB    20.0MiB   19.8MiB    42.2MiB  51.4MiB  7  main     195  0  15s470ms  2s50ms     20ms  1s460ms   20ms  35s120ms
+      rib                                                                                                                                                    
+      connected networks                                                                                                                                     
+   1  fib                           2816.0KiB  0         8.1MiB     27.4MiB  51.4MiB     fib      255  1  5s730ms   7m4s790ms        23s350ms        23s350ms
+   2  ospf                          512.0KiB   0         3151.0KiB  14.6MiB  51.4MiB     ospf     260  1  20ms      100ms            20ms            20ms    
+      connected networks                                                                                                                                     
+   3  fantasy                       256.0KiB   0         1898.0KiB  5.8MiB   51.4MiB     fantasy  261  1  40ms      60ms             20ms            20ms    
+   4  configuration and reporting   4096.0KiB  512.0KiB  9.2MiB     28.4MiB  51.4MiB     static   262  1  3s210ms   40ms             220ms           220ms   
+   5  rip                           512.0KiB   0         3151.0KiB  14.6MiB  51.4MiB     rip      259  1  50ms      90ms             20ms            20ms    
+      connected networks                                                                                                                                     
+   6  routing policy configuration  768.0KiB   768.0KiB  2250.0KiB  6.2MiB   51.4MiB     policy   256  1  70ms      50ms             20ms            20ms    
+   7  BGP service                   768.0KiB   0         3359.0KiB  14.9MiB  51.4MiB     bgp      257  1  4s260ms   8s50ms           30ms            30ms    
+      connected networks                                                                                                                                     
+   8  BFD service                   512.0KiB   0         3151.0KiB  14.6MiB  51.4MiB     12       258  1  80ms      40ms             20ms            20ms    
+      connected networks                                                                                                                                     
+   9  BGP Input 10.155.101.232      8.2MiB     6.8MiB    17.0MiB    39.1MiB  51.4MiB     20       270  1  24s880ms  3s60ms           18s550ms        18s550ms
+      BGP Output 10.155.101.232                                                                                                                              
+  10  Global memory                            256.0KiB                                  global     0  0    </pre>
+</div></div><p><br/></p><p><br/></p><h2 id="RoutingProtocolMulticoreSupport-RoutingTableUpdateMechanism">Routing Table Update Mechanism</h2><p>Illustration below tries to explain in more user friendly form on how routing table update mechanism is working.</p><p><span class="confluence-embedded-file-wrapper image-center-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image image-center" draggable="false" height="400" src="attachments/34897937/37224450.png" data-image-src="attachments/34897937/37224450.png" data-unresolved-comment-count="0" data-linked-resource-id="37224450" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="PNG.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="34897937" data-linked-resource-container-version="15" tabindex="0" alt=""></span></p><p>Routing protocols continuously loop through following procedures:</p><ul><li>&quot;<strong>main</strong>&quot; process waits for updates from other sub tasks (1);</li><li>&quot;<strong>main</strong>&quot; starts to calculate new routes (2..4) if:<ul><li>update from sub task is received;</li><li>protocol has not published all routes;</li><li>configuration has changed or link state has changed.</li></ul></li><li>during new route calculation (5) following event occur:<ul><li>all received updates are applied to the route;</li><li>gateway reachability is being determined;</li><li>recursive route is being resolved;</li></ul></li><li>&quot;<strong>publish</strong>&quot; event is called where &quot;<strong>current</strong>&quot; routes are being published. During this phase, &quot;<strong>current</strong>&quot; routes will not change, but protocols can still receive and send updates (6).</li><li>Do cleanup and free unused memory (7). In this step everything that is no longer used in new &quot;<strong>current</strong>&quot; table is removed (routes, attributes, etc.).</li></ul><p>Consider &quot;<strong>updated</strong>&quot; and &quot;<strong>current</strong>&quot; as two copies of routing table, where &quot;<strong>current</strong>&quot; table (2) is the one used at the moment and &quot;<strong>updated</strong>&quot; (1) is table of candidate routes to be published in the next publish event (3 and 4). This method prevents protocols to fill memory with buffered updates while &quot;<strong>main</strong>&quot; process is doing &quot;<strong>publish</strong>&quot;, instead protocols sends the newest update directly to &quot;main&quot; process which then copies new update in &quot;<strong>updated</strong>&quot; table. A bit more complicated is OSPF, it internally has similar process to select current OSPF routes which then are sent to the  &quot;<strong>main</strong>&quot; for further processing.</p><p><br/></p><p><br/></p><p><br/></p>
+                    </div>
+
+                                                            <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/34897937/37224450.png">PNG.png</a> (image/png)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

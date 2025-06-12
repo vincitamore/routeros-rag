@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : RPKI</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Routing_328222.html">Routing</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : RPKI
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Māris B.</span>, last updated on May 09, 2024
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <h1 id="RPKI-Overview">Overview</h1><p>RouterOS implements the Resource Public Key Infrastructure (RPKI) to Router Protocol defined in <a class="external-link" href="https://tools.ietf.org/html/rfc8210" rel="nofollow">RFC8210</a>. RTR is a very lightweight low memory footprint protocol, to reliably get prefix validation data from RPKI validators.<br/><span style="text-decoration: none;color:var(--ds-text,#172b4d);">More information on RPKI and how to set up validators can be found in the RIPE blog:</span><br style="text-decoration: none;"/><a class="external-link" href="https://blog.apnic.net/2019/10/28/how-to-installing-an-rpki-validator/" rel="nofollow" style="text-decoration: none;">https://blog.apnic.net/2019/10/28/how-to-installing-an-rpki-validator/</a></p><h1 id="RPKI-BasicExample">Basic Example</h1><p><span style="text-decoration: none;color:var(--ds-text,#172b4d);">Let's consider that we have our own RTR server on our network with IP address 192.168.1.1:</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/routing/bgp/rpki
+add group=myRpkiGroup address=192.168.1.1 port=8282 refresh-interval=20</pre>
+</div></div><p class="auto-cursor-target">If the connection is established and a database from the validator is received, we can check prefix validity:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: text; gutter: false">[admin@rack1_b33_CCR1036] /routing&gt; rpki-check group=myRpkiGroup prfx=70.132.18.0/24 origin-as=16509
+    valid</pre>
+</div></div><p class="auto-cursor-target">Now the cached database can be used by routing filters to accept/reject prefixes based on RPKI validity. At first, we need to set up a filter rule which defines against which RPKI group performs the verification. After that filters are ready to match the status from the RPKI database. Status can have one of three values:</p><ul><li class="auto-cursor-target"><strong>valid</strong> - database has a record and origin AS is valid.</li><li class="auto-cursor-target"><strong>invalid</strong> - the database has a record and origin AS is invalid.</li><li class="auto-cursor-target"><strong>unknown</strong> - database does not have information of prefix and origin AS.</li><li class="auto-cursor-target"><strong>unverified</strong> - set when none of the RPKI sessions of the RPKI group has synced database. This value can be used to handle the total failure of the RPKI.</li></ul><p><br/></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/routing/filter/rule
+add chain=bgp_in rule=&quot;rpki-verify myRpkiGroup&quot;
+add chain=bgp_in rule=&quot;if (rpki invalid) { reject } else { accept }&quot;</pre>
+</div></div><h1 id="RPKI-ConfigurationOptions">Configuration Options</h1><p><span style="color:var(--ds-background-accent-blue-bolder,#0c66e4);"><code><strong><span style="color:var(--ds-text-accent-teal-bolder,#164555);">Sub-Menu:</span></strong> <span style="color:var(--ds-text-accent-blue,#0055cc);">/routing/rpki</span></code></span></p><p><br/></p><div class="table-wrap"><table class="wrapped confluenceTable" style="margin-left: 14.4318px;"><colgroup><col/><col/></colgroup><tbody><tr><th class="highlight-#deebff confluenceTh" title="Background colour : Light blue 35%" data-highlight-colour="#deebff">Property</th><th class="highlight-#deebff confluenceTh" title="Background colour : Light blue 35%" data-highlight-colour="#deebff">Description</th></tr><tr><td class="confluenceTd"><strong>address</strong><span> </span>(<em>IPv4/6</em>) <span style="color:var(--ds-background-accent-orange-subtler-pressed,#fea362);">mandatory</span></td><td class="confluenceTd">Address of the RTR server</td></tr><tr><td class="highlight-#f4f5f7 confluenceTd" title="Background colour : Light grey 100%" data-highlight-colour="#f4f5f7"><strong title="">disabled</strong>(<em title="">yes | no</em>; Default:<span title=""> </span><strong title="">no</strong>)</td><td class="highlight-#f4f5f7 confluenceTd" title="Background colour : Light grey 100%" data-highlight-colour="#f4f5f7">Whether the item is ignored.</td></tr><tr><td class="confluenceTd"><strong>expire-interval</strong><span> </span>(<em>integer [600..172800]</em>; Default: 7200)</td><td class="confluenceTd">Time interval [s] polled data is considered valid in the absence of a valid subsequent update from the validator.</td></tr><tr><td class="highlight-#f4f5f7 confluenceTd" title="Background colour : Light grey 100%" data-highlight-colour="#f4f5f7"><strong title="">group</strong><span title=""> </span>(<em title="">string</em>) <span style="color:var(--ds-background-accent-orange-subtler-pressed,#fea362);" title="">mandatory</span></td><td class="highlight-#f4f5f7 confluenceTd" title="Background colour : Light grey 100%" data-highlight-colour="#f4f5f7">Name of the group a database is assigned to.</td></tr><tr><td class="confluenceTd"><strong>port</strong><span> </span>(<em>integer [0..65535]</em>; Default: 323)</td><td class="confluenceTd">Connection port number</td></tr><tr><td class="highlight-#f4f5f7 confluenceTd" title="Background colour : Light grey 100%" colspan="1" data-highlight-colour="#f4f5f7"><strong title="">preference</strong><span title=""> </span>(<em title="">integer [0..4294967295]</em>; Default: 0)</td><td class="highlight-#f4f5f7 confluenceTd" title="Background colour : Light grey 100%" colspan="1" data-highlight-colour="#f4f5f7"><p title="">If there are multiple RTR sources, the preference number indicates a more preferred one. A higher number is preferred.</p><p title="">If preference is not configured then lowest remote IP within a group is preferred, if IPs are equal then lowest remote port is preferred.</p></td></tr><tr><td colspan="1" class="confluenceTd"><strong>refresh-interval</strong><span> </span>(<em>integer [1..86400]</em>; Default: 3600)</td><td colspan="1" class="confluenceTd">Time interval [s] to poll the newest data from the validator.</td></tr><tr><td class="highlight-#f4f5f7 confluenceTd" title="Background colour : Light grey 100%" colspan="1" data-highlight-colour="#f4f5f7"><strong title="">retry-interval</strong><span title=""> </span>(<em title="">integer [1..7200]</em>; Default: 600)</td><td class="highlight-#f4f5f7 confluenceTd" title="Background colour : Light grey 100%" colspan="1" data-highlight-colour="#f4f5f7">Time Interval [s] to retry after the failed data poll from the validator.</td></tr><tr><td colspan="1" class="confluenceTd"><strong>vrf</strong>(<em>name</em>; Default: main)</td><td colspan="1" class="confluenceTd">Name of the VRF table used to bind the connection to.</td></tr></tbody></table></div>
+                    </div>
+
+                                        
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

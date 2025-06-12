@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : Note</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="System-Information-and-Utilities_119144657.html">System Information and Utilities</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : Note
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Unknown User (olga)</span>, last updated by <span class='editor'> Toms Filatovs</span> on Dec 05, 2024
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <h2 id="Note-Summary"><span class="mw-headline">Summary</span></h2><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/system note</pre>
+</div></div><p><br/>The system note feature allows you to assign arbitrary text notes or messages that will be displayed on each login right after the banner. For example, you may distribute warnings between system administrators this way, or describe what does that particular router actually do. To configure system note, you may upload a plain text file named<span> </span><strong>sys-note.txt</strong><span> </span>on the router's FTP server, or, additionally, edit the settings in this menu</p><h2 id="Note-Properties"><span class="mw-headline">Properties</span></h2><div class="table-wrap"><table class="relative-table wrapped confluenceTable" style="margin-left: 14.4318px;width: 99.2765%;"><colgroup><col style="width: 46.1648%;"/><col style="width: 53.7879%;"/></colgroup><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>note</strong><span> </span>(<em>string</em>; Default: )</td><td class="confluenceTd">Note that will be displayed.</td></tr><tr><td class="confluenceTd"><strong>show-at-login</strong><span> </span>(<em>yes | no</em>; Default:<span> </span><strong>yes</strong>)</td><td class="confluenceTd">Whether to show system note on each login</td></tr><tr><td class="confluenceTd"><strong>show-at-cli-login </strong>(<em>yes</em> | <em>no</em>, Default: <strong>no</strong>)<strong><br/></strong></td><td class="confluenceTd">Whether to show system note before telnet login prompt.</td></tr></tbody></table></div><p><br/></p><h2 id="Note-Example"><span class="mw-headline">Example</span></h2><p>It is possible to add multi-line notes using an embedded text editor (<em><span> </span>/system note edit note</em>), for example, add ASCII art to your home router:</p><p><br/></p><pre>system/note/set note=</pre><pre>                                       .&amp;                                       <br/>                                     @&amp;   @&amp;                                    <br/>                                     @@   @#                                    <br/>                                       @@&amp;                                      <br/>                                ,      @@@      .                               <br/>                                @@@@@@@@@@@@@@@@@                               <br/>                                       @@@                                      <br/>                                       @@@                                      <br/>                                       @@@                                      <br/>                          ,@           @@@           &amp;                          <br/>                         @@@@          @@@          @@@@                        <br/>                          @@           @@@           @(                         <br/>                           &amp;@@         @@@         @@@                          <br/>                             @@@@@     @@@     &amp;@@@&amp;                            <br/>                                &amp;@@@@@@@@@@@@@@@&amp;                               <br/>                                      @@@@@             </pre>
+                    </div>
+
+                                        
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

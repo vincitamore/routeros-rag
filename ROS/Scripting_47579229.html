@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : Scripting</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : Scripting
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Oskars K.</span>, last updated by <span class='editor'> Dāvis Bleikšs</span> on May 19, 2025
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <div class="panel" style="border-color: grey;border-style: solid;border-width: 1px;"><div class="panelContent">
+<div id="expander-1488456976" class="expand-container"><div role="heading" aria-level="6" id="expander-control-1488456976" class="expand-control"><button type="button" id="expand-button-1488456976" class="aui-button aui-button-link aui-button-link-icon-text" aria-expanded="true" aria-controls="expander-content-1488456976" ><span class="expand-icon aui-icon aui-icon-small aui-iconfont-chevron-down" aria-hidden="true"></span><span class="expand-control-text conf-macro-render">Table of Contents</span></button></div><div role="region" id="expander-content-1488456976" class="expand-content" aria-labelledby="expand-button-1488456976"><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742032430 {padding: 0px;}
+div.rbtoc1747742032430 ul {margin-left: 0px;}
+div.rbtoc1747742032430 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742032430'>
+<ul class='toc-indentation'>
+<li><a href='#Scripting-Scriptinglanguagemanual'>Scripting language manual</a>
+<ul class='toc-indentation'>
+<li><a href='#Scripting-Linestructure'>Line structure</a>
+<ul class='toc-indentation'>
+<li><a href='#Scripting-Command-line'>Command-line</a></li>
+<li><a href='#Scripting-PhysicalLine'>Physical Line</a></li>
+<li><a href='#Scripting-Comments'>Comments</a>
+<ul class='toc-indentation'>
+<li><a href='#Scripting-Example'>Example</a></li>
+</ul>
+</li>
+<li><a href='#Scripting-Linejoining'>Line joining</a>
+<ul class='toc-indentation'>
+<li><a href='#Scripting-Example.1'>Example</a></li>
+</ul>
+</li>
+<li><a href='#Scripting-Whitespacebetweentokens'>Whitespace between tokens</a>
+<ul class='toc-indentation'>
+<li><a href='#Scripting-Scopes'>Scopes</a>
+<ul class='toc-indentation'>
+<li><a href='#Scripting-Globalscope'>Global scope</a></li>
+<li><a href='#Scripting-Localscope'>Local scope</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href='#Scripting-Keywords'>Keywords</a></li>
+<li><a href='#Scripting-Delimiters'>Delimiters</a></li>
+<li><a href='#Scripting-Datatypes'>Data types</a>
+<ul class='toc-indentation'>
+<li><a href='#Scripting-ConstantEscapeSequences'>Constant Escape Sequences</a>
+<ul class='toc-indentation'>
+<li><a href='#Scripting-Example.2'>Example</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href='#Scripting-Operators'>Operators</a>
+<ul class='toc-indentation'>
+<li><a href='#Scripting-ArithmeticOperators'>Arithmetic Operators</a></li>
+<li><a href='#Scripting-RelationalOperators'>Relational Operators</a></li>
+<li><a href='#Scripting-LogicalOperators'>Logical Operators</a></li>
+<li><a href='#Scripting-BitwiseOperators'>Bitwise Operators</a></li>
+<li><a href='#Scripting-ConcatenationOperators'>Concatenation Operators</a></li>
+<li><a href='#Scripting-OtherOperators'>Other Operators</a></li>
+</ul>
+</li>
+<li><a href='#Scripting-Variables'>Variables</a>
+<ul class='toc-indentation'>
+<li><a href='#Scripting-Reservedvariablenames'>Reserved variable names</a></li>
+</ul>
+</li>
+<li><a href='#Scripting-Commands'>Commands</a>
+<ul class='toc-indentation'>
+<li><a href='#Scripting-Globalcommands'>Global commands</a></li>
+<li><a href='#Scripting-Menuspecificcommands'>Menu specific commands</a>
+<ul class='toc-indentation'>
+<li><a href='#Scripting-Commoncommands'>Common commands</a></li>
+<li><a href='#Scripting-import'>import</a></li>
+<li><a href='#Scripting-printparameters'>print parameters</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href='#Scripting-Loopsandconditionalstatements'>Loops and conditional statements</a>
+<ul class='toc-indentation'>
+<li><a href='#Scripting-Loops'>Loops</a></li>
+<li><a href='#Scripting-Conditionalstatement'>Conditional statement</a></li>
+</ul>
+</li>
+<li><a href='#Scripting-Functions'>Functions</a></li>
+<li><a href='#Scripting-Catchrun-timeerrors'>Catch run-time errors</a></li>
+<li><a href='#Scripting-OperationswithArrays'>Operations with Arrays</a></li>
+</ul>
+</li>
+<li><a href='#Scripting-Scriptrepository'>Script repository</a>
+<ul class='toc-indentation'>
+<li><a href='#Scripting-Environment'>Environment</a></li>
+<li><a href='#Scripting-Job'>Job</a></li>
+</ul>
+</li>
+<li><a href='#Scripting-Seealso'>See also</a></li>
+<li><a href='#Scripting-VideosonScripting'>Videos on Scripting</a></li>
+</ul>
+</div><p><br/></p></div></div>
+</div></div><h2 id="Scripting-Scriptinglanguagemanual"><span class="mw-headline">Scripting language manual</span></h2><p>This manual provides an introduction to RouterOS's built-in powerful scripting language.</p><p>Scripting host provides a way to automate some router maintenance tasks by means of executing user-defined scripts bounded to some event occurrence.</p><p>Scripts can be stored in<span> the </span><a href="https://help.mikrotik.com/docs/display/ROS/Scripting#Scripting-Scriptrepository" rel="nofollow">Script repository</a><span> </span>or can be written directly to<span> the </span><a href="Console_8978498.html">console</a>. The events used to trigger script execution include, but are not limited to the<span> </span><a href="Scheduler_40992881.html">System Scheduler</a>, the<span> </span><a href="Interface-stats-and-monitor-traffic_139526175.html">Traffic Monitoring Tool</a>, and the<span> </span><a href="Netwatch_8323208.html">Netwatch Tool</a><span> </span>generated events.</p><p>If you are already familiar with scripting in RouterOS, you might want to see our<span> </span><a href="https://help.mikrotik.com/docs/spaces/ROS/pages/283574370/Scripting+Tips+and+Tricks" rel="nofollow">Tips &amp; Tricks</a>.</p><h3 id="Scripting-Linestructure"><span class="mw-headline">Line structure</span></h3><p>The RouterOS script is divided into a number of command lines. Command lines are executed one by one until the end of the script or until a runtime error occurs.</p><h4 id="Scripting-Command-line"><span class="mw-headline">Command-line</span></h4><p>The RouterOS console uses the following command syntax:</p><p><code>[prefix] [path] command [uparam] [param=[value]] .. [param=[value]]</code></p><ul class="bullets"><li>[prefix] - &quot;:&quot; or &quot;/&quot; character which indicates if a command is<span> </span><a href="https://help.mikrotik.com/docs/display/ROS/Scripting#Scripting-Commands" rel="nofollow">ICE</a><span> </span>or path. It may not be required.</li><li>[path] - relative path to the desired menu level. It may not be required.</li><li>command - one of the<span> </span><a href="https://help.mikrotik.com/docs/display/ROS/Scripting#Scripting-Commands" rel="nofollow">commands</a><span> </span>available at the specified menu level.</li><li>[uparam] - unnamed parameter, must be specified if the command requires it.</li><li>[params] - a sequence of named parameters followed by respective values</li></ul><p>The end of the command line is represented by the token<span> </span><em>“;”</em><span> </span>or<span> </span><em>NEWLINE</em>. Sometimes<span> </span><em>“;”</em><span> </span>or<span> </span><em>NEWLINE</em><span> </span>is not required to end the command line.</p><p>Single command inside<span> </span><code>(), [] or {}</code><span> </span>does not require any end-of-command character. The end of the command is determined by the content of the whole script</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">:if ( true ) do={ :put &quot;lala&quot; }</pre>
+</div></div><p>Each command line inside another command line starts and ends with square brackets &quot;[ ]&quot;<span> </span><a href="https://help.mikrotik.com/docs/display/ROS/Scripting#Scripting-OtherOperators" rel="nofollow">(command concatenation)</a>.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">:put [/ip route get [find gateway=1.1.1.1]]; </pre>
+</div></div><p>Notice that the code above contains three command lines:</p><ul class="bullets"><li>:put</li><li>/ip route get</li><li>find gateway=1.1.1.1</li></ul><p>Command-line can be constructed from more than one physical line by following<span> </span><a href="https://help.mikrotik.com/docs/display/ROS/Scripting#Scripting-Linejoining" rel="nofollow">line joining rules</a>.</p><h4 id="Scripting-PhysicalLine"><span class="mw-headline">Physical Line</span></h4><p>A physical line is a sequence of characters terminated by an end-of-line (EOL) sequence. Any of the standard platform line termination sequences can be used:</p><ul class="bullets"><li><strong>Unix</strong><span> </span>– ASCII LF;</li><li><strong>Windows</strong><span> </span>– ASCII CR LF;</li><li><strong>mac</strong><span> </span>– ASCII CR;</li></ul><p>Standard C conventions for newline characters can be used ( the \n character).</p><h4 id="Scripting-Comments"><span class="mw-headline">Comments</span></h4><p>The following rules apply to a comment:</p><ul><li>A comment starts with a hash character (#) and ends at the end of the physical line.</li><li>RouterOS does not support multiline comments.</li><li>If a <strong>#</strong> character appears inside the string it is not considered a comment.</li></ul><h5 id="Scripting-Example"><span class="mw-headline">Example</span></h5><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false"># this is a comment 
+# next line comment
+:global a; # another valid comment
+
+:global myStr &quot;part of the string # is not a comment&quot;</pre>
+</div></div><h4 id="Scripting-Linejoining"><span class="mw-headline">Line joining</span></h4><p>Two or more physical lines may be joined into logical lines using the backslash character (\).</p><p>The following rules apply to using backslash as a line-joining tool:</p><ul><li>A line ending in a backslash cannot carry a comment.</li><li>A backslash does not continue a comment.</li><li>A backslash does not continue a token except for string literals.</li><li>A backslash is illegal elsewhere on a line outside a string literal.</li></ul><h5 id="Scripting-Example.1"><span class="mw-headline">Example</span></h5><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">:if ($a = true \
+	and $b=false) do={ :put &quot;$a $b&quot;; } 
+:if ($a = true \ # bad comment 
+	and $b=false) do={ :put &quot;$a $b&quot;; }
+# comment \
+	continued - invalid (syntax error)</pre>
+</div></div><h4 id="Scripting-Whitespacebetweentokens"><span class="mw-headline">Whitespace between tokens</span></h4><p>Whitespace can be used to separate tokens. Whitespace is necessary between two tokens only if their concatenation could be interpreted as a different token. Example:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">{  
+	:local a true; :local b false;
+# whitespace is not required 
+	:put (a&amp;&amp;b); 
+# whitespace is required  
+	:put (a and b); 
+}
+</pre>
+</div></div><p>Whitespace characters are not allowed</p><ul class="bullets"><li>between '&lt;parameter&gt;='</li><li>between 'from=' 'to=' 'step=' 'in=' 'do=' 'else='</li></ul><p>Example:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">#incorrect: 
+:for i from = 1 to = 2 do = { :put $i } 
+#correct syntax: 
+:for i from=1 to=2 do={ :put $i } 
+:for i from= 1 to= 2 do={ :put $i } 
+
+#incorrect 
+/ip route add gateway = 3.3.3.3 
+#correct 
+/ip route add gateway=3.3.3.3</pre>
+</div></div><h5 id="Scripting-Scopes"><span class="mw-headline">Scopes</span></h5><p>Variables can be used only in certain regions of the script called scopes. These regions determine the visibility of the variable. There are two types of scopes -<span> </span>global<span> </span>and<span> </span>local. A variable declared within a block is accessible only within that block and blocks enclosed by it, and only after the point of declaration.</p><h6 id="Scripting-Globalscope"><span class="mw-headline">Global scope</span></h6><p>Global scope or root scope is the default scope of the script. It is created automatically and can not be turned off.</p><h6 id="Scripting-Localscope"><span class="mw-headline">Local scope</span></h6><p>User can define their own groups to block access to certain variables, these scopes are called local scopes. Each local scope is enclosed in curly braces (&quot;{ }&quot;).</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">{  
+	:local a 3;
+	{  
+		:local b 4;  
+		:put ($a+$b); 
+	} #line below will show variable b in light red color since it is not defined in scope  
+	:put ($a+$b); 
+}
+</pre>
+</div></div><p>In the code above variable,<span> </span>b<span> </span>has local scope and will not be accessible after a closing curly brace.</p><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body">Each line written in the terminal is treated as local scope</div></div><p>So for example, the defined local variable will not be visible in the next command line and will generate a syntax error</p><pre style="margin-left: 20.0px;">[admin@MikroTik] &gt; :local myVar a;
+[admin@MikroTik] &gt; :put $myVar
+syntax error (line 1 column 7)
+</pre><div role="region" aria-label="Warning" class="confluence-information-macro  confluence-information-macro-warning" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-error confluence-information-macro-icon" ></span><div class="confluence-information-macro-body">Do not define global variables inside local scopes.</div></div><p>Note that even variable can be defined as global, it will be available only from its scope unless it is not referenced to be visible outside of the scope.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">{  
+	:local a 3; 
+	{  
+		:global b 4; 
+	}  
+	:put ($a+$b); 
+}</pre>
+</div></div><p>The code above will output 3, because outside of the scope b is not visible. </p><p>The following code will fix the problem and will output 7:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">{  
+	:local a 3; 
+	{  
+		:global b 4; 
+	}
+	:global b;  
+	:put ($a+$b); 
+}</pre>
+</div></div><p><br/></p><h3 id="Scripting-Keywords"><span class="mw-headline">Keywords</span></h3><p>The following words are keywords and cannot be used as variable and function names:</p><pre style="margin-left: 20.0px;">and       or       in
+</pre><h3 id="Scripting-Delimiters"><span class="mw-headline">Delimiters</span></h3><p>The following tokens serve as delimiters in the grammar:</p><pre style="margin-left: 20.0px;">()  []  {}  :   ;   $   / 
+</pre><h3 id="Scripting-Datatypes"><span class="mw-headline">Data types</span></h3><p>RouterOS scripting language has the following data types:</p><div class="table-wrap"><table class="wrapped confluenceTable" style="margin-left: 10.375px;"><colgroup><col/><col/></colgroup><tbody><tr><th class="confluenceTh">Type</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>num (number)</strong></td><td class="confluenceTd">- 64bit signed integer, possible hexadecimal input;</td></tr><tr><td class="confluenceTd"><strong>bool (boolean)</strong></td><td class="confluenceTd">- values can bee<span> </span><code>true</code><span> </span>or<span> </span><code>false</code>;</td></tr><tr><td class="confluenceTd"><strong>str (string)</strong></td><td class="confluenceTd">- character sequence;</td></tr><tr><td class="confluenceTd"><strong>ip</strong></td><td class="confluenceTd">- IP address;</td></tr><tr><td class="confluenceTd"><strong>ip-prefix</strong></td><td class="confluenceTd">- IP prefix;</td></tr><tr><td class="confluenceTd"><strong>ip6</strong></td><td class="confluenceTd">- IPv6 address</td></tr><tr><td class="confluenceTd"><strong>ip6-prefix</strong></td><td class="confluenceTd">- IPv6 prefix</td></tr><tr><td class="confluenceTd"><strong>id (internal ID)</strong></td><td class="confluenceTd">- hexadecimal value prefixed by '*' sign. Each menu item has an assigned unique number - internal ID;</td></tr><tr><td class="confluenceTd"><strong>time</strong></td><td class="confluenceTd">- date and time value;</td></tr><tr><td class="confluenceTd"><strong>array</strong></td><td class="confluenceTd">- sequence of values organized in an array;</td></tr><tr><td class="confluenceTd"><strong>nil</strong></td><td class="confluenceTd">- default variable type if no value is assigned;</td></tr></tbody></table></div><h4 id="Scripting-ConstantEscapeSequences"><span class="mw-headline">Constant Escape Sequences</span></h4><p>Following escape sequences can be used to define certain special characters within a string:</p><div class="table-wrap"><table class="wrapped confluenceTable" style="margin-left: 10.375px;"><colgroup><col/><col/></colgroup><tbody><tr><td class="confluenceTd"><strong>\&quot;</strong></td><td class="confluenceTd">Insert double quote</td></tr><tr><td class="confluenceTd"><strong>\\</strong></td><td class="confluenceTd">Insert backslash</td></tr><tr><td class="confluenceTd"><strong>\n</strong></td><td class="confluenceTd">Insert newline</td></tr><tr><td class="confluenceTd"><strong>\r</strong></td><td class="confluenceTd">Insert carriage return</td></tr><tr><td class="confluenceTd"><strong>\t</strong></td><td class="confluenceTd">Insert horizontal tab</td></tr><tr><td class="confluenceTd"><strong>\$</strong></td><td class="confluenceTd">Output $ character. Otherwise, $ is used to link the variable.</td></tr><tr><td class="confluenceTd"><strong>\?</strong></td><td class="confluenceTd"><s>Output ? character. Otherwise ? is used to print &quot;help&quot; in the console.</s> Removed since v7.1rc2</td></tr><tr><td class="confluenceTd"><strong>\_</strong></td><td class="confluenceTd">- space</td></tr><tr><td class="confluenceTd"><strong>\a</strong></td><td class="confluenceTd">- BEL (0x07)</td></tr><tr><td class="confluenceTd"><strong>\b</strong></td><td class="confluenceTd">- backspace (0x08)</td></tr><tr><td class="confluenceTd"><strong>\f</strong></td><td class="confluenceTd">- form feed (0xFF)</td></tr><tr><td class="confluenceTd"><strong>\v</strong></td><td class="confluenceTd">Insert vertical tab</td></tr><tr><td class="confluenceTd"><strong>\xx</strong></td><td class="confluenceTd">A print character from hex value. Hex numbers should use capital letters.</td></tr></tbody></table></div><h5 id="Scripting-Example.2"><span class="mw-headline">Example</span></h5><pre style="margin-left: 20.0px;">:put &quot;\48\45\4C\4C\4F\r\nThis\r\nis\r\na\r\ntest&quot;;
+</pre><p>which will show on the display<br/><code>HELLO<br/>This<br/>is<br/>a<br/>test<br/></code></p><h3 id="Scripting-Operators"><span class="mw-headline">Operators</span></h3><h4 id="Scripting-ArithmeticOperators"><span class="mw-headline">Arithmetic Operators</span></h4><p>Usual arithmetic operators are supported in the RouterOS scripting language</p><div class="table-wrap"><table class="wrapped confluenceTable" style="margin-left: 10.375px;"><colgroup><col/><col/><col/></colgroup><tbody><tr><th class="confluenceTh">Operator</th><th class="confluenceTh">Description</th><th class="confluenceTh">Example</th></tr><tr><td class="confluenceTd"><strong>&quot;+&quot;</strong></td><td class="confluenceTd">binary addition</td><td class="confluenceTd"><code>:put (3+4);</code></td></tr><tr><td class="confluenceTd"><strong>&quot;-&quot;</strong></td><td class="confluenceTd">binary subtraction</td><td class="confluenceTd"><code>:put (1-6);</code></td></tr><tr><td class="confluenceTd"><strong>&quot;*&quot;</strong></td><td class="confluenceTd">binary multiplication</td><td class="confluenceTd"><code>:put (4*5);</code></td></tr><tr><td class="confluenceTd"><strong>&quot;/&quot;</strong></td><td class="confluenceTd">binary division</td><td class="confluenceTd"><code>:put (10 / 2); :put ((10)/2)</code></td></tr><tr><td class="confluenceTd"><strong>&quot;%&quot;</strong></td><td class="confluenceTd">modulo operation</td><td class="confluenceTd"><code>:put (5 % 3);</code></td></tr><tr><td class="confluenceTd"><strong>&quot;-&quot;</strong></td><td class="confluenceTd">unary negation</td><td class="confluenceTd"><code>{ :local a 1; :put (-a); }</code></td></tr></tbody></table></div><p><strong>Note:</strong><span> </span>for the division to work you have to use braces or spaces around the dividend so it is not mistaken as an IP address</p><h4 id="Scripting-RelationalOperators"><span class="mw-headline">Relational Operators</span></h4><div class="table-wrap"><table class="wrapped confluenceTable" style="margin-left: 10.375px;"><colgroup><col/><col/><col/></colgroup><tbody><tr><th class="confluenceTh">Operator</th><th class="confluenceTh">Description</th><th class="confluenceTh">Example</th></tr><tr><td class="confluenceTd"><strong>&quot;&lt;&quot;</strong></td><td class="confluenceTd">less</td><td class="confluenceTd"><code>:put (3&lt;4);</code></td></tr><tr><td class="confluenceTd"><strong>&quot;&gt;&quot;</strong></td><td class="confluenceTd">greater</td><td class="confluenceTd"><code>:put (3&gt;4);</code></td></tr><tr><td class="confluenceTd"><strong>&quot;=&quot;</strong></td><td class="confluenceTd">equal</td><td class="confluenceTd"><code>:put (2=2);</code></td></tr><tr><td class="confluenceTd"><strong>&quot;&lt;=&quot;</strong></td><td class="confluenceTd">less or equal</td><td class="confluenceTd"><br/></td></tr><tr><td class="confluenceTd"><strong>&quot;&gt;=&quot;</strong></td><td class="confluenceTd">greater or equal</td><td class="confluenceTd"><br/></td></tr><tr><td class="confluenceTd"><strong>&quot;!=&quot;</strong></td><td class="confluenceTd">not equal</td><td class="confluenceTd"><br/></td></tr></tbody></table></div><p>To negate an expression, you can use &quot;expression=false&quot;. To print all interfaces that are not &quot;ethernet&quot;, you can use expression negation like this:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface/print where (name~&quot;ether&quot;)=false</pre>
+</div></div><p>Or to do the opposite, you can use &quot;expression=true&quot;:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface/print where (name~&quot;ether&quot;)=true</pre>
+</div></div><h4 id="Scripting-LogicalOperators"><span class="mw-headline">Logical Operators</span></h4><div class="table-wrap"><table class="wrapped confluenceTable" style="margin-left: 10.375px;"><colgroup><col/><col/><col/></colgroup><tbody><tr><th class="confluenceTh">Operator</th><th class="confluenceTh">Description</th><th class="confluenceTh">Example</th></tr><tr><td class="confluenceTd"><strong>“!”</strong></td><td class="confluenceTd">logical NOT</td><td class="confluenceTd"><code>:put (!true);</code></td></tr><tr><td class="confluenceTd"><strong>“&amp;&amp;”, “and”</strong></td><td class="confluenceTd">logical AND</td><td class="confluenceTd"><code>:put (true&amp;&amp;true)</code></td></tr><tr><td class="confluenceTd"><strong>“||”, “or”</strong></td><td class="confluenceTd">logical OR</td><td class="confluenceTd"><code>:put (true||false);</code></td></tr><tr><td class="confluenceTd"><strong>“in”</strong></td><td class="confluenceTd"><br/></td><td class="confluenceTd"><code>:put (1.1.1.1/32 in 1.0.0.0/8);</code></td></tr></tbody></table></div><h4 id="Scripting-BitwiseOperators"><span class="mw-headline">Bitwise Operators</span></h4><p>Bitwise operators are working on number, IP, and IPv6 address<span> </span><a href="https://help.mikrotik.com/docs/display/ROS/Scripting#Scripting-Datatypes" rel="nofollow">data types</a>.</p><div class="table-wrap"><table class="wrapped confluenceTable" style="margin-left: 10.375px;"><colgroup><col/><col/><col/></colgroup><tbody><tr><th class="confluenceTh">Operator</th><th class="confluenceTh">Description</th><th class="confluenceTh">Example</th></tr><tr><td class="confluenceTd"><strong>“~”</strong></td><td class="confluenceTd">bit inversion</td><td class="confluenceTd"><code>:put (~0.0.0.0)</code><br/><code>:put (~::ffff)</code></td></tr><tr><td class="confluenceTd"><strong>“|”</strong></td><td class="confluenceTd">bitwise OR. Performs logical OR operation on each pair of corresponding bits. In each pair the result is “1” if one of the bits or both bits is “1”, otherwise the result is “0”.</td><td class="confluenceTd"><code>:put (192.168.88.0|0.0.0.255)</code><br/><code>:put (2001::1|::ffff)</code></td></tr><tr><td class="confluenceTd"><strong>“^”</strong></td><td class="confluenceTd">bitwise XOR. The same as OR, but the result in each position is “1” if two bits are not equal, and “0” if the bits are equal.</td><td class="confluenceTd"><code>:put (1.1.1.1^255.255.0.0)</code><br/><code>:put (2001::ffff:1^::ffff:0)</code></td></tr><tr><td class="confluenceTd"><strong>“&amp;”</strong></td><td class="confluenceTd">bitwise AND. In each pair, the result is “1” if the first and second bit is “1”. Otherwise, the result is “0”.</td><td class="confluenceTd"><code>:put (192.168.88.77&amp;255.255.255.0)</code><br/><code>:put (2001::1111&amp;ffff::)</code></td></tr><tr><td class="confluenceTd"><strong>“&lt;&lt;”</strong></td><td class="confluenceTd">left shift by a given amount of bits, not supported for IPv6 address data type</td><td class="confluenceTd"><code>:put (192.168.88.77&lt;&lt;8)</code></td></tr><tr><td class="confluenceTd"><strong>“&gt;&gt;”</strong></td><td class="confluenceTd">right shift by a given amount of bits, not supported for IPv6 address data type</td><td class="confluenceTd"><code>:put (192.168.88.77&gt;&gt;24)</code></td></tr></tbody></table></div><p>Calculate the subnet address from the given IP and CIDR Netmask using the &quot;&amp;&quot; operator:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">{ 
+:local IP 192.168.88.77; 
+:local CIDRnetmask 255.255.255.0; 
+:put ($IP&amp;$CIDRnetmask); 
+}</pre>
+</div></div><p>Get the last 8 bits from the given IP addresses:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false"> :put (192.168.88.77&amp;0.0.0.255);</pre>
+</div></div><p>Use the &quot;|&quot; operator and inverted CIDR mask to calculate the broadcast address:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">{ 
+:local IP 192.168.88.77; 
+:local Network 192.168.88.0; 
+:local CIDRnetmask 255.255.255.0; 
+:local InvertedCIDR (~$CIDRnetmask); 
+:put ($Network|$InvertedCIDR) 
+}</pre>
+</div></div><h4 id="Scripting-ConcatenationOperators"><span class="mw-headline">Concatenation Operators</span></h4><div class="table-wrap"><table class="wrapped confluenceTable" style="margin-left: 10.375px;"><colgroup><col/><col/><col/></colgroup><tbody><tr><th class="confluenceTh">Operator</th><th class="confluenceTh">Description</th><th class="confluenceTh">Example</th></tr><tr><td class="confluenceTd"><strong>&quot;.&quot;</strong></td><td class="confluenceTd">concatenates two strings</td><td class="confluenceTd"><code>:put (&quot;concatenate&quot; . &quot; &quot; . &quot;string&quot;);</code></td></tr><tr><td class="confluenceTd"><strong>&quot;,&quot;</strong></td><td class="confluenceTd">concatenates two arrays or adds an element to the array</td><td class="confluenceTd"><code>:put ({1;2;3} , 5 );</code></td></tr></tbody></table></div><p>It is possible to add variable values to strings without a concatenation operator:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">:global myVar &quot;world&quot;; 
+
+:put (&quot;Hello &quot; . $myVar); 
+# next line does the same as above 
+:put &quot;Hello $myVar&quot;;</pre>
+</div></div><p>By using $[] and $() in the string it is possible to add expressions inside strings:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">:local a 5; 
+:local b 6; 
+:put &quot; 5x6 = $($a * $b)&quot;; 
+
+:put &quot; We have $[ :len [/ip route find] ] routes&quot;;</pre>
+</div></div><h4 id="Scripting-OtherOperators"><span class="mw-headline">Other Operators</span></h4><p><br/></p><div class="table-wrap"><table class="wrapped confluenceTable" style="margin-left: 10.375px;"><colgroup><col/><col/><col/></colgroup><tbody><tr><th class="confluenceTh">Operator</th><th class="confluenceTh">Description</th><th class="confluenceTh">Example</th></tr><tr><td class="confluenceTd"><strong>“[]”</strong></td><td class="confluenceTd">command substitution. Can contain only a single command line</td><td class="confluenceTd"><code>:put [ :len &quot;my test string&quot;; ];</code></td></tr><tr><td class="confluenceTd"><strong>“()”</strong></td><td class="confluenceTd">subexpression or grouping operator</td><td class="confluenceTd"><code>:put ( &quot;value is &quot; . (4+5));</code></td></tr><tr><td class="confluenceTd"><strong>“$”</strong></td><td class="confluenceTd">substitution operator</td><td class="confluenceTd"><code>:global a 5; :put $a;</code></td></tr><tr><td class="confluenceTd"><strong>“~”</strong></td><td class="confluenceTd">the binary operator that matches value against POSIX extended regular expression</td><td class="confluenceTd">Print all routes whose gateway ends with 202:<br/><code>/ip route print where gateway~&quot;^[0-9 \\.]*202\$&quot;</code></td></tr><tr><td class="confluenceTd"><strong>“-&gt;”</strong></td><td class="confluenceTd">Get an array element by key</td><td class="confluenceTd"><pre style="margin-left: 20.0px;">[admin@x86] &gt;:global aaa {a=1;b=2}
+[admin@x86] &gt; :put ($aaa-&gt;&quot;a&quot;)
+1
+[admin@x86] &gt; :put ($aaa-&gt;&quot;b&quot;)
+2</pre></td></tr></tbody></table></div><h3 id="Scripting-Variables"><span class="mw-headline">Variables</span></h3><p>The scripting language has two types of variables:</p><ul class="bullets"><li>global<span> </span>- accessible from all scripts created by the current user, defined by<span> </span><a href="https://help.mikrotik.com/docs/display/ROS/Scripting#Scripting-Scopes" rel="nofollow">global</a><span> </span>keyword;</li><li>local<span> </span>- accessible only within the current<span> </span><a href="https://help.mikrotik.com/docs/display/ROS/Scripting#Scripting-Scopes" rel="nofollow">scope</a>, defined by<span> </span><a href="https://help.mikrotik.com/docs/display/ROS/Scripting#Scripting-Scopes" rel="nofollow">local</a><span> </span>keyword.</li></ul><p>There can be <strong>undefined</strong> variables. When a variable is undefined, the parser will try to look for variables set, for example, by<span> </span><a href="DHCP_24805500.html">DHCP</a><span> </span>lease-script<span> </span>or<span> </span><a href="HotSpot---Captive-portal_56459266.html">Hotspot</a><span> </span>on-login</p><p>Every variable, except for built-in RouterOS variables, must be declared before usage by local or global keywords. Undefined variables will be marked as undefined and will result in a compilation error. Example:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false"># following code will result in compilation error, because myVar is used without declaration 
+:set myVar &quot;my value&quot;; 
+:put $myVar</pre>
+</div></div><p>Correct code:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">:local myVar; 
+:set myVar &quot;my value&quot;; 
+:put $myVar;</pre>
+</div></div><p>The exception is when using variables set, for example, by DHCP<span> </span>lease-script</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/system script 
+add name=myLeaseScript policy=\ 
+	ftp,reboot,read,write,policy,test,winbox,password,sniff,sensitive,api \ 
+	source=&quot;:log info \$leaseActIP\r\ 
+	\n:log info \$leaseActMAC\r\ 
+	\n:log info \$leaseServerName\r\ 
+	\n:log info \$leaseBound&quot; 
+
+/ip dhcp-server set myServer lease-script=myLeaseScript</pre>
+</div></div><p>Valid characters in variable names are letters and digits. If the variable name contains any other character, then the variable name should be put in double quotes. Example:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">#valid variable name 
+:local myVar; 
+#invalid variable name 
+:local my-var; 
+#valid because double quoted 
+:global &quot;my-var&quot;;</pre>
+</div></div><p>If a variable is initially defined without value then<span> the </span><a href="https://help.mikrotik.com/docs/display/ROS/Scripting#Scripting-Datatypes" rel="nofollow">variable data type</a><span> </span>is set to<span> </span><em>nil</em>, otherwise, a data type is determined automatically by the scripting engine. Sometimes conversion from one data type to another is required. It can be achieved using<span> </span><a href="https://help.mikrotik.com/docs/display/ROS/Scripting#Scripting-Globalcommands" rel="nofollow">data conversion commands</a>. Example:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">#convert string to array 
+:local myStr &quot;1,2,3,4,5&quot;; 
+:put [:typeof $myStr]; 
+:local myArr [:toarray $myStr]; 
+:put [:typeof $myArr]</pre>
+</div></div><p>Variable names are case-sensitive.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">:local myVar &quot;hello&quot; 
+# following line will generate error, because variable myVAr is not defined 
+:put $myVAr 
+# correct code 
+:put $myVar</pre>
+</div></div><p>Set command without value will un-define the variable (remove from environment, new in v6.2)</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">#remove variable from environment 
+:global myVar &quot;myValue&quot; 
+:set myVar;</pre>
+</div></div><p>Use quotes on the full variable name when the name of the variable contains operators. Example:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">:local &quot;my-Var&quot;;
+:set &quot;my-Var&quot; &quot;my value&quot;;
+:put $&quot;my-Var&quot;;</pre>
+</div></div><h4 id="Scripting-Reservedvariablenames"><span class="mw-headline">Reserved variable names</span></h4><p>All built-in RouterOS properties are reserved variables. Variables that will be defined the same as the RouterOS built-in properties can cause errors. To avoid such errors, use custom designations.</p><p>For example, the following script will not work:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">{ 
+:local type &quot;ether1&quot;; 
+/interface print where name=$type; 
+}</pre>
+</div></div><p>But will work with different defined variables:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false"> { 
+:local customname &quot;ether1&quot;; 
+/interface print where name=$customname; 
+}</pre>
+</div></div><h3 id="Scripting-Commands"><span class="mw-headline">Commands</span></h3><h4 id="Scripting-Globalcommands"><span class="mw-headline">Global commands</span></h4><p>Every global command should start with<span> the </span><em>&quot;:&quot;</em><span> </span>token, otherwise, it will be treated as a variable.</p><div class="table-wrap"><table class="wrapped fixed-width confluenceTable" style="margin-left: 10.375px;width: 1781.0px;"><colgroup><col style="width: 115.0px;"/><col style="width: 253.0px;"/><col style="width: 502.0px;"/><col style="width: 910.0px;"/></colgroup><tbody><tr><th class="confluenceTh">Command</th><th class="confluenceTh">Syntax</th><th class="confluenceTh">Description</th><th class="confluenceTh">Example</th></tr><tr><td class="confluenceTd"><strong>/</strong></td><td class="confluenceTd"><br/></td><td class="confluenceTd">go to the root menu</td><td class="confluenceTd"><br/></td></tr><tr><td class="confluenceTd"><strong>..</strong></td><td class="confluenceTd"><br/></td><td class="confluenceTd">go back by one menu level</td><td class="confluenceTd"><br/></td></tr><tr><td class="confluenceTd"><strong>?</strong></td><td class="confluenceTd"><br/></td><td class="confluenceTd">list all available menu commands and brief descriptions</td><td class="confluenceTd"><br/></td></tr><tr><td class="confluenceTd"><strong>global</strong></td><td class="confluenceTd"><code>:global &lt;var&gt; [&lt;value&gt;]</code></td><td class="confluenceTd">define a global variable</td><td class="confluenceTd"><code>:global myVar &quot;something&quot;; :put $myVar;</code></td></tr><tr><td class="confluenceTd"><strong>local</strong></td><td class="confluenceTd"><code>:local &lt;var&gt; [&lt;value&gt;]</code></td><td class="confluenceTd">define the local variable</td><td class="confluenceTd"><code>{ :local myLocalVar &quot;I am local&quot;; :put $myVar; }</code></td></tr><tr><td class="confluenceTd"><strong>beep</strong></td><td class="confluenceTd"><code>:beep frequency=[num] length=[num]</code></td><td class="confluenceTd">beep built-in speaker</td><td class="confluenceTd"><br/></td></tr><tr><td class="confluenceTd"><strong>convert</strong></td><td class="confluenceTd"><code>:convert from=[arg] to=[arg]</code></td><td class="confluenceTd"><p>Converts specified value from one format to another. By default uses an automatically parsed value, if the &quot;from&quot; format is not specified (for example, &quot;001&quot; becomes &quot;1&quot;, &quot;10.1&quot; becomes &quot;10.0.0.1&quot;, etc.).</p><p><strong>from</strong> specifies the format of the value - <em>base32, base64, byte-array, hex, num, raw, url</em>.</p><p><strong>to</strong> specifies the format of the output value - <em>base32, base64, bit-array-lsb, bit-array-msb, byte-array, hex, num, raw, url</em>.</p><p><strong>transform</strong> to transform values - <em>lc (transforms value to be in lowercases), uc (uppercases), lcfirst (first value to lowercase), ucfirst (first value to uppercase), crlf, ed25519-private-to-x25519-private, none, rot 13, x25519-private-to-x25519-public, ed25519-private-to-ed25519-public, ed25519-public-to-x25519-public, md5, reverse (reverses text), sha512.</em></p></td><td class="confluenceTd"><p><span style="color:var(--ds-text,#333333);"><code>:put [:convert 001 to=hex ]</code></span></p><p><span style="color:var(--ds-text,#333333);"><code>31</code></span></p><p><span style="color:var(--ds-text,#333333);"><code>:put [:convert [/ip dhcp-client/option/get hostname raw-value] from=hex to=raw ]</code></span></p><p><span style="color:var(--ds-text,#333333);"><code>MikroTik</code></span></p><p><code>:put [convert transform=lc &quot;AAA&quot;]         </code></p><p><code>aaa</code></p></td></tr><tr><td class="confluenceTd"><strong>delay</strong></td><td class="confluenceTd"><code>:delay &lt;time&gt;</code></td><td class="confluenceTd">do nothing for a given period of time</td><td class="confluenceTd"><br/></td></tr><tr><td class="confluenceTd"><strong>environment</strong></td><td class="confluenceTd"><code>:environment print &lt;start&gt;</code></td><td class="confluenceTd">print initialized variable information</td><td class="confluenceTd"><code>:global myVar true; :environment print;</code></td></tr><tr><td class="confluenceTd"><strong>error</strong></td><td class="confluenceTd"><code>:error &lt;output&gt;</code></td><td class="confluenceTd">Generate console error and stop executing the script</td><td class="confluenceTd"><br/></td></tr><tr><td class="confluenceTd"><strong>execute</strong></td><td class="confluenceTd"><code>:execute &lt;expression&gt;</code></td><td class="confluenceTd"><p>Execute the script in the background. The result can be written in the file by setting<span> a &quot;</span>file&quot;<span> </span>parameter or printed to the CLI by setting &quot;as-string&quot;.</p><p>When using the &quot;as-string&quot; parameter executed script is blocked (not executed in the background).</p><p>Executed script can not be larger than <span style="color:var(--ds-text,#172b4d);">64kB</span></p></td><td class="confluenceTd"><div class="content-wrapper"><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">{
+:local j [:execute {/interface print follow where [:log info ~Sname~]}];
+:delay 10s;
+:onerror e {/system script job remove $j}
+}</pre>
+</div></div></div></td></tr><tr><td class="confluenceTd"><strong>find</strong></td><td class="confluenceTd"><code>:find &lt;arg&gt; &lt;arg&gt; &lt;start&gt;</code></td><td class="confluenceTd">return position of a substring or array element</td><td class="confluenceTd"><code>:put [:find &quot;abc&quot; &quot;a&quot; -1];</code></td></tr><tr><td class="confluenceTd"><strong>grep</strong></td><td class="confluenceTd"><code>:grep script=[str] pattern=[expression] after=[num] before=[num] filename=[str]</code><br/><br/></td><td class="confluenceTd">Command &quot;:grep&quot; executes &quot;script&quot; part of a command in terminal and provides just the output which matches &quot;pattern&quot;. Additional options &quot;after&quot; and &quot;before&quot; allow to print out specific number of lines of script output which are available also after/before matched pattern. Results can be directly saved into a file with &quot;filename&quot; parameter.</td><td class="confluenceTd"><p><code>:grep script=&quot;/interface print&quot; pattern=&quot;ether&quot; after=1 before=1 filename=results.txt</code></p></td></tr><tr><td class="confluenceTd"><strong>jobname<br/></strong></td><td class="confluenceTd">:jobname</td><td class="confluenceTd">return current script name</td><td class="confluenceTd"><div class="content-wrapper"><div class="code panel pdl" style="border-width: 1px;"><div class="codeHeader panelHeader pdl" style="border-bottom-width: 1px;"><b>Limit script execution to single instance</b></div><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">:if ([/system script job print count-only as-value where script=[:jobname] ] &gt; 1) do={
+  :error &quot;script instance already running&quot;
+  }</pre>
+</div></div><p><br/></p></div></td></tr><tr><td class="confluenceTd"><strong>len</strong></td><td class="confluenceTd"><code>:len &lt;expression&gt;</code></td><td class="confluenceTd">return string length or array element count</td><td class="confluenceTd"><code>:put [:len &quot;length=8&quot;];</code></td></tr><tr><td class="confluenceTd"><strong>log</strong></td><td class="confluenceTd"><code>:log &lt;topic&gt; &lt;message&gt;</code></td><td class="confluenceTd">write a message to<span> the </span><a href="Log_328094.html">system log</a>. Available topics are<span> </span><code>&quot;debug, error, info and warning&quot;</code></td><td class="confluenceTd"><code>:log info &quot;Hello from script&quot;;</code></td></tr><tr><td class="confluenceTd"><strong>onerror</strong></td><td class="confluenceTd"><code>:onerror &lt;var_name&gt; in={&lt;command&gt;} do={&lt;expression&gt;}</code></td><td class="confluenceTd"><div class="content-wrapper"><p><span style="text-decoration: none;color:var(--ds-text,#172b4d);">The command used to catch errors and get error details. The <strong style="text-decoration: none;text-align: left;">do={...}</strong> block is executed, when </span><strong style="text-decoration: none;text-align: left;">in={...}</strong><span style="text-decoration: none;color:var(--ds-text,#172b4d);"> block has an error,  and error details are written in &lt;var_name&gt; variable. </span></p><p>Parameter order is important. The &quot;error&quot; parameter must be set before &quot;do&quot; block, otherwise do block will not see the local variable. </p><p><br style="text-decoration: none;text-align: left;"/><span style="text-decoration: none;color:var(--ds-text,#172b4d);">:onerror will return </span><em style="text-decoration: none;text-align: left;">false</em><span style="text-decoration: none;color:var(--ds-text,#172b4d);"> (if there is no error) and </span><em style="text-decoration: none;text-align: left;">true</em><span style="text-decoration: none;color:var(--ds-text,#172b4d);"> (if there is an error) unless otherwise specified (with commands such as :return or :error), so it can be used in </span><strong style="text-decoration: none;text-align: left;">:if</strong><span style="text-decoration: none;color:var(--ds-text,#172b4d);"> condition statement scripts.</span></p></div></td><td class="confluenceTd"><code><span style="text-decoration: none;color:var(--ds-text,#172b4d);"> :onerror errorName in={ :error &quot;failure&quot; } do={ :put &quot;Critical $errorName&quot; }</span></code></td></tr><tr><td class="confluenceTd"><strong>parse</strong></td><td class="confluenceTd"><code>:parse &lt;expression&gt;</code></td><td class="confluenceTd">parse the string and return parsed console commands. Can be used as a function.</td><td class="confluenceTd"><code>:global myFunc [:parse &quot;:put hello!&quot;];<br/>$myFunc;</code></td></tr><tr><td class="confluenceTd"><strong>pick</strong></td><td class="confluenceTd"><code>:pick &lt;var&gt; &lt;start&gt; [&lt;end&gt;]</code></td><td class="confluenceTd"><p>return range of elements or substring. If the count is not specified, will return only one element from an array.</p><ul><li>var - value to pick elements from</li><li>start - element to start picking from (the first element index is 0)</li><li data-uuid="5f06f372-ce37-4813-817e-08d56142b5c8">end - terminating index (element at this index is not included)</li></ul></td><td class="confluenceTd"><div class="content-wrapper"><p><br/></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; :put [:pick &quot;abcde&quot; 1 3]
+bc</pre>
+</div></div><p><br/></p></div></td></tr><tr><td class="confluenceTd"><strong>put</strong></td><td class="confluenceTd"><code>:put &lt;expression&gt;</code></td><td class="confluenceTd">put the supplied argument into the console</td><td class="confluenceTd">:put &quot;Hello world&quot;</td></tr><tr><td class="confluenceTd"><strong>range</strong></td><td class="confluenceTd"><code>:range &lt;var&gt; &lt;var&gt;</code></td><td class="confluenceTd">creates an array from the specified range</td><td class="confluenceTd"><pre>:put [:range 2 8]<br/>2;3;4;5;6;7;8</pre></td></tr><tr><td class="confluenceTd"><strong>resolve</strong></td><td class="confluenceTd"><code>:resolve &lt;arg&gt; [&lt;domain-name&gt;][&lt;server&gt;][&lt;server-port&gt;][&lt;type&gt;]</code></td><td class="confluenceTd"><p>return the IP address of the given DNS name</p><ul><li>domain-name - DNS name that needs to be resolved;</li><li>server - specific server that will be used to resolve DNS name (returned results will not be cached);</li><li>server-port - server port;</li><li>type - any/any6/ipv4/ipv6:<ul><li>any - first tries to resolve ipv4, if fails tries ipv6;</li><li>any6 - first tries to resolve ipv6, if fails tries ipv4;</li><li>ipv4 - tries to resolve only ipv4;</li><li>ipv6 - tries to resolve only ipv6</li></ul></li></ul></td><td class="confluenceTd"><p><code>:put [:resolve &quot;<a class="external-link" href="http://www.mikrotik.com" rel="nofollow">www.mikrotik.com</a>&quot;];</code></p><p><code>:put [:resolve domain-name=&quot;<a class="external-link" href="http://www.mikrotik.com" rel="nofollow">www.mikrotik.com</a>&quot;];</code></p><p><code>:put [:resolve domain-name=&quot;<a class="external-link" href="http://www.mikrotik.com" rel="nofollow">www.mikrotik.com</a>&quot; server=192.168.88.1 port=53];</code></p><p><code>:put [:resolve domain-name=&quot;<a class="external-link" href="http://www.mikrotik.com" rel="nofollow">www.mikrotik.com</a>&quot; type=ipv6];</code></p></td></tr><tr><td class="confluenceTd"><strong>retry</strong></td><td class="confluenceTd"><p>:onerror e {:retry command=&lt;expr&gt; delay=[num] max=[num]} do={&lt;expr&gt;}</p></td><td class="confluenceTd">Try to execute the given command &quot;max&quot; amount of times with a given &quot;delay&quot; in seconds between tries. On failure, execute the command in the do={} block.</td><td class="confluenceTd"><div class="content-wrapper"><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: text; gutter: false">:onerror e {:retry command={abc} delay=1 max=2} do={:put &quot;got error&quot;}
+got error</pre>
+</div></div></div></td></tr><tr><td class="confluenceTd"><strong>typeof</strong></td><td class="confluenceTd"><code>:typeof &lt;var&gt;</code></td><td class="confluenceTd">the return data type of variable</td><td class="confluenceTd"><code>:put [:typeof 4];</code></td></tr><tr><td class="confluenceTd"><strong>rndnum</strong></td><td class="confluenceTd"><code>:rndnum from=[num] to=[num]</code></td><td class="confluenceTd">random number generator</td><td class="confluenceTd"><code>:put [:rndnum from=1 to=99];</code></td></tr><tr><td class="confluenceTd"><strong>rndstr</strong></td><td class="confluenceTd"><code>:rndstr from=[str] length=[num]</code></td><td class="confluenceTd"><p>Random string generator.</p><p><strong>from</strong> specifies characters to construct the string from and defaults to all ASCII letters and numerals.<br/><strong>length</strong> specifies the length of the string to create and defaults to 16.</p></td><td class="confluenceTd"><p><code>:put [:<span style="color:var(--ds-text,#172b4d);">rndstr<span> </span></span>from=&quot;abcdef%^&amp;</code><code>&quot; length=33];</code></p><p><br/></p><p><br/></p></td></tr><tr><td class="confluenceTd"><strong>set</strong></td><td class="confluenceTd"><code>:set &lt;var&gt; [&lt;value&gt;]</code></td><td class="confluenceTd">assign value to a declared variable.</td><td class="confluenceTd"><code>:global a; :set a true;</code></td></tr><tr><td class="confluenceTd"><strong>serialize</strong></td><td class="confluenceTd"><code>:serialize <span class="error">[&lt;value&gt;]</span> to=<span class="error">[arg]</span></code></td><td class="confluenceTd"><p>Serialize specified value/array to JSON or dsv (delimiter separated values) format.</p><p><strong>value </strong>specifues which values to process.</p><p><strong>to</strong> specifies the format - <em>json, dsv</em></p><p><strong>delimiter</strong> sets the &quot;separator&quot;.</p><p><strong>order</strong> specifies the order for variables.</p><p><strong>options</strong> specifies additional options<em>:</em></p><ul><li data-uuid="be2cc495-4f38-4e20-9cc7-048240bbac98"><em>json.pretty</em>  - makes the JSON output more visually appealing<em>;</em></li><li data-uuid="2f3cfdd4-76eb-48b9-abd6-5bbc6e00644a"><p><em>json.no-string-conversion</em> - prevents implict conversions from console string type to json number type;</p></li><li data-uuid="7e7a8188-bf6c-4a49-aa35-a2a2690b52a8"><em>dsv.wrap-strings</em> - wraps string values inside quatation marks;</li><li data-uuid="b08503c5-148e-4293-bc5f-26e95fb443db"><em>dsv.ignore-size - </em>if array values have different sizes, e.g. <code>a=(1,2);b=(3,4);c=(5,6,7)</code>, this option will work around <code>array size mismatch</code> error and set &quot;empty&quot; values in those slots.</li><li data-uuid="233e3bbe-d79c-4aa5-bcf7-2208e45648ba"><em>dsv.remap</em> - merges array of dictionaries into a single dictionary (useful when working with &quot;<code>print as-value</code>&quot;)</li></ul><p><strong>file-name </strong>enables the option to generate command's output into a file (available for download in the &quot;/files&quot; section).</p></td><td class="confluenceTd"><div class="content-wrapper"><p><br/></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">:put [:serialize value=a,b,c to=json]                 
+[&quot;a&quot;,&quot;b&quot;,&quot;c&quot;]
+
+:local test {a=(1,2,3);b=(4,5,6);c=(7,&quot;text&quot;,9)}; :put [ :serialize to=dsv delimiter=&quot;;&quot; value=$test order=(&quot;c&quot;,&quot;a&quot;,&quot;b&quot;) ]     
+c;a;b
+7;1;4
+text;2;5
+9;3;6
+
+:global var ({ &quot;string&quot;=&quot;1234&quot;; &quot;number&quot;=1234 });:put [ :serialize to=json value=$var ]
+{&quot;number&quot;:1234,&quot;string&quot;:1234.000000}
+:put [ :serialize to=json value=$var options=json.no-string-conversion  ]
+{&quot;number&quot;:1234,&quot;string&quot;:&quot;1234&quot;}
+
+:put [:serialize to=dsv options=dsv.remap delimiter=&quot;#&quot; [/ip/address/print as-value]]  
+.id#address#comment#interface#network
+*1#192.168.88.1/24#defconf#bridge#192.168.88.0
+*2#192.168.69.190/24##ether1#192.168.69.0
+</pre>
+</div></div><p><br/></p></div></td></tr><tr><td class="confluenceTd"><strong>deserialize</strong></td><td class="confluenceTd"><code>:deserialize <span class="error">[&lt;value&gt;]</span> from=<span class="error">[arg]</span></code></td><td class="confluenceTd"><p>Deserialize specified value/array from JSON or dsv (delimiter separated values) format.</p><p><strong>from</strong> specifies the format - <em>json, dsv</em></p><p><strong>delimiter</strong> sets the &quot;separator&quot;.</p><p><strong>options</strong> specifies additional options<em>:</em></p><ul><li data-uuid="f6df50e5-d93a-4a28-889c-5e2ddc770dd1"><em>dsv.plain</em> - deserializes every line as an array (input does not have a header or column names);</li><li data-uuid="84e373de-34eb-498f-abd6-6dc90ecad00c"><em>dsv.array</em> - expects a header (column names) and will return an array of dictionaries, where values are mapped to column names provided in the header.</li><li data-uuid="3f5adb45-fe4d-4a61-b711-877ddec9aa02"><em>json.no-string-conversion</em> - prevents implicit conversions from json string type to console values (number, ip, etc.).</li></ul></td><td class="confluenceTd"><div class="content-wrapper"><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">:put [:deserialize from=json value=&quot;[\&quot;a\&quot;,\&quot;b\&quot;,\&quot;c\&quot;]&quot;]
+a;b;c
+
+:put ([ :deserialize from=dsv delimiter=&quot;;&quot; value=&quot;a;b;c\n1;findme;3&quot; options=dsv.plain ]-&gt;1-&gt;1) 
+findme
+
+:put ([ :deserialize from=dsv delimiter=&quot;;&quot; value=&quot;a;b;c\n1;findme;3&quot; options=dsv.plain ]-&gt;0-&gt;1)   
+b
+
+:put ([:deserialize from=dsv &quot;a;b;c\n1;2;3\n4;5;6&quot; delimiter=&quot;;&quot; options=dsv.array]-&gt;1-&gt;&quot;b&quot;) 
+5
+
+:put ([:deserialize from=dsv &quot;a;b;c\n1;2;3\n4;5;6&quot; delimiter=&quot;;&quot; options=dsv.array]-&gt;0-&gt;&quot;c&quot;)    
+3
+
+:put [typeof ([:deserialize &quot;{ \&quot;str\&quot;: \&quot;123\&quot; }&quot; from=json options=json.no-string-conversion]-&gt;&quot;str&quot;)]
+str
+
+:deserialize [/file/get file.json contents] from=json</pre>
+</div></div></div></td></tr><tr><td class="confluenceTd"><strong>time</strong></td><td class="confluenceTd"><code>:time &lt;expression&gt;</code></td><td class="confluenceTd">return interval of time needed to execute the command</td><td class="confluenceTd"><code>:put [:time {:for i from=1 to=10 do={ :delay 100ms }}];</code></td></tr><tr><td class="confluenceTd"><strong>timestamp</strong></td><td class="confluenceTd"><code>:timestamp</code></td><td class="confluenceTd">returns the <span style="text-decoration: none;color:var(--ds-text,#333333);">time since epoch, where epoch is January 1, 1970 (Thursday), not counting leap seconds</span></td><td class="confluenceTd"><div class="content-wrapper"><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: text; gutter: false">[admin@MikroTik] &gt; :put [:timestamp]
+2735w21:41:43.481891543
+or
+[admin@MikroTik] &gt; :put [:timestamp]
+2735w1d21:41:43.481891543
+with the day offset</pre>
+</div></div></div></td></tr><tr><td class="confluenceTd"><strong>toarray</strong></td><td class="confluenceTd"><code>:toarray &lt;var&gt;</code></td><td class="confluenceTd">convert a variable to the array</td><td class="confluenceTd"><br/></td></tr><tr><td class="confluenceTd"><strong>tobool</strong></td><td class="confluenceTd"><code>:tobool &lt;var&gt;</code></td><td class="confluenceTd">convert a variable to boolean</td><td class="confluenceTd"><br/></td></tr><tr><td class="confluenceTd"><strong>toid</strong></td><td class="confluenceTd"><code>:toid &lt;var&gt;</code></td><td class="confluenceTd">convert a variable to internal ID</td><td class="confluenceTd"><br/></td></tr><tr><td class="confluenceTd"><strong>toip</strong></td><td class="confluenceTd"><code>:toip &lt;var&gt;</code></td><td class="confluenceTd">convert a variable to IP address</td><td class="confluenceTd"><br/></td></tr><tr><td class="confluenceTd"><strong>toip6</strong></td><td class="confluenceTd"><code>:toip6 &lt;var&gt;</code></td><td class="confluenceTd">convert a variable to IPv6 address</td><td class="confluenceTd"><br/></td></tr><tr><td class="confluenceTd"><strong>tonum</strong></td><td class="confluenceTd"><code>:tonum &lt;var&gt;</code></td><td class="confluenceTd">convert a variable to an integer</td><td class="confluenceTd"><br/></td></tr><tr><td class="confluenceTd"><strong>tostr</strong></td><td class="confluenceTd"><code>:tostr &lt;var&gt;</code></td><td class="confluenceTd">convert a variable to a string</td><td class="confluenceTd"><br/></td></tr><tr><td class="confluenceTd"><strong>totime</strong></td><td class="confluenceTd"><code>:totime &lt;var&gt;</code></td><td class="confluenceTd">convert a variable to time</td><td class="confluenceTd"><br/></td></tr><tr><td class="confluenceTd"><strong>tonsec</strong></td><td class="confluenceTd"><code>:tonsec &lt;var&gt;</code></td><td class="confluenceTd">convert time to nanoseconds</td><td class="confluenceTd"><pre>:put [:tonsec value=10:00]               <br/>36000000000000</pre></td></tr><tr><td class="confluenceTd"><strong>tocrlf</strong></td><td class="confluenceTd"><code>:tocrlf &lt;var&gt;</code></td><td class="confluenceTd">converts line endings to CRLF</td><td class="confluenceTd"><pre class="code-java">:put [:tocrlf  <span class="code-quote">&quot;AAA\r\nBBB\r\nCCC&quot;</span> ]                                                                                                             
+AAA                                              
+BBB
+CCC</pre></td></tr><tr><td class="confluenceTd"><strong>tolf</strong></td><td class="confluenceTd"><code>:tolf &lt;var&gt;</code></td><td class="confluenceTd">converts line endings to LF</td><td class="confluenceTd"><pre class="code-java">:put [:tolf  <span class="code-quote">&quot;AAA\nBBB\nCCC&quot;</span> ]      
+AAA
+   BBB
+      CCC</pre></td></tr><tr><td class="confluenceTd"><strong>nothing</strong></td><td class="confluenceTd"><code>:nothing</code></td><td class="confluenceTd">return a value of nothing</td><td class="confluenceTd"><pre class="code-java">:if ([:nothing] = 0) do={:put true} else={:put false}<br/>false<br/>:if ([:nothing] &gt; 0) do={:put true} else={:put false} <br/>false<br/>:if ([:nothing] &lt; 0) do={:put true} else={:put false} <br/>true</pre></td></tr></tbody></table></div><h4 id="Scripting-Menuspecificcommands"><span class="mw-headline">Menu specific commands</span></h4><h5 id="Scripting-Commoncommands"><span class="mw-headline">Common commands</span></h5><p>The following commands are available from most sub-menus:</p><div class="table-wrap"><table class="wrapped confluenceTable" style="margin-left: 10.375px;"><colgroup><col/><col/><col/></colgroup><tbody><tr><th class="confluenceTh">Command</th><th class="confluenceTh">Syntax</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>add</strong></td><td class="confluenceTd"><code>add &lt;param&gt;=&lt;value&gt;..&lt;param&gt;=&lt;value&gt;</code></td><td class="confluenceTd">add new item</td></tr><tr><td class="confluenceTd"><strong>remove</strong></td><td class="confluenceTd"><code>remove &lt;id&gt;</code></td><td class="confluenceTd">remove selected item</td></tr><tr><td class="confluenceTd"><strong>enable</strong></td><td class="confluenceTd"><code>enable &lt;id&gt;</code></td><td class="confluenceTd">enable selected item</td></tr><tr><td class="confluenceTd"><strong>disable</strong></td><td class="confluenceTd"><code>disable &lt;id&gt;</code></td><td class="confluenceTd">disable selected item</td></tr><tr><td class="confluenceTd"><strong>set</strong></td><td class="confluenceTd"><code>set &lt;id&gt; &lt;param&gt;=&lt;value&gt;..&lt;param&gt;=&lt;value&gt;</code></td><td class="confluenceTd">change selected items parameter, more than one parameter can be specified at the time. The parameter can be unset by specifying '!' before the parameter.<br/><p>Example:<br/><code>/ip firewall filter add chain=blah action=accept protocol=tcp port=123 nth=4,2<br/>print<br/>set 0 !port chain=blah2 !nth protocol=udp</code></p></td></tr><tr><td class="confluenceTd"><strong>get</strong></td><td class="confluenceTd"><code>get &lt;id&gt; &lt;param&gt;=&lt;value&gt;</code></td><td class="confluenceTd">get the selected item's parameter value</td></tr><tr><td class="confluenceTd"><strong>print</strong></td><td class="confluenceTd"><code>print &lt;param&gt;&lt;param&gt;=[&lt;value&gt;]</code></td><td class="confluenceTd">print menu items. Output depends on the print parameters specified. The most common print parameters are described<span> </span><a href="https://help.mikrotik.com/docs/display/ROS/Scripting#Scripting-printparameters" rel="nofollow">here</a></td></tr><tr><td class="confluenceTd"><strong>export</strong></td><td class="confluenceTd"><code>export [file=&lt;value&gt;]</code></td><td class="confluenceTd">export configuration from the current menu and its sub-menus (if present). If the file parameter is specified output will be written to the file with the extension '.rsc', otherwise the output will be printed to the console. Exported commands can be imported by<span> </span><a href="https://help.mikrotik.com/docs/display/ROS/Scripting#Scripting-import" rel="nofollow">import command</a></td></tr><tr><td class="confluenceTd"><strong>edit</strong></td><td class="confluenceTd"><code>edit &lt;id&gt; &lt;param&gt;</code></td><td class="confluenceTd">edit selected items property in the built-in<span> </span>text editor</td></tr><tr><td class="confluenceTd"><strong>find</strong></td><td class="confluenceTd"><code>find &lt;expression&gt;</code></td><td class="confluenceTd">Returns list of internal numbers for items that are matched by given expression. For example:<span> </span><code> :put [/interface find name~&quot;ether&quot;]</code></td></tr></tbody></table></div><h5 id="Scripting-import"><span class="mw-headline">import</span></h5><p>The import command is available from the root menu and is used to import configuration from files created by<span> an </span><a href="https://help.mikrotik.com/docs/display/ROS/Scripting#Scripting-Commoncommands" rel="nofollow">export</a><span> </span>command or written manually by hand.</p><p>Starting from 7.16.x version, its possible to catch syntax errors:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@admin] &gt; do { import test.rsc } on-error={ :put &quot;Failure&quot; }  
+Failure</pre>
+</div></div><p>New parameter <em>onerror</em> can be used:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@admin] &gt; onerror e in={ import test.rsc } do={ :put &quot;Failure - $e&quot; }       
+Failure - Script Error: bad command name this (line 1 column 1)</pre>
+</div></div><p>In addition, the <em>import</em> command has new options in <em>verbose</em> mode - the <em>dry-run</em> parameter is specially designed for debugging and can find multiple errors without changing the configuration.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@admin] &gt; import test.rsc verbose=yes dry-run 
+#line 1
+this
+bad command name this (line 1 column 1)
+...
+Script Error: found 5 error(s) in import file</pre>
+</div></div><h5 id="Scripting-printparameters"><span class="mw-headline">print parameters</span></h5><p>Several parameters are available for print command:</p><div class="table-wrap"><table class="wrapped confluenceTable" style="margin-left: 10.375px;"><colgroup><col/><col/><col/></colgroup><tbody><tr><th class="confluenceTh">Parameter</th><th class="confluenceTh">Description</th><th class="confluenceTh">Example</th></tr><tr><td class="confluenceTd"><strong>append</strong></td><td class="confluenceTd"><br/></td><td class="confluenceTd"><br/></td></tr><tr><td class="confluenceTd"><strong>as-value</strong></td><td class="confluenceTd">print output as an array of parameters and its values</td><td class="confluenceTd"><code>:put [/ip address print as-value]</code></td></tr><tr><td class="confluenceTd"><strong>brief</strong></td><td class="confluenceTd">print brief description</td><td class="confluenceTd"><br/></td></tr><tr><td class="confluenceTd"><strong>detail</strong></td><td class="confluenceTd">print detailed description, the output is not as readable as brief output but may be useful to view all parameters</td><td class="confluenceTd"><br/></td></tr><tr><td class="confluenceTd"><strong>count-only</strong></td><td class="confluenceTd">print only count of menu items</td><td class="confluenceTd"><br/></td></tr><tr><td class="confluenceTd"><strong>file</strong></td><td class="confluenceTd">print output to a file</td><td class="confluenceTd"><br/></td></tr><tr><td class="confluenceTd"><strong>follow</strong></td><td class="confluenceTd">print all current entries and track new entries until ctrl-c is pressed, very useful when viewing log entries</td><td class="confluenceTd"><code>/log print follow</code></td></tr><tr><td class="confluenceTd"><strong>follow-only</strong></td><td class="confluenceTd">print and track only new entries until ctrl-c is pressed, very useful when viewing log entries</td><td class="confluenceTd"><code>/log print follow-only</code></td></tr><tr><td class="confluenceTd"><strong>from</strong></td><td class="confluenceTd">print parameters only from specified item</td><td class="confluenceTd"><code>/user print from=admin</code></td></tr><tr><td class="confluenceTd"><strong>interval</strong></td><td class="confluenceTd">continuously print output in a selected time interval, useful to track down changes where<span> </span><code>follow</code><span> </span>is not acceptable</td><td class="confluenceTd"><code>/interface print interval=2</code></td></tr><tr><td class="confluenceTd"><strong>terse</strong></td><td class="confluenceTd">show details in a compact and machine-friendly format</td><td class="confluenceTd"><br/></td></tr><tr><td class="confluenceTd"><strong>value-list</strong></td><td class="confluenceTd">show values single per line (good for parsing purposes)</td><td class="confluenceTd"><br/></td></tr><tr><td class="confluenceTd"><strong>without-paging</strong></td><td class="confluenceTd">If the output does not fit in the console screen then do not stop, print all information in one piece</td><td class="confluenceTd"><br/></td></tr><tr><td class="confluenceTd"><strong>where</strong></td><td class="confluenceTd">expressions followed by where parameters can be used to filter outmatched entries</td><td class="confluenceTd"><p><code>/ip route print where interface=&quot;ether1&quot;<br/></code></p></td></tr><tr><td class="confluenceTd"><strong>about</strong></td><td class="confluenceTd">returns entries that have the &quot;about&quot; parameter, such as &quot;managed by CAPsMAN &quot;information or warnings</td><td class="confluenceTd"><p><code>/interface wifi print where about</code></p></td></tr></tbody></table></div><p>More than one parameter can be specified at a time, for example,<span> </span><code>/ip route print count-only interval=1 where interface=&quot;ether1&quot;</code></p><h3 id="Scripting-Loopsandconditionalstatements"><span class="mw-headline">Loops and conditional statements</span></h3><h4 id="Scripting-Loops"><span class="mw-headline">Loops</span></h4><div class="table-wrap"><table class="wrapped confluenceTable" style="margin-left: 10.375px;"><colgroup><col/><col/><col/></colgroup><tbody><tr><th class="confluenceTh">Command</th><th class="confluenceTh">Syntax</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>do..while</strong></td><td class="confluenceTd"><code>:do { &lt;commands&gt; } while=( &lt;conditions&gt; ); :while ( &lt;conditions&gt; ) do={ &lt;commands&gt; };</code></td><td class="confluenceTd">execute commands until a given condition is met.</td></tr><tr><td class="confluenceTd"><strong>for</strong></td><td class="confluenceTd"><code>:for &lt;var&gt; from=&lt;int&gt; to=&lt;int&gt; step=&lt;int&gt; do={ &lt;commands&gt; }</code></td><td class="confluenceTd">execute commands over a given number of iterations</td></tr><tr><td class="confluenceTd"><strong>foreach</strong></td><td class="confluenceTd"><code>:foreach &lt;var&gt; in=&lt;array&gt; do={ &lt;commands&gt; };</code></td><td class="confluenceTd">execute commands for each element in a list</td></tr></tbody></table></div><h4 id="Scripting-Conditionalstatement"><span class="mw-headline">Conditional statement</span></h4><div class="table-wrap"><table class="wrapped confluenceTable" style="margin-left: 10.375px;"><colgroup><col/><col/><col/></colgroup><tbody><tr><th class="confluenceTh">Command</th><th class="confluenceTh">Syntax</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>if</strong></td><td class="confluenceTd"><code>:if (&lt;condition&gt;) do={&lt;commands&gt;} else={&lt;commands&gt;}</code></td><td class="confluenceTd">If a given condition is<span> </span><code>true</code><span> </span>then execute commands in the<span> </span><code>do</code><span> </span>block, otherwise execute commands in the<span> </span><code>else</code><span> </span>block if specified.</td></tr></tbody></table></div><p>Example:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">{  
+	:local myBool true;  
+	:if ($myBool = false) do={ :put &quot;value is false&quot; } else={ :put &quot;value is true&quot; } 
+}</pre>
+</div></div><h3 id="Scripting-Functions"><span class="mw-headline">Functions</span></h3><p>Scripting language does not allow you to create functions directly, however, you could use :parse command as a workaround.</p><p>Starting from v6.2 new syntax is added to easier define such functions and even pass parameters. It is also possible to return function value with<span> </span><strong>:return</strong><span> </span>command.</p><p>See examples below:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">#define function and run it
+:global myFunc do={:put &quot;hello from function&quot;}
+$myFunc
+
+output:
+hello from function
+
+#pass arguments to the function
+:global myFunc do={:put &quot;arg a=$a&quot;; :put &quot;arg &#39;1&#39;=$1&quot;} 
+$myFunc a=&quot;this is arg a value&quot; &quot;this is arg1 value&quot;
+
+output:
+arg a=this is arg a value
+arg &#39;1&#39;=this is arg1 value</pre>
+</div></div><p>Notice that there are two ways how to pass arguments:</p><ul><li>pass arg with a specific name (&quot;a&quot; in our example)</li><li>pass value without arg name, in such case arg &quot;1&quot;, &quot;2&quot; .. &quot;n&quot; is used.</li></ul><p><strong>Return example</strong></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">:global myFunc do={ :return ($a + $b)} 
+:put [$myFunc a=6 b=2] 
+
+output: 
+8</pre>
+</div></div><p>You can even clone an existing script from the script environment and use it as a function.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">#add script
+/system script add name=myScript source=&quot;:put \&quot;Hello $myVar !\&quot;&quot;
+
+:global myFunc [:parse [/system script get myScript source]]
+$myFunc myVar=world
+
+output:
+Hello world !</pre>
+</div></div><div role="region" aria-label="Warning" class="confluence-information-macro  confluence-information-macro-warning" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-error confluence-information-macro-icon" ></span><div class="confluence-information-macro-body">If the function contains a defined global variable that names match the name of the passed parameter, then the globally defined variable is ignored, for compatibility with scripts written for older versions. This feature can change in future versions.<span> </span><strong>Avoid using parameters with the same name as global variables.</strong></div></div><p>For example:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">:global my2 &quot;123&quot; 
+
+:global myFunc do={ :global my2; :put $my2; :set my2 &quot;lala&quot;; :put $my2 } 
+$myFunc my2=1234 
+:put &quot;global value $my2&quot;</pre>
+</div></div><p>The output will be:</p><pre style="margin-left: 20.0px;">1234
+lala
+global value 123
+</pre><p><strong>Nested function example</strong></p><p><strong>Note:</strong><span> </span>to call another function its name needs to be declared (the same as for variables)</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">:global funcA do={ :return 5 } 
+:global funcB do={  
+	:global funcA;  
+	:return ([$funcA] + 4) 
+} 
+:put [$funcB] 
+
+Output: 
+9</pre>
+</div></div><h3 id="Scripting-Catchrun-timeerrors"><span class="mw-headline">Catch run-time errors</span></h3><p>Starting from v6.2 scripting has the ability to catch run-time errors.</p><p>For example, the [code]:reslove[/code] command if failed will throw an error and break the script.</p><pre style="margin-left: 20.0px;">[admin@MikroTik] &gt; { :put [:resolve www.example.com]; :put &quot;lala&quot;;}
+failure: dns name does not exist
+</pre><p>Now we want to catch this error and proceed with our script:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">:onerror e {:put [:resolve www.example.com]} do={:put &quot;resolver failed&quot;}
+:put &quot;lalala&quot;
+
+output: 
+
+resolver failed 
+lala</pre>
+</div></div><h3 id="Scripting-OperationswithArrays"><span class="mw-headline">Operations with Arrays</span></h3><p><strong>Warning:</strong><span> </span>Key name in the array contains any character other than a lowercase character, it should be put in quotes</p><p>For example:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@ce0] &gt; {:local a { &quot;aX&quot;=1; ay=2 }; :put ($a-&gt;&quot;aX&quot;)} 
+1</pre>
+</div></div><p><strong>Loop through keys and values</strong></p><p>&quot;foreach&quot; command can be used to loop through keys and elements:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@ce0] &gt; :foreach k,v in={2; &quot;aX&quot;=1; y=2; 5} do={:put (&quot;$k=$v&quot;)} 
+
+0=2 
+1=5 
+aX=1 
+y=2</pre>
+</div></div><p>If the &quot;foreach&quot; command is used with one argument, then the element value will be returned:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@ce0] &gt; :foreach v in={2; &quot;aX&quot;=1; y=2; 5} do={:put (&quot;$v&quot;)} 
+
+2 
+5 
+1 
+2</pre>
+</div></div><p><strong>Note:</strong><span> </span>If the array element has a key then these elements are sorted in alphabetical order, elements without keys are moved before elements with keys and their order is not changed (see example above).</p><p><strong>Change the value of a single array element</strong></p><pre style="margin-left: 20.0px;">[admin@MikroTik] &gt; :global a {x=1; y=2}
+[admin@MikroTik] &gt; :set ($a-&gt;&quot;x&quot;) 5 
+[admin@MikroTik] &gt; :environment print 
+a={x=5; y=2}
+</pre><h2 id="Scripting-Scriptrepository"><span class="mw-headline">Script repository</span></h2><p><strong>Sub-menu level:</strong><span> </span><code>/system script</code></p><p>Contains all user-created scripts. Scripts can be executed in several different ways:</p><ul class="bullets"><li><strong>on event</strong><span> </span>- scripts are executed automatically on some facility events (<a href="Scheduler_40992881.html"><span> </span>scheduler</a>,<span> </span><a href="Netwatch_8323208.html">netwatch</a>,<span> </span><a href="VRRP_81362945.html">VRRP</a>)</li><li><strong>by another script</strong><span> </span>- running script within the script is allowed</li><li><strong>manually</strong><span> </span>- from console executing<span> a </span>run<span> </span>command or in winbox</li></ul><p><br/></p><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Only scripts (including schedulers, netwatch, etc) with equal or higher permission rights can execute other scripts.</p></div></div><p><br/></p><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>When executing script from GUI or CLI, user permissions are used. To run a script with script permissions, a script must be executed from CLI with additional &quot;<em>use-script-permissions</em>&quot; parameter.</p></div></div><p><br/></p><div class="table-wrap"><table class="wrapped relative-table confluenceTable" style="margin-left: 10.375px;width: 93.8021%;"><colgroup><col style="width: 33.2812%;"/><col style="width: 66.704%;"/></colgroup><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>comment</strong><span> </span>(<em>string</em>; Default: )</td><td class="confluenceTd">Descriptive comment for the script</td></tr><tr><td class="confluenceTd"><strong>dont-require-permissions</strong><span> </span>(<em>yes | no</em>; Default:<span> </span><em>no</em>)</td><td class="confluenceTd">Bypass permissions check when the script is being executed, useful when scripts are being executed from services that have limited permissions, such as<span> </span><a class="external-link" href="https://wiki.mikrotik.com/wiki/Manual:Tools/Netwatch" rel="nofollow" style="text-decoration: none;" title="Manual:Tools/Netwatch">Netwatch</a></td></tr><tr><td class="confluenceTd"><strong>name</strong><span> </span>(<em>string</em>; Default:<span> </span><em>&quot;Script[num]&quot;</em>)</td><td class="confluenceTd">name of the script</td></tr><tr><td class="confluenceTd"><strong>policy</strong><span> </span>(<em>string</em>; Default: ftp,reboot,read,write,policy,test,password,sniff,sensitive,romon)</td><td class="confluenceTd">list of applicable policies:<br/><ul class="bullets"><li><strong>ftp</strong><span> </span>- can log on remotely via FTP and send and retrieve files from the router</li><li><strong>password</strong><span> </span>- change passwords</li><li><strong>policy</strong><span> </span>- manage user policies, add and remove user</li><li><strong>read</strong><span> </span>- can retrieve the configuration</li><li><strong>reboot</strong><span> </span>- can reboot the router</li><li><strong>sensitive</strong><span> </span>- allows changing &quot;hide sensitive&quot; parameter</li><li><strong>sniff</strong><span> </span>- can run sniffer, torch, etc</li><li><strong>test</strong><span> </span>- can run ping, traceroute, bandwidth test</li><li><strong>write</strong><span> </span>- can change the configuration</li></ul><p>Read more detailed policy descriptions<span> </span><a href="User_8978504.html">here</a></p></td></tr><tr><td class="confluenceTd"><strong>source</strong><span> </span>(<em>string</em>;)</td><td class="confluenceTd">Script source code</td></tr></tbody></table></div><p>Read-only status properties:</p><div class="table-wrap"><table class="wrapped confluenceTable" style="margin-left: 10.375px;"><colgroup><col/><col/></colgroup><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>last-started</strong><span> </span>(<em>date</em>)</td><td class="confluenceTd">Date and time when the script was last invoked.</td></tr><tr><td class="confluenceTd"><strong>owner</strong><span> </span>(<em>string</em>)</td><td class="confluenceTd">The user who created the script</td></tr><tr><td class="confluenceTd"><strong>run-count</strong><span> </span>(<em>integer</em>)</td><td class="confluenceTd">Counter that counts how many times the script has been executed</td></tr></tbody></table></div><p>Menu specific commands</p><div class="table-wrap"><table class="wrapped relative-table confluenceTable" style="margin-left: 10.375px;width: 32.4359%;"><colgroup><col style="width: 33.4738%;"/><col style="width: 66.5262%;"/></colgroup><tbody><tr><th class="confluenceTh">Command</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>run</strong><span> </span>(<em>run [id|name]</em>)</td><td class="confluenceTd"><p>Execute the specified script by ID or name using user permissions.</p></td></tr><tr><td class="confluenceTd"><strong>use-script-permissions</strong></td><td class="confluenceTd"><p>Additional parameter to execute script using script permissions.</p></td></tr></tbody></table></div><h3 id="Scripting-Environment"><span class="mw-headline">Environment</span></h3><p><strong>Sub-menu level:</strong></p><ul><li><code>/system script environment</code></li><li><code>/environment</code></li></ul><p>Contains all user-defined variables and their assigned values.</p><pre style="margin-left: 20.0px;">[admin@MikroTik] &gt; :global example;
+[admin@MikroTik] &gt; :set example 123
+[admin@MikroTik] &gt; /environment print  
+&quot;example&quot;=123
+</pre><p><br/>Read-only status properties:</p><div class="table-wrap"><table class="wrapped confluenceTable" style="margin-left: 10.375px;"><colgroup><col/><col/></colgroup><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>name</strong><span> </span>(<em>string</em>)</td><td class="confluenceTd">Variable name</td></tr><tr><td class="confluenceTd"><strong>user</strong><span> </span>(<em>string</em>)</td><td class="confluenceTd">The user who defined variable</td></tr><tr><td class="confluenceTd"><strong>value</strong><span> </span>()</td><td class="confluenceTd">The value assigned to a variable</td></tr></tbody></table></div><h3 id="Scripting-Job"><span class="mw-headline">Job</span></h3><p><strong>Sub-menu level:</strong><span> </span><code>/system script job</code></p><p>Contains a list of all currently running scripts.<br/>Read-only status properties:</p><div class="table-wrap"><table class="wrapped confluenceTable" style="margin-left: 10.375px;"><colgroup><col/><col/></colgroup><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>owner</strong><span> </span>(<em>string</em>)</td><td class="confluenceTd">The user who is running the script</td></tr><tr><td class="confluenceTd"><strong>policy</strong><span> </span>(<em>array</em>)</td><td class="confluenceTd">List of all policies applied to the script</td></tr><tr><td class="confluenceTd"><strong>started</strong><span> </span>(<em>date</em>)</td><td class="confluenceTd">Local date and time when the script was started</td></tr></tbody></table></div><h2 id="Scripting-Seealso"><span class="mw-headline">See also</span></h2><ul><li><a href="Scripting-examples_139067404.html">Scripting Examples</a></li><li><a href="Scripting-Tips-and-Tricks_283574370.html">Manual: Scripting Tips and Tricks</a></li></ul><p><br/></p><h2 id="Scripting-VideosonScripting"><span class="mw-headline">Videos on Scripting<br/></span></h2><p><a class="external-link" href="http://youtube.com/watch?v=GJ-57ByVMWk" rel="nofollow">Scripting pt1</a></p><p><a class="external-link" href="http://youtube.com/watch?v=2WsFhkLVaMY" rel="nofollow">Scripting pt2</a></p><p><a class="external-link" href="http://youtube.com/watch?v=9SeYC_s95rw" rel="nofollow">Scripting: Data Types</a></p><p><a class="external-link" href="http://youtube.com/watch?v=eWCJw0uZ-lE" rel="nofollow">Scripting: Arrays</a></p><p><br/></p>
+                    </div>
+
+                                        
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : Wireless VLAN Trunk</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Bridging-and-Switching_328068.html">Bridging and Switching</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Bridging-and-Switching-Case-Studies_119144611.html">Bridging and Switching Case Studies</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : Wireless VLAN Trunk
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Unknown User (emils)</span>, last updated by <span class='editor'> Guntis G.</span> on Apr 17, 2024
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <h1 id="WirelessVLANTrunk-Summary"><span class="mw-headline">Summary</span></h1><p>A very common task is to forward only a certain set of VLANs over a Wireless Point-to-Point (PtP) link. This can be done using bridge VLAN filtering and should be used instead of any other methods (including bridging VLAN interfaces). Let's say we need to forward over a Wireless link to 2 different VLANs and all other VLAN IDs should be dropped. VLAN 10 is going to be our Internet traffic while VLAN 99 is going to be for our management traffic. Below you can find the network topology:</p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/122388482/129531965.jpg" data-image-src="attachments/122388482/129531965.jpg" data-unresolved-comment-count="0" data-linked-resource-id="129531965" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="Wlan_trunk.jpg" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/jpeg" data-linked-resource-container-id="122388482" data-linked-resource-container-version="6" tabindex="0" alt=""></span></p><h1 id="WirelessVLANTrunk-Configuration"><span class="mw-headline">Configuration</span></h1><p>Start by creating a new bridge on <strong>AP</strong> and <strong>ST</strong> and add <strong>ether1</strong> and <strong>wlan1</strong> ports to it:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface bridge
+add name=bridge protocol-mode=none
+/interface bridge port
+add bridge=bridge interface=ether1
+add bridge=bridge interface=wlan1</pre>
+</div></div><p><br/></p><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body">You can enable RSTP if it is required, but generally, RSTP is not required for PtP links since there should not be any way for a loop to occur.</div></div><p><br/></p><p>For security reasons you should enable ingress-filtering since you are expecting only tagged traffic, then you can set the bridge to filter out all untagged traffic. Do the following on <strong>AP</strong> and <strong>ST</strong>:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface bridge port
+set [find where interface=ether1 or interface=wlan1] frame-types=admit-only-vlan-tagged ingress-filtering=yes</pre>
+</div></div><p><br/></p><p>Set up the bridge VLAN table. Since VLAN99 is going to be our management traffic, then we need to allow this VLAN ID to be able to access the bridge interface, otherwise, the traffic will be dropped as soon as you will try to access the device. VLAN10 does not need to access the bridge since it is only meant to be forwarded to the other end. To achieve such functionality add these entries to the bridge VLAN table on <strong>AP</strong> and <strong>ST</strong>:</p><p><br/></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface bridge vlan
+add bridge=bridge tagged=ether1,wlan1 vlan-ids=10
+add bridge=bridge tagged=ether1,wlan1,bridge vlan-ids=99</pre>
+</div></div><p><br/></p><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body">You can limit from which interfaces it will be allowed to access the device. For example, if you don't want the device to be accessible from <code>wlan1</code>, then you can remove the interface from the corresponding bridge VLAN entry.</div></div><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>For devices with <a href="https://help.mikrotik.com/docs/display/ROS/Bridging+and+Switching#BridgingandSwitching-BridgeHardwareOffloading" rel="nofollow">hardware offloaded VLAN filtering</a> and wireless interface support (e.g. RB4011 with <span style="color:var(--ds-text,#172b4d);">RTL8367 switch chip, or</span> LtAP with <span style="color:var(--ds-text,#172b4d);">MT7621 switch chip</span>), more attention needs to be paid. Packets going from HW offloaded ports to wireless can be filtered, if the VLAN access to the CPU is not allowed. It is possible to allow CPU access for a certain VLAN by adding the bridge interface as a VLAN member (similar to the VLAN99 example) or disabling HW offloading on bridge ports.</p></div></div><p><br/></p><p>All devices (<strong>R1</strong>, <strong>R2</strong>, <strong>AP,</strong> and <strong>ST</strong>) need a VLAN interface created to be able to access the device through the specific VLAN ID. For <strong>AP</strong> and <strong>ST</strong> create the VLAN interface on top of the bridge interface and assign an IP address to it:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface vlan
+add interface=bridge name=MGMT vlan-id=99
+/ip address
+add address=192.168.99.X/24 interface=MGMT</pre>
+</div></div><p>For <strong>R1</strong> and <strong>R2</strong> do the same, but the interface, on which you need to create the VLAN interface, will probably change, depending on your setup:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface vlan
+add interface=ether1 name=MGMT vlan-id=99
+/ip address
+add address=192.168.99.X/24 interface=MGMT</pre>
+</div></div><p><br/></p><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body">To allow more VLANs to be forwarded, you simply need to specify more VLAN IDs in the bridge VLAN table, you can specify multiple VLANs divided by coma or even VLAN ranges.</div></div><p><br/></p><p>Setup the Wireless link on <strong>AP</strong>:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface wireless security-profiles
+add authentication-types=wpa2-psk mode=dynamic-keys name=wlan_sec wpa2-pre-shared-key=use_a_long_password_here
+/interface wireless
+set wlan1 band=5ghz-a/n/ac channel-width=20/40/80mhz-Ceee disabled=no mode=bridge scan-list=5180 security-profile=wlan_sec ssid=ptp_test</pre>
+</div></div><p>Setup the Wireless link on <strong>ST</strong>:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface wireless security-profiles
+add authentication-types=wpa2-psk mode=dynamic-keys name=wlan_sec wpa2-pre-shared-key=use_a_long_password_here
+/interface wireless
+set wlan1 band=5ghz-a/n/ac channel-width=20/40/80mhz-Ceee disabled=no mode=station-bridge scan-list=5180 security-profile=wlan_sec ssid=ptp_test</pre>
+</div></div><p><br/></p><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body">For each type of setup, there are different requirements, for PtP links NV2 wireless protocol is commonly used. You can read more about NV2 on the <a href="https://help.mikrotik.com/docs/display/ROS/Nv2" rel="nofollow"> NV2 Manual </a> page.</div></div><p>When links are set up, you can enable bridge VLAN filtering on <strong>AP</strong> and <strong>ST</strong>:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface bridge
+set bridge vlan-filtering=yes</pre>
+</div></div><p><br/></p><div role="region" aria-label="Warning" class="confluence-information-macro  confluence-information-macro-warning" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-error confluence-information-macro-icon" ></span><div class="confluence-information-macro-body">Double-check the bridge VLAN table before enabling VLAN filtering. A misconfigured bridge VLAN table can lead to the device being inaccessible and a configuration reset might be required.</div></div>
+                    </div>
+
+                                                            <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/122388482/122388483.png">Wlan_trunk.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/122388482/129531965.jpg">Wlan_trunk.jpg</a> (image/jpeg)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

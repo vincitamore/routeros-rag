@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : Health</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="119144606.html">Diagnostics, monitoring and troubleshooting</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : Health
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Unknown User (elans)</span>, last updated by <span class='editor'> Dāvis M.</span> on Feb 18, 2025
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <h2 id="Health-Summary"><span class="mw-headline"><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742046038 {padding: 0px;}
+div.rbtoc1747742046038 ul {margin-left: 0px;}
+div.rbtoc1747742046038 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742046038'>
+<ul class='toc-indentation'>
+<li><a href='#Health-Summary'>Summary</a></li>
+<li><a href='#Health-Voltage'>Voltage</a></li>
+<li><a href='#Health-Temperature'>Temperature</a></li>
+<li><a href='#Health-Fancontrolandbehavior'>Fan control and behavior</a>
+<ul class='toc-indentation'>
+<li><a href='#Health-PoE-outconsumption'>PoE-out consumption</a></li>
+<li><a href='#Health-Limitedmanualfan-controloption'>Limited manual fan-control option</a></li>
+<li><a href='#Health-Briefdescriptionofthefan-control'>Brief description of the fan-control</a></li>
+</ul>
+</li>
+</ul>
+</div></span><span class="mw-headline">Summary</span></h2><p>Hardware that supports monitoring will display different information about hardware status, like temperature, voltage, current, fan-speed, etc.</p><p>Example on CCR1072-1G-8S+ device:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; system/health/print 
+Columns: NAME, VALUE, TYPE
+ #  NAME                VALUE  TYPE
+ 0  power-consumption   50.8   W   
+ 1  cpu-temperature     43     C   
+ 2  fan1-speed          5654   RPM 
+ 3  fan2-speed          5825   RPM 
+ 4  fan3-speed          5800   RPM 
+ 5  fan4-speed          5750   RPM 
+ 6  board-temperature1  29     C   
+ 7  board-temperature2  28     C   
+ 8  psu1-voltage        0      V   
+ 9  psu2-voltage        12.1   V   
+10  psu1-current        0      A   
+11  psu2-current        4.2    A</pre>
+</div></div><p><br/></p><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>For feature availability on RouterBOARD products check<span> </span><a class="external-link" href="https://mikrotik.com/products" rel="nofollow" style="text-decoration: none;">mikrotik.com</a></p></div></div><p><br/>Intensive health monitoring on the <a class="external-link" href="https://mikrotik.com/product/ccr2004_16g_2s_pc" rel="nofollow">CCR2004-16G-2S+PC</a> device (from the console, winbox or SNMP) causes significant CPU load.</p><h2 id="Health-Voltage"><span class="mw-headline">Voltage</span></h2><p>Routers that support voltage monitoring will display supplied voltage value. In CLI/Winbox it will display volts. In scripts/API/SNMP this will be dV or value showed in CLI/Winbox </p><p><strong>Note:</strong><span> </span>Routers that have PEXT and PoE power input are calibrated using PEXT, as a result, value showed over PoE can be lower than input voltage due to additional ethernet protection chains.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; system/health/print 
+Columns: NAME, VALUE, TYPE
+#  NAME         VALUE  TYPE
+0  voltage      23.8   V   
+1  temperature  39     C </pre>
+</div></div><p><br/></p><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body">If old revision CRS112, CRS210 and CRS109 devices are powered with PoE - Health will show correct voltage only up to 26.7V. If higher voltage will be used - Health will show constant 16V.</div></div><h2 id="Health-Temperature"><span class="mw-headline">Temperature</span></h2><p>Routers that support temperature monitoring will display temperature reading. In CLI/Winbox it will display degrees Celsius. Using scripts/API/SNMP this value will be shown in CLI/Winbox multiplied by 10. There are various temperature sensors depending on the device. These sensors may refer to: cpu-temperature, pcb-temperature, sfp-temperature. Device tested ambient temperature range you can find in specification description at<span> </span><a class="external-link" href="https://mikrotik.com/products" rel="nofollow" style="text-decoration: none;">mikrotik.com</a>. Tested ambient temperature range is temperature in which device can be physically located. It is<span> </span><strong>not</strong><span> </span>the same as temperature which reports system health monitor!</p><h2 id="Health-Fancontrolandbehavior"><span class="mw-headline">Fan control and behavior</span></h2><p><br/></p><pre style="margin-left: 20.0px;">/system health set</pre><p>Using this menu users will be able to control fan behaviour on TILE architecture<span> </span><a class="external-link" href="https://mikrotik.com/download" rel="nofollow" style="text-decoration: none;">devices</a>.</p><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Improved FAN stability starting from version 6.45.5.</p></div></div><p>There are three parameters that may affect fan behaviour: PoE-out consumption, SFP temperature and CPU temperature. As soon as one of the parameters exceeds the optimal value the, fans are started.</p><h3 id="Health-PoE-outconsumption"><span class="mw-headline">PoE-out consumption</span></h3><p>If a device has PoE-out, then the fan RPM will change as described below:</p><div class="table-wrap"><table class="wrapped confluenceTable"><tbody><tr><th style="text-align: center;" class="confluenceTh">PoE-out load</th><th style="text-align: center;" class="confluenceTh"><p>RPM % of max FAN speed</p></th></tr><tr><td class="confluenceTd">0%..24%</td><td class="confluenceTd">FAN speed 0%</td></tr><tr><td class="confluenceTd">25%..46%</td><td class="confluenceTd">FAN speed 25%</td></tr><tr><td class="confluenceTd">47%..70%</td><td class="confluenceTd">FAN speed 50%</td></tr><tr><td class="confluenceTd">71%..92%</td><td class="confluenceTd">FAN speed 75%</td></tr><tr><td class="confluenceTd">93%..</td><td class="confluenceTd">FAN speed 100%</td></tr></tbody></table></div><p>For devices with<span> </span><strong>PWM</strong><span> </span>fans, the speed will linearly increase or decrease from 9..88% (note: below 100W the fan RPM=0)</p><h3 id="Health-Limitedmanualfan-controloption">Limited manual fan-control option</h3><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p><span class="mw-headline">Starting from RouterOS version 7.9 limited manual fan-control options have been added for CRS3xx, CRS5xx and CCR2xxx devices.</span></p><p><span class="mw-headline">Starting from RouterOS version 7.14 limited manual fan-control is available for the CCR1036-8G-2S+-r2, CCR1036-12G-4S-r2 and CCR1016-12S-1S+-r2 devices.</span></p></div></div><p><span class="mw-headline">Fan behavior can be manipulated using the settings section of system health:</span></p><pre>/system health settings set </pre><p>Available properties are described below:</p><div class="table-wrap"><table class="wrapped relative-table confluenceTable" style="width: 49.2185%;"><colgroup><col style="width: 42.2253%;"/><col style="width: 89.7442%;"/></colgroup><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>fan-full-speed-temp</strong> (<em>integer</em> <em>[-273..65]; </em>Default: <strong>65</strong>)<p><br/></p></td><td class="confluenceTd"><p>Sets the temperature value upon which the fan speed will be increased to the maximum possible rpm.</p><p>Reads temperature from CPU, PHY, SWITCH and SFP and adjusts fan speed based on the component with the highest temperature.</p></td></tr><tr><td class="confluenceTd"><strong>fan-target-temp</strong> (<em>integer</em> <em>[-273..65]; </em>Default: <strong>58</strong>)</td><td class="confluenceTd"><p>Sets the target temperature for the hottest component. Based on this setting adjusts fan behavior to hold temperatures in target range.</p></td></tr><tr><td class="confluenceTd"><strong>fan-min-speed-percent</strong> (<em>integer</em> <em>[0..100]; </em>Default: <strong>depends on FAN controller</strong>)</td><td class="confluenceTd"><p>Sets the minimum percentage of fan speed thus not allowing fans to have a lower rpm than this value.<br/><strong>*NOTE: </strong>the default value may vary based on FAN controller chip and/or specific model requirements. From RouterOS verson 7.14 default value is set to <strong>12,</strong> all previous versions have <strong>0.</strong></p></td></tr><tr><td class="confluenceTd"><strong>fan-control-interval </strong>(<em>integer</em> <em>[5..30]; </em>Default: <strong>30</strong>)</td><td class="confluenceTd"><p>Sets the actual temperature data read interval to get temperature values from CPU, PHY, SWITCH and SFP.</p><p><strong>*NOTE:</strong> THIS SETTING DIRECTLY AFFECTS CPU USAGE</p></td></tr><tr><td class="confluenceTd"><strong>cpu-overtemp-check </strong><em>(yes | no; Default: no)</em></td><td class="confluenceTd"><p>Enables/disables CPU overtemperature monitoring.</p><p> <em>(Available for ARM/ARM64 devices) </em></p></td></tr><tr><td class="confluenceTd"><strong> cpu-overtemp-threshold </strong><em>(integer [0..105]; Default: 105)</em></td><td class="confluenceTd"><p>Maximum temperature before triggering an overtemperature protection.</p></td></tr><tr><td class="confluenceTd"><strong>cpu-overtemp-startup-delay</strong><em> (time; Default: 1m)</em></td><td class="confluenceTd"><p>Delay after startup before enabling overtemperature monitoring.</p></td></tr></tbody></table></div><h3 id="Health-Briefdescriptionofthefan-control"><span class="mw-headline">Brief description of the fan-control </span></h3><p>If at least one of the internal measured (CPU, SFP, Switch, Board etc.) temperatures exceed <strong>fan-target-temp</strong>, the fans will start to spin. The higher the temperature, the faster the fans will spin. For devices with PWM fans, as the internal measured temperatures exceed <strong>fan-target-temp</strong>, the fans will linearly increase their RPM to try to keep the temperature at <strong>fan-target-temp</strong> if possible and will get to their Max RPM when the temperature is equal or exceeds <strong>fan-full-speed-temp</strong>.  For devices with DC fans, as the internal measured temperatures exceed <strong>fan-target-temp</strong>, the fans will start spinning but at a higher minimum RPM by default. This may result in cooling the device to the point where the fans turn-off completely if <strong>fan-min-speed-percent </strong>is set to <strong>0%</strong>, while with the default value of <strong>12% </strong>fans will never go to a full stop therefore reducing the noise and On/Off peaks that may occur. The temperature then may slowly increase to <strong>fan-target-temp</strong> and the fans will turn on again. Currently, there is one exception. The S+RJ10 modules have a temperature threshold of 65C before they trigger the fans. Since it's a higher temperature threshold, the fans will start spinning at a higher initial speed to cool the device. All the above mentioned functionality is directly related to the <strong>fan-control-interval </strong>parameter value as it will determine how often FAN controller monitors all sensor data and triggers changes in fan-control. </p><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>PWM and DC fans react to fan-control differently. While PWM fans will increase/decrease their RPM in a linear way the DC fans have only few possible speed ratings at which they may operate.  <br/><strong><br/></strong>All readings are approximate and may not be 100% precise. Their purpose is to ~inform users about possible/upcoming failures.</p></div></div><p><br/></p>
+                    </div>
+
+                                        
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:54</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

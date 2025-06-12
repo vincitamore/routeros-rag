@@ -1,0 +1,123 @@
+.desktopHeader {
+  display: none; /* Hidden by default (mobile-first) */
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-sm, 1rem) var(--space-md, 1.25rem);
+  
+  /* Enhanced glassmorphism matching mobile header */
+  background: rgba(45, 55, 72, 0.85);
+  backdrop-filter: blur(25px) saturate(180%);
+  -webkit-backdrop-filter: blur(25px) saturate(180%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 
+    0 8px 32px 0 rgba(0, 0, 0, 0.37),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  
+  position: fixed;
+  top: 0;
+  left: 0; /* Start from left edge */
+  right: 0;
+  z-index: 1002;
+  min-height: var(--touch-target, 44px);
+  transition: left var(--transition-smooth, 300ms cubic-bezier(0.4, 0, 0.2, 1));
+}
+
+/* Show on desktop */
+@media (min-width: 768px) {
+  .desktopHeader {
+    display: flex;
+  }
+}
+
+.headerTitle {
+  font-size: var(--text-lg, 1.25rem);
+  font-weight: 700;
+  color: #f7fafc;
+  margin: 0;
+  flex: 1;
+  text-align: center;
+}
+
+.homeButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--touch-target, 44px);
+  height: var(--touch-target, 44px);
+  border-radius: 8px;
+  transition: all var(--transition-fast, 200ms ease);
+  text-decoration: none;
+  flex-shrink: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.homeButton:hover {
+  background: rgba(99, 179, 237, 0.1);
+  transform: translateY(-1px);
+}
+
+.homeButton:active {
+  background: rgba(99, 179, 237, 0.2);
+  transform: translateY(0);
+}
+
+.homeButton:focus {
+  outline: 2px solid rgba(99, 179, 237, 0.5);
+  outline-offset: 2px;
+}
+
+.headerHamburger {
+  flex-shrink: 0;
+}
+
+/* Hamburger menu styles */
+.hamburger {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: var(--touch-target, 44px);
+  height: var(--touch-target, 44px);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 8px;
+  transition: background-color var(--transition-fast, 200ms ease);
+}
+
+.hamburger:hover {
+  background: rgba(99, 179, 237, 0.1);
+}
+
+.hamburger:active {
+  background: rgba(99, 179, 237, 0.2);
+}
+
+.hamburgerLine {
+  display: block;
+  width: 24px;
+  height: 3px;
+  background: #e2e8f0;
+  border-radius: 3px;
+  transition: all var(--transition-smooth, 300ms cubic-bezier(0.4, 0, 0.2, 1));
+  transform-origin: center;
+}
+
+.hamburgerLine:not(:last-child) {
+  margin-bottom: 4px;
+}
+
+/* Hamburger animation when open */
+.hamburger.open .hamburgerLine:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+
+.hamburger.open .hamburgerLine:nth-child(2) {
+  opacity: 0;
+  transform: scaleX(0);
+}
+
+.hamburger.open .hamburgerLine:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+} 

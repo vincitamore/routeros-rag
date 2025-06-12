@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : Kaa IoT setup</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Internet-of-Things_46759975.html">Internet of Things</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="MQTT_46759978.html">MQTT</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : Kaa IoT setup
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Deniss M.</span>, last updated by <span class='editor'> Normunds R.</span> on Oct 03, 2024
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <h1 id="KaaIoTsetup-Introduction">Introduction</h1><p><a href="https://help.mikrotik.com/docs/display/ROS/MQTT" rel="nofollow">MQTT</a> and <a href="https://help.mikrotik.com/docs/display/ROS/Fetch" rel="nofollow">HTTP</a> are among the most popular protocols that are used for transferring all kinds of data. Both protocols are heavily utilized in different IoT setups, and they both are supported by <a href="https://help.mikrotik.com/docs/display/ROS/Software+Specifications" rel="nofollow">RouterOS</a>.</p><p>What kind of data, you might ask? Pretty much anything... RouterOS <a href="https://help.mikrotik.com/docs/display/ROS/Scripting" rel="nofollow">scripting</a> is a very powerful tool that can help you automate your devices with the help of <a href="https://help.mikrotik.com/docs/display/ROS/Scheduler" rel="nofollow">scheduling</a>.</p><p>For example, you can check your system's resource information with the help of the command <code>/system resource print</code> :</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/system resource print
+                   uptime: 4d1h37m55s
+                  version: 7.14.3 (stable)
+               build-time: 2024-04-17 12:47:58
+         factory-software: 6.45.9
+              free-memory: 926.0MiB
+             total-memory: 1024.0MiB
+                      cpu: ARM
+                cpu-count: 4
+            cpu-frequency: 533MHz
+                 cpu-load: 0%
+           free-hdd-space: 88.5MiB
+          total-hdd-space: 128.0MiB
+  write-sect-since-reboot: 1107
+         write-sect-total: 1447413
+               bad-blocks: 0%
+        architecture-name: arm
+               board-name: RB1100AHx4
+                 platform: MikroTik</pre>
+</div></div><p>This command shows you useful information, like CPU usage, RAM-memory usage, device's uptime and its firmware version. Another command will print out <a href="https://help.mikrotik.com/docs/display/ROS/GPS" rel="nofollow">GPS</a> coordination (if the device has a GPS chip built-in) and so on...</p><p>What this means, essentially, is that anything that can be &quot;printed out&quot; into the RouterOS <a href="https://help.mikrotik.com/docs/display/ROS/Command+Line+Interface" rel="nofollow">terminal</a>, can be scripted to be structured into JSON format messages and send out with a configured interval. We will showcase a more detailed example later on in the guide.</p><p>In other words, you are able to send the data from your MikroTik to any MQTT or HTTP server of your choice. <a class="external-link" href="https://www.kaaiot.com/" rel="nofollow">Kaa IoT</a> is one of such servers.</p><p><a class="external-link" href="https://www.kaaiot.com/advantages/platform" rel="nofollow">Why Kaa IoT?</a></p><h1 id="KaaIoTsetup-KaaIoTconfiguration">Kaa IoT configuration</h1><p>Make sure to check <a class="external-link" href="https://www.kaaiot.com/docs/tutorials/getting-started/connecting-your-first-device" rel="nofollow">KAA: Connecting your first device</a>.</p><p>After you log into the portal, to start, follow the steps from the <a class="external-link" href="https://www.kaaiot.com/docs/tutorials/getting-started/connecting-your-first-device" rel="nofollow">playbook</a>: </p><p>a) Create an application, under &quot;<strong>Home&gt;Device management&gt;Applications</strong>&quot;, by clicking on the &quot;<strong>Add application</strong>&quot; button, name it, and &quot;<strong>Create</strong>&quot; it:</p><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" draggable="false" width="1000" src="attachments/250707984/250707989.png" data-image-src="attachments/250707984/250707989.png" data-unresolved-comment-count="0" data-linked-resource-id="250707989" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2024-5-21_10-56-57.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="250707984" data-linked-resource-container-version="37" tabindex="0" alt=""></span></p><p>b) Create a device, under &quot;<strong>Home&gt;Device management&gt;Devices</strong>&quot;, by clicking on the &quot;<strong>Add device</strong>&quot; button, name it, and &quot;<strong>Create</strong>&quot; it:</p><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" draggable="false" width="1000" src="attachments/250707984/250707990.png" data-image-src="attachments/250707984/250707990.png" data-unresolved-comment-count="0" data-linked-resource-id="250707990" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2024-5-21_10-58-12.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="250707984" data-linked-resource-container-version="37" tabindex="0" alt=""></span></p><p>Input your own &quot;Endpoint token&quot; or let the system auto-generate one for you. Make sure to &quot;save&quot; it (because you will not be able to access it again).</p><p>All that is left is to connect our router to the server using MQTT or HTTP, post some data and customize our first dashboard to easier visualize it.</p><h1 id="KaaIoTsetup-RouterOSconfiguration">RouterOS configuration</h1><p>First thing first, the device should have internet access. Check our <a href="https://help.mikrotik.com/docs/display/ROS/First+Time+Configuration" rel="nofollow">First Time Configuration</a> guide.</p><p>Once you have internet up and running, if you are planning to use <a href="https://help.mikrotik.com/docs/display/ROS/MQTT" rel="nofollow">MQTT</a> protocol, make sure you have <strong>iot</strong> package installed. You can download it from our <a class="external-link" href="https://mikrotik.com/download" rel="nofollow">download page</a>, under the &quot;Extra packages&quot; file (for your device's respective architecture). Unzip the &quot;Extra packages&quot; file and upload <strong>iot</strong> package to the &quot;<a href="https://help.mikrotik.com/docs/pages/viewpage.action?pageId=2555971" rel="nofollow">Files</a>&quot; (reboot the device after that). If you are planning on only using <a href="https://help.mikrotik.com/docs/display/ROS/Fetch" rel="nofollow">HTTP posting</a>, there is no need for iot package installation.</p><p>Before going further, visit Kaa IoT <a class="external-link" href="https://www.kaaiot.com/docs/device-connectivity/mqtt-device-api" rel="nofollow">MQTT</a> and <a class="external-link" href="https://www.kaaiot.com/docs/device-connectivity/http-device-api" rel="nofollow">HTTP</a> device API guides.</p><h2 id="KaaIoTsetup-UsingHTTPtopostthedata">Using HTTP to post the data</h2><p>To post a basic JSON message:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: bash; gutter: false">{&quot;test&quot;:&quot;data&quot;}</pre>
+</div></div><p>Simply run the command:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/tool fetch url=&quot;https://next.kaaiot.com/kpc/kp1/&lt;app-version&gt;/epmx/&lt;token&gt;/update/keys&quot; http-method=post  http-header-field=&quot;Content-Type: application/json&quot; http-data=&quot;{\&quot;test\&quot;:\&quot;data\&quot;}&quot; output=user mode=https</pre>
+</div></div><p>, where you should change <code>&lt;app-version&gt;</code> (that you can check under the &quot;<strong>Home&gt;Devices management&gt;Devices&gt;Specific device</strong>&quot; tab) and <code>&lt;token&gt;</code> (that you've generated after creating a device on the platform) to your respective values.</p><p>You should be able to see that a new &quot;Metadata&quot; value appeared under &quot;<strong>Home&gt;Device management&gt;Devices&gt;Specific device&gt;Overview</strong>&quot; tab or check logs under &quot;<strong>Home&gt;Device management&gt;Devices&gt;Specific device&gt;Data logs&quot; </strong>tab.</p><p><br/></p><p>To collect <code>/system resource print</code> information and post it, we can use scripting. Copy and paste the content of the script show below into the command line:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/system script
+add dont-require-permissions=no name=systeminfo owner=admin policy=\
+    ftp,reboot,read,write,policy,test,password,sniff,sensitive,romon source=&quot;#####################\
+    ############### System ###################################\r\
+    \n:put (\&quot;[*] Gathering system info...\&quot;)\r\
+    \n:local cpuLoad [/system resource get cpu-load];\r\
+    \n:local freeMemory [/system resource get free-memory];\r\
+    \n:local usedMemory ([/system resource get total-memory] - \$freeMemory);\r\
+    \n:local rosVersion [/system package get value-name=version \\\r\
+    \n[/system package find where name ~ \&quot;^routeros\&quot;]];\r\
+    \n:local model [/system routerboard get value-name=model];\r\
+    \n:local serialNumber [/system routerboard get value-name=serial-number];\r\
+    \n:local upTime [/system resource get uptime];\r\
+    \n\r\
+    \n#################################### message #####################################\r\
+    \n:local message \\\r\
+    \n\&quot;{\\\&quot;model\\\&quot;:\\\&quot;\$model\\\&quot;,\\\r\
+    \n\\\&quot;sn\\\&quot;:\\\&quot;\$serialNumber\\\&quot;,\\\r\
+    \n\\\&quot;ros\\\&quot;:\\\&quot;\$rosVersion\\\&quot;,\\\r\
+    \n\\\&quot;cpu\\\&quot;:\\\&quot;\$cpuLoad\\\&quot;,\\\r\
+    \n\\\&quot;umem\\\&quot;:\\\&quot;\$usedMemory\\\&quot;,\\\r\
+    \n\\\&quot;fmem\\\&quot;:\\\&quot;\$freeMemory\\\&quot;,\\\r\
+    \n\\\&quot;uptime\\\&quot;:\\\&quot;\$upTime\\\&quot;}\&quot;\r\
+    \n\r\
+    \n:log info \&quot;\$message\&quot;;\r\
+    \n:put (\&quot;[*] Total message size: \$[:len \$message] bytes\&quot;)\r\
+    \n:put (\&quot;[*] Sending message...\&quot;)\r\
+    \n/tool fetch url=\&quot;https://next.kaaiot.com/kpc/kp1/&lt;app-version&gt;/epmx/&lt;token&gt;/up\
+    date/keys\&quot; http-method=post  http-header-field=\&quot;Content-Type: application/json\&quot; http-data=\
+    \&quot;\$message\&quot; output=user mode=https\r\
+    \n:put (\&quot;[*] Done\&quot;)&quot;</pre>
+</div></div><p>Change the URL's <code>&lt;app-version&gt;</code> and <code>&lt;token&gt;</code> values. Then, run the script using:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/system script run systeminfo</pre>
+</div></div><p>The JSON message will look like this:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: bash; gutter: false">{
+  &quot;model&quot;: &quot;RB924iR-2nD-BT5&amp;BG77&quot;,
+  &quot;sn&quot;: &quot;XXXXXXX&quot;,
+  &quot;ros&quot;: &quot;7.99&quot;,
+  &quot;cpu&quot;: &quot;7&quot;,
+  &quot;umem&quot;: &quot;45113344&quot;,
+  &quot;fmem&quot;: &quot;21995520&quot;,
+  &quot;uptime&quot;: &quot;4d22:16:08&quot;
+}</pre>
+</div></div><h2 id="KaaIoTsetup-UsingMQTTtopostthedata">Using MQTT to post the data</h2><p>In order to use a one-way SSL MQTT scenario, get the root certificate from &quot;<strong>Home&gt;Device management&gt;Credentials</strong>&quot; by clicking on the &quot;<strong>Get root certificate</strong>&quot; button. More info can be found <a class="external-link" href="https://www.kaaiot.com/docs/tutorials/getting-started/authenticating-client-with-tls-certificate" rel="nofollow">here</a>.</p><p>Upload ca.pem certificate file to the RouterOS and import it using:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/certificate/import file-name=ca.pem passphrase=&quot;&quot;</pre>
+</div></div><p>Add a new MQTT broker:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/iot mqtt brokers
+add address=mqtt.next.kaaiot.com name=kaaiot port=8883 ssl=yes</pre>
+</div></div><p>Connect to the broker and check whether the connection is ongoing with the help of the &quot;print&quot; command (&quot;<strong>connected=yes</strong>&quot; should be present):</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/iot mqtt connect broker=kaaiot
+
+/iot mqtt brokers print
+0 name=&quot;kaaiot&quot; address=&quot;mqtt.next.kaaiot.com&quot; port=8883 ssl=yes auto-connect=no keep-alive=60 parallel-scripts-limit=off connected=yes
+</pre>
+</div></div><p>To post a basic JSON message:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: bash; gutter: false">{&quot;test&quot;:&quot;data&quot;}</pre>
+</div></div><p>Simply run the command:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/iot mqtt publish broker=kaaiot message=&quot;{\&quot;test\&quot;:\&quot;data\&quot;}&quot; topic=&quot;kp1/&lt;app-version&gt;/epmx/&lt;token&gt;/update/keys/88&quot;</pre>
+</div></div><p>, where you should change <code>&lt;app-version&gt;</code> (that you can check under the &quot;<strong>Home&gt;Devices management&gt;Devices&gt;Specific device</strong>&quot; tab) and <code>&lt;token&gt;</code> (that you've generated after creating a device on the platform) to your respective values.</p><p>You should be able to see that a new &quot;Metadata&quot; value appeared under &quot;<strong>Home&gt;Device management&gt;Devices&gt;Specific device&gt;Overview</strong>&quot; tab or check logs under &quot;<strong>Home&gt;Device management&gt;Devices&gt;Specific device&gt;Data logs&quot; </strong>tab.</p><p><br/></p><p>To collect <code>/system resource print</code> information and post it, we can use scripting. Copy and paste the content of the script show below into the command line:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/system script
+add dont-require-permissions=no name=systeminfo owner=admin policy=ftp,reboot,read,write,policy,test,password,sniff,sensitive,romon source=&quot;#####\
+    ############################### System ###################################\r\
+    \n:put (\&quot;[*] Gathering system info...\&quot;)\r\
+    \n:local cpuLoad [/system resource get cpu-load];\r\
+    \n:local freeMemory [/system resource get free-memory];\r\
+    \n:local usedMemory ([/system resource get total-memory] - \$freeMemory);\r\
+    \n:local rosVersion [/system package get value-name=version \\\r\
+    \n[/system package find where name ~ \&quot;^routeros\&quot;]];\r\
+    \n:local model [/system routerboard get value-name=model];\r\
+    \n:local serialNumber [/system routerboard get value-name=serial-number];\r\
+    \n:local upTime [/system resource get uptime];\r\
+    \n\r\
+    \n#################################### message #####################################\r\
+    \n:local message \\\r\
+    \n\&quot;{\\\&quot;model\\\&quot;:\\\&quot;\$model\\\&quot;,\\\r\
+    \n\\\&quot;sn\\\&quot;:\\\&quot;\$serialNumber\\\&quot;,\\\r\
+    \n\\\&quot;ros\\\&quot;:\\\&quot;\$rosVersion\\\&quot;,\\\r\
+    \n\\\&quot;cpu\\\&quot;:\\\&quot;\$cpuLoad\\\&quot;,\\\r\
+    \n\\\&quot;umem\\\&quot;:\\\&quot;\$usedMemory\\\&quot;,\\\r\
+    \n\\\&quot;fmem\\\&quot;:\\\&quot;\$freeMemory\\\&quot;,\\\r\
+    \n\\\&quot;uptime\\\&quot;:\\\&quot;\$upTime\\\&quot;}\&quot;\r\
+    \n\r\
+    \n:log info \&quot;\$message\&quot;;\r\
+    \n:put (\&quot;[*] Total message size: \$[:len \$message] bytes\&quot;)\r\
+    \n:put (\&quot;[*] Sending message...\&quot;)\r\
+    \n/iot mqtt publish broker=kaaiot message=\$message topic=\&quot;kp1/&lt;app-version&gt;/epmx/&lt;token&gt;/update/keys/88\&quot;\r\
+    \n:put (\&quot;[*] Done\&quot;)&quot;</pre>
+</div></div><p>Change the topic's <code>&lt;app-version&gt;</code> and <code>&lt;token&gt;</code> values. Then, run the script using:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/system script run systeminfo</pre>
+</div></div><p>The JSON message will look like this:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: bash; gutter: false">{
+  &quot;model&quot;: &quot;RB924iR-2nD-BT5&amp;BG77&quot;,
+  &quot;sn&quot;: &quot;XXXXXXX&quot;,
+  &quot;ros&quot;: &quot;7.99&quot;,
+  &quot;cpu&quot;: &quot;7&quot;,
+  &quot;umem&quot;: &quot;45113344&quot;,
+  &quot;fmem&quot;: &quot;21995520&quot;,
+  &quot;uptime&quot;: &quot;4d22:16:08&quot;
+}</pre>
+</div></div><h1 id="KaaIoTsetup-Datavisualizationusingdashboards">Data visualization using dashboards</h1><p>To visualize previously posted data, go to &quot;<strong>Home&gt;Solutions&gt;Your_Solution&gt;Dashboards&gt;Your_Dasboard</strong>&quot; and click on &quot;<strong>Add widget</strong>&quot;:</p><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" draggable="false" width="1000" src="attachments/250707984/250708023.png" data-image-src="attachments/250707984/250708023.png" data-unresolved-comment-count="0" data-linked-resource-id="250708023" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2024-5-21_13-5-21.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="250707984" data-linked-resource-container-version="37" tabindex="0" alt=""></span></p><p>Select a widget type (we will use &quot;<strong>Device management</strong>&quot;), and a pre-set widget (we will use &quot;<strong>Endpoint metadata</strong>&quot;).</p><p>&quot;<strong>Edit</strong>&quot; the widget and choose your &quot;Endpoint ID&quot; under &quot;<strong>Data source&gt;Endpoint ID</strong>&quot;. From here, you can customize the dashboard further:</p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/250707984/250708024.png" data-image-src="attachments/250707984/250708024.png" data-unresolved-comment-count="0" data-linked-resource-id="250708024" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2024-5-21_13-10-20.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="250707984" data-linked-resource-container-version="37" tabindex="0" alt=""></span></p><p>And so! you can create your own scripts that collect information that is important to you instead, and then just apply a <a href="https://help.mikrotik.com/docs/display/ROS/Scheduler" rel="nofollow">scheduler</a> to run the script with an interval of your choice. Maybe you want to collect GPS coordinates from your<a class="external-link" href="https://mikrotik.com/product/ltap#fndtn-specifications" rel="nofollow"> LTAP </a>and visualize them using the &quot;map&quot; widget? It is only up to you!</p>
+                    </div>
+
+                                                            <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/250707984/250707986.png">image-2024-5-21_10-49-42.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/250707984/250707987.png">image-2024-5-21_10-51-17.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/250707984/250707988.png">image-2024-5-21_10-54-9.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/250707984/250707989.png">image-2024-5-21_10-56-57.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/250707984/250707990.png">image-2024-5-21_10-58-12.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/250707984/250708023.png">image-2024-5-21_13-5-21.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/250707984/250708024.png">image-2024-5-21_13-10-20.png</a> (image/png)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:54</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

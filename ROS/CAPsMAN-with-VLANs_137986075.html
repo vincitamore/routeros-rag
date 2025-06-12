@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : CAPsMAN with VLANs</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Wireless_1409138.html">Wireless</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Wireless-Case-Studies_120324140.html">Wireless Case Studies</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : CAPsMAN with VLANs
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Guntis G.</span>, last updated on Aug 02, 2022
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742037910 {padding: 0px;}
+div.rbtoc1747742037910 ul {margin-left: 0px;}
+div.rbtoc1747742037910 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742037910'>
+<ul class='toc-indentation'>
+<li><a href='#CAPsMANwithVLANs-Summary'>Summary</a></li>
+<li><a href='#CAPsMANwithVLANs-UsingLocalForwardingMode'>Using Local Forwarding Mode</a>
+<ul class='toc-indentation'>
+<li><a href='#CAPsMANwithVLANs-CAPsMANRouter:'>CAPsMAN Router:</a></li>
+<li><a href='#CAPsMANwithVLANs-Switch:'>Switch:</a></li>
+<li><a href='#CAPsMANwithVLANs-CAPs:'>CAPs:</a></li>
+</ul>
+</li>
+<li><a href='#CAPsMANwithVLANs-UsingCAPsMANForwardingMode'>Using CAPsMAN Forwarding Mode</a>
+<ul class='toc-indentation'>
+<li><a href='#CAPsMANwithVLANs-CAPsMANrouter:'>CAPsMAN router:</a></li>
+<li><a href='#CAPsMANwithVLANs-CAPs:.1'>CAPs:</a></li>
+</ul>
+</li>
+<li><a href='#CAPsMANwithVLANs-Casestudies'>Case studies</a>
+<ul class='toc-indentation'>
+<li><a href='#CAPsMANwithVLANs-WithoutVirtualAPs'>Without Virtual APs</a></li>
+</ul>
+</li>
+</ul>
+</div></p><h1 id="CAPsMANwithVLANs-Summary">Summary</h1><p>It is possible to create a centralized Access Point management setup for a home or office environment that is scalable to many Access Points, such a setup is quite easy to configure and has been explained in the<span> </span><a href="https://help.mikrotik.com/docs/pages/viewpage.action?pageId=1409149#APController(CAPsMAN)-SimplesetupofaCAPsMANsystem" rel="nofollow">Simple CAPsMAN setup</a><span> </span>guide, but for more complex setups VLANs might be required. CAPsMAN has the functionality to assign a certain VLAN ID under certain conditions. This guide will provide an example on how to assign a VLAN ID to Wireless packets based on the AP, to which a wireless client connects to. CAPsMAN with VLANs can be achieved either by using<span> </span><a href="https://help.mikrotik.com/docs/pages/viewpage.action?pageId=1409149#APController(CAPsMAN)-LocalForwardingMode" rel="nofollow">Local Forwarding Mode</a><span> </span>or<span> </span><a href="https://help.mikrotik.com/docs/pages/viewpage.action?pageId=1409149#APController(CAPsMAN)-ManagerForwardingMode" rel="nofollow">CAPsMAN Forwarding Mode</a>, the Local Forwarding Mode will provide the possibility to use a switch between your APs and CAPsMAN router to switch packets (to achieve larger throughput), while CAPsMAN Forwarding Mode should be used when all traffic should always be forwarded to the CAPsMAN router (in most cases to filter packets).</p><p>In this example, we are going to assign all our Wireless clients to<span> </span><strong>VLAN10</strong>, if they connect to<span> </span><strong>WiFi_WORK</strong>, and going to assign Wireless clients to<span> </span><strong>VLAN20</strong>, if they connect to<span> </span><strong>WiFi_GUEST</strong>. We are going to use Virtual APs along with CAPsMAN to create multiple SSIDs for our Wireless clients to connect to while using a single physical device. An example of how to use a single SSID for a single physical device will also be shown by using CAPsMAN provisioning rules.</p><h1 id="CAPsMANwithVLANs-UsingLocalForwardingMode">Using Local Forwarding Mode</h1><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/137986075/140017722.jpg" data-image-src="attachments/137986075/140017722.jpg" data-unresolved-comment-count="0" data-linked-resource-id="140017722" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="CAPsMAN_VLANs_local.jpg" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/jpeg" data-linked-resource-container-id="137986075" data-linked-resource-container-version="4" tabindex="0" alt=""></span></p><p>In Local Forwarding Mode, the CAPsMAN router is distributing the configuration across all CAPs that are being provisioned by the CAPsMAN router. In Local Forwarding Mode traffic is not required to be sent to the CAPsMAN router, rather it can be sent to a different router without involving the CAPsMAN router when forwarding traffic. This mode allows you to tag traffic to a certain VLAN ID before it is sent to your network from your Wireless client, which adds the possibility to use a switch to limit certain VLAN IDs to certain ports. In Local Forwarding Mode traffic is not encapsulated with a special CAPsMAN header, which can only be removed by a CAPsMAN router.</p><h2 id="CAPsMANwithVLANs-CAPsMANRouter:">CAPsMAN Router:</h2><ul><li>Create appropriate CAP configurations for each VLAN</li></ul><pre style="margin-left: 20.0px;">/caps-man configuration
+add country=latvia datapath.local-forwarding=yes datapath.vlan-id=10 datapath.vlan-mode=use-tag name=Config_WORK security.authentication-types=wpa-psk,wpa2-psk \
+    security.passphrase=secret_work_password ssid=WiFi_WORK
+add country=latvia datapath.local-forwarding=yes datapath.vlan-id=20 datapath.vlan-mode=use-tag name=Config_GUEST security.authentication-types=\
+    wpa-psk,wpa2-psk security.passphrase=secret_guest_password ssid=WiFi_GUEST
+</pre><ul><li>We are going to create a single CAPsMAN provisioning rule to create the<span> </span><strong>WiFi_WORK</strong><span> </span>and the<span> </span><strong>WiFi_GUEST</strong><span> </span>SSIDs on a single device, each connected CAP is going to create these SSIDs automatically</li></ul><pre style="margin-left: 20.0px;">/caps-man provisioning
+add action=create-dynamic-enabled master-configuration=Config_WORK slave-configurations=Config_GUEST</pre><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p><span style="color:var(--ds-text-accent-lime-bolder,#37471f);">You can create even more Virtual APs by adding multiple<span> </span></span>slave-configurations<span style="color:var(--ds-text-accent-lime-bolder,#37471f);">. That requires multiple CAPsMAN configurations that were created earlier.</span></p></div></div><ul><li>For security reasons, limit the CAPsMAN to a single interface</li></ul><pre style="margin-left: 20.0px;">/caps-man manager interface
+set [ find default=yes ] forbid=yes
+add disabled=no interface=ether1
+</pre><ul><li>Enable the CAPsMAN manager</li></ul><pre style="margin-left: 20.0px;">/caps-man manager
+set enabled=yes
+</pre><ul><li>Setup DHCP Server for each VLAN</li></ul><pre style="margin-left: 20.0px;">/interface vlan
+add interface=ether1 name=VLAN10 vlan-id=10
+add interface=ether1 name=VLAN20 vlan-id=20
+/ip address
+add address=192.168.10.1/24 interface=VLAN10
+add address=192.168.20.1/24 interface=VLAN20
+/ip pool
+add name=dhcp_pool10 ranges=192.168.10.2-192.168.10.254
+add name=dhcp_pool20 ranges=192.168.20.2-192.168.20.254
+/ip dhcp-server
+add address-pool=dhcp_pool10 disabled=no interface=VLAN10 name=dhcp10
+add address-pool=dhcp_pool20 disabled=no interface=VLAN20 name=dhcp20
+/ip dhcp-server network
+add address=192.168.10.0/24 dns-server=8.8.8.8 gateway=192.168.10.1
+add address=192.168.20.0/24 dns-server=8.8.8.8 gateway=192.168.20.1</pre><h2 id="CAPsMANwithVLANs-Switch:">Switch:</h2><p>In this example, we are going to be using<span> </span><a href="https://help.mikrotik.com/docs/display/ROS/Bridging+and+Switching#BridgingandSwitching-VLANExample-TrunkandAccessPorts" rel="nofollow">Bridge VLAN Filtering</a><span> </span>to filter unknown VLANs and to assign other devices to the same networks. Some devices are capable of offloading this to the built-in switch chip, check<span> </span><a href="https://help.mikrotik.com/docs/display/ROS/Basic+VLAN+switching" rel="nofollow">Basic VLAN switching</a><span> </span>guide to see how to configure it on different types of devices.</p><ul><li>Setup Bridge VLAN Filtering</li></ul><pre style="margin-left: 20.0px;">/interface bridge
+add name=bridge1 vlan-filtering=yes
+/interface bridge port
+add bridge=bridge1 interface=ether1
+add bridge=bridge1 interface=ether2
+add bridge=bridge1 interface=ether3
+add bridge=bridge1 interface=ether4 pvid=10
+add bridge=bridge1 interface=ether5 pvid=20
+/interface bridge vlan
+add bridge=bridge1 tagged=ether1,ether2,ether3 untagged=ether4 vlan-ids=10
+add bridge=bridge1 tagged=ether1,ether2,ether3 untagged=ether5 vlan-ids=20</pre><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p><span style="color:var(--ds-text-accent-lime-bolder,#37471f);">In this example, untagged traffic is going to be used to communicate between CAPs and CAPsMAN Router. By default, if PVID is not changed, untagged traffic is going to be forwarded between ports that have the same PVID value set (including the default PVID).</span></p></div></div><h2 id="CAPsMANwithVLANs-CAPs:">CAPs:</h2><ul><li>Create a bridge and assign a port to it, that is connected to the CAPsMAN Router</li></ul><pre style="margin-left: 20.0px;">/interface bridge
+add name=bridge1
+/interface bridge port
+add bridge=bridge1 interface=ether1
+</pre><ul><li>Enable CAP mode on the AP, and make sure you specify to use the newly created bridge</li></ul><pre style="margin-left: 20.0px;">/interface wireless cap
+set bridge=bridge1 discovery-interfaces=bridge1 enabled=yes interfaces=wlan1
+</pre><ul><li>After CAPs are successfully connected to the CAPsMAN Router, the wlan1 (SSID<span> </span><strong>WiFi_WORK</strong>) and a newly created virtual wlan5 (SSID<span> </span><strong>WiFi_GUEST</strong>) interfaces get dynamically added as bridge ports. The VLAN is assigned for a wireless interface and as a result, all data coming from wireless gets tagged and only data with this tag will be sent out over wireless. A bridge<span> </span>vlan-filtering<span> </span>can be disabled if additional VLAN managing and controlling is not needed. The associated VLAN can be seen with a port VLAN ID (PVID) property.</li></ul><pre style="margin-left: 20.0px;">[admin@CAP_1] /interface bridge port pr
+Flags: X - disabled, I - inactive, D - dynamic, H - hw-offload 
+ #     INTERFACE                     BRIDGE                    HW  PVID PRIORITY  PATH-COST INTERNAL-PATH-COST    HORIZON
+ 0   H ether1                        bridge1                   yes    1     0x80         10                 10       none
+ 1  D  wlan1                         bridge1                         10     0x80         10                 10       none
+ 2  D  wlan5                         bridge1                         20     0x80         10                 10       none
+</pre><p>That is it! Connect Wireless clients to your APs and check connectivity.</p><h1 id="CAPsMANwithVLANs-UsingCAPsMANForwardingMode">Using CAPsMAN Forwarding Mode</h1><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/137986075/140017723.jpg" data-image-src="attachments/137986075/140017723.jpg" data-unresolved-comment-count="0" data-linked-resource-id="140017723" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="CAPsMAN_VLANs.jpg" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/jpeg" data-linked-resource-container-id="137986075" data-linked-resource-container-version="4" tabindex="0" alt=""></span></p><p><span style="color:var(--ds-text-accent-lime-bolder,#37471f);">In CAPsMAN Forwarding Mode all traffic that is coming from a CAP is encapsulated with a special CAPsMAN header, which can only be removed by a CAPsMAN router, this means that a switch will not be able to distinguish the VLAN ID set by the CAP since the VLAN tag is also going to be encapsulated. This mode limits the possibility to divert traffic in Layer2 networks, but gives you the possibility to forward traffic from each CAP over Layer3 networks for a distant CAPsMAN router to process the traffic, this mode is useful when you want to control multiple CAPs in remote locations, but want to use a central gateway.</span></p><h2 id="CAPsMANwithVLANs-CAPsMANrouter:"><span style="color:var(--ds-text-accent-lime-bolder,#37471f);">CAPsMAN router:</span></h2><ul><li>Setup Bridge VLAN filtering to limit interfaces to appropriate VLANs</li></ul><pre style="margin-left: 20.0px;">/interface bridge
+add name=bridge1 vlan-filtering=yes
+/interface bridge port
+add bridge=bridge1 interface=ether1 pvid=10
+add bridge=bridge1 interface=ether2 pvid=20
+/interface bridge vlan
+add bridge=bridge1 tagged=bridge1 untagged=ether1 vlan-ids=10
+add bridge=bridge1 tagged=bridge1 untagged=ether2 vlan-ids=20
+</pre><p><span style="color:var(--ds-text-accent-lime-bolder,#37471f);"><br/></span></p><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p><span style="color:var(--ds-text-accent-lime-bolder,#37471f);">CAPsMAN will attach CAP interfaces to the bridge and automatically will add appropriate entries to the bridge VLAN table</span></p></div></div><p><span style="color:var(--ds-text-accent-lime-bolder,#37471f);"><br/></span></p><p><strong>Note:</strong><span> </span>CAPsMAN will attach CAP interfaces to the bridge and automatically will add appropriate entries to the bridge VLAN table. This feature is available starting with RouterOS v6.43</p><p><br/></p><ul><li>Create appropriate CAP configurations for each VLAN</li></ul><pre style="margin-left: 20.0px;">/caps-man configuration
+add country=latvia datapath.bridge=bridge1 datapath.vlan-id=10 datapath.vlan-mode=use-tag name=Config_WORK security.authentication-types=wpa-psk,wpa2-psk \
+    security.passphrase=secret_work_password ssid=WiFi_WORK
+add country=latvia datapath.bridge=bridge1 datapath.vlan-id=20 datapath.vlan-mode=use-tag name=Config_GUEST security.authentication-types=wpa-psk,wpa2-psk \
+    security.passphrase=secret_guest_password ssid=WiFi_GUEST
+</pre><ul><li>We are going to create a single CAPsMAN provisioning rule to create the<span> </span><strong>WiFi_WORK</strong><span> </span>and the<span> </span><strong>WiFi_GUEST</strong><span> </span>SSIDs on a single device, each connect CAP is going to create these SSIDs automatically</li></ul><pre style="margin-left: 20.0px;">/caps-man provisioning
+add action=create-dynamic-enabled master-configuration=Config_WORK slave-configurations=Config_GUEST</pre><p><br/></p><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>You can create even more Virtual APs by adding multiple slave-configurations. That requires multiple CAPsMAN configurations that were created earlier.</p></div></div><p><br/></p><ul><li>For security reasons, limit the CAPsMAN to interfaces. to which CAPs are going to be connected</li></ul><pre style="margin-left: 20.0px;">/caps-man manager interface
+set [ find default=yes ] forbid=yes
+add disabled=no interface=ether3
+add disabled=no interface=ether4
+</pre><ul><li>Enable the CAPsMAN manager</li></ul><pre style="margin-left: 20.0px;">/caps-man manager
+set enabled=yes
+</pre><ul><li>Setup DHCP Server for each VLAN</li></ul><pre style="margin-left: 20.0px;">/interface vlan
+add interface=bridge1 name=VLAN10 vlan-id=10
+add interface=bridge1 name=VLAN20 vlan-id=20
+/ip address
+add address=192.168.10.1/24 interface=VLAN10
+add address=192.168.20.1/24 interface=VLAN20
+/ip pool
+add name=dhcp_pool10 ranges=192.168.10.2-192.168.10.254
+add name=dhcp_pool20 ranges=192.168.20.2-192.168.20.254
+/ip dhcp-server
+add address-pool=dhcp_pool10 disabled=no interface=VLAN10 name=dhcp10
+add address-pool=dhcp_pool20 disabled=no interface=VLAN20 name=dhcp20
+/ip dhcp-server network
+add address=192.168.10.0/24 dns-server=8.8.8.8 gateway=192.168.10.1
+add address=192.168.20.0/24 dns-server=8.8.8.8 gateway=192.168.20.1</pre><h2 id="CAPsMANwithVLANs-CAPs:.1">CAPs:</h2><ul><li>Enable CAP mode on each AP, specify which interface is connected to the CAPsMAN router</li></ul><pre style="margin-left: 20.0px;">/interface wireless cap <br/>set discovery-interfaces=ether1 enabled=yes interfaces=wlan1
+</pre><ul><li>After CAPs are successfully connected to the CAPsMAN Router, two CAP interfaces will be dynamically created on the CAPsMAN Router. Both of these interfaces will get dynamically added as bridge ports on the same CAPsMAN Router due to explicitly selecting the bridge interface with<span> </span>datapath.bridge=bridge1<span> </span>and using the default CAPsMAN Forwarding Mode<span> </span>datapath.local-forwarding=no. Because of using a bridge with enabled<span> </span>vlan-filtering, both CAP interfaces will also show up in a bridge VLAN table.</li></ul><pre style="margin-left: 20.0px;">[admin@CAPsMAN_Router] /interface bridge port print
+Flags: X - disabled, I - inactive, D - dynamic, H - hw-offload 
+ #     INTERFACE                       BRIDGE                      HW  PVID PRIORITY  PATH-COST INTERNAL-PATH-COST    HORIZON
+ 0     ether1                          bridge1                     yes   10     0x80         10                 10       none
+ 1     ether2                          bridge1                     yes   20     0x80         10                 10       none
+ 2  D  cap16                           bridge1                           10     0x80         10                 10       none
+ 3  D  cap17                           bridge1                           20     0x80         10                 10       none
+[admin@CAPsMAN_Router] /interface bridge vlan print
+Flags: X - disabled, D - dynamic 
+ #   BRIDGE                         VLAN-IDS  CURRENT-TAGGED                         CURRENT-UNTAGGED                        
+ 0 D bridge1                        1                                                bridge1                                 
+ 1   bridge1                        10        cap16                                  ether1                                  
+ 2   bridge1                        20        cap17                                  ether2  
+</pre><p>That is it! Connect Wireless clients to your APs and check connectivity.</p><h1 id="CAPsMANwithVLANs-Casestudies">Case studies</h1><h2 id="CAPsMANwithVLANs-WithoutVirtualAPs">Without Virtual APs</h2><p>Not everyone wants to create Virtual APs since that does decrease the total throughput. If you want to use multiple devices to create multiple SSIDs, then it is possible to assign a certain configuration on a CAP based on its identity. To achieve this you should use CAPsMAN provisioning rules along with RegEx expressions. In this example we are going to assign the<span> </span><strong>Config_WORK</strong><span> </span>configuration to CAPs that have identity set to &quot;'<strong>AP_WORK_*</strong>&quot; and we are going to assign the<span> </span><strong>Config_GUEST</strong><span> </span>configuration to CAPs that have identity set to &quot;<strong>AP_GUEST_*</strong>&quot;. To do this, you simply need to change the CAPsMAN provisioning rules.</p><ul><li>Remove any existing provisioning rules</li></ul><pre style="margin-left: 20.0px;">/caps-man provisioning remove [f]
+</pre><ul><li>Create new provisioning rules that will assign appropriate configuration on a CAP based on its identity</li></ul><pre style="margin-left: 20.0px;">/caps-man provisioning
+add action=create-dynamic-enabled identity-regexp=^AP_GUEST_ master-configuration=Config_GUEST
+add action=create-dynamic-enabled identity-regexp=^AP_WORK_ master-configuration=Config_WORK</pre><p><br/></p><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p><span style="color:var(--ds-text-accent-lime-bolder,#37471f);">Don't forget to set a proper identity on the CAPs since CAPsMAN is going to assign appropriate configuration on the APs based on it's identity.</span></p></div></div><p><br/></p><p><br/></p>
+                    </div>
+
+                                                            <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/137986075/140017722.jpg">CAPsMAN_VLANs_local.jpg</a> (image/jpeg)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/137986075/140017723.jpg">CAPsMAN_VLANs.jpg</a> (image/jpeg)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

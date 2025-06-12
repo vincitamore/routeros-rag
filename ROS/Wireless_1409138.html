@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : Wireless</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : Wireless
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Normunds R.</span>, last updated on Aug 08, 2024
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <div class="contentLayout2">
+<div class="columnLayout two-left-sidebar" data-layout="two-left-sidebar">
+<div class="cell aside" data-type="aside">
+<div class="innerCell">
+<div class="panel" style="border-width: 1px;"><div class="panelHeader" style="border-bottom-width: 1px;"><b>In This Section:</b></div><div class="panelContent">
+<p>
+
+
+<div class="plugin_pagetree">
+
+        
+        
+    <ul role="list" aria-busy="true" class="plugin_pagetree_children_list plugin_pagetree_children_list_noleftspace">
+        <div class="plugin_pagetree_children">
+        </div>
+    </ul>
+
+    <fieldset class="hidden">
+        <input type="hidden" name="treeId" value="">
+        <input type="hidden" name="treeRequestId" value="/docs/plugins/pagetree/naturalchildren.action?decorator=none&amp;excerpt=false&amp;sort=position&amp;reverse=false&amp;disableLinks=false&amp;expandCurrent=false&amp;placement=">
+        <input type="hidden" name="treePageId" value="1409138">
+
+        <input type="hidden" name="noRoot" value="false">
+        <input type="hidden" name="rootPageId" value="1409138">
+
+        <input type="hidden" name="rootPage" value="">
+        <input type="hidden" name="startDepth" value="0">
+        <input type="hidden" name="spaceKey" value="ROS" >
+
+        <input type="hidden" name="i18n-pagetree.loading" value="Loading...">
+        <input type="hidden" name="i18n-pagetree.error.permission" value="Unable to load page tree. It seems that you do not have permission to view the root page.">
+        <input type="hidden" name="i18n-pagetree.eeror.general" value="There was a problem retrieving the page tree. Please check the server log file for more information.">
+        <input type="hidden" name="loginUrl" value="">
+        <input type="hidden" name="mobile" value="false">
+        <input type="hidden" name="placement" value="">
+
+                <fieldset class="hidden">
+                            <input type="hidden" name="ancestorId" value="1409138">
+                    </fieldset>
+    </fieldset>
+</div>
+
+</p>
+</div></div></div>
+</div>
+<div class="cell normal" data-type="normal">
+<div class="innerCell">
+<p><br/></p></div>
+</div>
+</div>
+<div class="columnLayout single" data-layout="single">
+<div class="cell normal" data-type="normal">
+<div class="innerCell">
+<p>This section will describe the configuration of 802.11 wireless protocols and best use examples.</p><p>Wireless capabilities of a router can greatly enhance the usability of your home or office network or provide a solution for industrial structures. Choosing the right device for setup can be a puzzle to inexperienced users. This guide intends to explain different parameters and suggest a thought process to not get lost in the vast selection of MikroTik routers.</p><h2 id="Wireless-RouterOSpackagetype">RouterOS package type</h2><p>Since RouterOS v7.13 some MikroTik devices can choose between two types of Wireless NPK package (ie. wireless drivers), depending on the required features and the device type. More details can be found in the respective documentation sections. CAPsMAN functionality is included in the routeros bundle package, regardless of CPU architecture and independent of wireless drivers, ie. you can run CAPsMAN on an model. </p><p>In short:</p><ul><li>CAPsMAN can run anywhere, on any MikroTik device. You can run both new and old CAPsMAN at the same time in most cases (when running both on an AX router, built in cards can't be used)</li><li>MIPS type devices have no choice of driver, only legacy drivers are supported</li><li>ARM CPU 802.11AC wireless devices and 802.11AX wireless devices <em>have</em> a choice of wireless driver. </li></ul><p>The below table helps you choose in this case: </p><h3 id="Wireless-Old802.11acARMCPUdevices*">Old 802.11ac ARM CPU devices* </h3><div class="table-wrap"><table class="wrapped relative-table confluenceTable" style="width: 55.9895%;"><colgroup><col style="width: 30.6643%;"/><col style="width: 25.8019%;"/><col style="width: 43.5338%;"/></colgroup><tbody><tr><td class="confluenceTd"><strong>Feature</strong></td><td class="confluenceTd"><strong>Needed packages</strong></td><td class="confluenceTd"><strong>Notes</strong></td></tr><tr><td class="confluenceTd"><br/></td><td class="confluenceTd"><br/></td><td class="confluenceTd"><em> </em></td></tr><tr><td class="confluenceTd">New drivers (WPA3, Fast Roaming)</td><td class="highlight-#e3fcef confluenceTd" data-highlight-colour="#e3fcef">routeros + wifi-qcom-ac</td><td class="confluenceTd"><em> </em></td></tr><tr><td class="confluenceTd">Legacy drivers (Nstreme, Nv2)</td><td class="confluenceTd">routeros + wireless</td><td class="confluenceTd"><em> </em></td></tr><tr><td class="confluenceTd"><br/></td><td class="confluenceTd"><br/></td><td class="confluenceTd"><em> </em></td></tr><tr><td class="confluenceTd">New Capsman and own real interfaces</td><td class="highlight-#e3fcef confluenceTd" data-highlight-colour="#e3fcef">routeros + wifi-qcom-ac</td><td class="confluenceTd"><em>Built-in cards work with new drivers</em></td></tr><tr><td class="confluenceTd">New Capsman only controller</td><td class="confluenceTd">routeros</td><td class="confluenceTd"><em>Built-in cards are not used at all</em></td></tr><tr><td class="confluenceTd">Old Capsman</td><td class="confluenceTd">routeros + wireless</td><td class="confluenceTd"><em>Actually old = dual. Built-in cards will work with legacy drivers</em></td></tr><tr><td class="confluenceTd">Running both capsmans at the same time</td><td class="confluenceTd">routeros + wireless</td><td class="confluenceTd"><em>Built-in cards can only work with legacy drivers</em></td></tr></tbody></table></div><p><em><strong>* wifi-qcom-ac</strong>: Audience, Audience LTE kit, Chateau (all variants of D53), hAP ac^2, hAP ac^3, cAP ac, cAP XL ac, LDF 5 ac, LHG XL 5 ac, LHG XL 52 ac, NetMetal ac^2, mANTBox 52 15s, wAP ac (RBwAPG-5HacD2HnD), SXTsq 5 ac</em></p><h3 id="Wireless-New802.11axdevices">New 802.11ax devices</h3><div class="table-wrap"><table class="relative-table wrapped confluenceTable" style="width: 56.2527%;"><colgroup><col style="width: 30.6769%;"/><col style="width: 25.6031%;"/><col style="width: 43.72%;"/></colgroup><tbody><tr><td class="confluenceTd"><strong>Feature</strong></td><td class="confluenceTd"><strong>Needed packages</strong></td><td class="confluenceTd"><strong>Notes</strong><em><br/></em></td></tr><tr><td class="confluenceTd"><br/></td><td class="confluenceTd"><br/></td><td class="confluenceTd"><em> </em></td></tr><tr><td class="confluenceTd">New drivers (WPA3, Fast Roaming)</td><td class="highlight-#e6fcff confluenceTd" data-highlight-colour="#e6fcff">routeros + wifi-qcom</td><td class="confluenceTd"><em> </em></td></tr><tr><td class="confluenceTd">Legacy drivers (Nstreme, Nv2)</td><td class="highlight-#ffebe6 confluenceTd" data-highlight-colour="#ffebe6">-</td><td class="highlight-#ffebe6 confluenceTd" data-highlight-colour="#ffebe6"><em title="">Not possible</em></td></tr><tr><td class="confluenceTd"><br/></td><td class="confluenceTd"><br/></td><td class="confluenceTd"><em> </em></td></tr><tr><td class="confluenceTd">New Capsman and own real interfaces</td><td class="highlight-#e6fcff confluenceTd" data-highlight-colour="#e6fcff">routeros + wifi-qcom</td><td class="confluenceTd"><em>Built-in cards work with new drivers</em></td></tr><tr><td class="confluenceTd">New Capsman only controller</td><td class="confluenceTd">routeros</td><td class="confluenceTd"><em>Built-in cards are not used at all</em></td></tr><tr><td class="confluenceTd">Old Capsman</td><td class="highlight-#fffae6 confluenceTd" data-highlight-colour="#fffae6">routeros + wireless</td><td class="highlight-#fffae6 confluenceTd" data-highlight-colour="#fffae6"><em title="">Actually old = dual. Loses built-in cards</em></td></tr><tr><td class="confluenceTd">Running both capsmans at the same time</td><td class="highlight-#fffae6 confluenceTd" data-highlight-colour="#fffae6">routeros + wireless</td><td class="highlight-#fffae6 confluenceTd" data-highlight-colour="#fffae6"><em title="">Loses built-in cards</em></td></tr></tbody></table></div><h2 id="Wireless-Frequencies"><span class="mw-headline">Frequencies</span></h2><p>MikroTik provides routers with interfaces in 3 frequency bands - 2.4GHz, 5GHz, and 60GHz. Each frequency band has its own advantages and use cases.</p><h3 id="Wireless-2.4GHz"><span class="mw-headline"><strong>2.4GHz</strong></span></h3><p>Nowadays considered legacy because of overuse, it is still the most widely supported band. If you have a wireless client like phone, laptop or another device, it will most probably support this band. Even IoT devices often support 2.4GHz band. Because of the lower frequency, the 2.4GHz band can better overcome obstacles, so sequentially it has a bigger range than a 5GHz device, but it also usually has smaller throughput (internet speed). Also, it can severely suffer from interference (noise) from other 2.4GHz wireless devices, because almost every home access point supports 2.4GHz band and it performs well through walls and over large distances also, there are fewer frequencies to choose from (3 non-overlapping). If you have many close neighbors (apartments, shared office building) chances are 2.4GHz band will be saturated and performance will be lower. This band can also be used for industrial links.</p><h3 id="Wireless-5GHz"><span class="mw-headline"><strong>5GHz</strong></span></h3><p>Usually, new phones and laptops also support 5GHz band. If your client device and router support 802.11ac (sometimes referred to as just &quot;ac&quot;) it will be faster than the 2.4GHz band. 5GHz band has more frequencies to choose from, but also usually has a lower range than 2.4GHz band. If you have new client devices, your network will benefit from an ac router. The 5GHz band is also often used for industrial links, because of the big frequency range.</p><h3 id="Wireless-60GHz"><span class="mw-headline"><strong>60GHz</strong></span></h3><p>Currently, there are very few client devices (phones, laptops) that support the 60GHz band. However, it offers cutting edge solutions for industrial links. For example, if you have 2 points that must be connected at distances up to 1500 meters you will get a 1 Gbps duplex link. For example, one of the MikroTik products is called the <em>Wireless Wire</em> because it provides the same speed as 1Gbps wired connection, but you will need a clear line of sight to establish the link.</p><hr/><h2 id="Wireless-Usecase"><span class="mw-headline">Use case</span></h2><p>RouterOS software on MikroTik devices provides broad and coherent configuration possibilities. RouterOS software allows you to use MikroTik devices in many ways, for example, if needed, a &quot;home access point&quot; device can be easily reconfigured to act as a client or form a point to point link, if needed. The &quot;home AP&quot; is simply the default configuration, but it can be changed to whatever configuration you wish. That being said, it is best to use hardware for its intended purpose.</p><h3 id="Wireless-HomeAPforphonesandlaptops"><span class="mw-headline">Home AP for phones and laptops<br/></span></h3><p>Before you determine the most optimal choice for your setup, you should answer questions like how many clients you want to connect, what range you should cover and what speeds you want to get.</p><h3 id="Wireless-Clientcount"><span class="mw-headline">Client count</span></h3><p>More connected clients mean higher latency and smaller throughput. We recommend 20-50 clients per interface to reach the peak performance, depending on conditions the number of clients can go up to 100 and still work stable. If clients will need high throughput or data traffic is time sensitive it is advised to plan fewer clients per access point. Often it is beneficial to choose simpler access points but place them denser.</p><h3 id="Wireless-Range"><span class="mw-headline">Range</span></h3><p>The range of wireless connections depends on many conditions. Some of those are antenna gain, transmit power of router and client device, interference from other devices, obstacles (walls, metal objects), router placement. An important factor to note is that all involved devices affect the achievable distance, meaning that no matter how strong and sensitive your AP is, a small phone will be limited by its own transmit power and sensitivity. One device is unable to cover large areas if the client devices are mobile phones. Usually, only a few hundred meters can be achieved and more AP devices are required to cover bigger areas.</p><ul><li><strong>Antenna gain</strong> is measured in dBi and determines how narrow the beam is. The radiation pattern of 0 dBi (practically impossible) is of the shape of a sphere, 1.5 dBi - 5 dBi radiates to all directions almost equally but has some dents and sides where the signal will be stronger. &gt; 9 dBi has an obvious directional radiation pattern. Antennas with higher antenna gain if properly positioned will reach further in the necessary direction.</li><li><strong>Transmit power</strong> measured in dBm or mW determines signal strength that is coming out of a wireless interface. Mobile devices usually have small transmit power to save battery power. Even if, for example, phone reports an OK received signal strength, the router may receive a weak signal from the phone.</li></ul><ul><li><strong>Interference</strong> from other devices increases the noise floor and it gets harder for the router to distinguish signal from noise, therefore, the signal must be stronger and client closer to the access point. Access points in the same frequency occupy the same air time decreasing throughput and increased latency.</li></ul><ul><li>Some <strong>objects</strong> decrease (attenuate) signal strength while others reflect the signal. Usually, in buildings, you have to keep in mind walls and their thickness, floor, and ceiling, metallic objects, glass, and wood also attenuate the signal.</li></ul><ul><li><strong>Placement</strong> of access point also affects range. The access point shouldn't be covered by metallic objects or surfaces so the signal would have space to spread.</li></ul><h3 id="Wireless-Speed"><span class="mw-headline">Speed</span></h3><p>If speed is important, then you should choose a 5GHz wireless router with 802.11 ac support. </p><h2 id="Wireless-Forotherwirelessantennastoconnect(CPEtoAP)"><span class="mw-headline">For other wireless antennas to connect (CPE to AP) <br/></span></h2><p>Often it is necessary to connect two or more points, like, connect buildings on campus or connect client homes to network, or establish a long link. MikroTik provides solutions in these situations too. In order to choose, you must know the distance, whether you have to connect two points (point to point - PtP) or multiple points (point to multipoint - PtMP) and what speeds you need.</p><h3 id="Wireless-Distance"><span class="mw-headline">Distance</span></h3><p>Because in these situations we are dealing with directional antennas and big distances, you must keep in mind that alignment and line of sight are crucial. For small distances up to 1500 meters, we advise using 60 GHz devices which will provide stability and great speed. Also, in small distances, 2.4 GHz or 5 GHz devices with small antenna gain will do just fine, although, you won't get such speeds as with 60 GHz devices. For longer links antenna gain and transmit power should be taken into consideration. Higher signal strength will allow higher data rates which mean higher throughput. Choose your frequency wisely to escape interference with other wireless links. Keep in mind that in cities even above the roof there often is interference from neighboring 2.4 GHz and 5 GHz links.</p><h3 id="Wireless-PtPorPtMP"><span class="mw-headline">PtP or PtMP</span></h3><p>PtP and PtMP links differ in some areas. For PtMP you most probably will want an antenna with a wider beam also called - sector antenna. Such antenna covers a wider angle but also has less gain, therefore, less distance. Also in PtMP access point must have at least level 4 RouterOS software license. Clients or devices that are connected to the access point and devices in PtP link can have license level 3 and narrower beamwidth.</p><h3 id="Wireless-Speed.1"><span class="mw-headline">Speed</span></h3><p>For higher speeds in short links, you must choose 60 GHz devices, in longer distances - 5GHz ac devices.</p><hr/><h3 id="Wireless-Note">Note</h3><p>For controlling large networks of access points you can use <a href="1409149.html">AP Controller (CAPsMAN)</a> (Controlled access point manager). All RouterOS devices can act as CAPsMAN servers, however, it is advised to use appropriate devices for the task, with higher CPU power and more RAM. All RouterOS devices with 2GHz and/or 5GHz interface and software level at least 4 can be CAP (Controlled access point) clients and connect to a CAPsMAN server. For controlling hundreds of access points, we advise using our CCR series devices. For controlling thousands of access point you might want to try using CHR or an x86 machine.</p></div>
+</div>
+</div>
+</div>
+                    </div>
+
+                                        
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : VLAN</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Bridging-and-Switching_328068.html">Bridging and Switching</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : VLAN
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Edgars P.</span>, last updated on Oct 10, 2024
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742024634 {padding: 0px;}
+div.rbtoc1747742024634 ul {margin-left: 0px;}
+div.rbtoc1747742024634 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742024634'>
+<ul class='toc-indentation'>
+<li><a href='#VLAN-Summary'>Summary</a></li>
+<li><a href='#VLAN-802.1Q'>802.1Q</a></li>
+<li><a href='#VLAN-Q-in-Q'>Q-in-Q</a></li>
+<li><a href='#VLAN-Properties'>Properties</a></li>
+<li><a href='#VLAN-Setupexamples'>Setup examples</a>
+<ul class='toc-indentation'>
+<li><a href='#VLAN-Videoexamples'>Video examples</a></li>
+<li><a href='#VLAN-Layer2VLANexamples'>Layer2 VLAN examples</a></li>
+<li><a href='#VLAN-Layer3VLANexamples'>Layer3 VLAN examples</a>
+<ul class='toc-indentation'>
+<li><a href='#VLAN-SimpleVLANrouting'>Simple VLAN routing</a></li>
+<li><a href='#VLAN-InterVLANrouting'>InterVLAN routing</a></li>
+<li><a href='#VLAN-RouterOS/32andIPunnumberedaddresses'>RouterOS /32 and IP unnumbered addresses</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div></p><h1 id="VLAN-Summary"><span class="mw-headline">Summary</span></h1><p><strong>Standards:</strong><span> </span><code>IEEE 802.1Q, IEEE <span style="color:var(--ds-text-accent-lime-bolder,#37471f);">802.1ad</span></code></p><p>Virtual Local Area Network (VLAN) is a Layer 2 method that allows multiple Virtual LANs on a single physical interface (ethernet, wireless, etc.), giving the ability to segregate LANs efficiently.</p><p>You can use MikroTik RouterOS (as well as Cisco IOS, Linux, and other router systems) to mark these packets as well as to accept and route marked ones.</p><p>As VLAN works on OSI Layer 2, it can be used just like any other network interface without any restrictions. VLAN successfully passes through regular Ethernet bridges.</p><p>You can also transport VLANs over wireless links and put multiple VLAN interfaces on a single wireless interface. Note that as VLAN is not a full tunnel protocol (i.e., it does not have additional fields to transport MAC addresses of sender and recipient), the same limitation applies to bridging over VLAN as to bridging plain wireless interfaces. In other words, while wireless clients may participate in VLANs put on wireless interfaces, it is not possible to have VLAN put on a wireless interface in station mode bridged with any other interface.</p><h1 id="VLAN-802.1Q"><span class="mw-headline">802.1Q</span></h1><p>The most commonly used protocol for Virtual LANs (VLANs) is IEEE 802.1Q. It is a standardized encapsulation protocol that defines how to insert a four-byte VLAN identifier into the Ethernet header.</p><p>Each VLAN is treated as a separate subnet. It means that by default, a host in a specific VLAN cannot communicate with a host that is a member of another VLAN, although they are connected to the same switch. So if you want inter-VLAN communication you need a router. RouterOS supports up to 4094 VLAN interfaces, each with a unique VLAN ID, per interface. VLAN priorities may also be used and manipulated.</p><p>When the VLAN extends over more than one switch, the inter-switch link has to become a 'trunk', where packets are tagged to indicate which VLAN they belong to. A trunk carries the traffic of multiple VLANs; it is like a point-to-point link that carries tagged packets between switches or between a switch and router.</p><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>The IEEE 802.1Q standard has reserved VLAN IDs with special use cases, the following VLAN IDs should not be used in generic VLAN setups: 0, 1, 4095</p></div></div><h1 id="VLAN-Q-in-Q"><span class="mw-headline">Q-in-Q</span></h1><p>Original 802.1Q allows only one VLAN header, Q-in-Q on the other hand allows two or more VLAN headers. In RouterOS, Q-in-Q can be configured by adding one VLAN interface over another. Example:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface vlan
+add name=vlan1 vlan-id=11 interface=ether1
+add name=vlan2 vlan-id=12 interface=vlan1</pre>
+</div></div><p><br/></p><p>If any packet is sent over the 'vlan2' interface, two VLAN tags will be added to the Ethernet header - '11' and '12'.</p><h1 id="VLAN-Properties"><span class="mw-headline">Properties</span></h1><div class="table-wrap"><table class="wrapped confluenceTable"><colgroup><col/><col/></colgroup><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>arp</strong><span> </span>(<em>disabled | enabled | local-proxy-arp | proxy-arp | reply-only</em>; Default:<span> </span><strong>enabled</strong>)</td><td class="confluenceTd">Address Resolution Protocol setting<ul><li><span style="color:var(--ds-background-accent-green-bolder,#1f845a);"><code>disabled</code> </span>- the interface will not use ARP</li><li><span style="color:var(--ds-background-accent-green-bolder,#1f845a);"><code>enabled</code> </span>- the interface will use ARP</li><li><span style="color:var(--ds-background-accent-green-bolder,#1f845a);"><code>local-proxy-arp</code></span><span> </span>-<span> </span><span style="color:var(--ds-text-accent-lime-bolder,#37471f);"><span> </span>the router performs proxy ARP on the interface and sends replies to the same interface</span></li><li><span style="color:var(--ds-background-accent-green-bolder,#1f845a);"><code>proxy-arp</code></span><span> </span>-<span> </span><span style="color:var(--ds-text-accent-lime-bolder,#37471f);">the router performs proxy ARP on the interface and sends replies to other interfaces</span></li><li><span style="color:var(--ds-background-accent-green-bolder,#1f845a);"><code>reply-only</code></span><span> </span>- the interface will only reply to requests originated from matching IP address/MAC address combinations which are entered as static entries in the<span> </span>IP/ARP<span> </span>table. No dynamic entries will be automatically stored in the<span> </span>IP/ARP<span> </span>table. Therefore for communications to be successful, a valid static entry must already exist.</li></ul></td></tr><tr><td class="confluenceTd"><strong>arp-timeout</strong><span> </span>(<em>auto | integer</em>; Default:<span> </span><strong>auto</strong>)</td><td class="confluenceTd">How long the ARP record is kept in the ARP table after no packets are received from IP. Value<span> </span><span style="color:var(--ds-background-accent-green-bolder,#1f845a);"><code>auto</code> </span>equals to the value of<span> </span><span style="color:var(--ds-background-accent-green-bolder,#1f845a);"><code>arp-timeout</code></span><span> </span>in<span> </span>IP/Settings, default is 30s.</td></tr><tr><td class="confluenceTd"><strong>disabled</strong><span> </span>(<em>yes | no</em>; Default:<span> </span><strong>no</strong>)</td><td class="confluenceTd">Changes whether the bridge is disabled.</td></tr><tr><td class="confluenceTd"><strong>interface</strong><span> </span>(<em>name</em>; Default:<span> </span>)</td><td class="confluenceTd">Name of the interface on top of which VLAN will work</td></tr><tr><td style="text-align: left;vertical-align: top;" class="confluenceTd"><strong>mvrp</strong><span> </span>(<em>yes | no</em>; Default:<span> </span><strong>no</strong>)</td><td style="text-align: left;vertical-align: top;" class="confluenceTd">Specifies whether this VLAN should declare its attributes through Multiple VLAN Registration Protocol (MVRP) as an applicant. Its main use case is for VLANs that is created on Ethernet interface (such as a &quot;router on a stick&quot; setup) that is connected to a bridge supporting <a href="https://help.mikrotik.com/docs/display/ROS/Bridging+and+Switching#BridgingandSwitching-MVRP" rel="nofollow">MVRP</a>. Enabling this option on a VLAN interface that is already part of an MVRP-enabled bridge has no effect, as the bridge manages MVRP in that case.<span style="color:var(--ds-text,#172b4d);"><span> </span>This property only has an effect when</span><span style="color:var(--ds-text,#172b4d);"> </span><span style="color:var(--ds-background-accent-green-bolder,#1f845a);"><code>use-service-tag</code></span><span style="color:var(--ds-text,#172b4d);"> </span><span style="color:var(--ds-text,#172b4d);">is disabled</span><span style="color:var(--ds-text,#172b4d);">.</span></td></tr><tr><td class="confluenceTd"><strong>mtu</strong><span> </span>(<em>integer: 68..65535</em>; Default:<span> </span><strong>1500</strong>)</td><td class="confluenceTd">Layer3 Maximum transmission unit</td></tr><tr><td class="confluenceTd"><strong>name</strong><span> </span>(<em>string</em>; Default:<span> </span>)</td><td class="confluenceTd">Interface name</td></tr><tr><td class="confluenceTd"><strong>use-service-tag</strong><span> </span>(<em>yes | no</em>; Default:<span> </span>)</td><td class="confluenceTd">IEEE 802.1ad compatible Service Tag</td></tr><tr><td class="confluenceTd"><strong>vlan-id</strong><span> </span>(<em>integer: 1..4094</em>; Default:<span> </span><strong>1</strong>)</td><td class="confluenceTd">Virtual LAN identifier or tag that is used to distinguish VLANs. Must be equal for all computers that belong to the same VLAN.</td></tr></tbody></table></div><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>MTU should be set to 1500 bytes same as on Ethernet interfaces. But this may not work with some Ethernet cards that do not support receiving/transmitting of full-size Ethernet packets with VLAN header added (1500 bytes data + 4 bytes VLAN header + 14 bytes Ethernet header). In this situation, MTU 1496 can be used, but note that this will cause packet fragmentation if larger packets have to be sent over the interface. At the same time remember that MTU 1496 may cause problems if path MTU discovery is not working properly between source and destination.</p></div></div><h1 id="VLAN-Setupexamples"><span class="mw-headline">Setup examples</span></h1><h2 id="VLAN-Videoexamples">Video examples</h2><p><a class="external-link" href="http://youtube.com/watch?v=US2EU6cgHQU" rel="nofollow">VLANs pt1</a>, <a class="external-link" href="http://youtube.com/watch?v=YMwOrc0LDP8" rel="nofollow">VLANs pt2</a>, <a class="external-link" href="http://youtube.com/watch?v=7a_z1jAdIME" rel="nofollow">VLANs pt3</a></p><h2 id="VLAN-Layer2VLANexamples"><span class="mw-headline">Layer2 VLAN examples</span></h2><p>There are multiple possible configurations that you can use, but each configuration type is designed for a special set of devices since some configuration methods will give you the benefits of the built-in switch chip and gain larger throughput. Check the<span> </span><a href="https://help.mikrotik.com/docs/display/ROS/Basic+VLAN+switching" rel="nofollow">Basic VLAN switching</a><span> </span>guide to see which configuration to use for each type of device to gain maximum possible throughput and compatibility, the guide shows how to set up a very basic VLAN trunk/access port configuration.</p><p>There are some other ways to set up VLAN tagging or VLAN switching, but the recommended way is to use<span> </span><a href="https://help.mikrotik.com/docs/display/ROS/Bridging+and+Switching#BridgingandSwitching-BridgeVLANFiltering" rel="nofollow">Bridge VLAN Filtering</a>. Make sure you have not used any<span> </span><a href="https://help.mikrotik.com/docs/display/ROS/Layer2+misconfiguration" rel="nofollow">known Layer2 misconfigurations</a>.</p><h2 id="VLAN-Layer3VLANexamples"><span class="mw-headline">Layer3 VLAN examples</span></h2><h3 id="VLAN-SimpleVLANrouting"><span class="mw-headline">Simple VLAN routing</span></h3><p>Let us assume that we have several MikroTik routers connected to a hub. Remember that a hub is an OSI physical layer device (if there is a hub between routers, then from the L3 point of view it is the same as an Ethernet cable connection between them). For simplification assume that all routers are connected to the hub using the ether1 interface and have assigned IP addresses as illustrated in the figure below. Then on each of them the VLAN interface is created.</p><p>Configuration for R2 and R4 is shown below:</p><p>R2:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] /interface vlan&gt; add name=VLAN2 vlan-id=2 interface=ether1 disabled=no
+
+[admin@MikroTik] /interface vlan&gt; print 
+Flags: X - disabled, R - running, S - slave 
+ #    NAME                  MTU   ARP        VLAN-ID INTERFACE                
+0 R  VLAN2                 1500  enabled    2       ether1</pre>
+</div></div><p>R4:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] /interface vlan&gt; add name=VLAN2 vlan-id=2 interface=ether1 disabled=no
+
+[admin@MikroTik] /interface vlan&gt; print 
+Flags: X - disabled, R - running, S - slave 
+ #    NAME                  MTU   ARP        VLAN-ID INTERFACE                
+0 R  VLAN2                 1500  enabled    2       ether1</pre>
+</div></div><p>The next step is to assign IP addresses to the VLAN interfaces.</p><p>R2:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false"> [admin@MikroTik] ip address&gt; add address=10.10.10.3/24 interface=VLAN2
+ [admin@MikroTik] ip address&gt; print
+ Flags: X - disabled, I - invalid, D - dynamic
+   #   ADDRESS            NETWORK         BROADCAST       INTERFACE
+   0   10.0.1.4/24        10.0.1.0        10.0.1.255      ether1
+   1   10.20.0.1/24       10.20.0.0       10.20.0.255     pc1
+   2   10.10.10.3/24      10.10.10.0      10.10.10.255    vlan2
+
+ [admin@MikroTik] ip address&gt; </pre>
+</div></div><p>R4:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false"> [admin@MikroTik] ip address&gt; add address=10.10.10.5/24 interface=VLAN2
+ [admin@MikroTik] ip address&gt; print
+ Flags: X - disabled, I - invalid, D - dynamic
+   #   ADDRESS            NETWORK         BROADCAST       INTERFACE
+   0   10.0.1.5/24        10.0.1.0        10.0.1.255      ether1
+   1   10.30.0.1/24       10.30.0.0       10.30.0.255     pc2
+   2   10.10.10.5/24      10.10.10.0      10.10.10.255    vlan2
+
+[admin@MikroTik] ip address&gt; </pre>
+</div></div><p>At this point, it should be possible to ping router R4 from router R2 and vice versa:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false"> &quot;Ping from R2 to R4:&quot;
+
+ [admin@MikroTik] ip address&gt; /ping 10.10.10.5
+
+ 10.10.10.5 64 byte ping: ttl=255 time=4 ms
+
+ 10.10.10.5 64 byte ping: ttl=255 time=1 ms
+
+ 2 packets transmitted, 2 packets received, 0% packet loss
+
+ round-trip min/avg/max = 1/2.5/4 ms
+
+
+ &quot;From R4 to R2:&quot;
+ 
+ [admin@MikroTik] ip address&gt; /ping 10.10.10.3
+ 10.10.10.3 64 byte ping: ttl=255 time=6 ms
+ 10.10.10.3 64 byte ping: ttl=255 time=1 ms
+ 2 packets transmitted, 2 packets received, 0% packet loss
+ round-trip min/avg/max = 1/3.5/6 ms </pre>
+</div></div><p><br/></p><p>To make sure if the VLAN setup is working properly, try to ping R1 from R2. If pings are timing out then VLANs are successfully isolated.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false"> &quot;From R2 to R1:&quot;
+
+ [admin@MikroTik] ip address&gt; /ping 10.10.10.2
+ 10.10.10.2 ping timeout
+ 10.10.10.2 ping timeout
+ 3 packets transmitted, 0 packets received, 100% packet loss </pre>
+</div></div><h3 id="VLAN-InterVLANrouting"><span class="mw-headline">InterVLAN routing</span></h3><p>If separate VLANs are implemented on a switch, then a router is required to provide communication between VLANs. A switch works at OSI layer 2 so it uses only the Ethernet header to forward and does not check the IP header. For this reason, we must use the router that is working as a gateway for each VLAN. Without a router, a host is unable to communicate outside of its own VLAN. The routing process between VLANs described above is called inter-VLAN communication.</p><p>To illustrate inter-VLAN communication, we will create a trunk that will carry traffic from three VLANs (VLAN2 and VLAN3, VLAN4) across a single link between a Mikrotik router and a manageable switch that supports VLAN trunking.</p><p>Each VLAN has its own separate subnet (broadcast domain) as we see in the figure above:</p><ul><li>VLAN 2 – 10.10.20.0/24;</li><li>VLAN 3 – 10.10.30.0/24;</li><li>VLAN 4 – 10.10.40.0./24.</li></ul><p>VLAN configuration on most switches is straightforward, we need to define which ports are members of the VLANs and define a 'trunk' port that can carry tagged frames between the switch and the router.</p><p>Create VLAN interfaces:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface vlan
+add name=VLAN2 vlan-id=2 interface=ether1 disabled=no
+add name=VLAN3 vlan-id=3 interface=ether1 disabled=no
+add name=VLAN4 vlan-id=4 interface=ether1 disabled=no</pre>
+</div></div><p><br/></p><p>Add IP addresses to VLANs:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip address 
+add address=10.10.20.1/24 interface=VLAN2
+add address=10.10.30.1/24 interface=VLAN3
+add address=10.10.40.1/24 interface=VLAN4</pre>
+</div></div><h3 id="VLAN-RouterOS/32andIPunnumberedaddresses"><span class="mw-headline">RouterOS /32 and IP unnumbered addresses</span></h3><p>In RouterOS, to create a point-to-point tunnel with addresses you have to use the address with a network mask of '/32' that effectively brings you the same features as some vendors unnumbered IP address.</p><p>There are 2 routers RouterA and RouterB where each is part of networks 10.22.0.0/24 and 10.23.0.0/24 respectively and to connect these routers using VLANs as a carrier with the following configuration:</p><p>RouterA:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false"> /ip address add address=10.22.0.1/24 interface=ether1
+ /interface vlan add interface=ether2 vlan-id=1 name=vlan1
+ /ip address add address=10.22.0.1/32 interface=vlan1 network=10.23.0.1
+ /ip route add gateway=10.23.0.1 dst-address=10.23.0.0/24 </pre>
+</div></div><p>RouterB:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false"> /ip address add address=10.23.0.1/24 interface=ether1
+ /interface vlan add interface=ether2 vlan-id=1 name=vlan1
+ /ip address add address=10.23.0.1/32 interface=vlan1 network=10.22.0.1
+ /ip route add gateway=10.22.0.1 dst-address=10.22.0.0/24 </pre>
+</div></div>
+                    </div>
+
+                                        
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

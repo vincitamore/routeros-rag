@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : Scripting Tips and Tricks</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Scripting_47579229.html">Scripting</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : Scripting Tips and Tricks
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Antons B.</span> on Nov 21, 2024
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742032505 {padding: 0px;}
+div.rbtoc1747742032505 ul {margin-left: 0px;}
+div.rbtoc1747742032505 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742032505'>
+<ul class='toc-indentation'>
+<li><a href='#ScriptingTipsandTricks-Donotuseconsolenumberstogetparametervalues'>Do not use console numbers to get parameter values</a></li>
+<li><a href='#ScriptingTipsandTricks-Whyfinddoesnotworkevenifcorrectvalueisspecified?'>Why find does not work even if correct value is specified?</a></li>
+<li><a href='#ScriptingTipsandTricks-Howtodefineemptyarray'>How to define empty array</a></li>
+<li><a href='#ScriptingTipsandTricks-Howtoremovevariables'>How to remove variables</a></li>
+<li><a href='#ScriptingTipsandTricks-Getvaluesforpropertiesif&#39;get&#39;commandisnotavailable'>Get values for properties if &#39;get&#39; command is not available</a></li>
+<li><a href='#ScriptingTipsandTricks-Alwayscheckwhatvalueandtypecommandreturns'>Always check what value and type command returns</a></li>
+<li><a href='#ScriptingTipsandTricks-Becarefulwhenaddingarraytostring'>Be careful when adding array to string</a></li>
+<li><a href='#ScriptingTipsandTricks-Get/Setunnamedelementsinarray'>Get/Set unnamed elements in array</a></li>
+<li><a href='#ScriptingTipsandTricks-Setelementvaluein2Darray'>Set element value in 2D array</a></li>
+<li><a href='#ScriptingTipsandTricks-Readvalueofglobalvariabledefinedinotherscript'>Read value of global variable defined in other script</a></li>
+<li><a href='#ScriptingTipsandTricks-Accessingglobalvariablefromfunction'>Accessing global variable from function</a></li>
+<li><a href='#ScriptingTipsandTricks-Runningfunctionfromanotherfunction'>Running function from another function</a></li>
+<li><a href='#ScriptingTipsandTricks-Alwaysuseuniquevariablenames'>Always use unique variable names</a></li>
+<li><a href='#ScriptingTipsandTricks-Getvaluesfromloopedinteractivecommandslike&quot;monitor&quot;'>Get values from looped interactive commands like &quot;monitor&quot;</a></li>
+<li><a href='#ScriptingTipsandTricks-Getfilecontentreceivedbyfetchtool'>Get file content received by fetch tool</a></li>
+<li><a href='#ScriptingTipsandTricks-Checkscriptpermissions'>Check script permissions</a></li>
+<li><a href='#ScriptingTipsandTricks-Becarefulwhenusingdont-require-permissions'>Be careful when using dont-require-permissions</a></li>
+</ul>
+</div></p><h3 id="ScriptingTipsandTricks-Donotuseconsolenumberstogetparametervalues"><span class="mw-headline">Do not use console numbers to get parameter values</span></h3><p>Lets start with very basics. When you work with console to access parameters, you are used to following syntax:</p><pre>[admin@rack1_b34_CCR1036] /interface&gt; print 
+Flags: D - dynamic, X - disabled, R - running, S - slave 
+ #     NAME                                TYPE       ACTUAL-MTU L2MTU  MAX-L2MTU
+ 0  R  ether1                              ether            1500  1580      1022
+[admin@rack1_b34_CCR1036] /interface&gt; set 0 name=LAN   
+</pre><p>What print command does is temporary saves buffer with id numbers referencing to internal ID numbers, so obviously if you are trying to use non-existent buffer values script will fail, like, for example this script:</p><pre>/system script add name=script1 source={
+  /ip route set 0 gateway=3.3.3.3
+}
+</pre><p>Script does not know what you assume by &quot;1&quot; and will throw an error. Proper way is to use internal ID numbers, those numbers can be seen if you are doing <code>print as-value</code> or returned by find command, for example:</p><pre>[admin@rack1_b34_CCR1036] /ip route&gt; :put [find where dst-address=&quot;10.0.0.0/8&quot;] 
+*1
+</pre><p>So in this case proper script would be:</p><pre>/system script add name=script1 source={
+  /ip route set *1 gateway=3.3.3.3
+}
+</pre><p>Note that it is not recommended to use internal numbers directly, since items can be removed and re-added in which case internal id number will change and script will fail again, so instead use find command directly in your code:</p><pre>/system script add name=script1 source={
+  /ip route set [find dst-address=&quot;0.0.0.0/0&quot;] gateway=3.3.3.3
+}
+</pre><p><br/></p><h3 id="ScriptingTipsandTricks-Whyfinddoesnotworkevenifcorrectvalueisspecified?"><span class="mw-headline">Why find does not work even if correct value is specified?</span></h3><p>Lets say we want to print specific address:</p><pre>[admin@rack1_b34_CCR1036] /ip address&gt; print where address=111.111.1.1/24
+Flags: X - disabled, I - invalid, D - dynamic 
+ #   ADDRESS            NETWORK         INTERFACE      
+</pre><p>So why it does not work?</p><p>Console tries to convert variable types as hard as it can, but it is not always possible to do it correctly, so lets look closely why this particular example does not work. First lets check what variable type &quot;address&quot; is:</p><pre>[admin@rack1_b34_CCR1036] /ip address&gt; :put [:typeof ([print as-value]-&gt;0-&gt;&quot;address&quot;)]
+str
+</pre><p>So obviously we are comparing string to ip-prefix. And conversion from ip-prefix to string does not happen, so what we can do to solve the problem? Convert variable to correct format:</p><pre>[admin@rack1_b34_CCR1036] /ip address&gt; print where address=[:tostr 111.111.1.1/24]
+  
+Flags: X - disabled, I - invalid, D - dynamic 
+ #   ADDRESS            NETWORK         INTERFACE                                
+ 0   111.111.1.1/24     111.111.1.0     ether2  
+</pre><p><br/>Or use string directly:</p><pre>[admin@rack1_b34_CCR1036] /ip address&gt; print where address=&quot;111.111.1.1/24&quot;
+  
+Flags: X - disabled, I - invalid, D - dynamic 
+ #   ADDRESS            NETWORK         INTERFACE                                
+ 0   111.111.1.1/24     111.111.1.0     ether2  
+</pre><p>Obviously second method is not suitable if you are getting ip prefix from a variable, then conversion should be done as in first example or by writing variable to string with &quot;$myVar&quot;.</p><h3 id="ScriptingTipsandTricks-Howtodefineemptyarray"><span class="mw-headline">How to define empty array</span></h3><p>RouterOS does not allow to define empty array in a way that you think it should work:</p><pre>[admin@1p_DUT_wAP ac] /interface&gt; :global array {}
+syntax error (line 1 column 17)
+</pre><p>Insted a work around is to convert empty string to an array:</p><pre>[admin@rack1_b36_CCR1009] &gt; :global array [:toarray &quot;&quot;]
+[admin@rack1_b36_CCR1009] &gt; :environment print 
+array={}
+
+</pre><p>From here we can use this array to set elements:</p><pre>[admin@rack1_b36_CCR1009] &gt; :set ($array-&gt;&quot;el0&quot;) &quot;el0_val&quot;       
+[admin@rack1_b36_CCR1009] &gt; :environment print            
+array={el0=&quot;el0_val&quot;}
+
+</pre><p><br/></p><h3 id="ScriptingTipsandTricks-Howtoremovevariables"><span class="mw-headline">How to remove variables</span></h3><p>You could use <code>/system script environment remove</code> to remove unused variables, however more preferred method is to unset variable.</p><p>Setting no value to existing parameter will unset it, see example below:</p><pre>[admin@MikroTik] /system script environment&gt; :global myVar 1
+[admin@MikroTik] /system script environment&gt; print 
+ # NAME               VALUE                                                      
+ 0 myVar              1                                                          
+[admin@MikroTik] /system script environment&gt; :set myVar
+[admin@MikroTik] /system script environment&gt; print 
+ # NAME               VALUE                                                      
+[admin@MikroTik] /system script environment&gt; 
+
+</pre><h3 id="ScriptingTipsandTricks-Getvaluesforpropertiesif&#39;get&#39;commandisnotavailable"><span class="mw-headline">Get values for properties if 'get' command is not available</span></h3><p>For example, how do you get usable output for scripting from <code>/interface wireless info hw-info</code> command? Use as-value:</p><pre>[admin@1p_DUT_wAP ac] /interface wireless info&gt; :put [hw-info wlan1 as-value ]
+ranges=2312-2732/5/b;g;gn20;gn40;2484-2484/5/b;g;gn20;gn40;rx-chains=0;1;tx-chains=0;1
+</pre><p>Output is 1D array so you can easily get interested property value</p><pre>[admin@1p_DUT_wAP ac] /interface wireless info&gt; :put ([hw-info wlan1 as-value ]-&gt;&quot;tx-chains&quot;)      
+0;1
+</pre><h3 id="ScriptingTipsandTricks-Alwayscheckwhatvalueandtypecommandreturns"><span class="mw-headline">Always check what value and type command returns</span></h3><p>Lets say we want to get gateway of specific route using as-value, if we execute following command it will return nothing</p><pre>[admin@rack1_b36_CCR1009] /ip address&gt; :put ([/ip route print as-value where gateway=&quot;ether1&quot;]-&gt;&quot;gateway&quot;) 
+
+
+</pre><p>Command assumes that output will be 1D array from which we could extract element gateway.</p><p>At first lets check if print is actually find anything:</p><pre>[admin@rack1_b36_CCR1009] /ip address&gt; :put ([/ip route print as-value where gateway=&quot;ether1&quot;])  
+.id=*400ae12f;distance=255;dst-address=111.111.111.1/32;gateway=ether1;pref-src=111.111.111.1
+</pre><p>So obviously there is something wrong with variable itself or variable type returned. Lets check it more closely:</p><pre>[admin@rack1_b36_CCR1009] /ip address&gt; :global aa ([/ip route print as-value where gateway=&quot;ether1&quot;
+])       
+[admin@rack1_b36_CCR1009] /ip address&gt; :environment print 
+aa={{.id=*400ae12f; distance=255; dst-address=111.111.111.1/32; gateway={&quot;ether1&quot;}; pref-src=111.11
+1.111.1}}
+
+</pre><p>Now it is clear that returned value is 2D array with one element. So the right sequence to extract gateway will be:</p><ul><li>get 2d array</li><li>get first element</li><li>get &quot;gateway&quot; from picked element</li></ul><pre>[admin@rack1_b36_CCR1009] /ip address&gt; :put ([:pick [/ip route print as-value where gateway=&quot;ether1&quot;] 0]-&gt;&quot;gateway&quot;)  
+ether1
+
+</pre><h3 id="ScriptingTipsandTricks-Becarefulwhenaddingarraytostring"><span class="mw-headline">Be careful when adding array to string</span></h3><p>If you want to print an array or add an array to existing string, be very careful as it may lead to unexpected results. For example ,we have array with two elements and we want to print the array value on screen:</p><pre>[admin@1p_DUT_wAP ac] /&gt; :global array {&quot;cccc&quot;, &quot;ddddd&quot;}
+[admin@1p_DUT_wAP ac] /&gt; :put (&quot;array value is: &quot; . $array )       
+array value is: cccc;array value is: ddddd
+</pre><p>Obviously this is not what we expected, because what . does is adds string to each array element and then prints the output. Instead you need to convert to string first:</p><pre>[admin@1p_DUT_wAP ac] /&gt; :put (&quot;array value is: &quot; . [:tostr  $array] )
+array value is: cccc;ddddd
+
+</pre><p><br/></p><h3 id="ScriptingTipsandTricks-Get/Setunnamedelementsinarray"><span class="mw-headline">Get/Set unnamed elements in array</span></h3><p>Lets say we have an array of elements { &quot;el1&quot;; &quot;el2&quot;; &quot;el3&quot; }. It is possible to pick elements of an array with pick command, but is not so neat as syntax below:</p><pre>[admin@1p_DUT_wAP ac] /&gt; :global test { &quot;el1&quot;; &quot;el2&quot;; &quot;el3&quot; }   
+[admin@1p_DUT_wAP ac] /&gt; :put ($test-&gt;1)                     
+el2
+</pre><p>The same syntax can be used to set values:</p><pre>[admin@1p_DUT_wAP ac] /&gt; :set ($test-&gt;2) &quot;el3_changed&quot;
+[admin@1p_DUT_wAP ac] /&gt; :environment print 
+test={&quot;el1&quot;; &quot;el2&quot;; &quot;el3_changed&quot;}
+</pre><p><br/></p><h3 id="ScriptingTipsandTricks-Setelementvaluein2Darray"><span class="mw-headline">Set element value in 2D array</span></h3><p>Syntax used in example above can also be used to set element value in 2D array:</p><pre>[admin@1p_DUT_wAP ac] /&gt; :global test {{&quot;11&quot;;&quot;12&quot;;&quot;13&quot;};{&quot;21&quot;;&quot;22&quot;;&quot;23&quot;}}   
+[admin@1p_DUT_wAP ac] &gt; :set ($test-&gt;1-&gt;1) &quot;22_changed&quot;
+[admin@1p_DUT_wAP ac] &gt; :put [($test-&gt;1-&gt;1)]           
+22_changed
+[admin@1p_DUT_wAP ac] &gt; :environment print  
+test={{&quot;11&quot;; &quot;12&quot;; &quot;13&quot;}; {&quot;21&quot;; &quot;22_changed&quot;; &quot;23&quot;}}
+</pre><p><br/></p><h3 id="ScriptingTipsandTricks-Readvalueofglobalvariabledefinedinotherscript"><span class="mw-headline">Read value of global variable defined in other script</span></h3><p>Lets say we have one script that declares variable and sets the value:</p><pre>/system script add name=script1 source={
+  :global myVar &quot;hello!&quot;
+}
+</pre><p>And we want to write the value of that variable in log from another script. Simply adding <code>/log info $myVar</code> will fail to return correct value, because second script does not know anything about variables defined in another scripts. To make it work properly variable need to be defined, so correct second script code is:</p><pre>/system script add name=script2 source={
+  :global myVar;
+  :log info &quot;value is: $myvar&quot;
+}
+</pre><h3 id="ScriptingTipsandTricks-Accessingglobalvariablefromfunction"><span class="mw-headline">Accessing global variable from function</span></h3><p>Logically you would think that globally defined variables should be accessible in functions too, but that is not really the case. Lets see an example:</p><pre>:global myVar &quot;test&quot;
+:global myFunc do={
+  :put &quot;global var=$myVar&quot;
+}
+[$myFunc]
+</pre><p>Output is:</p><pre>global var=
+</pre><p>So obviously global variable is not accessible directly. To make it work we need do declare global variable inside the function:</p><pre>:global myVar &quot;test&quot;
+:global myFunc do={
+  :global myVar;
+  :put &quot;global var=$myVar&quot;
+}
+[$myFunc]
+</pre><p>Output:</p><pre>global var=test
+</pre><p><br/></p><h3 id="ScriptingTipsandTricks-Runningfunctionfromanotherfunction"><span class="mw-headline">Running function from another function</span></h3><p>Same as above applies also to functions. If you want to run function from another function then it need to be declared.</p><pre>:global test do={
+  :return ($1 + 1)
+}
+
+:global testtest do={
+  :local x 5
+  :local y [$test $x]
+  :put &quot;typeof = $[:typeof $y]&quot;
+  :put &quot;testets_res=$y&quot;
+}
+</pre><p>Code above will not work as expected, output will be:</p><pre>typeof = nil
+testets_res=
+</pre><p>To fix this we need to declare global &quot;test&quot; in &quot;testtest&quot; function</p><pre>:global testtest do={
+  :global test
+  :local x 5
+  :local y [$test $x]
+  :put &quot;typeof = $[:typeof $y]&quot;
+  :put &quot;testets_res=$y&quot;
+}
+</pre><h3 id="ScriptingTipsandTricks-Alwaysuseuniquevariablenames"><span class="mw-headline">Always use unique variable names</span></h3><p>One of the most common scripting mistakes that most users are doing is not using unique varible names, for example, variable defined in function has the same name as globally defined variable, which leads to unexpected result:</p><pre>:global my2 &quot;123&quot;
+
+:global myFunc do={ :global my2; :put $my2; :set my2 &quot;lala&quot;; :put $my2 }
+$myFunc my2=1234
+:put &quot;global value $my2&quot;
+</pre><p>Output will be:</p><pre>1234
+lala
+global value 123
+</pre><p><br/>Another common case is when user defined variable have the same name as RouterOS built in variable, for example, we want to print route with dst address defined in variable:</p><pre>[admin@1p_DUT_wAP ac] /ip route&gt; :global &quot;dst-address&quot; &quot;0.0.0.0/0&quot;
+[admin@1p_DUT_wAP ac] /ip route&gt; print where dst-address=$&quot;dst-address&quot; 
+Flags: X - disabled, A - active, D - dynamic, C - connect, S - static, r - rip, b - bgp, o - ospf, m - mme, 
+B - blackhole, U - unreachable, P - prohibit 
+ #      DST-ADDRESS        PREF-SRC        GATEWAY            DISTANCE
+ 0 ADS  0.0.0.0/0                          10.155.136.1              1
+ 1 ADC  10.155.136.0/24    10.155.136.41   ether1                    0
+
+</pre><p>Obviously result is not as expected, simple solution, use unique variable name:</p><pre>[admin@1p_DUT_wAP ac] /ip route&gt; :global myDst &quot;0.0.0.0/0&quot;
+[admin@1p_DUT_wAP ac] /ip route&gt; print where dst-address=$myDst             
+Flags: X - disabled, A - active, D - dynamic, C - connect, S - static, r - rip, b - bgp, o - ospf, m - mme, 
+B - blackhole, U - unreachable, P - prohibit 
+ #      DST-ADDRESS        PREF-SRC        GATEWAY            DISTANCE
+ 0 ADS  0.0.0.0/0                          10.155.136.1              1
+</pre><p><br/></p><h3 id="ScriptingTipsandTricks-Getvaluesfromloopedinteractivecommandslike&quot;monitor&quot;"><span class="mw-headline">Get values from looped interactive commands like &quot;monitor&quot;</span></h3><p>Frequently asked question s how to get values in script returned by, for example, monitor command? First problem with such commands is that they are running infinitely until user action is applied, obviously you cannot do that from script. Instead you can run with additional parameter once, it will allow to execute command only once and stop. Another problem is getting variable value sin script, there is no as-value, there is no get, but they have do. What it does is allows to access variables returned by the command as in example below:</p><pre>[admin@1p_DUT_wAP ac] /interface&gt; monitor-traffic ether1 once do={:global myBps $&quot;rx-bits-per-second&quot; }
+...
+[admin@1p_DUT_wAP ac] /interface&gt; :environment print 
+myBps=71464
+</pre><p><br/></p><h3 id="ScriptingTipsandTricks-Getfilecontentreceivedbyfetchtool"><span class="mw-headline">Get file content received by fetch tool</span></h3><p>Fetch tool allows for ease of use downloading file content into memory and allowing to access this data by script. To make it work use as-value parameter and output=user:</p><pre>[admin@rack1_b34_CCR1036] &gt; :put ([/tool fetch ftp://admin:@10.155.136.41/test.txt
+ output=user as-value ]-&gt;&quot;data&quot;)
+my file content
+
+</pre><p><br/></p><h3 id="ScriptingTipsandTricks-Checkscriptpermissions"><span class="mw-headline">Check script permissions</span></h3><p>Lets say we have a script that creates and writes content to the file:</p><pre>/system script add name=script1 policy=ftp,read,write source={
+       /file print file=test;
+       /file set test.txt content=&quot;my content&quot;
+}
+</pre><p>Now lets add scheduler that will try to execute this script:</p><pre>/system scheduler
+add interval=10s name=test on-event=script2 policy=read,write
+</pre><p>So now we wait 10 seconds, file not created, we wait another 10 seconds and still no file. What is going on? If you look closely script requires policy &quot;ftp&quot;, to create a file, but scheduler has only &quot;read&quot; and &quot;write&quot; policies, so script will not be executed. Fix is to set scheduler to run with correct policies &quot;read,write,ftp&quot;.</p><p>This applies also if you are trying to run script from netwatch, ppp on event and so on, which are limited to specific policies &quot;read,write,test,reboot&quot;, so you will not be able to run advanced scripts that creates backups, creates files and so on.</p><p>Limitation could be fixed by using dont-require-permissions, but be very careful, read below.</p><h3 id="ScriptingTipsandTricks-Becarefulwhenusingdont-require-permissions"><span class="mw-headline">Be careful when using dont-require-permissions</span></h3><p>It is possible to set script with dont-require-permissions parameter. Basically it allows anyone without adequate permissions to execute the script. For example, if script has policies &quot;read,write,test,sensitive&quot;, but user or application that executes the script has less, for example, &quot;read,write&quot;, then by setting <code>dont-require-permissions=yes</code> will allow to run script anyway.</p><p>This could potentially allow to change sensitive information using script even if user doe snot have enough permissions. </p>
+                    </div>
+
+                                        
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

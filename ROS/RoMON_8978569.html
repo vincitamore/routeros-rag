@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : RoMON</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Management-tools_328121.html">Management tools</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : RoMON
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Artūrs C.</span>, last updated by <span class='editor'> Edgars P.</span> on Nov 13, 2024
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742021715 {padding: 0px;}
+div.rbtoc1747742021715 ul {margin-left: 0px;}
+div.rbtoc1747742021715 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742021715'>
+<ul class='toc-indentation'>
+<li><a href='#RoMON-Summary'>Summary</a></li>
+<li><a href='#RoMON-Secrets'>Secrets</a></li>
+<li><a href='#RoMON-Peerdiscovery'>Peer discovery</a></li>
+<li><a href='#RoMON-ConfigurationExamples'>Configuration Examples</a>
+<ul class='toc-indentation'>
+<li><a href='#RoMON-Applications'>Applications</a></li>
+<li><a href='#RoMON-RunRoMONinWinBoxbyusingCLI'>Run RoMON in WinBox by using CLI</a></li>
+<li><a href='#RoMON-ConnecttoRoMONthroughWinBoxGUI'>Connect to RoMON through WinBox GUI</a></li>
+</ul>
+</li>
+</ul>
+</div></p><h1 id="RoMON-Summary">Summary</h1><p>RoMON stands for &quot;Router Management Overlay Network&quot;. RoMON works by establishing an independent MAC layer peer discovery and data forwarding network. RoMON packets are encapsulated with EtherType 0x88bf and DST-MAC 01:80:c2:00:88:bf and its network operate independently of L2 or L3 forwarding configuration. When RoMON is enabled, any received RoMON packets will not be displayed by sniffer or torch tools.</p><p>Each router on the RoMON network is assigned its RoMON ID. RoMON ID can be selected from the port MAC address or specified by the user.</p><p>RoMON protocol does not provide encryption services. Encryption is provided at the &quot;application&quot; level, by e.g. using ssh or by using a secure WinBox.</p><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p style="">RoMON packets can be forwarded through network switches or bridges, unless there are specific restrictions on multicast traffic. When using a MikroTik bridge with hardware offloading, these packets are treated like regular multicast packets and are flooded across the network.</p><p style="">Since RouterOS v7.17, if the RoMON service is enabled and the switch chip supports ACL rules, dynamic rules are automatically created to redirect these packets to the CPU, where the RoMON service operates. However, if the switch does not support ACL rules and configuration does not align, such as when CPU and RoMON untagged packets are not in the same VLAN, the RoMON service might not function as expected.</p></div></div><h1 id="RoMON-Secrets">Secrets</h1><p>RoMON protocol secrets are used for message authentication, integrity check and replay prevention by means of hashing message contents with MD5.</p><p>For each interface, if the interface-specific secret list is empty, a global secret list is used. When sending out, messages are hashed with the first secret in list if list is not empty and first is not &quot;empty secret&quot; (empty string = &quot;&quot;), otherwise, messages are sent unhashed. When received, unhashed messages are only accepted if a secret list is empty or contains &quot;empty secret&quot;, hashed messages are accepted if they are hashed with any of the secrets in list.</p><p>This design allows for the incremental introduction and/or change of secrets in-network without RoMON service interruption and can happen over RoMON itself, e.g.:</p><ul><li> initially, all routers are without secrets;</li><li> configure each router one by one with secrets=&quot;&quot;,&quot;mysecret&quot; - this will make all routers still send unprotected frames, but they all will be ready to accept frames protected with secret &quot;mysecret&quot;;</li><li> configure each router one by one with secrets=&quot;mysecret&quot;,&quot;&quot; - this will make all routers use secret &quot;mysecret&quot;, but also still accept unprotected frames (from routers that have not yet been changed);</li><li> configure each router with secrets=&quot;mysecret&quot; - this will make all routers use secret &quot;mysecret&quot; and also only accept frames protected with &quot;mysecret&quot;;</li></ul><p>Changing of secret in a network should be performed in a similar fashion where for some time both secrets are in use in network.</p><h1 id="RoMON-Peerdiscovery"><span class="mw-headline">Peer discovery</span></h1><p><span class="mw-headline">In order to discover all routers on RoMON network RoMON discover command must be used: </span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; /tool/romon/discover 
+Flags: A - active
+Columns: ADDRESS, COST, HOPS, PATH, L2MTU, IDENTITY, VERSION, BOARD
+   ADDRESS            COS  H  PATH               L2MT  IDENTITY   VERSION    BOARD              
+A  6C:3B:6B:48:0E:8B  200  1  6C:3B:6B:48:0E:8B  1500  hEX        6.47beta7  RB750Gr3           
+A  6C:3B:6B:ED:83:69  200  1  6C:3B:6B:ED:83:69  1500  CCR1009    6.47beta7  CCR1009-7G-1C-1S+  
+A  B8:69:F4:B3:1B:D2  200  1  B8:69:F4:B3:1B:D2  1500  4K11       6.47beta7  RB4011iGS+5HacQ2HnD
+A  CC:2D:E0:26:22:4D  200  1  CC:2D:E0:26:22:4D  1500  CCR1036    6.47beta7  CCR1036-8G-2S+     
+A  CC:2D:E0:8D:01:88  200  1  CC:2D:E0:8D:01:88  1500  CRS328     6.47beta7  CRS328-24P-4S+     
+A  E4:8D:8C:1C:D3:0E  200  1  E4:8D:8C:1C:D3:0E  1500  MikroTik   6.47beta7  RB2011iLS          
+A  E4:8D:8C:49:49:DB  200  1  E4:8D:8C:49:49:DB  1500  hAP        6.47beta7  RB962UiGS-5HacT2HnT
+
+</pre>
+</div></div><h1 id="RoMON-ConfigurationExamples">Configuration Examples</h1><p>In order for a device to participate in the RoMON network, the RoMON feature must be enabled and ports that participate in the RoMON network must be specified.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/tool romon set enabled=yes secrets=testing</pre>
+</div></div><p>Ports that participate in the RoMON network are configured in <strong>the RoMON port</strong> menu. Port list is a list of entries that match either specific port or all ports and specifies if matching port(s) is forbidden to participate in the RoMON network and in case port is allowed to participate in RoMON network entry also specifies the port cost. Note that all specific port entries have higher priority than the wildcard entry with <strong>interface=all</strong>.</p><p>For example, the following list specifies that all ports participate in RoMON network with cost 100 and ether7 interface with cost 200:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; /tool/romon/port/print
+Flags: * - default
+Columns: INTERFACE, FORBID, COST
+#     INTERF  FO  COS
+0  *  all     no  100
+1     ether7  no  200</pre>
+</div></div><p>By default one wildcard entry with <strong>forbid=no</strong> and <strong>cost=100</strong> is created.</p><h2 id="RoMON-Applications"><span class="mw-headline">Applications</span></h2><p class="auto-cursor-target">Multiple applications can be run over the RoMON network.</p><p class="auto-cursor-target">In order to test the reachability of specific router on RoMON network RoMON ping command can be used:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; /tool/romon/ping id=6C:3B:6B:48:0E:8B count=5
+  SEQ HOST                                    TIME  STATUS                                                    
+    0 6C:3B:6B:48:0E:8B                       1ms                                                             
+    1 6C:3B:6B:48:0E:8B                       0ms                                                             
+    2 6C:3B:6B:48:0E:8B                       1ms                                                             
+    3 6C:3B:6B:48:0E:8B                       0ms                                                             
+    4 6C:3B:6B:48:0E:8B                       1ms                                                             
+    sent=5 received=5 packet-loss=0% min-rtt=0ms avg-rtt=0ms max-rtt=1ms</pre>
+</div></div><p><span class="mw-headline auto-cursor-target">In order to establish a secure terminal connection to router on RoMON network RoMON SSH command can be used: </span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; /tool/romon/ssh 6C:3B:6B:48:0E:8B</pre>
+</div></div><h2 id="RoMON-RunRoMONinWinBoxbyusingCLI"><span class="mw-headline">Run RoMON in WinBox by using CLI</span></h2><p><span class="mw-headline">In order to establish the RoMON session directly by using the command line on a computer, you must specify RoMON agents and desired routers addresses. RoMON agent must be saved on Managed routers list in WinBox in order to make a successful connection: </span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">winbox.exe --romon 192.168.88.1 6C:3B:6B:48:0E:8B admin &quot;&quot;</pre>
+</div></div><h2 id="RoMON-ConnecttoRoMONthroughWinBoxGUI">Connect to RoMON through WinBox GUI</h2><p>Watch a video <a class="external-link" href="https://www.youtube.com/watch?v=Peg6UcSJ_eA" rel="nofollow">here.</a></p>
+                    </div>
+
+                                        
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : Reset Button</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Getting-started_328119.html">Getting started</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : Reset Button
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Artūrs C.</span>, last updated by <span class='editor'> Oskars K.</span> on Nov 08, 2024
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <h1 id="ResetButton-Introduction">Introduction</h1><p>The RouterOS password can only be reset by reinstalling the RouterOS or using the reset button (or jumper hole) in case the hardware is RouterBOARD. For X86(CHR) devices, only a complete reinstall will clear the password, along with any other configuration. For RouterBOARD devices, several methods exist, depending on the device model.</p><h1 id="ResetButton-ResetFromRouterOS"><span class="mw-headline">Reset From RouterOS</span></h1><p>If you still have access to your router and want to recover its default configuration, then you can:</p><ul><li>Run the command<span> </span><strong>&quot;/system reset-configuration&quot;</strong><span> </span>from a command-line interface;</li></ul><ul><li>Do it from<span> the </span><strong>System -&gt; Reset Configuration</strong><span> </span>menu in the graphical user interface;</li></ul><h1 id="ResetButton-UsingResetButton"><span class="mw-headline">Using Reset Button</span></h1><p>RouterBOARD devices are fitted with a reset button which has several functions:</p><ul><li><strong>Loading the backup RouterBOOT loader</strong><br/>Hold this button before applying power, and release it after three seconds since powering, to load the backup boot loader. This might be necessary if the device is not operating because of a failed RouterBOOT upgrade. When you have started the device with the backup loader, you can either set RouterOS to <em>force backup loader</em> in the RouterBOARD settings or have a chance to reinstall the failed RouterBOOT from a &quot;.fwf&quot; file (total of <strong>3 seconds</strong>)</li></ul><ul><li><strong>Resetting the RouterOS configuration</strong><br/>Hold this button until the LED light starts flashing, and release the button to reset RouterOS configuration to default.</li></ul><ul><li><strong>Enabling CAPs mode</strong><br/>To connect this device to a wireless network managed by CAPsMAN, keep holding the button for 5 more seconds, LED turns solid, release now to turn on CAPs mode. It is also possible to enable CAPs mode via the command line, to do so run the command<span style="letter-spacing: 0.0px;"> </span><strong style="letter-spacing: 0.0px;">&quot;/system reset-configuration caps-mode=yes&quot;</strong><span style="letter-spacing: 0.0px;">;</span></li></ul><ul><li><strong>Starting the RouterBOARD in Netinstall mode</strong><br/>Or keep holding the button for 5 more seconds until the LED turns off, then release it to make the RouterBOARD look for Netinstall servers. You can also simply keep the button pressed until the device shows up in the Netinstall program on Windows.</li></ul><p><br/></p><div role="region" aria-label="Tip" class="confluence-information-macro  confluence-information-macro-tip" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-approve confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p><span style="color:var(--ds-text,#333333);">You can also do the previous three functions without loading the backup loader, simply push the button immediately after you apply power. You might need the assistance of another person to push the button and also plug in the power supply at the same time!</span></p></div></div><h1 id="ResetButton-Howtoresetconfiguration"><span class="mw-headline">How to reset configuration</span></h1><p>1) Unplug the device from power;</p><p>2) Press and hold the button right after applying power;</p><p><em>Note: hold the button until the LED will start flashing;</em></p><p>3) Release the button to clear the configuration;</p><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p><span style="color:var(--ds-text,#333333);">If you wait until the LED stops flashing, and only then release the button - this will instead launch Netinstall mode, to reinstall RouterOS.</span></p></div></div><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image confluence-content-image-border" draggable="false" src="attachments/24805498/24805501.png" data-image-src="attachments/24805498/24805501.png" data-unresolved-comment-count="0" data-linked-resource-id="24805501" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="262_hi_res.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="24805498" data-linked-resource-container-version="8" tabindex="0" alt=""></span></p><h1 id="ResetButton-Jumperholereset"><span class="mw-headline">Jumper hole reset</span></h1><p><span class="mw-headline"><span style="color:var(--ds-text,#333333);">Older RouterBOARD models are also fitted with a reset jumper hole. Some devices might need an opening of the enclosure, RB750/RB951/RB751 have the jumper hole under one of the rubber feet of the enclosure.</span></span></p><p><span class="mw-headline"><span style="color:var(--ds-text,#333333);">Close the jumper with a metal screwdriver, and boot the board until the configuration is cleared:<br/><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/24805498/24805502.jpg" data-image-src="attachments/24805498/24805502.jpg" data-unresolved-comment-count="0" data-linked-resource-id="24805502" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="Resethole.jpg" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/jpeg" data-linked-resource-container-id="24805498" data-linked-resource-container-version="8" tabindex="0" alt=""></span><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/24805498/24805503.jpg" data-image-src="attachments/24805498/24805503.jpg" data-unresolved-comment-count="0" data-linked-resource-id="24805503" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="Passw.jpg" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/jpeg" data-linked-resource-container-id="24805498" data-linked-resource-container-version="8" tabindex="0" alt=""></span><br/></span></span></p><h2 id="ResetButton-Jumperresetforoldermodels"><span class="mw-headline">Jumper reset for older models</span></h2><p><span class="mw-headline"><span style="color:var(--ds-text,#333333);">The<span> </span></span><strong>below</strong><span style="color:var(--ds-text,#333333);"><span> </span>image shows the location of the Reset Jumper on older RouterBOARDs like RB133C:</span></span></p><p><span class="mw-headline"><span style="color:var(--ds-text,#333333);"><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/24805498/24805504.jpg" data-image-src="attachments/24805498/24805504.jpg" data-unresolved-comment-count="0" data-linked-resource-id="24805504" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="CRW_5184.jpg" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/jpeg" data-linked-resource-container-id="24805498" data-linked-resource-container-version="8" tabindex="0" alt=""></span><br/></span></span></p><div role="region" aria-label="Warning" class="confluence-information-macro  confluence-information-macro-warning" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-error confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p><span style="color:var(--ds-text,#333333);">Don't forget to remove the jumper after the configuration has been reset, or it will be reset every time you reboot!</span></p></div></div><h2 class="auto-cursor-target" id="ResetButton-WPS">WPS </h2><p class="auto-cursor-target">Some devices have WPS button, or reset button with WPS functionality to reach and control access for Wireless networks without logging into the device, so that client can connect without password. Specific models use WPS sync function to connect with each other. Detailed information on WPS and reset button functionality for each model are described in <a href="https://help.mikrotik.com/docs/spaces/UM/pages/8978698/User+Manuals">User Manuals</a></p>
+                    </div>
+
+                                                            <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/24805498/24805501.png">262_hi_res.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/24805498/24805502.jpg">Resethole.jpg</a> (image/jpeg)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/24805498/24805503.jpg">Passw.jpg</a> (image/jpeg)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/24805498/24805504.jpg">CRW_5184.jpg</a> (image/jpeg)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

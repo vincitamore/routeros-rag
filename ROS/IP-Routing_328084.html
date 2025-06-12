@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : IP Routing</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="IPv4-and-IPv6-Fundamentals_119144661.html">IPv4 and IPv6 Fundamentals</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : IP Routing
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Normunds R.</span>, last updated by <span class='editor'> Māris B.</span> on Jul 21, 2024
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742021094 {padding: 0px;}
+div.rbtoc1747742021094 ul {margin-left: 0px;}
+div.rbtoc1747742021094 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742021094'>
+<ul class='toc-indentation'>
+<li><a href='#IPRouting-Overview'>Overview</a></li>
+<li><a href='#IPRouting-HowRoutingWorks'>How Routing Works</a></li>
+<li><a href='#IPRouting-RoutingInformation'>Routing Information</a>
+<ul class='toc-indentation'>
+<li><a href='#IPRouting-RoutingInformationBase'>Routing Information Base</a>
+<ul class='toc-indentation'>
+<li><a href='#IPRouting-ConnectedRoutes'>Connected Routes</a></li>
+<li><a href='#IPRouting-DefaultRoute'>Default Route</a></li>
+<li><a href='#IPRouting-HardwareOffloadedRoute'>Hardware Offloaded Route</a></li>
+<li><a href='#IPRouting-Multipath(ECMP)routes'>Multipath (ECMP) routes</a></li>
+<li><a href='#IPRouting-RouteSelection'>Route Selection</a></li>
+<li><a href='#IPRouting-NexthopLookup'>Nexthop Lookup</a></li>
+<li><a href='#IPRouting-RouteStorage'>Route Storage</a></li>
+</ul>
+</li>
+<li><a href='#IPRouting-ForwardingInformationBase'>Forwarding Information Base</a>
+<ul class='toc-indentation'>
+<li><a href='#IPRouting-Routingtablelookup'>Routing table lookup</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href='#IPRouting-ShowRoutes'>Show Routes</a></li>
+</ul>
+</div></p><h1 id="IPRouting-Overview">Overview</h1><p>Routing is the process of selecting paths across the networks to move packets from one host to another. </p><h1 id="IPRouting-HowRoutingWorks">How Routing Works</h1><p>Let's look at a basic configuration example to illustrate how routing is used to forward packets between two local networks and to the Internet.</p><p>In this setup, we have several networks:</p><ul><li>two client networks (192.168.2.0/24 and 192.168.1.0/24);</li><li>one network to connect routers (172.16.1.0/30), usually called backbone;</li><li>the last network (10.1.1.0/24) connects our gateway router (Router1) to the internet. </li></ul><p><br/></p><p><span class="confluence-embedded-file-wrapper image-center-wrapper"><img class="confluence-embedded-image image-center" draggable="false" src="attachments/328084/4390944.jpg" data-image-src="attachments/328084/4390944.jpg" data-unresolved-comment-count="0" data-linked-resource-id="4390944" data-linked-resource-version="2" data-linked-resource-type="attachment" data-linked-resource-default-alias="How-routing-works.jpg" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/jpeg" data-linked-resource-container-id="328084" data-linked-resource-container-version="48" tabindex="0" alt=""></span></p><p> Router 2:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip address
+add address=172.16.1.2/30 interface=ether1
+add address=192.168.2.1/24 interface=bridge2</pre>
+</div></div><p><br/></p><p>Router1 (gateway) where ether1 connects to the internet:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip address
+add address=10.1.1.2/24 interface=ether1
+add address=172.16.1.1/30 interface=ether2
+add address=192.168.1.1/24 interface=bridge1</pre>
+</div></div><p>If we look, for example, at the Router1 routing table, we can see that the router knows only about<em> directly connected</em> networks. At this point, when the Client from LAN1 tries to reach the client from LAN2 (192.168.2.0/24), a packet will be dropped on the router, because the destination is unknown for the particular router:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: text; gutter: false">[admin@MikroTik] &gt; /ip/route&gt; print 
+Flags: D - dynamic; X - disabled, I - inactive, A - active; C - connect, S - static, r - ri
+p, b - bgp, o - ospf, d - dhcp, v - vpn
+Columns: DST-ADDRESS, GATEWAY, Distance
+    DST-ADDRESS    GATEWAY D
+DAC 10.1.1.0/24    ether1  0
+DAC 172.16.1.0/30  ether2  0
+DAC 192.168.1.0/24 bridge1 0</pre>
+</div></div><p>To fix this we need to add a route that tells the router what is the next device in the network to reach the destination.  In our example next hop is Router2, so we need to add a route with the gateway that points to the Router's 2 connected address. This type of route is known as a <em><strong>static route</strong></em>:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: text; gutter: false">[admin@MikroTik] &gt; /ip route add dst-address=192.168.2.0/24 gateway=172.16.1.2
+[admin@MikroTik] &gt; /ip/route&gt; print 
+Flags: D - dynamic; X - disabled, I - inactive, A - active; C - connect, S - static, r - ri
+p, b - bgp, o - ospf, d - dhcp, v - vpn
+Columns: DST-ADDRESS, GATEWAY,       Distance
+        DST-ADDRESS    GATEWAY       D
+    DAC 10.1.1.0/24    ether1        0
+    DAC 172.16.1.0/30  ether2        0
+    DAC 192.168.1.0/24 bridge1       0
+0   AS  192.168.2.0/24 172.16.1.2    </pre>
+</div></div><p>At this point packet from LAN1 will be successfully forwarded to LAN2, but we are not over yet. Router2 does not know how to reach LAN1, so any packet from LAN2 will be dropped on Router2.</p><p>If we look again at the network diagram, we can clearly see that Router2 has only one point of exit. It is safe to assume that all other unknown networks should be reached over the link to Router1. The easiest way to do this is by adding a <strong><em>default route</em></strong>: To add a default route set destination 0.0.0.0/0 or leave it blank:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip route add gateway=172.16.1.1</pre>
+</div></div><p>As we have seen from the example setup, there are different groups of routes, based on their origin and properties.</p><h1 id="IPRouting-RoutingInformation">Routing Information</h1><p>RouterOS routing information consists of two main parts:</p><ul><li><strong>FIB</strong> (Forwarding Information Base), is used to make packet forwarding decisions. It contains a copy of the necessary routing information.</li><li><strong>RIB</strong> (Routing Information Base) contains all learned prefixes from routing protocols (connected, static, BGP, RIP, OSPF).</li></ul><p><br/></p><p><span class="confluence-embedded-file-wrapper image-center-wrapper"><img class="confluence-embedded-image image-center" draggable="false" src="attachments/328084/1409137.png" data-image-src="attachments/328084/1409137.png" data-unresolved-comment-count="0" data-linked-resource-id="1409137" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="RIB_FIB.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="328084" data-linked-resource-container-version="48" tabindex="0" alt=""></span></p><h2 id="IPRouting-RoutingInformationBase"><br/>Routing Information Base</h2><p><span class="confluence-embedded-file-wrapper image-center-wrapper"><img class="confluence-embedded-image image-center" draggable="false" src="attachments/328084/5210113.jpg" data-image-src="attachments/328084/5210113.jpg" data-unresolved-comment-count="0" data-linked-resource-id="5210113" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="routing-hops.jpg" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/jpeg" data-linked-resource-container-id="328084" data-linked-resource-container-version="48" tabindex="0" alt=""></span></p><p>Routing Information Base is a database that lists entries for particular network destinations and their <em>gateways</em> (address of the next device along the path or simply <em>next-hop</em>). One such entry in the routing table is called a <em>route</em>.</p><p>A <em>hop</em> occurs when a packet is passed from one network segment to another.</p><p>By default, all routes are organized in one &quot;main&quot; routing table. It is possible to make more than one routing table which we will discuss further in this article, but for now, for sake of simplicity, we will consider that there is only one &quot;main&quot; routing table.</p><p>RIB table contains complete routing information, including static routes and policy routing rules configured by the user, routing information learned from dynamic routing protocols (RIP, OSPF, BGP), and information about connected networks.</p><p>Its purpose is not just to store routes, but also to filter routing information to calculate the best route for each destination prefix, to build and update the Forwarding Information Base, and to distribute routes between different routing protocols.</p><h3 id="IPRouting-ConnectedRoutes">Connected Routes</h3><p>Connected routes represent the network on which hosts can be directly reached (direct attachment to Layer2 broadcast domain). These routes are created automatically for each IP network that has at least one enabled interface attached to it (as specified in the <em>/ip address</em> or <em>/ipv6 address</em> configuration). RIB tracks the status of connected routes but does not modify them. For each connected route there is one IP address item such that:</p><ul><li><strong>address</strong> part of the <em>dst-address</em> of the connected route is equal to a network of IP address item.</li><li><strong>netmask</strong> part of <em>dst-address</em> of the connected route is equal to the netmask part of the address of the IP address item.</li><li><strong>gateway</strong> of the connected route is equal to the actual<em>-interface</em> of the IP address item (same as an interface, except for bridge interface ports) and represents an interface where directly connected hosts from the particular Layer3 network can be reached.</li></ul><div role="region" aria-label="Tip" class="confluence-information-macro  confluence-information-macro-tip" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-approve confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>The<strong> preferred source</strong> is not used anymore for connected routes. FIB chooses the source address based on the out-interface. This allows making setups that in ROS v6 and older were considered invalid. See <a class="external-link" href="https://wiki.mikrotik.com/wiki/Manual:Route_lookup_example" rel="nofollow">examples</a> for more details.</p></div></div><h3 id="IPRouting-DefaultRoute">Default Route</h3><p>A default route is used when the destination cannot be resolved by any other route in the routing table. In RouterOS <em>dst-address</em> of the default route is<span> </span><em><strong>0.0.0.0/0</strong><span> </span>(for IPv4) and<span> </span><strong>::/0</strong><span> </span>(for IPv6)</em><span> </span>routes. If the routing table contains an active default route, then the routing table lookup in this table will never fail.</p><p>Typically home router routing table contains only connected networks and one default route to forward all outgoing traffic to the ISP's gateway:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: text; gutter: false">[admin@TempTest] /ip/route&gt; print 
+Flags: D - dynamic; X - disabled, I - inactive, A - active; C - connect, S - static, r - ri
+p, b - bgp, o - ospf, d - dhcp, v - vpn
+Columns: DST-ADDRESS, GATEWAY, Distance
+#      DST-ADDRESS     GATEWAY      D
+   DAd 0.0.0.0/0       10.155.125.1 1
+   DAC 10.155.125.0/24 ether12      0
+   DAC 192.168.1.0/24  vlan2        0</pre>
+</div></div><h3 id="IPRouting-HardwareOffloadedRoute">Hardware Offloaded Route</h3><p>Devices with<strong> </strong><a href="https://help.mikrotik.com/docs/display/ROS/L3+Hardware+Offloading" rel="nofollow">Layer 3 Hardware Offloading</a><span style="color:var(--ds-text,#172b4d);"> (</span>L3HW<span style="color:var(--ds-text,#172b4d);">, otherwise known as IP switching or HW routing)<span> allow offloading packet routing onto the switch chip. When L3HW is enabled, such routes will display H-flag:<br/></span></span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: text; gutter: false">[admin@MikroTik] &gt; /ip/route print where static
+Flags: A - ACTIVE; s - STATIC, y - COPY; H - HW-OFFLOADED
+Columns: DST-ADDRESS, GATEWAY, DISTANCE
+#     DST-ADDRESS       GATEWAY         D
+0 AsH 0.0.0.0/0         172.16.2.1      1
+1 AsH 10.0.0.0/8        10.155.121.254  1
+2 AsH 192.168.3.0/24    172.16.2.1      1</pre>
+</div></div><p><span style="color:var(--ds-text,#172b4d);">By default, all the routes are participating to be hardware candidate routes. To further fine-tune which traffic to offload, there is an option for each IP or IPv6 static route to disable/enable </span><code style="letter-spacing: 0.0px;"><span style="color:var(--ds-text-accent-green,#216e4e);">suppress-hw-offload</span></code><span style="color:var(--ds-text,#172b4d);">. </span></p><p><span style="color:var(--ds-text,#172b4d);">For example, if we know that the majority of traffic flows to the network where servers are located, we can enable offloading only to that specific destination:</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip route set [find where static &amp;&amp; dst-address!=&quot;192.168.3.0/24&quot;] suppress-hw-offload=yes</pre>
+</div></div><p><span style="color:var(--ds-text,#172b4d);">Now only the route to 192.168.3.0/24 has an H-flag, indicating that it will be the only one eligible to be selected for HW offloading:</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: text; gutter: false">[admin@MikroTik] &gt; /ip/route print where static
+Flags: A - ACTIVE; s - STATIC, y - COPY; H - HW-OFFLOADED
+Columns: DST-ADDRESS, GATEWAY, DISTANCE
+#     DST-ADDRESS       GATEWAY         D
+0 As  0.0.0.0/0         172.16.2.1      1
+1 As  10.0.0.0/8        10.155.121.254  1
+2 AsH 192.168.3.0/24    172.16.2.1      1</pre>
+</div></div><div role="region" aria-label="Warning" class="confluence-information-macro  confluence-information-macro-warning" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-error confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p><span style="color:var(--ds-text,#172b4d);">H-flag does not indicate that the route is actually HW offloaded, it indicates only that route can be selected to be HW offloaded.</span></p></div></div><h3 id="IPRouting-Multipath(ECMP)routes">Multipath (ECMP) routes</h3><p>To implement some setups, such as load balancing, it might be necessary to use more than one path to a given destination.</p><p><span class="confluence-embedded-file-wrapper image-center-wrapper"><img class="confluence-embedded-image image-center" draggable="false" src="attachments/328084/67633173.png" data-image-src="attachments/328084/67633173.png" data-unresolved-comment-count="0" data-linked-resource-id="67633173" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="basic.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="328084" data-linked-resource-container-version="48" tabindex="0" alt=""></span></p><p><br/></p><p>ECMP (Equal cost multi-path) routes have multiple gateways (next-hop) values. All reachable next-hops are copied to FIB and are used to forward packets.</p><p>These routes can be created manually, as well as dynamically by any of the dynamic routing protocols (OSPF, BGP, RIP). Multiple equally preferred routes to the same destination will have assigned + flag and grouped together automatically by RouterOS (see example below).</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: text; gutter: false">[admin@TempTest] /ip/route&gt; print 
+Flags: D - DYNAMIC; I - INACTIVE, A - ACTIVE; C - CONNECT, S - STATIC, m - MODEM; + - ECMP
+Columns: DST-ADDRESS, GATEWAY, DISTANCE
+#       DST-ADDRESS      GATEWAY       D
+0   AS+ 192.168.2.0/24   10.155.125.1  1
+1   AS+ 192.168.2.0/24   172.16.1.2    1</pre>
+</div></div><p>By default, ECMP uses <strong>Layer3</strong> hash policy which hashes source IP and destination IP (for IPv4) or source IP, destination IP, flow label and IP protocol (for IPv6).</p><p>It is possible to change hashing policies in /ip/setting and /ipv6/settings to <strong>Layer4</strong> hashing or <strong>inner Layer3</strong> hashing.</p><div class="table-wrap"><table class="wrapped confluenceTable"><colgroup><col/><col/><col/></colgroup><tbody><tr><th scope="row" class="confluenceTh"><br/></th><th scope="col" class="confluenceTh">IPv4</th><th scope="col" class="confluenceTh">IPv6</th></tr><tr><th scope="row" class="confluenceTh">L3</th><td class="confluenceTd"><p>srcIPv4, dstIPv4</p></td><td class="confluenceTd">srcIPv6, dstIPv6, flow label, IP proto</td></tr><tr><th scope="row" class="confluenceTh">L4</th><td class="confluenceTd">srcIPv4, dstIPv4, srcPort, dstPort, IP proto</td><td class="confluenceTd">srcIPv6, dstIPv6, srcPort, dstPort, IP Proto</td></tr><tr><th scope="row" class="confluenceTh">L3-Inner</th><td class="confluenceTd"><ul><li>srcIPv4, dstIPv4 (if inner IPv4)</li><li>srcIPv6, dstIPv6, flow label, IP proto (if inner IPv6)</li><li>Same as L3 if inner is not present.</li></ul></td><td class="confluenceTd"><ul><li>srcIPv4, dstIPv4 (if inner IPv4)</li><li>srcIPv6, dstIPv6, flow label, IP proto (if inner IPv6)</li><li>Same as L3 if inner is not present.</li></ul></td></tr></tbody></table></div><p><br/></p><h3 id="IPRouting-RouteSelection">Route Selection</h3><p>There can be multiple routes with the same destination received from various routing protocols and from static configurations but only one (best) destination can be used for packet forwarding. To determine the best path, RIB runs a Route Selection algorithm that picks the best route from all candidate routes per destination.</p><p>Only routes that meet the following criteria can participate in the route selection process:</p><ul><li>Route is not disabled.</li><li>If the type of route is<span> </span><em>unicast</em><span> </span>it must have at least one reachable next-hop. ( if a gateway is from a connected network and there is a connected route active, the gateway is considered as reachable) </li><li>Route should not be<span> </span><em>synthetic</em>.</li></ul><p><br/></p><p>The candidate route with the lowest distance becomes an active route. If there is more than one candidate route with the same distance, the selection of the active route is arbitrary.</p><h3 id="IPRouting-NexthopLookup">Nexthop Lookup</h3><p><br/></p><p><span class="confluence-embedded-file-wrapper image-right-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image image-right" draggable="false" width="390" src="attachments/328084/1409144.png" data-image-src="attachments/328084/1409144.png" data-unresolved-comment-count="0" data-linked-resource-id="1409144" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="scope_and_target_scope.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="328084" data-linked-resource-container-version="48" tabindex="0" alt=""></span></p><p>Nexthop lookup is a part of the route selection process. Its main purpose is to find a directly reachable gateway address (next-hop). Only after a valid next-hop is selected router knows which interface to use for packet forwarding.</p><p><br/></p><p>Nexthop lookup becomes more complicated if routes have a gateway address that is several hops away from this router (e.g. iBGP, multihop eBGP). Such routes are installed in the FIB after the next-hop selection algorithm determines the address of the directly reachable gateway (immediate next-hop).</p><p><br/></p><p>It is necessary to restrict the set of routes that can be used to look up immediate next-hops. Nexthop values of RIP or OSPF routes, for example, are supposed to be directly reachable and should be looked up only using connected routes. This is achieved using<span> </span>scope<span> </span>and<span> </span>target-scope<span> </span>properties.</p><p>Routes with a scope greater than the maximum accepted value are not used for next-hop lookup. Each route specifies the maximum accepted scope value for its nexthop in the target-scope property. The default value of this property allows nexthop lookup only through connected routes, with the exception of iBGP routes that have a larger default value and can lookup nexthop also through IGP and static routes.</p><p>There are changes in RouterOS v7 nexthop lookup.</p><p>Routes are processed in scope order, and updates to routes with a larger scope cannot affect the state of nexthop lookup for routes with a smaller scope.</p><p>Consider an example from v6:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip route add dst-address=10.0.1.0/24 gateway=10.0.0.1
+    scope=50 target-scope=30 comment=A
+/ip route add dst-address=10.0.2.0/24 gateway=10.0.0.1
+    scope=30 target-scope=20 comment=B
+/ip route add dst-address=10.0.0.0/24 scope=20 gateway=WHATEVER
+    comment=C</pre>
+</div></div><p>Gateway 10.0.0.1 is recursively resolved through C using the smallest referring scope (scope 20 from route B), both routes are active. Now we change both A and B at the same time:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip route set A target-scope=10</pre>
+</div></div><p>Suddenly, applying an update to route A makes the gateway of route B inactive. This is because in v6 there is only one gateway object per address.</p><p>v7 keeps multiple gateway objects per address, one for each combination of scope and gateway check.</p><p>When <span style="color:var(--ds-text-accent-green,#216e4e);"><code>target-scope</code></span> or gateway check of a route is changed, ROS v7<span> </span><strong><em>will not affect other routes</em></strong>, as it does in v6. In v7 target-scope and gateway check are properties that are internally attached to the gateway, not to the route.</p><p>Scope values considered as invalid and fixed automatically:</p><ul><li>if gateway scope is set to 255 - RouterOS will internally fix this error by setting gateway scope to 254.</li><li>if route scope is less than gateway scope - RouterOS will internally fix this error by setting route scope to &quot;gateway scope + 1&quot;</li></ul><p>Used actual scope and target scope values can be seen in <span style="color:var(--ds-background-accent-blue-bolder,#0c66E4);"><code>/routing/nexthop</code></span> menu</p><p>Gateway check can be extended by setting <span style="color:var(--ds-text-accent-green,#216e4e);"><code>check-gateway</code></span> parameter. Gateway reachability can be checked by sending ARP probes, or ICMP messages or by checking active BFD sessions. The router periodically (every 10 seconds) checks the gateway by sending either an ICMP echo request (<em>ping</em>) or an ARP request (<em>arp</em>). If no response from the gateway is received for 10 seconds, the request times out. After two timeouts gateway is considered unreachable. After receiving a reply from the gateway it is considered reachable and the timeout counter is reset.</p><p><br/></p><h3 id="IPRouting-RouteStorage">Route Storage</h3><p>Routing information is stored to take as little memory as possible in a common case. These optimizations have non-obvious worst cases and impact on performance.</p><p>All routes and gateways are kept in a single hierarchy by the prefix/address.</p><pre>    Dst [4]/0 1/0+4                             18  &lt;-- number of prefixes
+         ^  ^ ^ ^ ^
+         |  | | | |
+         |  | | | \- bytes taken by Route distinguisher or Interface Id
+         |  | | \--- vrf/routing table
+         |  | \----- AFI
+         |  \------- netmask length of prefix
+         \---------- bytes taken by prefix value
+
+         [subject to change without notice]
+    </pre><p>Each of these 'Dst' corresponds to a unique 'dst-address' of route or address of the gateway. Each 'Dst' requires one or more 'T2Node' objects as well.</p><p>All routes with the same 'dst-address' are kept in Dst in a list sorted by route preference.<br/><strong>Note:<span> </span></strong>WORST CASE: having a lot of routes with the same 'dst-address' is really slow! even if they are inactive! because updating a sorted list with tens of thousands of elements is slow!</p><p>Route order changes only when route attributes change. If the route becomes active/inactive, the order does not change.</p><p><span class="confluence-embedded-file-wrapper image-right-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image image-right" draggable="false" width="550" src="attachments/328084/1409145.png" data-image-src="attachments/328084/1409145.png" data-unresolved-comment-count="0" data-linked-resource-id="1409145" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="Rib.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="328084" data-linked-resource-container-version="48" tabindex="0" alt=""></span></p><p>Each Route has three copies of route attributes:</p><ul><li><strong>private</strong><span> </span>-- what is received from the peer, before passing in-filters.</li><li><strong>updated</strong><span> </span>-- what is the result of applying in-filters.</li><li><strong>current</strong><span> </span>-- what are the attributes currently used by the route.</li></ul><p><br/></p><p>Periodically (when needed),<span> </span><strong><em>update</em></strong><span> </span>attributes are calculated from<span> </span><strong><em>private</em></strong><span> </span>attributes. This happens when route update is received, or when in-filter is updated.</p><p>When the routing table is recalculated,<span> </span><strong><em>current</em></strong><span> </span>attributes are set to the value from<span> </span><strong><em>updated</em></strong><span> </span>attributes.</p><p>This means, that usually if there is no in-filter that changes route attributes,<span> </span><strong><em>private</em></strong>,<span> </span><strong><em>updated,</em></strong><span> </span>and<span> </span><strong><em>current</em></strong><span> </span>share the same value.</p><p>Route attributes are kept in several groups:</p><ul><li>L1 Data - all flags, list of extra properties, as-path;</li><li>L2 Data - nexthops, RIP, OSPF, BGP metrics, route tags, originators, etc.</li><li>L3 Data - distance, scope, kernel type, MPLS stuff</li><li>extra properties - communities, originator, aggregator-id, cluster-list, unknown</li></ul><p><br/></p><p>Having for example many different combinations of<span> </span><strong><em>distance</em></strong><span> </span>and<span> </span><strong><em>scope</em></strong><span> </span>route attributes will use more memory!</p><p>Matching communities or as-path using regexp will cache the result, to speed up filtering. Each as-path or community value has a cache for all regexp, which is filled on-demand with match results.<br/><strong>Note:<span> </span></strong>WORST CASE: changing attributes in 'in-filter' will make the route program use more memory! Because 'private' and 'updated' attributes will be different! Having a lot of different regexps will make matching slow and use a lot of memory! Because each value will have a cache with thousands of entries!</p><p>Detailed info about used memory by routing protocols can be seen in<span> </span><span style="color:var(--ds-text-accent-blue,#0055cc);"><code><span style="color:var(--ds-background-accent-blue-bolder,#0c66E4);">/routing</span> stats memory</code> </span>menu</p><h2 id="IPRouting-ForwardingInformationBase">Forwarding Information Base</h2><p>FIB (Forwarding Information Base) contains a copy of the information that is necessary for packet forwarding:</p><ul><li>all active routes</li><li>policy routing rules</li></ul><p><br/></p><p>Each route has<span> </span><strong>dst-address</strong><span> </span>property, that specifies all destination addresses this route can be used for. If several routes apply to a particular IP address, the most specific one (with the largest netmask) is used. This operation (finding the most specific route that matches the given address) is called ''routing table lookup''.</p><p>Only one Best route can be used for packet forwarding. In cases where the routing table contains several routes with the same<span> </span><strong>dst-address</strong>, all equally best routes are combined into one<span> </span><a href="https://help.mikrotik.com/docs/display/ROS/IP+Routing#IPRouting-Multipath(ECMP)routes" rel="nofollow">ECMP</a><span> </span>route. The best route is installed into FIB and marked as ''active''.</p><p>When forwarding decision uses additional information, such as the source address of the packet, it is called<span> </span><strong>policy routing</strong>. Policy routing is implemented as a<span> </span>list of policy routing rules, that select different routing tables based on the destination address, source address, source interface, and routing mark (which can be changed by firewall mangle rules) of the packet.</p><h3 id="IPRouting-Routingtablelookup">Routing table lookup</h3><p><span class="confluence-embedded-file-wrapper image-right-wrapper"><img class="confluence-embedded-image image-right" draggable="false" src="attachments/328084/1409146.png" data-image-src="attachments/328084/1409146.png" data-unresolved-comment-count="0" data-linked-resource-id="1409146" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="Fib.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="328084" data-linked-resource-container-version="48" tabindex="0" alt=""></span></p><p>FIB uses the following information from the packet to determine its destination:</p><ul><li>source address</li><li>destination address</li><li>source interface</li><li>routing mark</li></ul><p><br/></p><p>Possible routing decisions are:</p><ul><li>receive packet locally</li><li>discard the packet (either silently or by sending an ICMP message to the sender of the packet)</li><li>send the packet to a specific IP address on a specific interface</li></ul><p><br/></p><p>Run routing decision:</p><ul><li>check that the packet has to be locally delivered (the destination address is the address of the router)</li><li>process implicit policy routing rules</li><li>process policy routing rules added by a user</li><li>process implicit catch-all rule that looks up the destination in the ''main'' routing table</li><li>the returned result is &quot;network unreachable&quot;</li></ul><p><br/></p><p>The result of the routing decision can be:</p><ul><li>IP address of nexthop + interface</li><li>point-to-point interface</li><li>local delivery</li><li>discard</li><li>ICMP prohibited</li><li>ICMP host unreachable</li><li>ICMP network unreachable</li></ul><p><br/></p><p>Rules that do not match the current packet are ignored. If a rule has action:</p><ul><li><strong>drop</strong><span> </span>or<span> </span><strong>unreachable</strong>, then it is returned as a result of the routing decision process.</li><li><strong>lookup</strong><span> </span>then the destination address of the packet is looked up in the routing table that is specified in the rule. If the lookup fails (no route matches the destination address of the packet), then FIB proceeds to the next rule.</li><li><strong>lookup-only</strong><span> is </span>similar to<span> </span><strong>lookup</strong><span> </span>except that lookup fails if none of the routes in the table matches the packet.</li></ul><p><span style="color:var(--ds-text-accent-magenta-bolder,#50253f);">Otherwise:</span></p><ul><li>if the type of the route is<span> </span><em>blackhole</em>,<span> </span><em>prohibit,</em><span> </span>or<span> </span><em>unreachable</em>, then return this action as the routing decision result;</li><li>if this is a connected route or route with an interface as the<span> </span><strong>gateway</strong><span> </span>value, then return this interface and the destination address of the packet as the routing decision result;</li><li>if this route has an IP address as the value of<span> the </span><strong>gateway</strong>, then return this address and associated interface as the routing decision result;</li><li>if this route has multiple values of nexthop, then pick one of them in a round-robin fashion.</li></ul><p><br/></p><h1 id="IPRouting-ShowRoutes">Show Routes</h1><p>In RouterOS you have three menus to see the current state of routes in the routing table:</p><ul><li><span style="color:var(--ds-text-accent-blue,#0055cc);"><code>/ip route</code></span><span> </span>- list IPv4 routes and basic properties</li><li><code>/<span style="color:var(--ds-text-accent-blue,#0055cc);">ipv6 route</span></code><span> </span>- list IPv6 routes and basic properties</li><li><code>/<span style="color:var(--ds-text-accent-blue,#0055cc);">routing route</span></code><span> </span>- list all routes with extended properties</li></ul><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p><code>/<span style="color:var(--ds-text-accent-blue,#0055cc);">routing route </span></code>menu currently is read-only. To add or remove routes<code>/<span style="color:var(--ds-text-accent-blue,#0055cc);">ip</span>(<span style="color:var(--ds-text-accent-blue,#0055cc);">ipv6</span>) <span style="color:var(--ds-text-accent-blue,#0055cc);">route </span></code>menus should be used.</p></div></div><p><br/></p><p><strong>Example output</strong></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] /ip/route&gt; print
+Flags: D - dynamic; X - disabled, I - inactive, A - active; C - connect, S - stati
+c, r - rip, b - bgp, o - ospf, d - dhcp, v - vpn
+Columns: DST-ADDRESS, GATEWAY, DIstance
+#       DST-ADDRESS      GATEWAY      DI
+0   XS   10.155.101.0/24  1.1.1.10 
+1   XS                    11.11.11.10 
+   D d   0.0.0.0/0        10.155.101.1 10
+2   AS   0.0.0.0/0        10.155.101.1 1
+3   AS + 1.1.1.0/24       10.155.101.1 10
+4   AS + 1.1.1.0/24       10.155.101.2 10
+5   AS   8.8.8.8          2.2.2.2      1
+   DAC   10.155.101.0/24  ether12      0
+
+
+|  ||| |   |                 |         |
+|  ||| |   |                 |         \----Distance
+|  ||| |   |                 \--Configured gateway
+|  ||| |   \-- dst prefix
+|  ||| \----- ECMP flag
+|  ||\------- flag indicating which protocol have added the route (bgp, osf,static,connected etc.)
+|  |\-------- route status flag (active, inactive, disabled)
+|  \--------- shows if route is dynamic
+\----------- console order number (shown only for static editable routes)
+    </pre>
+</div></div><p><span style="color:var(--ds-text-accent-blue,#0055cc);"><code>routing route</code></span><span> </span>output is very similar to<span style="color:var(--ds-text-accent-blue,#0055cc);"> ip route</span> except that it shows routes from all address families in one menu and lists filtered routes as well.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] /routing/route&gt; print
+Flags: X - disabled, I - inactive, F - filtered, U - unreachable, A - active; c - connect, s - static, 
+r - rip, b - bgp, o - ospf, d - dhcp, v - vpn, a - ldp-address, l - ldp-mapping
+Columns: DST-ADDRESS, GATEWAY, DIStance, SCOpe, TARget-scope, IMMEDIATE-GW
+     DST-ADDRESS            GATEWAY      DIS SCO TAR IMMEDIATE-GW 
+Xs   10.155.101.0/24 
+Xs 
+d    0.0.0.0/0              10.155.101.1 10  30  10  10.155.101.1%ether12
+As   0.0.0.0/0              10.155.101.1 1   30  10  10.155.101.1%ether12
+As   1.1.1.0/24             10.155.101.1 10  30  10  10.155.101.1%ether12
+As   8.8.8.8                2.2.2.2      1   254 254 10.155.101.1%ether12
+Ac   10.155.101.0/24        ether12      0   10      ether12 
+Ic   2001:db8:2::/64        ether2       0   10 
+Io   2001:db8:3::/64        ether12      110 20  10 
+Ic   fe80::%ether2/64       ether2       0   10 
+Ac   fe80::%ether12/64      ether12      0   10      ether12 
+Ac   fe80::%bridge-main/64  bridge-main  0   10      bridge-main 
+A    ether12                             0   250 
+A    bridge-main                         0   250 
+    </pre>
+</div></div><p><span style="color:var(--ds-text-accent-blue,#0055cc);"><code>routing route <span style="color:var(--ds-text-accent-green,#216e4e);">print detail</span></code></span><span> </span>shows more advanced info useful for debugging</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] /routing route&gt; print detail
+Flags: X - disabled, I - inactive, F - filtered, U - unreachable, A - active;
+c - connect, s - static, r - rip, b - bgp, o - ospf, d - dhcp, v - vpn, a - ldp-address, l - ldp-ma&gt;
++ - ecmp
+Xs dst-address=10.155.101.0/24
+Xs
+d afi=ip4 contribution=best-candidate dst-address=0.0.0.0/0 gateway=10.155.101.1
+immediate-gw=10.155.101.1%ether12 distance=10 scope=30 target-scope=10
+belongs-to=&quot;DHCP route&quot; mpls.in-label=0 .out-label=0 debug.fwp-ptr=0x201C2000
+
+As afi=ip4 contribution=active dst-address=0.0.0.0/0 gateway=10.155.101.1
+immediate-gw=10.155.101.1%ether12 distance=1 scope=30 target-scope=10
+belongs-to=&quot;Static route&quot; mpls.in-label=0 .out-label=0 debug.fwp-ptr=0x201C2000</pre>
+</div></div>
+                    </div>
+
+                                                            <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328084/1409137.png">RIB_FIB.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328084/1409141.png">simple-ipv4-routing.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328084/1409144.png">scope_and_target_scope.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328084/1409145.png">Rib.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328084/1409146.png">Fib.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328084/4882433.jpg">How-routing-works.jpg</a> (image/jpeg)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328084/4390948.jpg">nexthoplookup.jpg</a> (image/jpeg)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328084/4390947.jpg">nexthoplookup.jpg</a> (image/jpeg)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328084/4390944.jpg">How-routing-works.jpg</a> (image/jpeg)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328084/5210113.jpg">routing-hops.jpg</a> (image/jpeg)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328084/67633173.png">basic.png</a> (image/png)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

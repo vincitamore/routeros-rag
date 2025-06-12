@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : /routing/id</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Routing_328222.html">Routing</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Routing-Reference_119144618.html">Routing Reference</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : /routing/id
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Māris B.</span>, last updated on Jul 04, 2024
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p>Global Router ID election configuration. ID can be configured explicitly or set to be elected from one of the Routers IP addresses.</p><p>For each VRF table RouterOS adds dynamic ID instance, that elects the ID from one of the IP addresses belonging to a particular VRF:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: text; gutter: false">[admin@rack1_b33_CCR1036] /routing/id&gt; print 
+Flags: D - DYNAMIC, I - INACTIVE
+Columns: NAME, DYNAMIC-ID, SELECT-DYNAMIC-ID, SELECT-FROM-VRF
+#   NAME   DYNAMIC-ID      SELECT-D   SELE
+0 D main   111.111.111.2   only-vrf   main
+</pre>
+</div></div><h3 id="id-/routing/id-ConfigurationOptions"><strong>Configuration Options</strong></h3><div class="table-wrap"><table class="relative-table wrapped confluenceTable"><colgroup><col style="width: 17.961515%;"/><col style="width: 82.03969%;"/></colgroup><tbody><tr><th class="highlight-#deebff confluenceTh" style="text-align: left;" data-highlight-colour="#deebff">Property</th><th class="highlight-#deebff confluenceTh" data-highlight-colour="#deebff">Description</th></tr><tr><td class="confluenceTd"><strong>comment</strong><span> </span>(<em>string</em>)</td><td class="confluenceTd"><br/></td></tr><tr><td class="highlight-#f4f5f7 confluenceTd" data-highlight-colour="#f4f5f7"><strong title="">disabled</strong><span title=""> </span>(<em>yes | no</em>)</td><td class="highlight-#f4f5f7 confluenceTd" data-highlight-colour="#f4f5f7">ID reference is not used.</td></tr><tr><td class="confluenceTd"><strong>id</strong>(<em>IP</em>)</td><td class="confluenceTd">Parameter to explicitly set the Router ID. If ID is not explicitly specified, then it can be elected from one of the configured IP addresses on the router. See parameters <span style="color:var(--ds-background-accent-green-bolder,#1f845a);">select-dynamic-id</span> and <span style="color:var(--ds-background-accent-green-bolder,#1f845a);">select-from-vrf</span>.</td></tr><tr><td class="highlight-#f4f5f7 confluenceTd" data-highlight-colour="#f4f5f7"><strong title="">name</strong><span title=""> </span>(<em title="">string</em>)</td><td class="highlight-#f4f5f7 confluenceTd" data-highlight-colour="#f4f5f7">Reference name</td></tr><tr><td class="confluenceTd"><strong>select-dynamic-id</strong>(<em>any | lowest | only-active | only-loopback | only-static | only-vrf</em>)</td><td class="confluenceTd">States what IP addresses to use for the ID election:<br/><ul class="bullets"><li><span style="color:var(--ds-text-accent-red-bolder,#5d1f1a);">any</span> - any address found on the router can be elected as the Router ID.</li><li><span style="color:var(--ds-text-accent-red-bolder,#5d1f1a);">lowest</span> - pick the lowest IP address.</li><li><span style="color:var(--ds-text-accent-red-bolder,#5d1f1a);">only-active</span> - pick an ID only from active IP addresses.</li><li><span style="color:var(--ds-text-accent-red-bolder,#5d1f1a);">only-loopback</span> - pick an ID only from loopback addresses (loopback address is considered any non point to point /32 address).</li><li><span style="color:var(--ds-text-accent-red-bolder,#5d1f1a);">only-vrf</span> - pick an ID only from selected VRF. Works with <span style="color:var(--ds-background-accent-green-bolder,#1f845a);">select-from-vrf</span> property.</li></ul></td></tr><tr><td class="highlight-#f4f5f7 confluenceTd" data-highlight-colour="#f4f5f7"><strong title="">select-from-vrf</strong><span title=""> </span>(<em title="">name</em>)</td><td class="highlight-#f4f5f7 confluenceTd" data-highlight-colour="#f4f5f7">VRF from which to select IP addresses for the ID election.</td></tr></tbody></table></div><p><br/></p><h3 id="id-/routing/id-Read-onlyProperties"><strong>Read-only Properties</strong></h3><div class="table-wrap"><table class="relative-table wrapped confluenceTable" style="width: 68.91271%;"><colgroup><col style="width: 26.362625%;"/><col style="width: 73.637375%;"/></colgroup><tbody><tr><th class="highlight-#deebff confluenceTh" style="text-align: left;" data-highlight-colour="#deebff">Property</th><th class="highlight-#deebff confluenceTh" data-highlight-colour="#deebff">Description</th></tr><tr><td class="confluenceTd"><strong>dynamic</strong><span> </span>(<em>yes | no</em>)</td><td class="confluenceTd"><br/></td></tr><tr><td class="highlight-grey confluenceTd" colspan="1" data-highlight-colour="grey"><strong title="">dynamic-id</strong><span title=""> </span>(<em title="">IP</em>)</td><td class="highlight-grey confluenceTd" colspan="1" data-highlight-colour="grey">Currently selected ID.</td></tr><tr><td colspan="1" class="confluenceTd"><strong>inactive</strong><span> </span>(<em>yes | no</em>)</td><td colspan="1" class="confluenceTd">If there was a problem to get a valid ID, then item can become inactive.</td></tr></tbody></table></div>
+                    </div>
+
+                                        
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

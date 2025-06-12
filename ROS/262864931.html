@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : CHR: installing on VirtualBox</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Getting-started_328119.html">Getting started</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="18350234.html">Cloud Hosted Router, CHR</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : CHR: installing on VirtualBox
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Serhii T.</span>, last updated on Jul 31, 2024
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <h1 class="firstHeading mw-first-heading" id="CHR:installingonVirtualBox-CHRVirtualBoxinstallation.Videoinstruction">CHR VirtualBox installation. <span class="mw-headline">Video instruction</span></h1><p><strong><a class="external-link" href="https://www.youtube.com/watch?v=oHXkaHkSVVo" rel="nofollow"><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" draggable="false" height="250" src="attachments/262864931/262865013.png" data-image-src="attachments/262864931/262865013.png" data-unresolved-comment-count="0" data-linked-resource-id="262865013" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="chr_video.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="262864931" data-linked-resource-container-version="4" tabindex="0" alt=""></span></a></strong></p><ol><li><p><strong>Download VirtualBox</strong>: Install the latest version of VirtualBox from the official website.</p></li><li><p><strong>Download CHR Image</strong>: Download and unpack the latest Stable or Testing version of the CHR (Cloud Hosted Router) VDI image from the <a class="external-link" href="https://mikrotik.com/download" rel="nofollow">MikroTik website</a>.</p></li></ol><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" draggable="false" height="250" src="attachments/262864931/262864921.png" data-image-src="attachments/262864931/262864921.png" data-unresolved-comment-count="0" data-linked-resource-id="262864921" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="01.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="262864931" data-linked-resource-container-version="4" tabindex="0" alt=""></span></p><h2 id="CHR:installingonVirtualBox-Step1:CreateaNewVirtualMachine">Step 1: Create a New Virtual Machine</h2><ol><li><p>Launch the VirtualBox application.</p></li><li><p>Create a New VM:</p><ul><li><p>Click on <strong>New </strong>to create a new virtual machine.</p></li></ul></li></ol><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" draggable="false" width="600" src="attachments/262864931/262864922.png" data-image-src="attachments/262864931/262864922.png" data-unresolved-comment-count="0" data-linked-resource-id="262864922" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="011.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="262864931" data-linked-resource-container-version="4" tabindex="0" alt=""></span></p><ol><li style="list-style-type: none;"><ul><li><strong>Name and Operating System</strong>:</li></ul></li></ol><ul><li style="list-style-type: none;"><ul><li style="list-style-type: none;"><ul><li><p>Name: Enter a name for your VM (e.g., MikroTik_CHR).</p></li><li>Type: Select <strong>Linux</strong>.</li><li><p>Version: Select <strong>Other Linux (64-bit)</strong>.</p></li></ul></li></ul></li></ul><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" draggable="false" width="600" src="attachments/262864931/262864923.png" data-image-src="attachments/262864931/262864923.png" data-unresolved-comment-count="0" data-linked-resource-id="262864923" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="02.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="262864931" data-linked-resource-container-version="4" tabindex="0" alt=""></span></p><ol><li style="list-style-type: none;"><ul><li><p>Click <strong>Next</strong>.</p></li></ul></li></ol><h2 id="CHR:installingonVirtualBox-Step2:ConfigureMemorySize">Step 2: Configure Memory Size</h2><ul><li><strong>Memory Size</strong>: Allocate memory for the VM. It is recommended to allocate at least 256 MB of RAM (since RouterOS 7.15.1).</li></ul><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" draggable="false" width="600" src="attachments/262864931/262864924.png" data-image-src="attachments/262864931/262864924.png" data-unresolved-comment-count="0" data-linked-resource-id="262864924" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="03.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="262864931" data-linked-resource-container-version="4" tabindex="0" alt=""></span></p><ul><li><strong>Processors:</strong> Select the desired quantity of CPUs.</li><li>Click <strong>Next</strong>.</li></ul><h2 id="CHR:installingonVirtualBox-Step3:CreateaVirtualHardDisk">Step 3: Create a Virtual Hard Disk</h2><ol><li><strong>Virtual Hard Disk:</strong><ul><li>Select &quot;Use an existing Hard Disk File&quot;</li><li>Add the downloaded VDI image file</li><li>Click <strong>Choose</strong>.</li></ul></li></ol><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" draggable="false" width="600" src="attachments/262864931/262864925.png" data-image-src="attachments/262864931/262864925.png" data-unresolved-comment-count="0" data-linked-resource-id="262864925" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="04.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="262864931" data-linked-resource-container-version="4" tabindex="0" alt=""></span></p><ol><li style="list-style-type: none;"><ul><li>Click <strong>Next</strong>.</li></ul></li></ol><p>Check the settings and click <strong>Finish</strong>.</p><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" draggable="false" width="600" src="attachments/262864931/262864926.png" data-image-src="attachments/262864931/262864926.png" data-unresolved-comment-count="0" data-linked-resource-id="262864926" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="05.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="262864931" data-linked-resource-container-version="4" tabindex="0" alt=""></span></p><h2 id="CHR:installingonVirtualBox-Step4:ConfigureVirtualMachineSettings">Step 4: Configure Virtual Machine Settings</h2><ul><li><strong>Settings</strong>: Select your newly created VM and click on <em>Settings</em>.</li></ul><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" draggable="false" width="600" src="attachments/262864931/262864927.png" data-image-src="attachments/262864931/262864927.png" data-unresolved-comment-count="0" data-linked-resource-id="262864927" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="06.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="262864931" data-linked-resource-container-version="4" tabindex="0" alt=""></span></p><ul><li><strong>System</strong>: Go to the <em>System</em> tab and uncheck <em>Floppy</em>, <em>Optical </em>in the Boot Order section.</li><li><strong>Processors</strong>:<ul><li>Go to the <em>Processor </em>tab.</li><li>Select the desired quantity of CPUs.</li></ul></li><li><strong>Network</strong>:<ul><li>Go to the <em>Network </em>tab.</li></ul></li></ul><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" draggable="false" width="460" src="attachments/262864931/262864928.png" data-image-src="attachments/262864931/262864928.png" data-unresolved-comment-count="0" data-linked-resource-id="262864928" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="07.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="262864931" data-linked-resource-container-version="4" tabindex="0" alt=""></span></p><ul><li style="list-style-type: none;"><ul><li>Adapter 1: Enable the network adapter and attach it to<em> Bridged Adapter </em>or <em>NAT </em>(depending on your network setup).</li></ul></li></ul><h2 id="CHR:installingonVirtualBox-Step5:StarttheVirtualMachine">Step 5: Start the Virtual Machine</h2><ul><li><strong>Start VM</strong>: Click <em>Start </em>to boot your new virtual machine.</li></ul><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" draggable="false" width="600" src="attachments/262864931/262864929.png" data-image-src="attachments/262864931/262864929.png" data-unresolved-comment-count="0" data-linked-resource-id="262864929" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="08.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="262864931" data-linked-resource-container-version="4" tabindex="0" alt=""></span></p><ul><li><strong>Login</strong>: After the VM reboots, you will see the CHR login prompt. The default login credentials are:<ul><li>Username: <code>admin</code></li><li>Password: (blank)</li></ul></li></ul><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" draggable="false" width="600" src="attachments/262864931/262864930.png" data-image-src="attachments/262864931/262864930.png" data-unresolved-comment-count="0" data-linked-resource-id="262864930" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="09.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="262864931" data-linked-resource-container-version="4" tabindex="0" alt=""></span></p><ul><li><strong>Initial Configuration</strong>: Configure the CHR as per your network requirements using the MikroTik CLI or WebFig.</li></ul><p>Congratulations! You have successfully installed MikroTik CHR on VirtualBox. You can now proceed with configuring your network settings and using the full features of MikroTik RouterOS.</p><p><br/></p>
+                    </div>
+
+                                                            <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/262864931/262864921.png">01.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/262864931/262864922.png">011.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/262864931/262864923.png">02.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/262864931/262864924.png">03.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/262864931/262864925.png">04.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/262864931/262864926.png">05.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/262864931/262864927.png">06.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/262864931/262864928.png">07.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/262864931/262864929.png">08.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/262864931/262864930.png">09.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/262864931/262864935.png">image-2024-7-29_17-48-18.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/262864931/262865013.png">chr_video.png</a> (image/png)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

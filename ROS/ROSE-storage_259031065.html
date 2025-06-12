@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : ROSE-storage</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Hardware_13500445.html">Hardware</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Disks_91193346.html">Disks</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : ROSE-storage
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Unknown User (elvijsi)</span>, last updated by <span class='editor'> Jānis Bērziņš</span> on Apr 15, 2025
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><strong style="text-align: left;">ROSE (RouterOS Enterprise)</strong><span style="color:var(--ds-text,#172b4d);" data-darkreader-inline-color=""><span> </span>package adds data center functionality to RouterOS - for supporting disk monitoring, improved formatting, RAIDs, rsync, iSCSI ,NVMe over TCP, NFS. This functionality currently is supported on<span> </span></span><strong style="text-align: left;">arm, arm64, x86</strong><span style="color:var(--ds-text,#172b4d);" data-darkreader-inline-color=""><span> </span>and<span> </span></span><strong style="text-align: left;">tile</strong><span style="color:var(--ds-text,#172b4d);" data-darkreader-inline-color=""><span> </span>platforms.</span></p><p><span style="color:var(--ds-text,#172b4d);" data-darkreader-inline-color=""><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742044251 {padding: 0px;}
+div.rbtoc1747742044251 ul {margin-left: 0px;}
+div.rbtoc1747742044251 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742044251'>
+<ul class='toc-indentation'>
+<li><a href='#ROSEstorage-StorageType'>Storage Type</a>
+<ul class='toc-indentation'>
+<li><a href='#ROSEstorage-Crypted'>Crypted</a>
+<ul class='toc-indentation'>
+<li><a href='#ROSEstorage-Properties'>Properties</a></li>
+<li><a href='#ROSEstorage-Example:Simplecryptedfilesystem'>Example: Simple crypted file system</a></li>
+<li><a href='#ROSEstorage-Example:CryptedRAID1arraywithintegritycheck'>Example: Crypted RAID1 array with integrity check</a></li>
+</ul>
+</li>
+<li><a href='#ROSEstorage-iSCSI'>iSCSI</a>
+<ul class='toc-indentation'>
+<li><a href='#ROSEstorage-Properties.1'>Properties</a></li>
+<li><a href='#ROSEstorage-Configurationexample'>Configuration example</a></li>
+</ul>
+</li>
+<li><a href='#ROSEstorage-NFS'>NFS</a>
+<ul class='toc-indentation'>
+<li><a href='#ROSEstorage-Properties.2'>Properties</a></li>
+<li><a href='#ROSEstorage-Configurationexample.1'>Configuration example</a></li>
+</ul>
+</li>
+<li><a href='#ROSEstorage-NVMEoverTCP'>NVME over TCP</a>
+<ul class='toc-indentation'>
+<li><a href='#ROSEstorage-Properties.3'>Properties</a></li>
+<li><a href='#ROSEstorage-Example:Mountadisk'>Example: Mount a disk</a>
+<ul class='toc-indentation'>
+<li><a href='#ROSEstorage-LinuxClient'>Linux Client</a></li>
+</ul>
+</li>
+<li><a href='#ROSEstorage-Example:Mountafileasablockdevice'>Example: Mount a file as a block device</a></li>
+<li><a href='#ROSEstorage-Example:MountaRAIDarray'>Example: Mount a RAID array</a></li>
+</ul>
+</li>
+<li><a href='#ROSEstorage-Ramdisk'>Ramdisk</a>
+<ul class='toc-indentation'>
+<li><a href='#ROSEstorage-Properties.4'>Properties</a></li>
+<li><a href='#ROSEstorage-Configurationexample.2'>Configuration example</a></li>
+</ul>
+</li>
+<li><a href='#ROSEstorage-SMB'>SMB</a>
+<ul class='toc-indentation'>
+<li><a href='#ROSEstorage-Properties.5'>Properties</a></li>
+<li><a href='#ROSEstorage-Configurationexample.3'>Configuration example</a></li>
+</ul>
+</li>
+<li><a href='#ROSEstorage-Tmpfs'>Tmpfs</a>
+<ul class='toc-indentation'>
+<li><a href='#ROSEstorage-Properties.6'>Properties</a></li>
+<li><a href='#ROSEstorage-Configurationexample.4'>Configuration example</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href='#ROSEstorage-RAID'>RAID</a>
+<ul class='toc-indentation'>
+<li><a href='#ROSEstorage-Properties.7'>Properties</a>
+<ul class='toc-indentation'>
+<li><a href='#ROSEstorage-Configurationexample(RAID6):'>Configuration example (RAID6):</a></li>
+<li><a href='#ROSEstorage-Example:RAIDcheck'>Example: RAID check</a></li>
+</ul>
+</li>
+<li><a href='#ROSEstorage-RAID0'>RAID 0</a></li>
+<li><a href='#ROSEstorage-RAID1'>RAID 1</a></li>
+<li><a href='#ROSEstorage-RAID4'>RAID 4</a></li>
+<li><a href='#ROSEstorage-RAID5'>RAID 5</a></li>
+<li><a href='#ROSEstorage-RAID6'>RAID 6</a></li>
+<li><a href='#ROSEstorage-RAIDLinear'>RAID Linear</a></li>
+<li><a href='#ROSEstorage-NestedRAID'>Nested RAID</a>
+<ul class='toc-indentation'>
+<li><a href='#ROSEstorage-Configurationexample.5'>Configuration example</a></li>
+</ul>
+</li>
+<li><a href='#ROSEstorage-MovingyourRAIDarraytoadifferentdevice'>Moving your RAID array to a different device</a></li>
+</ul>
+</li>
+<li><a href='#ROSEstorage-RSYNC'>RSYNC</a>
+<ul class='toc-indentation'>
+<li><a href='#ROSEstorage-Properties.8'>Properties</a></li>
+<li><a href='#ROSEstorage-Configurationexample.6'>Configuration example</a></li>
+</ul>
+</li>
+<li><a href='#ROSEstorage-Self-EncryptionDrives'>Self-Encryption Drives</a></li>
+</ul>
+</div></span></p><h1 id="ROSEstorage-StorageType">Storage Type</h1><h2 id="ROSEstorage-Crypted">Crypted</h2><p><span style="color:var(--ds-text,#172b4d);" data-darkreader-inline-color="">Drive or device used together with type=crypted to make &quot;dm_crypt&quot; encrypted storage. <code>dm-crypt</code> is a transparent disk encryption subsystem designed to provide encryption of block devices. </span></p><h3 id="ROSEstorage-Properties"><span style="color:var(--ds-text,#172b4d);" data-darkreader-inline-color="">Properties</span></h3><div class="table-wrap"><table class="wrapped confluenceTable"><colgroup><col/><col/></colgroup><tbody><tr><th scope="col" class="confluenceTh">Property</th><th scope="col" class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>slot</strong> <em>(string;</em> Default: )</td><td class="confluenceTd">Name of the  file system</td></tr><tr><td class="confluenceTd"><strong>encryption-key</strong> <em>(string;</em> Default: )</td><td class="confluenceTd">key used to decrypt </td></tr><tr><td class="confluenceTd"><strong>crypted-backend </strong><em>(string;</em> Default: )</td><td class="confluenceTd">Drive or partition to encrypt</td></tr></tbody></table></div><h3 id="ROSEstorage-Example:Simplecryptedfilesystem"><span style="color:var(--ds-text,#172b4d);" data-darkreader-inline-color="">Example: Simple crypted file system</span></h3><p><span style="color:var(--ds-text,#172b4d);" data-darkreader-inline-color="">To create a crypted file-system:</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">add crypted-backend=usb1 encryption-key=&lt;secret_key&gt; slot=crypted-usb1 type=crypted</pre>
+</div></div><p><span style="color:var(--ds-text,#172b4d);" data-darkreader-inline-color="">After it's created format the file system and it's ready to go. </span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">disk format-drive crypted-usb1 file-system=ext4 </pre>
+</div></div><h3 class="auto-cursor-target" style="text-align: left;" id="ROSEstorage-Example:CryptedRAID1arraywithintegritycheck">Example: Crypted RAID1 array with integrity check</h3><p>Create a RAID1 array and create a crypted-file system on top of it:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/disk
+add raid-device-count=2 raid-type=1 slot=raid1 type=raid
+set nvme3 raid-master=raid1 raid-role=0
+set nvme4 raid-master=raid1 raid-role=1
+add crypted-backend=raid1 encryption-key=&lt;secret_key&gt; slot=crypted-raid1 type=crypted  crypt-mode=encryption-and-integrity
+
+</pre>
+</div></div><p>Format the crypted file-system to Btrfs:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/disk
+ format-drive crypted-raid1 file-system=btrfs  </pre>
+</div></div><p><br/></p><h2 class="auto-cursor-target" style="text-align: left;" id="ROSEstorage-iSCSI">iSCSI</h2><p>iSCSI<span style="color:var(--ds-text,#172b4d);" data-darkreader-inline-color=""><span> </span>allows accessing storage over an IP-based network. On initiator iSCSI device will appear as block device. RouterOS supports both target and initiator modes.</span></p><h3 id="ROSEstorage-Properties.1">Properties </h3><div class="table-wrap"><table class="wrapped confluenceTable"><colgroup><col/><col/></colgroup><tbody><tr><th scope="col" class="confluenceTh">Property</th><th scope="col" class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>iscasi-address</strong></td><td class="confluenceTd"> IP address of the iSCSI target. (Host device IP)</td></tr><tr><td class="confluenceTd"><strong>iscasi-export</strong></td><td class="confluenceTd">Disables/enables iSCASI on the host device</td></tr><tr><td class="confluenceTd"><strong>iscasi-iqn</strong></td><td class="confluenceTd">unique identifier used to name iSCSI target. (In ROS the iqn is the same as slot name, can't be changed and needs to be configured only on the client device)</td></tr><tr><td class="confluenceTd"><strong>iscasi-port</strong></td><td class="confluenceTd">network port used by the iSCSI target to listen for incoming connections from initiators. The default port for iSCSI traffic is 3260.</td></tr></tbody></table></div><h3 id="ROSEstorage-Configurationexample">Configuration example</h3><p>Host</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/disk
+set pcie1-nvme1 iscsi-export=yes</pre>
+</div></div><p>Client</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/disk
+add type=iscsi iscsi-address=192.168.1.1 iscsi-iqn=pcie1-nvme1</pre>
+</div></div><h2 id="ROSEstorage-NFS">NFS</h2><p>NFS<span style="color:var(--ds-text,#172b4d);" data-darkreader-inline-color=""><span> </span>allows sharing local directories over network. RouterOS currently supports NFS v4 only mode.</span></p><div role="region" aria-label="Warning" class="confluence-information-macro  confluence-information-macro-warning" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-error confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>NFS uses port TCP/2049. If the port is not available in disk print detail you will see the state stuck at  nfs-state=&quot;mounting&quot; </p></div></div><h3 id="ROSEstorage-Properties.2">Properties </h3><div class="table-wrap"><table class="wrapped confluenceTable"><colgroup class=""><col class=""/><col class=""/></colgroup><tbody class=""><tr class=""><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr class=""><td class="confluenceTd"><strong>nfs-address</strong></td><td class="confluenceTd">IP address of the NFS target. (host device IP)</td></tr><tr class=""><td class="confluenceTd"><strong>nfs-share</strong></td><td class="confluenceTd">Specify the folder to mount (client parameter)</td></tr><tr class=""><td class="confluenceTd"><strong>nfs-sharing</strong></td><td class="confluenceTd">Disable/enable NFS on the host device</td></tr></tbody></table></div><h3 id="ROSEstorage-Configurationexample.1">Configuration example</h3><p>Host</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/disk
+set pcie1-nvme1 nfs-sharing=yes</pre>
+</div></div><p>Client</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/disk
+add type=nfs nfs-address=192.168.1.1</pre>
+</div></div><p>Linux client</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: bash; gutter: false">mkdir /mnt/files
+mount -t nfs 192.168.1.1:/ /mnt/files</pre>
+</div></div><h2 id="ROSEstorage-NVMEoverTCP">NVME over TCP</h2><p>nvme-tcp<span> </span>allows accessing storage over network as NVMe block device on initiator side. On target side this device can be hdd/ssd/nvme or even raid array.</p><h3 id="ROSEstorage-Properties.3">Properties </h3><div class="table-wrap"><table class="wrapped confluenceTable"><colgroup class=""><col class=""/><col class=""/></colgroup><tbody class=""><tr class=""><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr class=""><td class="confluenceTd"><strong>nvme-tcp-address</strong></td><td class="confluenceTd"><span style="color:var(--ds-text,#172b4d);" data-darkreader-inline-color="">IP address of the NVME over TCP target. (host device IP)</span></td></tr><tr class=""><td class="confluenceTd"><strong>nvme-tcp-export</strong></td><td class="confluenceTd">Disable/enable NVME over TCP on the host device</td></tr><tr class=""><td class="confluenceTd"><strong>nvme-tcp-host-name</strong></td><td class="confluenceTd">This property specifies the hostname of the NVMe over TCP initiator. It can be used for identification and authentication purposes</td></tr><tr class=""><td class="confluenceTd"><strong>nvme-tcp-name</strong></td><td class="confluenceTd">This property specifies the name of the NVMe over TCP target or the connection name for reference purposes (needs to be the same as host slot name)</td></tr><tr><td class="confluenceTd"><strong>nvme-tcp-password</strong></td><td class="confluenceTd">his property is used to specify the password for authenticating the NVMe over TCP connection, ensuring secure access.</td></tr><tr><td class="confluenceTd"><strong>nvme-tcp-port</strong></td><td class="confluenceTd">This property specifies the network port used by the NVMe over TCP target to listen for incoming connections from initiators. The default port for NVMe over TCP traffic is 4420.</td></tr><tr><td class="confluenceTd"><strong>nvme-tcp-server-allow-host-name</strong></td><td class="confluenceTd">This property specifies whether the NVMe over TCP server allows connections from specific hostnames, providing a mechanism for host-based access control.</td></tr><tr><td class="confluenceTd"><strong>nvme-tcp-server-password</strong></td><td class="confluenceTd"> This property specifies the password for the NVMe over TCP server, used for authenticating initiators connecting to the target.</td></tr><tr><td class="confluenceTd"><strong>nvme-tcp-server-port</strong></td><td class="confluenceTd">This property specifies the network port used by the NVMe over TCP server to accept connections from initiators.</td></tr></tbody></table></div><h3 id="ROSEstorage-Example:Mountadisk">Example: Mount a disk</h3><p>In this example, one RouterOS device is used as a storage server ( <strong>Host</strong> ) and another RouterOS device requires a storage device to be mounted over the network ( <strong>Client</strong> ).</p><ol><li data-uuid="4449dbd9-71e0-4c06-bf4f-d9409f8066bb">Use the following commands on <strong>Host</strong> :<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/disk set disk1 nvme-tcp-export=yes nvme-tcp-port=4420</pre>
+</div></div></li><li data-uuid="7c557073-9b1e-4439-8f99-b089e37548cc">Use the following commands on <strong>Client</strong> :<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/disk add type=nvme-tcp nvme-tcp-address=192.168.1.1 nvme-tcp-name=disk1</pre>
+</div></div></li><li data-uuid="29966ad6-e570-4810-bf28-0b7ffc8919af">Your <strong>Client</strong>  will now see a disk that is actually mounted over network using NVMe-Over-TCP</li></ol><h4 id="ROSEstorage-LinuxClient">Linux Client</h4><p>Use these commands to setup NVM-Over-TCP on a Linux <strong>Client</strong> .</p><ol><li data-uuid="58bc2b32-c2eb-4956-9ce5-fdc4294efc46">Load kernel module<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">modprobe nvme_tcp</pre>
+</div></div></li><li data-uuid="2ba10338-c016-4c83-b40d-86f29cad2a3f">Discover existing NVMe-Over-TCP mounts:<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: bash; gutter: false">nvme discover -t tcp -a 192.168.1.1 -s 4420</pre>
+</div></div><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">#OUTPUT:
+Discovery Log Number of Records 1, Generation counter 2
+=====Discovery Log Entry 0======
+trtype:  tcp
+adrfam:  ipv4
+subtype: nvme subsystem
+treq:    not specified, sq flow control disable supported
+portid:  4420
+trsvcid: 4420
+subnqn:  disk1
+traddr:  10.155.166.7
+sectype: none</pre>
+</div></div></li><li data-uuid="c62b90bc-a593-42c3-ac70-4a171f2bc7c3">Connect to the NVMe-Over-TCP mount:<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: bash; gutter: false">nvme connect -t tcp -a 192.168.1.1 -s 4420 -n disk1</pre>
+</div></div></li><li data-uuid="c2406e7c-efd4-4135-960b-f1ceda30bdb1">Block devices now should be available:<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: bash; gutter: false">ls /dev/nvme*
+</pre>
+</div></div><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">#OUTPUT:
+/dev/nvme0  /dev/nvme0n1  /dev/nvme-fabrics</pre>
+</div></div></li><li data-uuid="84e36d09-f16c-4d45-a09c-55713810ff97">You can now use the mounted block device as any other block device on your Linux <strong>Client</strong> .</li></ol><p>In case you want to disconnect the mounted block device:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">nvme disconnect -d /dev/nvme0</pre>
+</div></div><h3 id="ROSEstorage-Example:Mountafileasablockdevice">Example: Mount a file as a block device</h3><p>In this example, one RouterOS device is used as a storage server ( <strong>Host</strong> ) and another RouterOS device requires a storage device to be mounted over the network ( <strong>Client</strong> ).</p><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Such a setup is useful when you don't want to delegate the whole disk to a <strong>Client</strong> , but rather give a fraction of the disk size to the <strong>Client</strong> . Mounting a file rather a disk is going to have a lower performance than mounting a disk (or partition) using NVMe-Over-TCP.</p></div></div><p><br/></p><ol><li data-uuid="efedc842-829d-417b-a892-71af57d3fb7d"> Use the following commands on <strong>Host</strong>  to create a file that is going to be used as a block device:<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/disk add type=file file-path=disk1/BIGFILE.img file-size=10G slot=blockdevice1
+/disk set blockdevice1 nvme-tcp-export=yes </pre>
+</div></div></li><li data-uuid="4127d2f1-471a-4977-83bf-00bc2ad76524">Use the following commands on <strong>Client</strong> to mount the file as a block device:<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/disk nvme-discover 192.168.1.1
+/disk add nvme-tcp-address=192.168.1.1 nvme-tcp-name=blockdevice1 type=nvme-tcp
+/disk format-drive blockdevice1 file-system=ext4</pre>
+</div></div></li><li data-uuid="7e042df4-3854-4b54-924a-4ecde6715678">Your <strong>Client</strong> will now see a new disk called <code>blockdevice1</code> even though on the <strong>Server</strong> the storage device is actually a file.</li></ol><div role="region" aria-label="Tip" class="confluence-information-macro  confluence-information-macro-tip" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-approve confluence-information-macro-icon" ></span><div class="confluence-information-macro-body">In case you want to mount the block device on a Linux <strong>Client</strong> , then check the <a href="#ROSEstorage-LinuxClient">LinuxClient</a> section.</div></div><h3 id="ROSEstorage-Example:MountaRAIDarray">Example: Mount a RAID array</h3><p>In this example, one RouterOS device is used as a storage server ( <strong>Host</strong> ) and another RouterOS device requires a storage device to be mounted over the network ( <strong>Client</strong> ), but also provides data redundancy.</p><ol><li data-uuid="5bbbaf7d-5efc-4e5e-a60a-1351eba6edea">Setup a <a href="https://help.mikrotik.com/docs/spaces/ROS/pages/259031065/ROSE-storage#ROSEstorage-RAID" rel="nofollow">RAID</a> on the <strong>Host</strong> , for example:<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/disk add raid-device-count=8 raid-type=6 slot=RAID6_array type=raid
+/disk set disk1 raid-master=RAID6_array raid-role=0
+/disk set disk2 raid-master=RAID6_array raid-role=1
+/disk set disk3 raid-master=RAID6_array raid-role=2 
+/disk set disk4 raid-master=RAID6_array raid-role=3
+/disk set disk5 raid-master=RAID6_array raid-role=4
+/disk set disk6 raid-master=RAID6_array raid-role=5
+/disk set disk7 raid-master=RAID6_array raid-role=6 
+/disk set disk8 raid-master=RAID6_array raid-role=7
+/disk set RAID6_array nvme-tcp-export=yes</pre>
+</div></div></li><li data-uuid="43508298-8aca-46cc-80aa-6bc8e5cfcb74"><p>Use the following commands on <strong>Client</strong> :</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false"></pre>
+</div></div></li><li data-uuid="268dfa47-a258-4c1a-8740-1cc14631bac8">Your <strong>Client</strong> will now see a single disk, but it is actually a highly redundant RAID array.</li></ol><div role="region" aria-label="Tip" class="confluence-information-macro  confluence-information-macro-tip" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-approve confluence-information-macro-icon" ></span><div class="confluence-information-macro-body">In case you want to mount the block device on a Linux <strong>Client</strong> , then check the <a href="#ROSEstorage-LinuxClient">LinuxClient</a> section.</div></div><div role="region" aria-label="Warning" class="confluence-information-macro  confluence-information-macro-warning" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-error confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Do not mount multiple disks from different RouterOS devices on a Linux Client and put them into a software RAID configuration (for example, mdadm). While this type of configuration does provide some redundancy, you can expect abnormal latency issues or even timeouts. It is recommended to create RAID array on your RouterOS and export the RAID array as a block device to your Linux Client.</p></div></div><h2 id="ROSEstorage-Ramdisk">Ramdisk</h2><p><span style="color:var(--ds-text,#172b4d);" data-darkreader-inline-color="">RAMdisk - allows using part of RAM as attached device (block device). If compared to tmpfs - this allows using RAM as part of raid, or any other configuration where device instead of folder is required.</span></p><div role="region" aria-label="Warning" class="confluence-information-macro  confluence-information-macro-warning" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-error confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>RAMdisk will be cleared on reboot or power loss</p></div></div><h3 id="ROSEstorage-Properties.4">Properties </h3><div class="table-wrap"><table class="wrapped confluenceTable"><colgroup class=""><col class=""/><col class=""/></colgroup><tbody class=""><tr class=""><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr class=""><td class="confluenceTd"><strong>ramdisk-size</strong></td><td class="confluenceTd">Size of the block device you want to create</td></tr></tbody></table></div><h3 id="ROSEstorage-Configurationexample.2">Configuration example</h3><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/disk add type=ramdisk ramdisk-size=500M</pre>
+</div></div><p><br/></p><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>To start using the created ramdisk, you must first format it.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/disk format-drive ramdisk1</pre>
+</div></div></div></div><h2 id="ROSEstorage-SMB">SMB</h2><p>SMB<span style="color:var(--ds-text,#172b4d);" data-darkreader-inline-color=""><span> </span>is a popular file-sharing protocol. ROSE package currently supports SMB2.1 SMB3.0, SMB3.1.1 dialects (SMB1 is not supported due to security vulnerabilities)</span></p><h3 id="ROSEstorage-Properties.5">Properties </h3><div class="table-wrap"><table class="wrapped relative-table confluenceTable" style="width: 23.9715%;"><colgroup class=""><col class="" style="width: 29.5763%;"/><col class="" style="width: 70.4022%;"/></colgroup><tbody class=""><tr class=""><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr class=""><td class="confluenceTd"><strong>smb-address</strong></td><td class="confluenceTd"><span style="color:var(--ds-text,#172b4d);" data-darkreader-inline-color="">IP address of the SMB server</span></td></tr><tr class=""><td class="confluenceTd"><strong>smb-password</strong></td><td class="confluenceTd">SMB password</td></tr><tr class=""><td class="confluenceTd"><strong>smb-share</strong></td><td class="confluenceTd">Name of the share you want to connect to</td></tr><tr><td class="confluenceTd"><strong>smb-user</strong></td><td class="confluenceTd">SMB user</td></tr></tbody></table></div><h3 id="ROSEstorage-Configurationexample.3">Configuration example</h3><p>Client</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">add smb-address=10.155.145.11 smb-share=share1 smb-user=user smb-password=password type=smb</pre>
+</div></div><p>Server-side configuration can be found - <a href="SMB_117145608.html">SMB</a></p><h2 id="ROSEstorage-Tmpfs">Tmpfs</h2><p><span style="color:var(--ds-text,#172b4d);" data-darkreader-inline-color="">TMPFS - allows using part of RAM as filesystem (can't be used as block device) </span></p><div role="region" aria-label="Warning" class="confluence-information-macro  confluence-information-macro-warning" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-error confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Tmpfs will be cleared on reboot or power loss</p></div></div><h3 id="ROSEstorage-Properties.6">Properties </h3><div class="table-wrap"><table class="wrapped confluenceTable"><colgroup class=""><col class=""/><col class=""/></colgroup><tbody class=""><tr class=""><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr class=""><td class="confluenceTd"><strong>tmpfs-max-size</strong></td><td class="confluenceTd">Size of the block device you want to create</td></tr></tbody></table></div><h3 id="ROSEstorage-Configurationexample.4">Configuration example</h3><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">add type=tmpfs tmpfs-max-size=10G</pre>
+</div></div><h1 id="ROSEstorage-RAID"><span style="color:var(--ds-text,#172b4d);" data-darkreader-inline-color="">RAID</span></h1><p style="text-align: left;">RAID (Redundant Array of Independent Disks) technology allows storing data on multiple drives - improving data transfer performance, data protection or both by combining them into logical units. </p><p style="text-align: left;">In the case of a RAID disk failure, a rebuild begins automatically once the failed drive is replaced.</p><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body">RouterOS supports software RAID levels 0,1,4,5,6,linear and nested RAID.</div></div><h2 id="ROSEstorage-Properties.7">Properties</h2><div class="table-wrap"><table class="wrapped confluenceTable"><colgroup><col/><col/></colgroup><tbody><tr><th scope="col" class="confluenceTh">Property</th><th scope="col" class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>raid-type</strong></td><td class="confluenceTd">RAID type used (levels 0,1,4,5,6,linear and nested RAID.)</td></tr><tr><td class="confluenceTd"><strong>raid-chunk-size</strong></td><td class="confluenceTd">The size of the chunks or stripes used in the RAID array.</td></tr><tr><td class="confluenceTd"><strong>raid-device-count</strong></td><td class="confluenceTd">The number of devices (disks) included in the RAID array.</td></tr><tr><td class="confluenceTd"><strong>raid-master</strong></td><td class="confluenceTd">Created RAID master block device the disks are added to.</td></tr><tr><td class="confluenceTd"><strong>raid-max-component-size</strong></td><td class="confluenceTd">The maximum size of an individual component or disk in the RAID array.</td></tr><tr><td class="confluenceTd"><strong>raid-member-failed</strong></td><td class="confluenceTd"><p>Sets the drive in a failed state in RAID array. Used if there is a need to change a non-failed drive</p></td></tr><tr><td class="confluenceTd"><strong>raid-role</strong></td><td class="confluenceTd">Defines the role of each device within the RAID array.</td></tr><tr><td class="confluenceTd"><strong>raid-scrub</strong></td><td class="confluenceTd"><p>Verifies and repairs data integrity across the RAID array.</p></td></tr></tbody></table></div><h3 id="ROSEstorage-Configurationexample(RAID6):">Configuration example (RAID6):</h3><p>This is an example on how to configure RAID, it will be the same procedure in most of RAID types</p><p>Create the RAID block device (In this example, RAID 6)</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">add raid-device-count=20 raid-type=6 slot=raid1 type=raid</pre>
+</div></div><p>Add drives to this raid</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">set nvme1 raid-master=raid1 raid-role=0
+set nvme2 raid-master=raid1 raid-role=1
+set nvme3 raid-master=raid1 raid-role=2
+set nvme4 raid-master=raid1 raid-role=3
+set nvme5 raid-master=raid1 raid-role=4
+set nvme6 raid-master=raid1 raid-role=5
+set nvme7 raid-master=raid1 raid-role=6
+set nvme8 raid-master=raid1 raid-role=7
+set nvme9 raid-master=raid1 raid-role=8
+set nvme10 raid-master=raid1 raid-role=9
+set nvme11 raid-master=raid1 raid-role=10
+set nvme12 raid-master=raid1 raid-role=11
+set nvme13 raid-master=raid1 raid-role=12
+set nvme14 raid-master=raid1 raid-role=13
+set nvme15 raid-master=raid1 raid-role=14
+set nvme16 raid-master=raid1 raid-role=15
+set nvme17 raid-master=raid1 raid-role=16
+set nvme18 raid-master=raid1 raid-role=17
+set nvme19 raid-master=raid1 raid-role=18
+set nvme20 raid-master=raid1 raid-role=19
+
+</pre>
+</div></div><p>Format the RAID block device</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">disk&gt; format-drive raid1 file-system=ext4 </pre>
+</div></div><p>And the result should look similar to this</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">21 BM        type=raid slot=&quot;raid1&quot; slot-default=&quot;&quot; parent=none uuid=&quot;f457bc79-7408-489b-8850-85923e900452&quot; fs=ext4 model=&quot;RAID6 2-parity-disks&quot; 
+             size=17 283 541 893 120 free=17 283 538 190 336 raid-type=6 raid-device-count=20 raid-max-component-size=none raid-chunk-size=1M raid-master=none 
+             raid-state=&quot;clean&quot; nvme-tcp-export=no iscsi-export=no nfs-sharing=no smb-sharing=no media-sharing=no media-interface=none 
+
+</pre>
+</div></div><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Avoid using multiple partitions on a single physical disk in multiple RAID arrays. Using the the same physical disk in multiple RAID arrays can result in low performance.</p></div></div><h3 id="ROSEstorage-Example:RAIDcheck">Example: RAID check</h3><p>It is extremely important to monitor your RAID array for failures. There are multiple ways to do it, but the simplest way is to create a script that sends an e-mail whenever a RAID member has failed. You can use the following script as an working example:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/system scheduler
+add interval=30s name=MRaidHealthCheckCall on-event=MraidHealthCheck policy=ftp,read,write,policy,test,sniff start-time=startup
+/system script
+add dont-require-permissions=no name=MraidHealthCheck owner=admin policy=ftp,read,write,policy,test,sniff source=&quot;:global CheckRAID;\
+    \n\
+    \n:local sysadmin; \
+    \n:set  \$sysadmin \&quot;sysadmin@domain.tld\&quot;;\
+    \n\
+    \n:local temp [/disk print count-only where raid-member-failed];\
+    \n:if ( \$temp &gt; 0 ) do={\
+    \n   :if ( \$CheckRAID &lt; 1 ) do={\
+    \n      /log info message=\&quot;ERROR: RAID has failed!\&quot;;\
+    \n      /tool e-mail send to= \$sysadmin subject=([/system identity get name].\&quot; RAID failed\&quot;) body=(\&quot;Go check it! Value: \&quot;.\$temp);\
+    \n      :set \$CheckRAID 7;\
+    \n      :delay 5s;\
+    \n    }\
+    \n   }       \
+    \n   :if ( \$CheckRAID &gt; 0 ) do={\
+    \n      :set \$CheckRAID ( \$CheckRAID -1 );\
+    \n   }\
+    \n&quot;</pre>
+</div></div><p>You will also need to configure your RouterOS device's e-mail server settings:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/tool e-mail
+set from=&lt;raidcheck@domain.com&gt; port=587 server=smtp.domain.com tls=starttls</pre>
+</div></div><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Make sure you configure your e-mail server's settings under <code>/tool e-mail</code> and change the e-mail address in the script above with the values that matches your e-mail server's settings.</p></div></div><h2 id="ROSEstorage-RAID0">RAID 0</h2><p style="text-align: left;">All data is written evenly over all disks in this RAID, this configuration does not provide any fault tolerance but provides best performance.</p><p style="text-align: left;"><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" draggable="false" height="250" src="attachments/259031065/261685256.jpg" data-image-src="attachments/259031065/261685256.jpg" data-unresolved-comment-count="0" data-linked-resource-id="261685256" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="RAID_0.jpg" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/jpeg" data-linked-resource-container-id="259031065" data-linked-resource-container-version="99" tabindex="0" alt=""></span></p><h2 id="ROSEstorage-RAID1">RAID 1 </h2><p style="text-align: left;">Same data is written in all drives (data is mirrored), this configuration provides best fault tolerance, but performance wise write speeds will be equal to slowest disk used in array.</p><p style="text-align: left;"><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" draggable="false" height="250" src="attachments/259031065/261685257.jpg" data-image-src="attachments/259031065/261685257.jpg" data-unresolved-comment-count="0" data-linked-resource-id="261685257" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="RAID_1.jpg" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/jpeg" data-linked-resource-container-id="259031065" data-linked-resource-container-version="99" tabindex="0" alt=""></span></p><h2 id="ROSEstorage-RAID4">RAID 4</h2><p style="text-align: left;">Block-level data is striped to a dedicated disk where parity bits are stored. Performance will be limited to a parity writing speed.</p><p style="text-align: left;"><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" draggable="false" height="250" src="attachments/259031065/261685258.jpg" data-image-src="attachments/259031065/261685258.jpg" data-unresolved-comment-count="0" data-linked-resource-id="261685258" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="RAID_4.jpg" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/jpeg" data-linked-resource-container-id="259031065" data-linked-resource-container-version="99" tabindex="0" alt=""></span></p><h2 id="ROSEstorage-RAID5">RAID 5</h2><p style="text-align: left;">Block-level data is striped evenly over the available disks. Can be recovered from 1 disk failure.</p><p style="text-align: left;"><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" draggable="false" height="250" src="attachments/259031065/261685259.jpg" data-image-src="attachments/259031065/261685259.jpg" data-unresolved-comment-count="0" data-linked-resource-id="261685259" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="RAID_5.jpg" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/jpeg" data-linked-resource-container-id="259031065" data-linked-resource-container-version="99" tabindex="0" alt=""></span></p><h2 id="ROSEstorage-RAID6">RAID 6</h2><p style="text-align: left;">Block-level data is striped evenly over the available disks. Can be recovered from 2 disk failures.</p><p style="text-align: left;"><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" draggable="false" height="250" src="attachments/259031065/261685260.jpg" data-image-src="attachments/259031065/261685260.jpg" data-unresolved-comment-count="0" data-linked-resource-id="261685260" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="RAID_6.jpg" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/jpeg" data-linked-resource-container-id="259031065" data-linked-resource-container-version="99" tabindex="0" alt=""></span></p><h2 id="ROSEstorage-RAIDLinear">RAID Linear</h2><p style="text-align: left;">Data is appended over multiple disks combining them into single large disk. Provides no redundancy and is limited to single disk read/write speed.</p><p style="text-align: left;"><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" draggable="false" height="250" src="attachments/259031065/261685261.jpg" data-image-src="attachments/259031065/261685261.jpg" data-unresolved-comment-count="0" data-linked-resource-id="261685261" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="Linear_RAID.jpg" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/jpeg" data-linked-resource-container-id="259031065" data-linked-resource-container-version="99" tabindex="0" alt=""></span></p><h2 id="ROSEstorage-NestedRAID">Nested RAID</h2><p style="text-align: left;">Combination of multiple RAID configurations into other RAID. For example RAID 10 (RAID 1+0) combines disk mirroring (RAID 1) and disk striping (RAID 0)</p><p style="text-align: left;"><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" draggable="false" height="250" src="attachments/259031065/261685262.jpg" data-image-src="attachments/259031065/261685262.jpg" data-unresolved-comment-count="0" data-linked-resource-id="261685262" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="nested_RAID_01_01.jpg" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/jpeg" data-linked-resource-container-id="259031065" data-linked-resource-container-version="99" tabindex="0" alt=""></span></p><h3 style="text-align: left;" id="ROSEstorage-Configurationexample.5">Configuration example</h3><p>In this example I'm using 20 SSD drives and configuring in RAID (RAID 1+0)</p><p>Create a RAID 1 block</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">add raid-device-count=2 raid-type=1 slot=raid10 type=raid</pre>
+</div></div><p>Crete two RAID 0 blocks and add them to set the master-raid the previously created RAID 1 block (name=raid10) </p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">add raid-device-count=10 raid-master=raid10 raid-role=0 raid-type=0 slot=raid0 type=raid
+add raid-device-count=10 raid-master=raid10 raid-role=1 raid-type=0 slot=raid1 type=raid</pre>
+</div></div><p><span style="color:var(--ds-text,#172b4d);" data-darkreader-inline-color="">Add drives to each RAID block</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">set nvme1 raid-master=raid1 raid-role=0
+set nvme2 raid-master=raid1 raid-role=1
+set nvme3 raid-master=raid1 raid-role=2
+set nvme4 raid-master=raid1 raid-role=3
+set nvme5 raid-master=raid1 raid-role=4
+set nvme6 raid-master=raid1 raid-role=5
+set nvme7 raid-master=raid1 raid-role=6
+set nvme8 raid-master=raid1 raid-role=7
+set nvme9 raid-master=raid1 raid-role=8
+set nvme10 raid-master=raid1 raid-role=9
+
+set nvme11 raid-master=raid0 raid-role=0
+set nvme12 raid-master=raid0 raid-role=1
+set nvme13 raid-master=raid0 raid-role=2
+set nvme14 raid-master=raid0 raid-role=3
+set nvme15 raid-master=raid0 raid-role=4
+set nvme16 raid-master=raid0 raid-role=5
+set nvme17 raid-master=raid0 raid-role=6
+set nvme18 raid-master=raid0 raid-role=7
+set nvme19 raid-master=raid0 raid-role=8
+set nvme20 raid-master=raid0 raid-role=9
+
+</pre>
+</div></div><p><span style="color:var(--ds-text,#172b4d);" data-darkreader-inline-color="">After this format, the raid10 block</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">format-drive raid10 file-system=ext4 </pre>
+</div></div><p><br/></p><p><span style="color:var(--ds-text,#172b4d);" data-darkreader-inline-color="">After formating you should see the free space and use the block</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">23 BM        type=raid slot=&quot;raid10&quot; slot-default=&quot;&quot; parent=none uuid=&quot;ec3344f4-1662-49ab-b899-db1aaa217b0f&quot; fs=ext4 model=&quot;RAID1 mirrored&quot; size=9 601 967 652 864 
+             free=9 597 901 369 344 raid-type=1 raid-device-count=2 raid-max-component-size=none raid-master=none raid-state=&quot;clean&quot; nvme-tcp-export=no 
+             iscsi-export=no nfs-sharing=no smb-sharing=no media-sharing=no media-interface=none </pre>
+</div></div><h2 id="ROSEstorage-MovingyourRAIDarraytoadifferentdevice"><span style="color:var(--ds-text,#172b4d);" data-darkreader-inline-color="">Moving your RAID array to a different device</span></h2><p><span style="color:var(--ds-text,#172b4d);" data-darkreader-inline-color="">It is possible to move your RAID array from one device to another. </span></p><p><span style="color:var(--ds-text,#172b4d);" data-darkreader-inline-color="">In this example we are using a RAID 5 array on an RDS2216 consisting of 4 members.</span></p><p>First, on the &quot;new&quot; device, create a RAID and assign the member slots</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false"># New device
+/disk add raid-device-count=4 raid-type=5 type=raid slot=raid5</pre>
+</div></div><p><span style="color:var(--ds-text,#172b4d);" data-darkreader-inline-color="">Then, add the currently empty slots to the newly created RAID</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false"># New device
+/disk set raid-master=raid5 raid-role=0 nvme1
+/disk set raid-master=raid5 raid-role=1 nvme2
+/disk set raid-master=raid5 raid-role=2 nvme3
+/disk set raid-master=raid5 raid-role=3 nvme4</pre>
+</div></div><p><span style="color:var(--ds-text,#172b4d);" data-darkreader-inline-color="">After the RAID has been created and the slots have been assigned to the RAID - on the &quot;old&quot; device, eject the disks you want to switch to the &quot;new&quot; device</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false"># Old device
+/disk eject nvme1
+/disk eject nvme2
+/disk eject nvme3
+/disk eject nvme4</pre>
+</div></div><p><span style="color:var(--ds-text,#172b4d);" data-darkreader-inline-color="">Finally, you can remove the disks from the &quot;old&quot; device and insert them in the assigned slots in the &quot;new&quot; one. RouterOS will automatically detect a RAID superblock and mount the array without any additional input.</span></p><h1 id="ROSEstorage-RSYNC"><span style="color:var(--ds-text,#172b4d);" data-darkreader-inline-color="">RSYNC</span></h1><p><span style="color:var(--ds-text,#172b4d);" data-darkreader-inline-color=""><code>rsync</code> (Remote Sync) is a powerful file synchronization and file transfer program used in Unix-based systems. It allows for efficient transfer and synchronization of files and directories between different systems or within the same system.<br/>If you make changes in a file only changes to files are transferred, reducing data transfer volume. RouterOS RSYNC implementation uses ipsec for data transfer (if password is set). When configured you will see dynamic ipsec entries. </span></p><p><span style="color:var(--ds-text,#172b4d);" data-darkreader-inline-color="">Rsync settings can be found in file/sync menu</span></p><div role="region" aria-label="Warning" class="confluence-information-macro  confluence-information-macro-warning" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-error confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Port TCP/8291 is used for the control connection (if not open in the status (<em>file sync print</em>) you will be stuck at making control connection to <em>192.168.88.2</em>)</p><p>Port UDP/500 and protocol 50 (ipsec-esp) is used to create a secure connection and start the transfer (if not open in the status (<em>file sync print</em>) you will be stuck at initializing transfer)</p></div></div><p><span style="color:var(--ds-text,#172b4d);" data-darkreader-inline-color="">IPSec dynamic entry example:</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">#     PEER                     TUNNEL  SRC-ADDRESS       DST-ADDRESS       PROTOCOL  ACTION   LEVEL    PH2-COUNT
+;;; file-sync-10.155.145.11
+1  D  file-sync-10.155.145.11  no      10.155.145.17/32  10.155.145.11/32  tcp       encrypt  require          1
+
+/ip/ipsec/peer&gt; print
+ 0  D  name=&quot;file-sync-10.155.145.11&quot; address=10.155.145.11/32 local-address=10.155.145.17 profile=default exchange-mode=main send-initial-contact=yes
+/ip/ipsec/identity&gt; print
+ 0 D  ;;; file-sync-10.155.145.11
+      peer=file-sync-10.155.145.11 auth-method=pre-shared-key secret=&quot;secret&quot; generate-policy=no</pre>
+</div></div><h3 id="ROSEstorage-Properties.8"><span style="color:var(--ds-text,#172b4d);" data-darkreader-inline-color="">Properties</span></h3><div class="table-wrap"><table class="wrapped confluenceTable"><colgroup><col/><col/></colgroup><tbody><tr><th scope="col" class="confluenceTh">Property</th><th scope="col" class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>local-path</strong></td><td class="confluenceTd">File/folder path. Used for mode <em>Upload </em>to set the path of the file/folder to upload to the device</td></tr><tr><td class="confluenceTd"><strong>mode</strong></td><td class="confluenceTd">Sets if you want to download/upload the file (direction of the sync)</td></tr><tr><td class="confluenceTd"><p><strong>password</strong></p></td><td class="confluenceTd">Target device password</td></tr><tr><td class="confluenceTd"><p><strong>remote-address</strong></p></td><td class="confluenceTd">Target devices IP</td></tr><tr><td class="confluenceTd"><p><strong>remote-path</strong></p></td><td class="confluenceTd">File/folder path. Used with mode <em>download</em> to set the path of the target device to be downloaded</td></tr><tr><td class="confluenceTd"><p><strong>user</strong></p></td><td class="confluenceTd">Target device password</td></tr></tbody></table></div><h3 id="ROSEstorage-Configurationexample.6">Configuration example</h3><p>Basic configuration is really easy, on the host device you need to add the file you want to sync to another device, the ip, user/password and the mode. </p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/file sync
+add local-path=/ipv6route.txt.rsc mode=upload remote-address=192.168.88.2 remote-path=RAID/
+
+</pre>
+</div></div><p>If configured correctly, you will see on the host device:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">0 192.168.88.2  upload  /ipv6route.txt.rsc  RAID/        in sync</pre>
+</div></div><p>And on the client device:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">#   REMOTE-ADDRESS   MODE      LOCAL-PATH  REMOTE-PATH         STATUS 
+0 D 192.168.88.1 download  RAID/       /ipv6route.txt.rsc  in sync</pre>
+</div></div><h1 id="ROSEstorage-Self-EncryptionDrives">Self-Encryption Drives</h1><p><span style="color:var(--ds-text,#172b4d);" data-darkreader-inline-color="">For using SED - drives have to be<span> </span></span><a class="external-link" href="https://en.wikipedia.org/wiki/Opal_Storage_Specification" rel="nofollow" style="text-align: left;">Opal</a><span style="color:var(--ds-text,#172b4d);" data-darkreader-inline-color="">-compliant. Please consult drive manufacturers documentation to find out if particular drive supports this feature before buying drives.</span><br style="text-align: left;"/><span style="color:var(--ds-text,#172b4d);" data-darkreader-inline-color="">RouterOS adds<span> </span></span><strong style="text-align: left;">o (supported inactive)<span> </span></strong><span style="color:var(--ds-text,#172b4d);" data-darkreader-inline-color="">or<span> </span></span><strong style="text-align: left;">O (supported active)</strong><span style="color:var(--ds-text,#172b4d);" data-darkreader-inline-color=""><span> </span>flags for supported drives:</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/disk print
+Flags: B - BLOCK-DEVICE; M, F - FORMATTING; o - TCG-OPAL-SELF-ENCRYPTION-SUPPORTED
+Columns: SLOT, MODEL, SERIAL, INTERFACE, SIZE, FREE, FS, RAID-MASTER
+#     SLOT   MODEL                  SERIAL           INTERFACE                   SIZE             FREE  FS    RAID
+0 BMo sata1  Samsung SSD 860 2.5in  S3Z9NX0N414510L  SATA 6.0 Gbps  1 000 204 886 016  983 351 111 680  ext4  none
+1 BMo sata2  Samsung SSD 860        S5GENG0N307602J  SATA 6.0 Gbps  1 000 204 886 016  983 351 128 064  ext4  none
+2 BMO sata3  Samsung SSD 860        S5GENG0N307604H  SATA 6.0 Gbps  1 000 204 886 016  983 351 128 064  ext4  none
+3 BMO sata4  Samsung SSD 860 2.5in  S4CSNX0N838150B  SATA 6.0 Gbps  1 000 204 886 016  983 351 128 064  ext4  none</pre>
+</div></div><p class="auto-cursor-target" style="text-align: left;">To set TCG-OPAL-SELF-ENCRYPTION:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/disk
+disk set sata1 self-encryption-password=securepassword</pre>
+</div></div><p>to unset:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/disk
+disk unset sata1 self-encryption-password</pre>
+</div></div><p>or</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/disk
+disk set sata1 !self-encryption-password
+</pre>
+</div></div>
+                    </div>
+
+                                                            <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/259031065/261685256.jpg">RAID_0.jpg</a> (image/jpeg)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/259031065/261685257.jpg">RAID_1.jpg</a> (image/jpeg)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/259031065/261685258.jpg">RAID_4.jpg</a> (image/jpeg)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/259031065/261685259.jpg">RAID_5.jpg</a> (image/jpeg)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/259031065/261685260.jpg">RAID_6.jpg</a> (image/jpeg)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/259031065/261685261.jpg">Linear_RAID.jpg</a> (image/jpeg)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/259031065/261685262.jpg">nested_RAID_01_01.jpg</a> (image/jpeg)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:54</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

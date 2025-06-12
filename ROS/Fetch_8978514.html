@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : Fetch</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="System-Information-and-Utilities_119144657.html">System Information and Utilities</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : Fetch
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Artūrs C.</span>, last updated by <span class='editor'> Matīss O.</span> on Feb 25, 2025
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742032716 {padding: 0px;}
+div.rbtoc1747742032716 ul {margin-left: 0px;}
+div.rbtoc1747742032716 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742032716'>
+<ul class='toc-indentation'>
+<li><a href='#Fetch-Summary'>Summary</a></li>
+<li><a href='#Fetch-Properties'>Properties</a></li>
+<li><a href='#Fetch-ConfigurationExamples'>Configuration Examples</a>
+<ul class='toc-indentation'>
+<li><a href='#Fetch-Sendinginformationtoaremotehost'>Sending information to a remote host</a></li>
+<li><a href='#Fetch-Returnvaluetoavariable'>Return value to a variable</a></li>
+</ul>
+</li>
+</ul>
+</div></p><h1 id="Fetch-Summary">Summary</h1><p>Fetch is one of the console tools in MikroTik RouterOS. It is used to copy files to/from a network device via HTTP, HTTPS, FTP or SFTP. It can also be used to send POST/GET requests and send any kind of data to a remote server. In HTTPS mode by default, no certificate checks are made, setting <em>check-certificate</em> to <em>yes</em> enables trust chain validation from the local certificate store (can be used only in HTTPS mode).</p><h1 class="auto-cursor-target" id="Fetch-Properties"><span>Properties</span></h1><div class="table-wrap"><table class="wrapped relative-table confluenceTable" style="margin-left: 16.7656px;width: 99.6613%;"><colgroup><col style="width: 27.5514%;"/><col style="width: 72.4499%;"/></colgroup><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>address</strong> (<em>string</em>; Default: )</td><td class="confluenceTd">IP address of the device to copy file from. Also at the end of the address you can specify &quot;@vrf_name&quot; in order to run fetch on particular VRF. You can skip specifying address and specify only VRF on this parameter, if you use URL parameter.</td></tr><tr><td class="confluenceTd"><strong>as-value</strong> (<em>set | not-set</em>; Default: <strong>not-set</strong>)</td><td class="confluenceTd">Store the output in a variable, should be used with the output property.</td></tr><tr><td class="confluenceTd"><strong>ascii</strong> (<em>yes | no</em>; Default: <strong>no</strong>)</td><td class="confluenceTd">Can be used with FTP and TFTP</td></tr><tr><td class="confluenceTd"><strong>certificate </strong>(<em>string</em>; Default: )</td><td class="confluenceTd"><p>Certificate that should be used for host verification. Can be used only in HTTPS mode.</p></td></tr><tr><td class="confluenceTd"><strong>check-certificate</strong> (<em>yes | yes-without-crl | no</em>; Default: <strong>no</strong>)</td><td class="confluenceTd"><p>Enables trust chain validation from local certificate store. <em>yes-without-crl, validates a certificate, not performing CRL check (certificate revocation list).  </em>Can be used only in HTTPS mode.</p></td></tr><tr><td class="confluenceTd"><strong>dst-path</strong> (<em>string</em>; Default: )</td><td class="confluenceTd">Destination path. Can be used to download file directly into an external disk, for example.</td></tr><tr><td class="confluenceTd"><strong>duration</strong> (<em>time;</em> Default: )</td><td class="confluenceTd"><p>Time how long fetch should run.</p></td></tr><tr><td class="confluenceTd"><strong>host</strong> (<em>string</em>; Default: )</td><td class="confluenceTd"><p>A domain name or virtual domain name (if used on a website, from which you want to copy information). For example,</p><pre>address=wiki.mikrotik.com host=forum.mikrotik.com</pre><br/>In this example the resolved ip address is the same (66.228.113.27), but hosts are different.</td></tr><tr><td class="confluenceTd"><strong>http-auth-scheme</strong><span> </span>(<em>basic|digest</em>; Default: <strong>basic</strong>)</td><td class="confluenceTd">HTTP authentication scheme</td></tr><tr><td class="confluenceTd"><p><strong>http-method</strong> (<em>delete|get|head|post|put|patch</em>; Default: <strong>get</strong>)</p></td><td class="confluenceTd">HTTP method to use</td></tr><tr><td class="confluenceTd"><strong>http-data</strong> (<em>string</em>; Default: )</td><td class="confluenceTd">The data, that is going to be sent, when using PUT or POST methods. Data limit is 64Kb.</td></tr><tr><td class="confluenceTd"><strong>http-header-field</strong> (<em>string</em>; Default: <strong>*empty*</strong>)</td><td class="confluenceTd">List of all header fields and their values, in the form of <code>http-header-field=&quot;h1:fff,h2:yyy&quot;</code> or <code>http-header-field=&quot;h:fff\\,yyy&quot;</code> (within a single header multiple values need to be &quot;escaped&quot; using two backlashes).</td></tr><tr><td class="confluenceTd"><strong>http-content-encoding </strong>(<em>deflate|gzip</em>; Default: *<strong>empty*</strong>)</td><td class="confluenceTd">Encodes the payload using <strong>gzip</strong> or <strong>deflate</strong> compression and adds a corresponding Content-Encoding header. Usable for HTTP POST and PUT only.</td></tr><tr><td class="confluenceTd"><strong>http-max-redirect-count</strong><span> </span>(<em>integer</em>; Default: 0)</td><td class="confluenceTd">Allows to follow redirects the specified number of times.</td></tr><tr><td class="confluenceTd"><strong>idle-timeout</strong><span> </span>(<em>time;</em><span> </span>Default: 10s)</td><td class="confluenceTd">Idle timeout since last read/write action.</td></tr><tr><td class="confluenceTd"><strong>keep-result</strong> (<em>yes | no</em>; Default: <strong>yes</strong>)</td><td class="confluenceTd">If yes, creates an input file.</td></tr><tr><td class="confluenceTd"><strong>mode</strong> (<em>ftp|http|https|sftp|tftp</em>; Default: <strong>http</strong>)</td><td class="confluenceTd">Choose the protocol of connection - http, https , ftp, sftp or tftp. Mode option is deprecated. To specify a protocol that you wish to use, we advise using &quot;url&quot; parameter instead (for example, like this &quot;url=sftp://your_IP_address&quot;).</td></tr><tr><td class="confluenceTd"><strong>output</strong> (<em>none|file|user|<span style="color:var(--ds-text,#172b4d);">user-with-headers</span></em>; Default: <strong>file</strong>)</td><td class="confluenceTd">Sets where to store the downloaded data.<ul><li><code>none</code> - do not store downloaded data</li><li><code>file</code> - store downloaded data in a file</li><li><code>user</code> - store downloaded data in the data variable (variable limit is 64Kb)</li><li>user-with-headers<span> </span>- store downloaded data and headers in the data variable (variable limit is 64Kb (20Kb for downloaded data, 44Kb for headers))</li></ul></td></tr><tr><td class="confluenceTd"><strong>password</strong> (<em>string</em>; Default: <strong>anonymous</strong>)</td><td class="confluenceTd">Password, which is needed for authentication to the remote device.</td></tr><tr><td class="confluenceTd"><strong>port</strong> (<em>integer</em>; Default: )</td><td class="confluenceTd">Connection port.</td></tr><tr><td class="confluenceTd"><strong>src-address </strong>(ip address; Default: )</td><td class="confluenceTd">Source address that is used to establish connection. Can be used only HTTP/S and SFTP modes.</td></tr><tr><td class="confluenceTd"><strong>src-path</strong> (<em>string</em>; Default: )</td><td class="confluenceTd">Title of the remote file you need to copy.</td></tr><tr><td class="confluenceTd"><strong>upload</strong> (<em>yes | no</em>; Default: <strong>no</strong>)</td><td class="confluenceTd">Only (S)FTP modes support upload. If enabled then fetch will be used to upload files to a remote server. Requires <em>src-path</em> and <em>dst-path</em> parameters to be set.</td></tr><tr><td class="confluenceTd"><strong>url</strong> (<em>string</em>; Default: )</td><td class="confluenceTd">URL pointing to file. Can be used instead of <strong>address</strong> and <strong>src-path</strong> parameters.</td></tr><tr><td class="confluenceTd"><strong>user</strong> (<em>string</em>; Default: <strong>anonymous</strong>)</td><td class="confluenceTd">Username, which is needed for authentication to the remote device.</td></tr></tbody></table></div><p><br/></p><h1 id="Fetch-ConfigurationExamples">Configuration Examples</h1><p>The following example shows how to copy the file with filename &quot;conf.rsc&quot; from a device with ip address 192.168.88.2 by FTP protocol and save it as file with filename &quot;123.rsc&quot;. User and password are needed to login into the device.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] /tool&gt; fetch address=192.168.88.2 src-path=conf.rsc \
+user=admin mode=ftp password=123 dst-path=123.rsc port=21 \
+host=&quot;&quot; keep-result=yes</pre>
+</div></div><p class="auto-cursor-target">Example to upload file to another router:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] /tool&gt; fetch address=192.168.88.2 src-path=conf.rsc \
+user=admin mode=ftp password=123 dst-path=123.rsc upload=yes</pre>
+</div></div><p class="auto-cursor-target">Another file download example that demonstrates the usage of url property.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] /&gt; /tool fetch url=&quot;https://www.mikrotik.com/img/netaddresses2.pdf&quot; mode=http 
+  status: finished
+
+[admin@test_host] /&gt; /file print 
+ # NAME                     TYPE                  SIZE                 CREATION-TIME       
+ ...
+ 5 netaddresses2.pdf        .pdf file             11547                jun/01/2010 11:59:51</pre>
+</div></div><h2 id="Fetch-Sendinginformationtoaremotehost"><span class="mw-headline">Sending information to a remote host</span></h2><p><span class="mw-headline">It is possible to use an HTTP POST request to send information to a remote server, that is prepared to accept it. In the following example, we send geographic coordinates to a PHP page: </span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/tool/fetch http-method=post http-header-field=&quot;Content-Type:application/json&quot; http-data=&quot;{\&quot;lat\&quot;:\&quot;56.12\&quot;,\&quot;lon\&quot;:\&quot;25.12\&quot;}&quot; url=&quot;https://testserver.lv/index.php&quot;    </pre>
+</div></div><p class="auto-cursor-target">In this example, the data is uploaded as a file. Important note, since variable data comes from a file, a file can only be in size up to 4KB. This is a limitation of RouterOS variables.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/export file=export.rsc
+
+:global data [/file get [/file find name=export.rsc] contents];
+:global $url &quot;https://prod-51.westeurope.logic.azure.com:443/workflows/blabla/triggers/manual/paths/invoke....&quot;;
+
+/tool fetch mode=https http-method=put http-data=$data url=$url</pre>
+</div></div><h2 id="Fetch-Returnvaluetoavariable"><span class="mw-headline">Return value to a variable</span></h2><p><span class="mw-headline">It is possible to save the result of the fetch command to a variable. For example, it is possible to trigger a certain action based on the result that an HTTP page returns. You can find a very simple example below that disables <strong>ether2</strong> whenever a PHP page returns &quot;0&quot;: </span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">{
+    :local result [/tool fetch url=https://10.0.0.1/disable_ether2.php as-value output=user];
+    :if ($result-&gt;&quot;status&quot; = &quot;finished&quot;) do={
+        :if ($result-&gt;&quot;data&quot; = &quot;0&quot;) do={
+            /interface ethernet set ether2 disabled=yes;
+        } else={
+            /interface ethernet set ether2 disabled=no;
+        }
+    }
+}</pre>
+</div></div>
+                    </div>
+
+                                        
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : USB Features</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Hardware_13500445.html">Hardware</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : USB Features
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Unknown User (emils)</span>, last updated by <span class='editor'> Guntis G.</span> on Nov 28, 2023
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><span class="mw-headline"><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742045909 {padding: 0px;}
+div.rbtoc1747742045909 ul {margin-left: 0px;}
+div.rbtoc1747742045909 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742045909'>
+<ul class='toc-indentation'>
+<li><a href='#USBFeatures-Summary'>Summary</a></li>
+<li><a href='#USBFeatures-USBPowerReset'>USB Power Reset</a></li>
+<li><a href='#USBFeatures-USBPortType'>USB Port Type</a></li>
+<li><a href='#USBFeatures-USBPortMode'>USB Port Mode</a></li>
+<li><a href='#USBFeatures-RouterBoardUSBPortLimitations'>RouterBoard USB Port Limitations</a></li>
+</ul>
+</div></span></p><h1 id="USBFeatures-Summary"><span class="mw-headline">Summary</span></h1><p><strong>Sub-menu:</strong> <code>/system routerboard usb</code><br/><strong>Package:</strong> s<code>ystem (v6, v7)</code></p><p>This article describes RouterBoard device supported USB features. </p><h1 id="USBFeatures-USBPowerReset"><span class="mw-headline">USB Power Reset<br/></span></h1><p>USB power reset turns off USB port power for a specified time. It is useful when 3G/LTE modem needs to be restarted but there is no physical access to it.</p><p>Available properties:</p><ul><li>duration (<em>time</em>; Default: &quot;3s&quot;) - Time interval of how long power is turned off.</li></ul><p>For example, turn off USB port power for 10 seconds:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/system routerboard usb power-reset duration=10s </pre>
+</div></div><p>RouterBoards with multiple USB buses also require a bus specified in order to do a USB power reset.<br/>Available properties:</p><ul><li>duration (<em>time</em>; Default: &quot;3s&quot;) - Time interval of how long power is turned off.</li><li>bus (<em>integer</em>; Default: 1) - USB bus where power reset is applied.</li></ul><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p><span><strong>RB953GS</strong>: The miniPCIe slot closer to Ethernet ports on the RB953GS board is the one which is shared with USB port and has configurable <a class="external-link" href="https://wiki.mikrotik.com/wiki/Manual:USB_Features#USB_port_type" rel="nofollow"> USB port type</a>, its USB bus number is 1. Depending on <a class="external-link" href="https://wiki.mikrotik.com/wiki/Manual:USB_Features#USB_port_type" rel="nofollow"> USB port type</a> the power reset is done on USB port or miniPCIe slot. The other miniPCIe slot closer to SFP slots has independent bus - 2.</span></p></div></div><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p><span><strong>RB922UAG</strong>: The USB port has an independent bus - 1. The miniPCIe slot has an independent bus - 2.</span></p></div></div><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p><span><strong>CCR1072-1G-8S+</strong>: The micro USB port has independent bus - 0. The USB Type-A port has independent bus - 1.</span></p></div></div><h1 id="USBFeatures-USBPortType"><span class="mw-headline">USB Port Type<br/></span></h1><p><span class="mw-headline">RB912UAG and RB953GS have partially shared USB port and miniPCIe slot. Due to hardware restrictions it is possible to use only one at the time for 3G/LTE modem. </span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; /system routerboard usb set type=
+USB-type-A  mini-PCIe</pre>
+</div></div><p>Available properties:</p><ul><li>type (<em>USB-type-A | mini-PCIe</em>; Default: &quot;USB-type-A&quot;) - Type of enabled port.</li></ul><p><br/></p><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p><span><strong> RB953GS: </strong>The miniPCIe slot closer to Ethernet ports on the RB953GS board is the one which is shared with USB port and has configurable <a class="external-link" href="https://wiki.mikrotik.com/wiki/Manual:USB_Features#USB_port_type" rel="nofollow"> USB port type</a>, its USB bus number is 1. Depending on <a class="external-link" href="https://wiki.mikrotik.com/wiki/Manual:USB_Features#USB_port_type" rel="nofollow"> USB port type</a> the power reset is done on USB port or miniPCIe slot. The other miniPCIe slot closer to SFP slots has independent bus - 2.</span></p></div></div><h1 id="USBFeatures-USBPortMode"><span class="mw-headline">USB Port Mode<br/></span></h1><p>RB2011 series, CRS1xx series, and mAP have micro USB port which operates in host mode when USB device is attached through USB OTG cable. Some vendor cables require forced host mode to recognize connected device.</p><p>Available properties:</p><ul><li>usb-mode (<em>automatic | force-host</em>; Default: &quot;automatic&quot;) - Defines USB port mode.</li></ul><p><br/></p><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><p class="title conf-macro-render">Warning</p><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p><span>On RB2011 and CRS1xx series boards USB devices may not work first time they are plugged in. In such cases power cycle (not reboot) is required.<br/></span></p></div></div><h1 id="USBFeatures-RouterBoardUSBPortLimitations"><span class="mw-headline">RouterBoard USB Port Limitations<br/></span></h1><p>Some RouterBoard devices have notable USB port limitations.</p><p>* RB mAP 2n - does not support USB Power Reset<br/>* RB750UP - does not support USB Power Reset<br/>* RB751U-2HnD - does not support USB Power Reset<br/>* RB751G-2HnD - does not support USB Power Reset<br/>* RB411U - does not support USB Power Reset<br/>* RB411UAHR - does not support USB Power Reset and USB Powering (<a class="external-link" href="https://mikrotik.com/product/5VUSB" rel="nofollow">USB power injector</a> is required)<br/>* RB433UAH - does not support USB Power Reset<br/>* RB435G - does not support USB Power Reset<br/>* RB493G - does not support USB Power Reset and USB Powering (<a class="external-link" href="https://mikrotik.com/product/5VUSB" rel="nofollow">USB power injector</a> is required)</p><p><br/></p><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p><span>RouterOS does not support memory slot from USB modems.</span></p></div></div>
+                    </div>
+
+                                        
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:54</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : MACVLAN</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Bridging-and-Switching_328068.html">Bridging and Switching</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : MACVLAN
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Edgars P.</span>, last updated on Jun 17, 2024
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742024186 {padding: 0px;}
+div.rbtoc1747742024186 ul {margin-left: 0px;}
+div.rbtoc1747742024186 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742024186'>
+<ul class='toc-indentation'>
+<li><a href='#MACVLAN-Overview'>Overview</a></li>
+<li><a href='#MACVLAN-BasicConfigurationExample'>Basic Configuration Example</a></li>
+<li><a href='#MACVLAN-PropertyReference'>Property Reference</a></li>
+</ul>
+</div></p><h1 id="MACVLAN-Overview">Overview</h1><p>The MACVLAN provides a means to create multiple virtual network interfaces, each with its own unique Media Access Control (MAC) address, attached to a physical network interface. This technology is utilized to address specific network requirements, such as obtaining multiple IP addresses or establishing distinct PPPoE client connections from a single physical Ethernet interface while using different MAC addresses. Unlike traditional <a href="https://help.mikrotik.com/docs/display/ROS/VLAN" rel="nofollow">VLAN</a> (Virtual LAN) interfaces, which rely on Ethernet frames tagged with VLAN identifiers, MACVLAN operates at the MAC address level, making it a versatile and efficient solution for specific networking scenarios.</p><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>RouterOS MACVLAN interfaces are not supported by <a href="https://help.mikrotik.com/docs/display/ROS/Container" rel="nofollow">Container</a>, as it exclusively utilizes <a href="https://help.mikrotik.com/docs/display/ROS/Container#Container-Createnetwork" rel="nofollow">VETH</a> (Virtual Ethernet) interfaces for its networking.</p></div></div><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p><span style="color:var(--ds-text,#172b4d);">A MACVLAN interface can only receive broadcast packets, packets addressed to its own MAC address, and a limited number of multicast addresses. If the physical interface has a VLAN configured, the MACVLAN interface cannot receive packets from that VLAN. </span></p><p><span style="color:var(--ds-text,#172b4d);">For bridging and more complex Layer2 solutions involving VLANs, a dedicated switch should be used instead.</span></p></div></div><p><br/></p><h1 id="MACVLAN-BasicConfigurationExample">Basic Configuration Example</h1><p>Picture a scenario where the ether1 interface connects to your ISP, and your router needs to lease two IP addresses, each with a distinct MAC address. Traditionally, this would require the use of two physical Ethernet interfaces and an additional switch. However, a more efficient solution is to create a virtual MACVLAN interface. </p><p>To create a MACVLAN interface, select the needed Ethernet interface. A MAC address will be automatically assigned if not manually specified:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface macvlan
+add interface=ether1 name=macvlan1
+
+/interface macvlan print
+Flags: R - RUNNING
+Columns: NAME, MTU, INTERFACE, MAC-ADDRESS, MODE
+#   NAME       MTU  INTERFACE  MAC-ADDRESS        MODE  
+0 R macvlan1  1500  ether1     76:81:BF:68:69:83  bridge</pre>
+</div></div><p>Now, a DHCP client can be created on ether1 and macvlan1 interfaces:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip dhcp-client
+add interface=ether1
+add interface=macvlan1</pre>
+</div></div><h1 id="MACVLAN-PropertyReference"><span class="mw-headline">Property Reference</span></h1><p><strong>Sub-menu:</strong> <code>/interface/macvlan</code></p><p>Configuration settings for the MACVLAN interface.</p><div class="table-wrap"><table class="wrapped confluenceTable"><colgroup class=""><col class=""/><col class=""/></colgroup><tbody class=""><tr class=""><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr class=""><td class="confluenceTd"><strong>arp</strong><span> </span>(<em>disabled | enabled | local-proxy-arp | proxy-arp | reply-only</em>; Default:<span> </span><strong>enabled</strong>)</td><td class="confluenceTd">Address Resolution Protocol setting<ul><li><span style="color:var(--ds-background-accent-green-bolder,#1f845a);"><code>disabled</code> </span>- the interface will not use ARP</li><li><span style="color:var(--ds-background-accent-green-bolder,#1f845a);"><code>enabled</code> </span>- the interface will use ARP</li><li><span style="color:var(--ds-background-accent-green-bolder,#1f845a);"><code>local-proxy-arp</code></span><span> </span>-<span> </span><span style="color:var(--ds-text-accent-lime-bolder,#37471f);"><span> </span>the router performs proxy ARP on the interface and sends replies to the same interface</span></li><li><span style="color:var(--ds-background-accent-green-bolder,#1f845a);"><code>proxy-arp</code></span><span> </span>-<span> </span><span style="color:var(--ds-text-accent-lime-bolder,#37471f);">the router performs proxy ARP on the interface and sends replies to other interfaces</span></li><li><span style="color:var(--ds-background-accent-green-bolder,#1f845a);"><code>reply-only</code></span><span> </span>- the interface will only reply to requests originating from matching IP address/MAC address combinations, which are entered as static entries in the<span> </span>IP/ARP<span> </span>table. No dynamic entries will be automatically stored in the<span> </span>IP/ARP<span> </span>table. Therefore, for communications to be successful, a valid static entry must already exist.</li></ul></td></tr><tr class=""><td class="confluenceTd"><strong>arp-timeout</strong><span> </span>(<em>auto | integer</em>; Default:<span> </span><strong>auto</strong>)</td><td class="confluenceTd">Sets for how long the ARP record is kept in the ARP table after no packets are received from IP. Value<span> </span><span style="color:var(--ds-background-accent-green-bolder,#1f845a);"><code>auto</code> </span>equals to the value of<span> </span><span style="color:var(--ds-background-accent-green-bolder,#1f845a);"><code>arp-timeout</code></span><span> </span>in<span> <code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">/</span></code></span><code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">ip/settings/</span></code>, default is 30s.</td></tr><tr><td style="text-align: left;vertical-align: top;" class="confluenceTd"><strong>comment</strong><span> </span>(<em>string</em>; Default: )</td><td style="text-align: left;vertical-align: top;" class="confluenceTd">Short description of the interface.</td></tr><tr class=""><td class="confluenceTd"><strong>disabled</strong><span> </span>(<em>yes | no</em>; Default:<span> </span><strong>no</strong>)</td><td class="confluenceTd">Changes whether the interface is disabled.</td></tr><tr class=""><td class="confluenceTd"><strong>interface</strong><span> </span>(<em>name</em>; Default:<span> </span>)</td><td class="confluenceTd">Name of the interface on top of which MACVLAN will work. MACVLAN interfaces can be created on Ethernet or VLAN interfaces, adding VLAN on MACVLAN is not supported.</td></tr><tr class=""><td style="text-align: left;vertical-align: top;" class="confluenceTd"><strong>loop-protect</strong><span> </span>(<em>on | off | default</em>; Default:<span> </span><strong>default</strong>)</td><td style="text-align: left;vertical-align: top;" class="confluenceTd">Enables or disables loop protect on the interface, the<span> </span><strong>default</strong><span> </span>works as turned off.</td></tr><tr><td style="text-align: left;vertical-align: top;" class="confluenceTd"><strong>loop-protect-disable-time</strong><span> </span>(<em>time interval | 0</em>; Default:<span> </span><strong>5m</strong>)</td><td style="text-align: left;vertical-align: top;" class="confluenceTd">Sets how long the selected interface is disabled when a loop is detected.<span> </span><strong>0</strong><span> </span>- forever.</td></tr><tr><td style="text-align: left;vertical-align: top;" class="confluenceTd"><strong>loop-protect-send-interval</strong><span> </span>(<em>time interval</em>; Default:<span> </span><strong>5s</strong>)</td><td style="text-align: left;vertical-align: top;" class="confluenceTd">Sets how often loop protect packets are sent on the selected interface.</td></tr><tr><td style="text-align: left;vertical-align: top;" class="confluenceTd"><strong>mac-address</strong><span> </span>(<em>MAC</em>; Default: )</td><td style="text-align: left;vertical-align: top;" class="confluenceTd"><span style="color:var(--ds-text,#172b4d);">Static MAC address of the interface. A</span> randomly generated MAC address will be assigned when not specified.</td></tr><tr><td style="text-align: left;vertical-align: top;" class="confluenceTd"><strong>mode </strong>(<em>private | bridge</em>; Default: <strong>bridge</strong>)</td><td style="text-align: left;vertical-align: top;" class="confluenceTd"><p>Sets MACVLAN interface mode:</p><ul><li><span style="color:var(--ds-background-accent-green-bolder,#1f845a);"><code>private</code> </span>- does not allow communication between MACVLAN instances on the same parent <strong>interface</strong>.</li><li><span style="color:var(--ds-background-accent-green-bolder,#1f845a);"><code>bridge</code> </span>- allows communication between MACVLAN instances on the same parent <strong>interface</strong>.</li></ul></td></tr><tr><td style="text-align: left;vertical-align: top;" class="confluenceTd"><strong>mtu</strong><span> </span>(<em>integer</em>; Default:<span> </span><strong>1500</strong>)</td><td style="text-align: left;vertical-align: top;" class="confluenceTd"><p>Sets Layer 3 Maximum Transmission Unit. For the MACVLAN interface, it cannot be higher than the parent <strong>interface</strong>.</p></td></tr><tr><td class="confluenceTd"><strong>name</strong><span> </span>(<em>string</em>; Default:<span> </span>)</td><td class="confluenceTd">Interface name.</td></tr></tbody></table></div><p><br/></p>
+                    </div>
+
+                                        
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

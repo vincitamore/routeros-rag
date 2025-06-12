@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : PPTP</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Virtual-Private-Networks_119144597.html">Virtual Private Networks</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : PPTP
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Artūrs C.</span>, last updated by <span class='editor'> Oskars K.</span> on Dec 19, 2024
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <h1 id="PPTP-Overview">Overview</h1><p>PPTP <u>has many known security issues and we do not recommend using it</u>. However, this protocol is integrated into common operating systems, and it is easy to set it up. PPTP can be useful in networks where security is not of concern.</p><p>IPv6 is not supported on this protocol.</p><p>PPTP traffic uses TCP port 1723 and IP protocol GRE (Generic Routing Encapsulation, IP protocol ID 47), as assigned by the Internet Assigned Numbers Authority (IANA). PPTP can be used with most firewalls and routers by enabling traffic destined for TCP port 1723 and protocol 47 traffic to be routed through the firewall or router.  PPTP includes PPP authentication and accounting for each PPTP connection. Full authentication and accounting of each connection may be done through a RADIUS client or locally.</p><h1 id="PPTP-PPTPClient">PPTP Client</h1><h2 id="PPTP-Properties">Properties</h2><div class="table-wrap"><table class="wrapped confluenceTable"><colgroup><col/><col/></colgroup><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>add-default-route</strong> (<em>yes | no</em>; Default: <strong>no</strong>)</td><td class="confluenceTd">Whether to add PPTP remote address as a default route.</td></tr><tr><td class="confluenceTd"><strong>allow</strong> (<em>mschap2 | mschap1 | chap | pap</em>; Default: <strong>mschap2, mschap1, chap, pap</strong>)</td><td class="confluenceTd">Allowed authentication methods.</td></tr><tr><td class="confluenceTd"><strong>connect-to</strong> (<em>IP</em>; Default: )</td><td class="confluenceTd">Remote address of PPTP server</td></tr><tr><td class="confluenceTd"><strong>default-route-distance</strong> (<em>byte [0..255]</em>; Default: <strong>1</strong>)</td><td class="confluenceTd">sets distance value applied to auto created default route, if add-default-route is also selected</td></tr><tr><td class="confluenceTd"><strong>dial-on-demand</strong> (<em>yes | no</em>; Default: <strong>no</strong>)</td><td class="confluenceTd">connects to PPTP server only when outbound traffic is generated. If selected, then route with gateway address from 10.112.112.0/24 network will be added while connection is not established.</td></tr><tr><td class="confluenceTd"><strong>disabled</strong> (<em>yes | no</em>; Default: <strong>yes</strong>)</td><td class="confluenceTd">Whether interface is disabled or not. By default it is disabled</td></tr><tr><td class="confluenceTd"><strong>keepalive-timeout</strong> (<em>integer</em>; Default: <strong>60</strong>)</td><td class="confluenceTd">Sets keepalive timeout in seconds.</td></tr><tr><td class="confluenceTd"><strong>max-mru</strong> (<em>integer</em>; Default: <strong>1450</strong>)</td><td class="confluenceTd">Maximum Receive Unit. Max packet size that PPTP interface will be able to receive without packet fragmentation.</td></tr><tr><td class="confluenceTd"><strong>max-mtu</strong> (<em>integer</em>; Default: <strong>1450</strong>)</td><td class="confluenceTd">Maximum Transmission Unit. Max packet size that PPTP interface will be able to send without packet fragmentation.</td></tr><tr><td class="confluenceTd"><strong>mrru</strong> (<em>disabled | integer</em>; Default: <strong>disabled</strong>)</td><td class="confluenceTd">Maximum packet size that can be received on the link. If a packet is bigger than tunnel MTU, it will be split into multiple packets, allowing full size IP or Ethernet packets to be sent over the tunnel.</td></tr><tr><td class="confluenceTd"><strong>name</strong> (<em>string</em>; Default: )</td><td class="confluenceTd">Descriptive name of the interface.</td></tr><tr><td class="confluenceTd"><strong>password</strong> (<em>string</em>; Default: <strong>&quot;&quot;</strong>)</td><td class="confluenceTd">Password used for authentication.</td></tr><tr><td class="confluenceTd"><strong>profile</strong> (<em>name</em>; Default: <strong>default-encryption</strong>)</td><td class="confluenceTd"><br/></td></tr><tr><td class="confluenceTd"><strong>user</strong> (<em>string</em>; Default: )</td><td class="confluenceTd">User name used for authentication.</td></tr></tbody></table></div><h1 id="PPTP-PPTPServer">PPTP Server</h1><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface pptp-server</pre>
+</div></div><p>An interface is created for each tunnel established to the given server. There are two types of interfaces in the PPTP server's configuration:</p><ul><li>Static interfaces are added administratively if there is a need to reference the particular interface name (in firewall rules or elsewhere) created for the particular user;</li><li>Dynamic interfaces are added to this list automatically whenever a user is connected and its username does not match any existing static entry (or in case the entry is active already, as there can not be two separate tunnel interfaces referenced by the same name);</li></ul><p>Dynamic interfaces appear when a user connects and disappear once the user disconnects, so it is impossible to reference the tunnel created for that use in router configuration (for example, in firewall), so if you need persistent rules for that user, create a static entry for him/her. Otherwise, it is safe to use a dynamic configuration.</p><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body">In both cases PPP users must be configured properly - static entries do not replace PPP configuration.</div></div><h2 id="PPTP-Properties.1"><em>Properties</em></h2><div class="table-wrap"><table class="wrapped confluenceTable"><colgroup><col/><col/></colgroup><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>authentication</strong> (<em>pap | chap | mschap1 | mschap2</em>; Default: <strong>mschap1,mschap2</strong>)</td><td class="confluenceTd">Authentication methods that server will accept.</td></tr><tr><td class="confluenceTd"><strong>default-profile</strong> (<em>name</em>; Default: <strong>default-encryption</strong>)</td><td class="confluenceTd"><br/></td></tr><tr><td class="confluenceTd"><strong>enabled</strong> (<em>yes | no</em>; Default: <strong>no</strong>)</td><td class="confluenceTd">Defines whether PPTP server is enabled or not.</td></tr><tr><td class="confluenceTd"><strong>keepalive-timeout</strong> (<em>time</em>; Default: <strong>30</strong>)</td><td class="confluenceTd">If server during keepalive period does not receive any packet, it will send keepalive packets every second five times. If the server does not receives response from the client, then disconnect after 5 seconds. Logs will show 5x &quot;LCP missed echo reply&quot; messages and then disconnect.</td></tr><tr><td class="confluenceTd"><strong>max-mru</strong> (<em>integer</em>; Default: <strong>1450</strong>)</td><td class="confluenceTd">Maximum Receive Unit. Max packet size that PPTP interface will be able to receive without packet fragmentation.</td></tr><tr><td class="confluenceTd"><strong>max-mtu</strong> (<em>integer</em>; Default: <strong>1450</strong>)</td><td class="confluenceTd">Maximum Transmission Unit. Max packet size that PPTP interface will be able to send without packet fragmentation.</td></tr><tr><td class="confluenceTd"><strong>mrru</strong> (<em>disabled | integer</em>; Default: <strong>disabled</strong>)</td><td class="confluenceTd">Maximum packet size that can be received on the link. If a packet is bigger than tunnel MTU, it will be split into multiple packets, allowing full size IP or Ethernet packets to be sent over the tunnel.</td></tr></tbody></table></div><h1 id="PPTP-Example">Example</h1><p><span class="confluence-embedded-file-wrapper image-center-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image image-center" draggable="false" height="250" src="attachments/2031638/3211293.jpg" data-image-src="attachments/2031638/3211293.jpg" data-unresolved-comment-count="0" data-linked-resource-id="3211293" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="pptp-setup.jpg" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/jpeg" data-linked-resource-container-id="2031638" data-linked-resource-container-version="13" tabindex="0" alt=""></span></p><h2 id="PPTP-PPTPClient.1">PPTP Client</h2><p>The following example demonstrates how to set up a PPTP client with username &quot;MT-User&quot;, password &quot;StrongPass&quot; and server 192.168.62.2:</p><p><br/></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; interface pptp-client add connect-to=192.168.62.2 disabled=no name=pptp-out1 password=StrongPass user=MT-User
+[admin@MikroTik] &gt; interface pptp-client print 
+Flags: X - disabled; R - running 
+ 0  R name=&quot;pptp-out1&quot; max-mtu=1450 max-mru=1450 mrru=disabled connect-to=192.168.62.2 user=&quot;MT-User&quot; 
+      password=&quot;StrongPass&quot; profile=default-encryption keepalive-timeout=60 add-default-route=no 
+      dial-on-demand=no allow=pap,chap,mschap1,mschap2 </pre>
+</div></div><h2 id="PPTP-PPTPServer.1">PPTP Server</h2><p>On the other side we simply enable the PPTP server and create a PPP secret for a particular user:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt;  interface pptp-server server set enabled=yes
+[admin@MikroTik] &gt;  ppp secret add local-address=10.0.0.1 name=MT-User password=StrongPass profile=default-encryption remote-address=10.0.0.5 service=pptp
+[admin@MikroTik] &gt;  interface pptp-server print
+Flags: D - dynamic; R - running
+Columns: NAME, USER, MTU, CLIENT-ADDRESS, UPTIME, ENCODING
+#      NAME            USER     MTU  CLIENT-ADDRESS  UPTIM  ENCODING         
+0  DR  &lt;pptp-MT-User&gt;  MT-User  1450  192.168.51.3   44m8s  MPPE128 stateless</pre>
+</div></div><p><br/></p><p><br/></p><p><br/></p>
+                    </div>
+
+                                                            <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/2031638/3211292.jpg">pptpsetup.jpg</a> (image/jpeg)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/2031638/3211293.jpg">pptp-setup.jpg</a> (image/jpeg)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : Queue types</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Firewall-and-Quality-of-Service_119144601.html">Firewall and Quality of Service</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Queues_328088.html">Queues</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : Queue types
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Unknown User (elvijsi)</span>, last updated by <span class='editor'> Druvis Timma</span> on May 20, 2025
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <h1 id="Queuetypes-Overview">Overview </h1><p>Queue types are like templates for classless queuing disciplines - the algorithms that control how packets are dropped or queued up in a memory buffer before further transmission. They are crucial for ensuring good Quality of Service, as they can not only help when bandwidth limits are exceeded, but also affect other aspects like latency.</p><p>Their complexity and attributes vary a lot. For example, a First-In-First-Out (FIFO) queue is simple and ensures fairness in the order of packet processing, but it can lead to issues such as head-of-line blocking. More complex queue types, such as those that implement fair queuing or congestion avoidance, can help manage network performance more effectively, but they may require more resources and configuration.</p><p>Therefore, the choice of queue type depends on the specific needs and characteristics of the network.</p><h1 id="Queuetypes-Queuetypesataglance"><span style="color:var(--ds-text-accent-purple-bolder,#352c63);">Queue types at a glance</span></h1><ol><li><p><strong>BFIFO (Byte-oriented First In, First Out):</strong></p><ul><li><strong>Features:</strong> BFIFO is a simple byte-oriented queuing discipline that sends out packets in the order they arrived and based on their size.</li><li><strong>Advantages:</strong> Simplicity and fairness in packet management.</li><li><strong>Disadvantages:</strong> BFIFO can lead to head-of-line blocking, where a large packet can delay all the smaller packets behind it. Also, there is no mechanism to prevent congestion or prioritize packets.</li></ul></li><li><p><strong>PFIFO (Packet-oriented First In, First Out):</strong></p><ul><li><strong>Features:</strong> Like BFIFO but operates on a packet basis rather than bytes.</li><li><strong>Advantages:</strong> Easy to implement and understand. It's fair in terms of packet numbers.</li><li><strong>Disadvantages:</strong> Like BFIFO, it suffers from head-of-line blocking and doesn't have any congestion management mechanism.</li></ul></li><li><p><strong>CAKE (Common Applications Kept Enhanced):</strong></p><ul><li><strong>Features:</strong> A comprehensive queue management system designed to combat bufferbloat and ensure fair queuing. It combines CoDel, FQ, and other technologies.</li><li><strong>Advantages:</strong> Excellent at managing latency under any network condition. It's particularly useful in consumer broadband connections.</li><li><strong>Disadvantages:</strong> More complex to configure than simpler queuing disciplines. Not ideal for all use cases, particularly where fine-tuned control is required.</li></ul></li><li><p><strong>CoDel (Controlled Delay):</strong></p><ul><li><strong>Features:</strong> CoDel aims to improve bufferbloat by dropping packets to control queue delay.</li><li><strong>Advantages:</strong> Good at managing latency and avoiding bufferbloat.</li><li><strong>Disadvantages:</strong> CoDel on its own does not provide fair queuing.</li></ul></li><li><p><strong>FQ_CoDel (Fair Queuing Controlled Delay):</strong></p><ul><li><strong>Features:</strong> Combines the latency management of CoDel with fair queuing.</li><li><strong>Advantages:</strong> Excellent latency management and fair distribution of bandwidth among flows. Generally considered a good default choice.</li><li><strong>Disadvantages:</strong> More complex than simpler queue disciplines, which can make it harder to configure.</li></ul></li><li><p><strong>MQ_PFIFO (Multiqueue Packet First In, First Out):</strong></p><ul><li><strong>Features:</strong> MQ_PFIFO is an extension of PFIFO that supports multiple queues.</li><li><strong>Advantages:</strong> Allows different queues for different types or priorities of traffic.</li><li><strong>Disadvantages:</strong> Still suffers from head-of-line blocking and lacks a built-in congestion management mechanism.</li></ul></li><li><p><strong>RED (Random Early Detection):</strong></p><ul><li><strong>Features:</strong> RED aims to anticipate and prevent congestion by randomly dropping packets before the queue becomes full.</li><li><strong>Advantages:</strong> Helps to prevent congestion and can improve overall network performance.</li><li><strong>Disadvantages:</strong> Configuration can be complex and needs to be tuned for the network's specific characteristics. Misconfiguration can lead to reduced performance.</li></ul></li><li><p><strong>SFQ (Stochastic Fairness Queuing):</strong></p><ul><li><strong>Features:</strong> SFQ aims to ensure a fair distribution of resources among flows by assigning them to different dynamic queues.</li><li><strong>Advantages:</strong> Helps to prevent a single flow from dominating the connection.</li><li><strong>Disadvantages:</strong> SFQ does not manage latency or congestion. The number of queues can also increase memory usage.</li></ul></li></ol><p>In choosing a queue discipline, you'll need to consider the characteristics of your network and what you prioritize most, such as latency, fairness, simplicity, or congestion management.</p>
+                    </div>
+
+                                        
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

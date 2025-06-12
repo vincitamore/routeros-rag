@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : Layer7</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Firewall-and-Quality-of-Service_119144601.html">Firewall and Quality of Service</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Firewall_250708066.html">Firewall</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : Layer7
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Artūrs C.</span>, last updated by <span class='editor'> Guntis G.</span> on Apr 23, 2024
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742026596 {padding: 0px;}
+div.rbtoc1747742026596 ul {margin-left: 0px;}
+div.rbtoc1747742026596 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742026596'>
+<ul class='toc-indentation'>
+<li><a href='#Layer7-Summary'>Summary</a>
+<ul class='toc-indentation'>
+<li><a href='#Layer7-Properties'>Properties</a></li>
+</ul>
+</li>
+<li><a href='#Layer7-Examples'>Examples</a>
+<ul class='toc-indentation'>
+<li><a href='#Layer7-SimpleL7usageexample'>Simple L7 usage example</a></li>
+<li><a href='#Layer7-L7intheinputchain'>L7 in the input chain</a></li>
+<li><a href='#Layer7-YoutubeMatcher'>Youtube Matcher</a></li>
+</ul>
+</li>
+</ul>
+</div></p><h1 id="Layer7-Summary"><span class="mw-headline">Summary</span></h1><p>Layer7-protocol is a method of searching for patterns in ICMP/TCP/UDP streams.</p><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>The L7 matcher is very resource-intensive. Use this feature only for very specific traffic. It is not recommended to use the L7 matcher for generic traffic, such as for blocking web pages. This will almost never work correctly and your device will exhaust its resources, trying to catch all the traffic. Use other features to block webpages by URL.</p></div></div><p>L7 matcher collects the first<span> </span><strong>10 packets</strong><span> </span>of a connection or the first<span> </span><strong>2KB</strong><span> </span>of a connection and searches for the pattern in the collected data. If the pattern is not found in the collected data, the matcher stops inspecting further. Allocated memory is freed and the protocol is considered <strong>unknown</strong>. You should take into account that a lot of connections will significantly increase memory and CPU usage. To avoid this, add regular firewall matchers to reduce the amount of data passed to layer-7 filters repeatedly.</p><p>An additional requirement is that the layer7 matcher must see both directions of traffic (incoming and outgoing). To satisfy this requirement l7 rules should be set in<span> the </span><strong>forward</strong><span> </span>chain. If the rule is set in<span> the </span><strong>input/prerouting</strong><span> </span>chain then the same rule<span> </span><strong>must</strong><span> </span>be also set in<span> the </span><strong>output/postrouting</strong><span> </span>chain, otherwise, the collected data may not be complete resulting in an incorrectly matched pattern.</p><div role="region" aria-label="Warning" class="confluence-information-macro  confluence-information-macro-warning" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-error confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p><span> </span>Layer 7 matcher is case insensitive!</p></div></div><p>Example L7 patterns compatible with RouterOS can be found on<span> the </span><a class="external-link" href="http://l7-filter.sourceforge.net/protocols" rel="nofollow" style="text-decoration: none;">l7-filter project page</a>.</p><div role="region" aria-label="Warning" class="confluence-information-macro  confluence-information-macro-warning" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-error confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p><span> </span>In some cases when layer 7 regular expression cannot be performed, RouterOS will log<span> </span><em>topic=firewall, warning</em><span> </span>with an error message stating the problem in the message!</p></div></div><h2 id="Layer7-Properties"><span class="mw-headline">Properties</span></h2><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip firewall layer7-protocol</pre>
+</div></div><p><br/></p><div class="table-wrap"><table class="wrapped relative-table confluenceTable" style="margin-left: 20.2273px;width: 98.6389%;"><colgroup><col style="width: 9.11066%;"/><col style="width: 90.8893%;"/></colgroup><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>name</strong><span> </span>(<em>string</em>; Default:<span> </span>)</td><td class="confluenceTd">Descriptive name of l7 pattern used by configuration in firewall rules. See example<span> </span><a class="external-link" href="https://wiki.mikrotik.com/wiki/L7#Examples" rel="nofollow" style="text-decoration: none;" title="L7">&gt;&gt;</a>.</td></tr><tr><td class="confluenceTd"><strong>regexp</strong><span> </span>(<em>string</em>; Default:<span> </span>)</td><td class="confluenceTd">POSIX compliant regular expression is used to match a pattern.</td></tr></tbody></table></div><h1 id="Layer7-Examples"><span class="mw-headline">Examples</span></h1><h3 id="Layer7-SimpleL7usageexample"><span class="mw-headline">Simple L7 usage example</span></h3><p>First, add Regexp strings to the protocols menu, to define the strings you will be looking for. In this example, we will use a pattern to match RDP packets.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip firewall layer7-protocol
+add name=rdp regexp=&quot;rdpdr.*cliprdr.*rdpsnd&quot;</pre>
+</div></div><p>Then, use the defined protocols in the firewall.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip firewall filter
+
+# add few known protocols to reduce mem usage
+add action=accept chain=forward comment=&quot;&quot; disabled=no port=80 protocol=tcp
+add action=accept chain=forward comment=&quot;&quot; disabled=no port=443 protocol=tcp
+
+# add l7 matcher
+add action=accept chain=forward comment=&quot;&quot; disabled=no layer7-protocol=\
+    rdp protocol=tcp</pre>
+</div></div><p>As you can see before the l7 rule we added several regular rules that will match known traffic thus reducing memory usage.</p><h3 id="Layer7-L7intheinputchain"><span class="mw-headline">L7 in the input chain</span></h3><p>In this example, we will try to match the telnet protocol connecting to our router.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip firewall layer7-protocol add comment=&quot;&quot; name=telnet regexp=&quot;^\\xff[\\xfb-\\xfe].\\xff[\\xfb-\\xfe].\\xff[\\xfb-\\xfe]&quot;</pre>
+</div></div><p>Note that we need both directions which is why we need also the l7 rule in the output chain that sees outgoing packets.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip firewall filter
+
+add action=accept chain=input comment=&quot;&quot; disabled=no layer7-protocol=telnet \
+    protocol=tcp
+
+add action=passthrough chain=output comment=&quot;&quot; disabled=no layer7-protocol=telnet \
+    protocol=tcp</pre>
+</div></div><h3 id="Layer7-YoutubeMatcher"><span class="mw-headline">Youtube Matcher</span></h3><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>When a user is logged in YouTube will use HTTPS, meaning that L7 will not be able to match this traffic. Only unencrypted HTTP can be matched.</p></div></div><p><br/></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip firewall layer7-protocol
+add name=youtube regexp=&quot;(GET \\/videoplayback\\\?|GET \\/crossdomain\\.xml)&quot;</pre>
+</div></div><p style="margin-left: 20.0px;"><br/></p>
+                    </div>
+
+                                        
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

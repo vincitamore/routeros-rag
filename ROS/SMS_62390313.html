@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : SMS</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Mobile-Networking_119144655.html">Mobile Networking</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : SMS
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Artūrs C.</span>, last updated by <span class='editor'> Artis Bernāts</span> on Jul 02, 2024
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742029805 {padding: 0px;}
+div.rbtoc1747742029805 ul {margin-left: 0px;}
+div.rbtoc1747742029805 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742029805'>
+<ul class='toc-indentation'>
+<li><a href='#SMS-Summary'>Summary</a></li>
+<li><a href='#SMS-Sending'>Sending</a>
+<ul class='toc-indentation'>
+<li><a href='#SMS-Example'>Example</a></li>
+</ul>
+</li>
+<li><a href='#SMS-USSDmessages'>USSD messages</a>
+<ul class='toc-indentation'>
+<li><a href='#SMS-Example.1'>Example</a></li>
+</ul>
+</li>
+<li><a href='#SMS-Receiving'>Receiving</a>
+<ul class='toc-indentation'>
+<li><a href='#SMS-Inbox'>Inbox</a></li>
+<li><a href='#SMS-Syntax'>Syntax</a></li>
+<li><a href='#SMS-Examples'>Examples</a></li>
+</ul>
+</li>
+<li><a href='#SMS-Debugging'>Debugging</a></li>
+<li><a href='#SMS-Implementationdetails'>Implementation details</a></li>
+</ul>
+</div></p><h1 id="SMS-Summary">Summary</h1><p>It is possible to connect the GSM modem to the RouterOS device and use it to send and receive SMS messages. RouterOS lists such modem as a serial port that appears in the '<code><span style="color:var(--ds-background-accent-green-bolder,#1f845A);">/port print</span></code>' listing. GSM standard defines AT commands for sending SMS messages and defines how messages should be encoded in these commands.<span> </span><code>'<span style="color:var(--ds-background-accent-green-bolder,#1f845A);">/tool sms send</span>'</code><span> </span>uses standard GSM AT commands to send SMS.</p><h1 id="SMS-Sending">Sending</h1><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/tool sms send</pre>
+</div></div><h2 id="SMS-Example"><strong style="font-size: 14.0px;letter-spacing: 0.0px;">Example</strong></h2><p class="auto-cursor-target">Sending command for ppp interface:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/tool sms send usb3 &quot;20000000&quot; \ message=&quot;ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!@#\$%^&amp;*(){}[]\&quot;&#39;~&quot;</pre>
+</div></div><p>For LTE interface use LTE interface name in the port field:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/tool sms send lte1 &quot;20000000&quot; \ message=&quot;ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!@#\$%^&amp;*(){}[]\&quot;&#39;~&quot;</pre>
+</div></div><div class="table-wrap"><table class="relative-table wrapped confluenceTable" style="margin-left: 18.3281px;width: 99.2286%;"><colgroup><col style="width: 16.2505%;"/><col style="width: 83.7495%;"/></colgroup><tbody><tr><th class="confluenceTh">Parameter</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>port</strong><span> </span>(<em>string</em>)</td><td class="confluenceTd">Name of port from<span> </span><code><span style="color:var(--ds-background-accent-green-bolder,#1f845A);">/port</span></code><span> </span>that GSM modem is attached to.</td></tr><tr><td class="confluenceTd"><strong>phone-number</strong><span> </span>(<em>string</em>)</td><td class="confluenceTd">Recipient phone number. Allowed characters are &quot;0123456789*#abc&quot;. If the first character is &quot;+&quot; then the phone number type is set to<span> </span><em>international</em>, otherwise, it is set to<span> </span><em>unknown</em>.</td></tr><tr><td class="confluenceTd"><strong>channel</strong><span> </span>(<em>integer</em>)</td><td class="confluenceTd">Which modem channel to use for sending.</td></tr><tr><td class="confluenceTd"><strong>message</strong><span> </span>(<em>string</em>)</td><td class="confluenceTd">Message contents. It is encoded using GSM 7 encoding (UCS2 currently is not supported), so the message length is limited to 160 characters (characters ^{}\[]~</td></tr><tr><td class="confluenceTd"><strong>smsc</strong><span> </span>(<em>string</em>)</td><td class="confluenceTd"><br/></td></tr><tr><td class="confluenceTd"><strong>type</strong><span> </span>(<em>string</em>)</td><td class="confluenceTd">If set to<span> </span><em>class-0</em>, then send class 0 SMS message. It is displayed immediately and not stored in the phone.</td></tr><tr><td class="confluenceTd"><strong>sms-storage </strong>(<em>string</em>)<strong><br/></strong></td><td class="confluenceTd">Select storage where to save received SMS (modem/sim) </td></tr><tr><td class="confluenceTd"><strong>status-report-request </strong>(<em>yes | no</em>; Default: yes)<strong><br/></strong></td><td class="confluenceTd">Set &quot;no&quot; to not request <span class="ILfuVd" lang="en"><span class="hgKElc">a confirmation message indicating whether a text message was successfully sent to the recipient.</span></span></td></tr></tbody></table></div><h1 id="SMS-USSDmessages"><span class="mw-headline">USSD messages</span></h1><p>USSD (Unstructured Supplementary Service Data) messages can be used to communicate with mobile network provider to receive additional information, enabling additional services or adding funds to prepaid cards. USSD messages can be processed by using AT commands (commands can differ or even may be blocked on some modems).</p><p><strong>3G or GSM network modes must be activated to use this functionality</strong>, as it's not supported under LTE only mode (<strong>R11e-LTE</strong><span> </span>modem auto switches to 3G mode to send out USSD message).</p><p>PDU (Protocol Data Unit) message and its decrypted version are printed under LTE debug logging.</p><h2 id="SMS-Example.1"><strong>Example</strong></h2><p><span style="color:var(--ds-text-accent-lime-bolder,#37471f);">Check if LTE debug logging is active:</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/system logging print
+Flags: X - disabled, I - invalid, * - default 
+# TOPICS ACTION PREFIX 
+0 * info memory 
+1 * error memory 
+2 * warning memory 
+3 * critical echo </pre>
+</div></div><p class="auto-cursor-target"><span style="color:var(--ds-text-accent-lime-bolder,#37471f);">If there is no logging entry add it by running this command:</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/system logging add topics=lte,!raw
+
+/system logging print
+Flags: X - disabled, I - invalid, * - default 
+# TOPICS ACTION PREFIX 
+0 * info memory 
+1 * error memory 
+2 * warning memory 
+3 * critical echo 
+4 lte,!raw memory </pre>
+</div></div><p class="auto-cursor-target"><span style="color:var(--ds-text-accent-lime-bolder,#37471f);">To receive account status from<span> </span></span><strong>*245#</strong></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface lte at-chat lte1 input=&quot;AT+CUSD=1,\&quot;*245#\&quot;,15&quot;
+output: OK
+/log print
+11:51:20 lte,async lte1: sent AT+CUSD=1,&quot;*245#&quot;,15 
+11:51:20 lte,async lte1: rcvd OK 
+11:51:23 lte,async,event +CUSD: 0,&quot;EBB79B1E0685E9ECF4BADE9E03&quot;, 0 
+11:51:23 gsm,info USSD: konta atlikums</pre>
+</div></div><h1 id="SMS-Receiving"><span class="mw-headline">Receiving</span></h1><p>RouterOS also supports receiving of SMS messages, can execute scripts, and even respond to the sender.</p><p>Before the router can receive SMS, the relevant configuration is required in the<span> </span><code><span style="color:var(--ds-background-accent-green-bolder,#1f845A);">/tool sms</span></code><span> </span>menu. The following parameters are configurable:</p><div class="table-wrap"><table class="relative-table wrapped confluenceTable" style="width: 99.0811%;"><colgroup><col style="width: 15.729%;"/><col style="width: 84.2509%;"/></colgroup><tbody><tr><th class="confluenceTh">Parameter</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>allowed-number </strong>(<em>string</em>; Default: &quot;&quot;)</td><td class="confluenceTd">The sender number that will be allowed to run commands, must specify the country code ie. +371XXXXXXX</td></tr><tr><td class="confluenceTd"><strong>channel </strong>(<em>integer</em>; Default: <strong>0</strong>)</td><td class="confluenceTd">Which modem channel to use for receiving.</td></tr><tr><td class="confluenceTd"><strong>keep-max-sms </strong>(<em>integer</em>; Default: <strong>0</strong>)</td><td class="confluenceTd">Maximum number of messages that will be saved. If you set this bigger than SIM supports, new messages will not be received. Replaced with <code><span style="color:var(--ds-background-accent-green-bolder,#1f845A);">auto-erase</span></code> parameter starting from RouterOS v6.44.6</td></tr><tr><td class="confluenceTd"><strong>auto-erase </strong>(<em>yes | no</em>; Default: <strong>no</strong>)</td><td class="confluenceTd">SIM storage size is read automatically. When <code><span style="color:var(--ds-background-accent-green-bolder,#1f845A);">auto-erase=no</span></code> new SMS will not be received if storage is full. Set <code><span style="color:var(--ds-background-accent-green-bolder,#1f845A);">auto-erase=yes </span></code>to delete the oldest received SMS to free space for new ones automatically. Available starting from v6.44.6</td></tr><tr><td class="confluenceTd"><strong>port </strong>(<em>string</em>; Default: (<strong>unknown</strong>))</td><td class="confluenceTd">Modem port (modem can be used only by one process &quot;/port&gt; print&quot; )</td></tr><tr><td class="confluenceTd"><strong>receive-enabled </strong>(<em>yes | no</em>; Default: <strong>no</strong>)</td><td class="confluenceTd">Must be turned on to receive messages</td></tr><tr><td class="confluenceTd"><strong>secret </strong>(<em>string</em>; Default: &quot;&quot;)</td><td class="confluenceTd">the secret password, mandatory</td></tr><tr><td class="confluenceTd"><strong>polling </strong>(<em>yes | no</em>; Default: <strong>no</strong>)</td><td class="confluenceTd">checking the modem for new SMS every 10s, instead of updating the inbox only after receiving the command from the modem. Available starting from v7.16</td></tr></tbody></table></div><p><strong><span class="mw-headline">Basic Example configuration to be able to view received messages:</span></strong></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/tool sms set receive-enabled=yes port=lte1
+
+/tool/sms/print 
+           status: running
+  receive-enabled: yes
+             port: lte1
+          channel: 0
+           secret: 
+   allowed-number: 
+       auto-erase: no
+          sim-pin: 
+        last-ussd: </pre>
+</div></div><h2 id="SMS-Inbox"><strong><span class="mw-headline">Inbox</span></strong></h2><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/tool sms inbox</pre>
+</div></div><p><span style="color:var(--ds-text-accent-lime-bolder,#37471f);">If you have enabled the reader, you will see incoming messages in this submenu:</span></p><p>Read-only properties:</p><div class="table-wrap"><table class="relative-table wrapped confluenceTable" style="margin-left: 18.3281px;width: 99.0811%;"><colgroup><col style="width: 15.729%;"/><col style="width: 84.2509%;"/></colgroup><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>phone</strong><span> </span>(<em>string</em>)</td><td class="confluenceTd">Senders phone number.</td></tr><tr><td class="confluenceTd"><strong>message</strong><span> </span>(<em>string</em>)</td><td class="confluenceTd">Message body</td></tr><tr><td class="confluenceTd"><strong>timestamp</strong><span> </span>(<em>time</em>)</td><td class="confluenceTd">The time when the message was received. It is the time sent by the operator, not the router's local time.</td></tr><tr><td class="confluenceTd"><strong>type</strong><span> </span>(<em>string</em>)</td><td class="confluenceTd">Message type</td></tr></tbody></table></div><h2 id="SMS-Syntax"><strong><span class="mw-headline">Syntax</span></strong></h2><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false"> :cmd SECRET script NAME [[ VAR[=VAL] ] ... ]</pre>
+</div></div><ul class="bullets"><li><strong>SECRET</strong><span> </span>- the password</li><li><strong>NAME</strong><span> </span>- the name of the script that's available in &quot;<code><span style="color:var(--ds-background-accent-green-bolder,#1f845A);">/system script</span></code>&quot;</li><li><strong>VAR</strong><span> </span>- variables that will be passed to the script (can be passed as VAR or as VAR=value), separated by spaces.</li></ul><p>Other things to remember:</p><ul class="bullets"><li>*Parameters can be put into quotes &quot;VAR&quot;=&quot;VAL&quot; if necessary.</li><li>*Escaping of values is not supported (VAR=&quot;\&quot;&quot;).</li><li>*Combined SMS are not supported, every SMS will be treated separately</li><li>* 16Bit unicode messages are not supported</li><li>* SMS are decoded with the standard GSM7 alphabet, so you can't send in other encodings, otherwise it will be decoded incorrectly</li></ul><h2 id="SMS-Examples"><strong>Examples</strong></h2><p><strong><strong>Wrong:</strong></strong></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">:cmd script mans_skripts
+:cmd slepens script mans skripts
+:cmd slepens script mans_skripts var=
+:cmd slepens script mans_skripts var= a
+:cmd slepens script mans_skripts var=a a</pre>
+</div></div><p class="auto-cursor-target"><strong>Right:</strong></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">:cmd slepens script mans_skripts
+:cmd slepens script &quot;mans skripts&quot;
+:cmd slepens script mans_skripts var
+:cmd slepens script mans_skripts var=a
+:cmd slepens script mans_skripts var=&quot;a a&quot; </pre>
+</div></div><h1 id="SMS-Debugging"><span class="mw-headline">Debugging</span></h1><p><span class="mw-headline"><code><span style="color:var(--ds-background-accent-green-bolder,#1f845A);">/tool sms send</span></code><span style="color:var(--ds-text-accent-lime-bolder,#37471f);"><span> </span>command is logging data that is written and read. It is logged with tags<span> </span></span><em>gsm,debug,write</em><span style="color:var(--ds-text-accent-lime-bolder,#37471f);"><span> </span>and<span> </span></span><em>gsm,debug,read</em><span style="color:var(--ds-text-accent-lime-bolder,#37471f);"><span> </span>For more information see<span> </span></span>system logging<span style="color:var(--ds-text-accent-lime-bolder,#37471f);">.</span></span></p><h1 id="SMS-Implementationdetails"><span class="mw-headline">Implementation details</span></h1><p><span class="mw-headline"><em>AT+CMGS</em><span style="color:var(--ds-text-accent-lime-bolder,#37471f);"><span> </span>and<span> </span></span><em>AT+CMGF</em><span style="color:var(--ds-text-accent-lime-bolder,#37471f);"><span> </span>commands are used. Port is acquired for the duration of the command and cannot be used concurrently by another RouterOS component. Message sending process can take a long time, it times out after a minute and after two seconds during the initial AT command exchange.</span></span></p>
+                    </div>
+
+                                        
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

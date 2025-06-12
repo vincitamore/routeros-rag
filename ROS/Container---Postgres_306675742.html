@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : Container - Postgres</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Extended-features_120324125.html">Extended features</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Container_84901929.html">Container</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : Container - Postgres
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Artūrs Z.</span>, last updated on Mar 24, 2025
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742047443 {padding: 0px;}
+div.rbtoc1747742047443 ul {margin-left: 0px;}
+div.rbtoc1747742047443 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742047443'>
+<ul class='toc-indentation'>
+<li><a href='#ContainerPostgres-Introduction'>Introduction</a></li>
+<li><a href='#ContainerPostgres-Configuration'>Configuration</a></li>
+<li><a href='#ContainerPostgres-Advanced:PostgreswithPgadmin'>Advanced: Postgres with Pgadmin</a></li>
+</ul>
+</div></p><h1 id="ContainerPostgres-Introduction">Introduction</h1><p>PostgreSQL is a widely used SQL database engine for various applications. This guide will give you the required steps to get PostgreSQL running on RouterOS. This guide will also give you the required steps to setup Pgadmin (a web interface to manage your PostgreSQL databases).</p><h1 id="ContainerPostgres-Configuration">Configuration</h1><p>To setup a Postgres Container on your RouterOS device, follow these steps bellow.</p><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Make sure you have created a <a href="https://help.mikrotik.com/docs/spaces/ROS/pages/84901929/Container#Container-Createnetwork" rel="nofollow">Container network</a> before proceeding.</p></div></div><ol><li data-uuid="be151a4d-e03e-41d2-854d-4be154bea58e">Create Postgres Container mount points:<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/container/mounts/add name=MOUNT_POSTGRES src=disk1/volumes/postgres/data dst=/var/lib/postgresql/data</pre>
+</div></div></li><li data-uuid="4d6e805a-237d-4666-a27c-7719e8a0fb82">Add environment variables:<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/container/envs/add name=ENV_POSTGRES key=POSTGRES_DB value=&quot;myapp&quot;
+/container/envs/add name=ENV_POSTGRES key=POSTGRES_PASSWORD value=&quot;&lt;changeme&gt;&quot;
+/container/envs/add name=ENV_POSTGRES key=POSTGRES_USER value=&quot;myapp&quot;
+/container/envs/add name=ENV_POSTGRES key=PGDATA value=&quot;/var/lib/postgresql/data/pgdata&quot;
+/container/envs/add name=ENV_POSTGRES key=POSTGRES_INITDB_ARGS value=&quot;--encoding=&#39;UTF8&#39; --lc-collate=&#39;C&#39; --lc-ctype=&#39;C&#39;&quot;</pre>
+</div></div></li><li data-uuid="a05bd25a-ae6f-4d1e-a0ae-92c63ef7a4c1">Create a Postgres Container:<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/container/add remote-image=postgres:15 interface=veth1 root-dir=disk1/images/postgres mounts=MOUNT_POSTGRES envlist=ENV_POSTGRES name=postgres start-on-boot=yes logging=yes</pre>
+</div></div><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>You can specify a different version for Postgres by changing the <code>postgres:15</code> value.</p></div></div></li><li data-uuid="3e84c0f9-1140-4d37-bc00-d53f350bd4aa">Start the Postgres Container:<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/container/start [find where name=postgres]</pre>
+</div></div></li></ol><h1 id="ContainerPostgres-Advanced:PostgreswithPgadmin">Advanced: Postgres with Pgadmin</h1><p>This example shows how to configure Pgadmin on RouterOS:</p><ol><li data-uuid="9011336b-45be-40db-9b36-83c3309b1d98">Create mount points for Pgadmin Container:<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/container/mounts/add name=MOUNT_PGADMIN_CONFIG src=disk1/volumes/pgadmin/config dst=/config
+/container/mounts/add name=MOUNT_PGADMIN_DATA src=disk1/volumes/pgadmin/data dst=/var/lib/pgadmin C</pre>
+</div></div></li><li data-uuid="16e558e9-0c0f-4523-b560-36d9c07e5dbd">Create environment variables for Pgadmin Container:<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/container/envs/add name=ENV_PGADMIN key=PGADMIN_LISTEN_PORT value=80
+/container/envs/add name=ENV_PGADMIN key=PGADMIN_DEFAULT_EMAIL value=&quot;sysadmin@domain.com&quot;
+/container/envs/add name=ENV_PGADMIN key=PGADMIN_DEFAULT_PASSWORD value=&quot;&lt;changeme&gt;&quot;
+/container/envs/add name=ENV_PGADMIN key=PGADMIN_SERVER_JSON_FILE value=&quot;/config/servers.json&quot;
+/container/envs/add name=ENV_PGADMIN key=PGADMIN_PREFERENCES_JSON_FILE value=&quot;/config/preferences.json&quot;
+/container/envs/add name=ENV_PGADMIN key=PGPASS_FILE value=&quot;/config/pgpass&quot;
+/container/envs/add name=ENV_PGADMIN key=PGADMIN_DISABLE_POSTFIX value=&quot;True&quot;
+
+</pre>
+</div></div></li><li data-uuid="68d783a0-9d77-461c-a437-4dae1e56ea89">Create the Pgadmin Container:<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">//container/add remote-image=dpage/pgadmin4 envlist=ENV_PGADMIN mounts=MOUNT_PGADMIN_CONFIG,MOUNT_PGADMIN_DATA interface=veth1 logging=yes name=pgadmin root-dir=disk1/images/pgadmin start-on-boot=yes user=0:0
+</pre>
+</div></div></li><li data-uuid="1903f013-bc5e-4105-9dbc-b43d41d41f9d">Disable Webfig:<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/ip service
+set www disabled=yes</pre>
+</div></div><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>You can also change the <code>PGADMIN_LISTEN_PORT</code> value to other than <code>80</code> and skip disabling Webfig</p></div></div></li><li data-uuid="20b8fc8d-95cb-4182-bf19-77014890f7dc">Start Pgadmin Container:<br/><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: routeros; gutter: false">/container start [find where name=pgadmin]</pre>
+</div></div></li></ol><p><br/></p><p><br/></p>
+                    </div>
+
+                                        
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:54</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : Speed Test</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="119144606.html">Diagnostics, monitoring and troubleshooting</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : Speed Test
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Artūrs C.</span>, last updated on Dec 10, 2019
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742046621 {padding: 0px;}
+div.rbtoc1747742046621 ul {margin-left: 0px;}
+div.rbtoc1747742046621 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742046621'>
+<ul class='toc-indentation'>
+<li><a href='#SpeedTest-Introduction'>Introduction</a></li>
+<li><a href='#SpeedTest-Generalinterfaceproperties'>General interface properties</a></li>
+<li><a href='#SpeedTest-ConfigurationExample'>Configuration Example</a></li>
+</ul>
+</div></p><h1 id="SpeedTest-Introduction">Introduction</h1><p>The Speed Test is an easy test tool for measuring ping, jitter, TCP and UDP throughput from one MikroTik device, to another. The &quot;speed-test&quot; command is based on the Ping Tool and Bandwidth Test. In order to use this command - Bandwidth test server needs to be accessible.</p><h1 id="SpeedTest-Generalinterfaceproperties"><span class="mw-headline">General interface properties</span></h1><p><span class="mw-headline">The speed-test is based on five configurable properties:</span></p><ul><li><span class="mw-headline">address - IP address of host;</span></li><li><span class="mw-headline">connection-count - If a device has more than 20 cores - core count will be used (default is 20);</span></li><li><span class="mw-headline">password - Password for the remote device;</span></li><li><span class="mw-headline">test-duration - Duration for each test (<em>By default: 5 tests * 10 sec duration + 1sec pause between each test = 55sec</em>);</span></li><li><span class="mw-headline">user - Remote device username;</span></li></ul><h1 id="SpeedTest-ConfigurationExample">Configuration Example</h1><p>Bandwidth and speed tests should be conducted through the devices, not on them to ensure real-life simulation and not to overload the CPU on the devices under testing,(DUT) due to the traffic generating process.</p><p>To run a simple test from device A (192.168.88.1) to device B (192.168.88.2):</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; /tool/speed-test address=192.168.88.1
+              status: done
+      time-remaining: 0s
+    ping-min-avg-max: 541us / 609us / 3.35ms
+  jitter-min-avg-max: 0s / 76us / 2.76ms
+                loss: 0% (0/100)
+        tcp-download: 921Mbps local-cpu-load:30%
+          tcp-upload: 920Mbps local-cpu-load:30% remote-cpu-load:25%
+        udp-download: 917Mbps local-cpu-load:6% remote-cpu-load:21%
+          udp-upload: 916Mbps local-cpu-load:20% remote-cpu-load:6%</pre>
+</div></div><p>If any of device CPU utilization during test reaches 100% warning message will appear:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik]] &gt; /tool/speed-test address=192.168.88.1
+                  ;;; results can be limited by cpu, note that traffic generation/termination 
+                      performance might not be representative of forwarding performance
+              status: done
+      time-remaining: 0s
+    ping-min-avg-max: 541us / 609us / 3.35ms
+  jitter-min-avg-max: 0s / 76us / 2.76ms
+                loss: 0% (0/100)
+        tcp-download: 721Mbps local-cpu-load:78%
+          tcp-upload: 820Mbps local-cpu-load:100% remote-cpu-load:84%
+        udp-download: 906Mbps local-cpu-load:10% remote-cpu-load:54%
+          udp-upload: 895Mbps local-cpu-load:55% remote-cpu-load:12%</pre>
+</div></div><p>&quot;test-duration&quot; parameter allows changing the duration of all of the 5 tests:</p><ul><li>) Ping test with 50ms delay</li><li>) TCP receive</li><li>) TCP send</li><li>) UDP receive</li><li>) UDP send</li></ul>
+                    </div>
+
+                                        
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:54</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

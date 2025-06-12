@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : MQTT</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Internet-of-Things_46759975.html">Internet of Things</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : MQTT
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Unknown User (emils)</span>, last updated by <span class='editor'> Deniss M.</span> on Feb 27, 2024
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742042652 {padding: 0px;}
+div.rbtoc1747742042652 ul {margin-left: 0px;}
+div.rbtoc1747742042652 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742042652'>
+<ul class='toc-indentation'>
+<li><a href='#MQTT-Summary'>Summary</a></li>
+<li><a href='#MQTT-Configuration'>Configuration</a>
+<ul class='toc-indentation'>
+<li><a href='#MQTT-Brokers'>Brokers</a></li>
+<li><a href='#MQTT-Connect'>Connect</a></li>
+<li><a href='#MQTT-Disconnect'>Disconnect</a></li>
+<li><a href='#MQTT-Publish'>Publish</a></li>
+<li><a href='#MQTT-Subscribe'>Subscribe</a></li>
+<li><a href='#MQTT-Subscriptions'>Subscriptions</a></li>
+<li><a href='#MQTT-Unsubscribe'>Unsubscribe</a></li>
+</ul>
+</li>
+<li><a href='#MQTT-PublishingRouterOSstatisticsusingscripts'>Publishing RouterOS statistics using scripts</a></li>
+</ul>
+</div></p><h1 id="MQTT-Summary">Summary</h1><p>MQTT is an open OASIS and ISO standard lightweight, publish-subscribe network protocol that transports messages between devices. A typical MQTT communication topology consists of:</p><ul><li>an MQTT publisher → a device that sends information to the server;</li><li>an MQTT broker → a server where the data is stored;</li><li>an MQTT subscriber → a device that reads/monitors the data published on the server.</li></ul><p>RouterOS can act as an MQTT publisher and subscriber (starting with <strong>7.11beta2</strong>). You can also run an MQTT broker/server via the <a href="https://help.mikrotik.com/docs/display/ROS/Container" rel="nofollow">container</a> feature. For Mosquitto MQTT broker configuration visit the<a href="https://help.mikrotik.com/docs/display/ROS/Container+-+mosquitto+MQTT+server" rel="nofollow"> link here</a>.</p><p>You can find application examples for MQTT publish scenarios below:</p><p>a) <a href="https://help.mikrotik.com/docs/pages/viewpage.action?pageId=63045633" rel="nofollow">MQTT/HTTPS example with AWS cloud platform</a></p><p>b) <a href="https://help.mikrotik.com/docs/display/UM/MQTT+and+Azure+configuration" rel="nofollow">MQTT example with Azure cloud platform</a></p><p>c) <a href="MQTT-and-ThingsBoard-configuration_105742352.html">MQTT and ThingsBoard configuration</a></p><p>Please note that AWS and Azure examples (scripts) showcase publishing Bluetooth tag data. Currently, only the <a class="external-link" href="https://mikrotik.com/product/knot" rel="nofollow">KNOT</a> has a Bluetooth chip built-in.</p><h1 id="MQTT-Configuration">Configuration</h1><p><strong>Sub-menu:</strong><span> </span><code>/iot mqtt</code></p><p><em><strong>note</strong>:  </em><strong>iot</strong> package is required.</p><p>IoT package is available with RouterOS version 6.48.3. You can get it from our <a class="external-link" href="https://mikrotik.com/download" rel="nofollow">download page</a> - under &quot;Extra packages&quot;.</p><div class="table-wrap"><table class="relative-table wrapped confluenceTable" style="width: 48.4593%;"><colgroup class=""><col class="" style="width: 35.0576%;"/><col class="" style="width: 64.9542%;"/></colgroup><tbody class=""><tr class=""><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr class=""><td class="confluenceTd"><strong>brokers</strong></td><td class="confluenceTd">A list of configured MQTT brokers.</td></tr><tr class=""><td class="confluenceTd"><strong>connect</strong></td><td class="confluenceTd">A command that specifies, which broker to connect to.</td></tr><tr class=""><td class="confluenceTd"><strong>disconnect</strong></td><td class="confluenceTd">A command that specifies, which broker to disconnect from.</td></tr><tr class=""><td class="confluenceTd"><strong>publish</strong><strong><br/></strong></td><td class="confluenceTd">A command that defines the MQTT message that needs to be published.</td></tr><tr class=""><td class="confluenceTd"><p><strong>subscribe</strong></p></td><td class="confluenceTd">A command that defines MQTT topics to subscribe to.</td></tr><tr class=""><td class="confluenceTd"><p><strong>subscriptions</strong></p></td><td class="confluenceTd">A list of subscribed topics and received messages.</td></tr><tr class=""><td class="confluenceTd"><p><strong>unsubscribe</strong></p></td><td class="confluenceTd">A command that specifies, which topic to unsubscribe from.</td></tr></tbody></table></div><h2 id="MQTT-Brokers">Brokers</h2><p>To add a new MQTT broker (or an MQTT server), run the following command:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/iot mqtt brokers add</pre>
+</div></div><p class="auto-cursor-target">Configurable properties are shown below:</p><div class="table-wrap"><table class="relative-table wrapped confluenceTable" style="width: 63.9244%;"><colgroup class=""><col class="" style="width: 36.7728%;"/><col class="" style="width: 63.2055%;"/></colgroup><tbody class=""><tr class=""><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr class=""><td class="confluenceTd"><strong>address</strong> (<em>IP|hostname</em>; Default: )</td><td class="confluenceTd">IP address or hostname of the broker.</td></tr><tr class=""><td class="confluenceTd"><strong>auto-connect </strong>(<em>yes | no</em>; Default: <strong>no</strong>)</td><td class="confluenceTd">When enabled, after the connection with the MQTT broker goes down/gets interrupted, RouterOS will try to re-establish the connection over and over again.</td></tr><tr class=""><td class="confluenceTd"><strong>certificate </strong>(<em>string</em>; Default: )<strong><br/></strong></td><td class="confluenceTd">The certificate that is going to be used for the SSL connection.</td></tr><tr class=""><td class="confluenceTd"><p><strong>client-id </strong>(<em>string</em>; Default: )</p></td><td class="confluenceTd">A unique ID used for the connection. The broker uses this ID to identify the client.</td></tr><tr class=""><td class="confluenceTd"><p><strong>keep-alive </strong>(<em>integer:30..64800</em>; Default: <strong>60</strong>)</p></td><td class="confluenceTd">A parameter that defines the time (in seconds), after which the client should &quot;ping&quot; the MQTT broker that it is &quot;alive&quot;, to ensure the connection stays ongoing. This value should be set according to MQTT broker settings.</td></tr><tr class=""><td class="confluenceTd"><p><strong>name</strong> (<em>string</em>; Default: )</p></td><td class="confluenceTd">Descriptive name of the broker.</td></tr><tr class=""><td class="confluenceTd"><p><strong>parallel-scripts-limit </strong>(<em>integer:3..1000; </em>Default: off)</p></td><td class="confluenceTd"><p>A parameter that defines how many scripts the <a href="https://help.mikrotik.com/docs/display/ROS/MQTT#MQTT-Subscriptions" rel="nofollow">on-message </a>feature for this broker is allowed to run at the exact same time. Can be useful to reduce CPU, in cases when a large number of messages are constantly published.</p></td></tr><tr class=""><td class="confluenceTd"><p><strong>password</strong> (<em>string</em>; Default: )</p></td><td class="confluenceTd">Password for the broker (if required by the broker).</td></tr><tr class=""><td class="confluenceTd"><p><strong>port</strong> (<em>integer:<em style="text-align: left;">0..4294967295</em></em>; Default: <strong>1883</strong>)</p></td><td class="confluenceTd">Network port used by the broker.</td></tr><tr class=""><td class="confluenceTd"><p><strong>ssl</strong> (<em>yes | no</em>; Default: <strong>no</strong>)</p></td><td class="confluenceTd">Secure Socket Layer configuration.</td></tr><tr class=""><td class="confluenceTd"><strong>username </strong>(<em>string</em>; Default: )</td><td class="confluenceTd">Username for the broker (if required by the broker).</td></tr></tbody></table></div><p>An example of adding a broker:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/iot mqtt brokers add name=&quot;broker&quot; address=&quot;192.168.88.33&quot; port=1883 ssl=no client-id=&quot;test-client&quot; auto-connect=no keep-alive=60</pre>
+</div></div><p>The result:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/iot mqtt brokers print
+ 0 name=&quot;broker&quot; address=&quot;192.168.88.33&quot; port=1883 ssl=no client-id=&quot;test-client&quot; auto-connect=no keep-alive=60 connected=no </pre>
+</div></div><h2 class="auto-cursor-target" id="MQTT-Connect">Connect</h2><p>To connect to the pre-configured MQTT broker, issue the command:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/iot mqtt connect broker=&quot;broker&quot;</pre>
+</div></div><p class="auto-cursor-target">If the connection is successful, the &quot;<strong>connected</strong>&quot; parameter should change to &quot;<strong>yes</strong>&quot;:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/iot mqtt brokers print
+ 0 name=&quot;broker&quot; address=&quot;192.168.88.33&quot; port=1883 ssl=no client-id=&quot;test-client&quot; auto-connect=no keep-alive=60 connected=yes</pre>
+</div></div><h2 class="auto-cursor-target" id="MQTT-Disconnect">Disconnect</h2><p>To disconnect from the MQTT broker, issue the command:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/iot mqtt disconnect broker=&quot;broker&quot;</pre>
+</div></div><p class="auto-cursor-target">To confirm that the broker was disconnected, issue the command below and it should indicate &quot;<strong>connected=no</strong>&quot;:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/iot mqtt brokers print            
+ 0 name=&quot;broker&quot; address=&quot;192.168.88.33&quot; port=1883 ssl=no client-id=&quot;test-client&quot; auto-connect=no keep-alive=60 connected=no </pre>
+</div></div><h2 class="auto-cursor-target" id="MQTT-Publish">Publish</h2><p>Publish menu is used to send MQTT messages to the MQTT broker.</p><div class="table-wrap"><table class="relative-table wrapped confluenceTable" style="width: 69.761%;"><colgroup class=""><col class="" style="width: 29.9894%;"/><col class="" style="width: 69.9475%;"/></colgroup><tbody class=""><tr class=""><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr class=""><td class="confluenceTd"><strong>broker </strong>(<em>string</em>; Default: )<strong><br/></strong></td><td class="confluenceTd">Select the broker, where to publish the message.</td></tr><tr class=""><td class="confluenceTd"><strong>disconnect-after </strong>(<em>yes | no</em>; Default: <strong>no</strong>)</td><td class="confluenceTd">Parameter, that ensures that the connection with the broker will be automatically disconnected after the publish message is sent.</td></tr><tr class=""><td class="confluenceTd"><strong>force</strong> (<em>yes | no</em>; Default: <strong>yes</strong>)<strong><br/></strong></td><td class="confluenceTd">If set to &quot;yes&quot;, when the connection with the broker is not yet established (&quot;<strong>connected=no</strong>&quot;), and the message is attempted to be published, RouterOS will try to establish an MQTT connection with the specified broker first and then publish the message. If set to &quot;no&quot;, RouterOS will not be able to send the message, unless the connection is already established beforehand (&quot;<strong>connected=yes</strong>&quot;).</td></tr><tr class=""><td class="confluenceTd"><p><strong>message </strong>(<em>string</em>; Default: )</p></td><td class="confluenceTd">The message that you wish to publish to the broker.</td></tr><tr class=""><td class="confluenceTd"><p><strong>qos </strong>(<em>integer:<em style="text-align: left;">0..4294967295</em></em>; Default: <strong>0</strong>)</p></td><td class="confluenceTd">Quality of service parameter, as defined by the broker.</td></tr><tr class=""><td class="confluenceTd"><p><strong>retain</strong> (<em>yes | no</em>; Default: <strong>no</strong>)</p></td><td class="confluenceTd">Whether to retain the message or to discard it if no one is subscribed to the topic. This parameter is defined by the broker.</td></tr><tr class=""><td class="confluenceTd"><p><strong>topic</strong> (<em>string</em>; Default: )</p></td><td class="confluenceTd">Topic, as defined by the broker.</td></tr></tbody></table></div><p>An example of publishing the message:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/iot mqtt publish message=&quot;test-message&quot; broker=&quot;broker&quot; topic=&quot;my/test/topic&quot;</pre>
+</div></div><h2 id="MQTT-Subscribe">Subscribe</h2><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Please remember that if you have an on-going connection with the broker (the connection is in the &quot;<strong>connected=yes</strong>&quot; status) and you subscribe to the topic via that broker, you have to re-establish the connection!</p></div></div><p>This menu is used to subscribe to MQTT topics from the broker.</p><div class="table-wrap"><table class="relative-table wrapped confluenceTable" style="width: 65.6229%;"><colgroup class=""><col class="" style="width: 25.58%;"/><col class="" style="width: 74.4287%;"/></colgroup><tbody class=""><tr class=""><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr class=""><td class="confluenceTd"><strong>broker </strong>(<em>string</em>; Default: )<strong><br/></strong></td><td class="confluenceTd">Select the broker, where to subscribe to.</td></tr><tr class=""><td class="confluenceTd"><strong>force</strong> (<em>yes | no</em>; Default: <strong>yes</strong>)<strong><br/></strong></td><td class="confluenceTd">If set to &quot;yes&quot;, when the connection with the broker is not yet established (&quot;<strong>connected=no</strong>&quot;), and subscription is attempted, RouterOS will try to establish an MQTT connection with the specified broker first and then subscribe to the topic. If set to &quot;no&quot;, RouterOS will not be able to subscribe to the topic, unless the connection is already established beforehand (&quot;<strong>connected=yes</strong>&quot;).</td></tr><tr class=""><td class="confluenceTd"><p><strong>qos </strong>(<em>integer:<em style="text-align: left;">0..4294967295</em></em>; Default: <strong>0</strong>)</p></td><td class="confluenceTd">Quality of service parameter, as defined by the broker.</td></tr><tr class=""><td class="confluenceTd"><p><strong>topic</strong> (<em>string</em>; Default: )</p></td><td class="confluenceTd">Topic, as defined by the broker, where to subscribe to.</td></tr></tbody></table></div><p>An example of a subscription:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/iot mqtt subscribe broker=&quot;broker&quot; topic=&quot;my/test/topic&quot;</pre>
+</div></div><p>Wildcard (single level &quot;<strong>+</strong>&quot; and multi-level &quot;<strong>#</strong>&quot;) subscriptions are also supported (RouterOS <strong>does not allow publishing</strong> to wildcard topics <strong>but allows subscribing</strong> to them):</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/iot mqtt subscribe broker=&quot;broker&quot; topic=&quot;my/test/#&quot;
+/iot mqtt subscribe broker=&quot;broker&quot; topic=&quot;my/test/+&quot;</pre>
+</div></div><p>This means that if you subscribe to <code>topic=&quot;my/test/#&quot;</code>, you will be able to receive messages published to any topic that begins with the pattern before the wildcard symbol &quot;#&quot; (e.g., <code>&quot;my/test/topic&quot;</code>, <code>&quot;my/test/topic/something&quot;</code>).</p><p>And, if you subscribe to <code>topic=&quot;my/test/+&quot;</code>, you will be able to receive messages published on the topic +1 level (e.g., <code>&quot;my/test/topic&quot;</code>, <code>&quot;my/test/something&quot;</code>).</p><h2 id="MQTT-Subscriptions">Subscriptions</h2><p>This section is used to manage already-added subscriptions (that were previously added via the <a href="https://help.mikrotik.com/docs/display/ROS/MQTT#MQTT-Subscribe" rel="nofollow">Subscribe</a> section).</p><p>It has the same properties as the <a href="https://help.mikrotik.com/docs/display/ROS/MQTT#MQTT-Subscribe" rel="nofollow">Subscribe</a> section.</p><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body">Starting with <strong>v7.12beta9</strong>, this menu allows you to add the &quot;<strong>on-message</strong>&quot; setting to your subscriptions.</div></div><div class="table-wrap"><table class="relative-table wrapped confluenceTable" style="width: 65.6229%;"><colgroup class=""><col class="" style="width: 25.58%;"/><col class="" style="width: 74.4287%;"/></colgroup><tbody class=""><tr class=""><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr class=""><td class="confluenceTd"><strong>on-message </strong>(<em>string</em>; Default: )<strong><br/></strong></td><td class="confluenceTd">Configure a <a href="https://help.mikrotik.com/docs/display/ROS/Scripting" rel="nofollow">script</a> that will be automatically initiated/run whenever a new message is received in the subscribed topic.</td></tr></tbody></table></div><p><br/></p><p>To check already subscribed topics, issue the command:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/iot mqtt subscriptions print
+0 broker=broker topic=&quot;my/test/topic&quot; qos=0</pre>
+</div></div><p>After you publish a test message as shown in the <strong>Publish</strong> section above:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/iot mqtt publish message=&quot;test-message&quot; broker=&quot;broker&quot; topic=&quot;my/test/topic&quot;</pre>
+</div></div><p>You should be able to check the received message under:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/iot mqtt subscriptions recv print
+ 0 broker=broker topic=&quot;my/test/topic&quot; data=&quot;test-message&quot; time=2023-05-22 16:57:00 </pre>
+</div></div><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Received message list is limited to 1024 entries. After which, older entries will get overwritten with the new ones.</p></div></div><p>To clear stored messages, issue the command:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/iot mqtt subscriptions recv clear</pre>
+</div></div><p><br/></p><p>To run a <a href="https://help.mikrotik.com/docs/display/ROS/Scripting" rel="nofollow">script</a> (for example, a basic &quot;log&quot; script) whenever any new message appears in the subscribed topic, you can use the <code>on-message</code> feature:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/iot mqtt subscriptions set on-message={:log info &quot;Got data {$msgData} from topic {$msgTopic}&quot;} broker=broker 0</pre>
+</div></div><p>The script can use <strong>$msgData</strong> and <strong>$msgTopic</strong> variables. <strong>$msgData</strong> defines the MQTT message that was published and <strong>$msgTopic </strong>defines the MQTT topic, where the message was published. Both variables are automatically generated when a new message appears.</p><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><ul><li><strong>$msgData </strong>and <strong>$msgTopic</strong> variables will not work when used in the &quot;<strong>System&gt;Script</strong>&quot; section created scripts, meaning, they will not work inside &quot;/iot mqtt subscriptions set <strong>on-message={/system script run x}</strong>&quot; added scripts. Both variables will work only when they are used inside the &quot;<strong>on-message={}</strong>&quot; written script, like, for example, &quot;<strong>on-message={:log info &quot;Got data {$msgData} from topic {$msgTopic}&quot;}</strong>&quot;.</li><li>The same applies to <a href="https://help.mikrotik.com/docs/display/ROS/Scripting#Scripting-Scopes" rel="nofollow">global</a> variable usage. If there are global variables that are &quot;generated&quot; using other scripts (variables that appear under System&gt;Script&gt;Environment section), they will not work inside the &quot;on-message&quot; script.</li></ul></div></div><p>After you publish a new MQTT message to the subscribed topic, a new log entry should appear:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/log print
+10:19:15 script,info Got data {test-message} from topic {my/test/topic}</pre>
+</div></div><p>A second example shows how to run a script whenever a specific message (keywords from the message) appears. To achieve a scenario, where we want to run a script only when the MQTT message has specific content or a keyword, we can utilize the <strong>if</strong><a href="https://help.mikrotik.com/docs/display/ROS/Scripting#Scripting-Conditionalstatement" rel="nofollow"> condition statement</a>:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/iot mqtt subscriptions set 0 on-messag={:if ($msgData~&quot;\\{\&quot;test\&quot;:\&quot;123\&quot;\\}&quot;) do={:log info &quot;Got data {$msgData} from topic {$msgTopic}&quot;}}</pre>
+</div></div><p>Or:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/iot mqtt subscriptions set 0 on-messag={:if ($msgData~&quot;test&quot;) do={:log info &quot;Got data {$msgData} from topic {$msgTopic}&quot;}}</pre>
+</div></div><p>As a result, on every received MQTT message, the script will check whether the if condition is true. If it is true (if <strong>$msgData</strong> contains the JSON string <strong>{&quot;test&quot;:&quot;123&quot;} </strong>or if <strong>$msgData</strong> contains the string &quot;<strong>test</strong>&quot;), the log entry will be generated. Otherwise, nothing will happen.</p><p>Meaning, the script will be run only when you publish a message like this:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/iot mqtt publish broker=broker topic=&quot;my/test/topic&quot; message=&quot;{\&quot;test\&quot;:\&quot;123\&quot;}&quot;</pre>
+</div></div><p>When you receive a message from a topic that falls under multiple subscriptions with <code>on-message </code>configuration, only <strong>x1</strong> <code>on-message</code> script will be run. RouterOS will choose which <code>on-meesage</code> script to run using the following logic/priority:</p><ol><li>If the topic configured for the subscription is an exact match →  first priority;</li><li>If the topic name is not an exact match (wildcard is used) → the second priority is for single 1v1 wildcard topics;</li><li>If the topic does not fall under the single 1v1 wildcard category → the third priority is for multi-level wildcard topics based on the topic level.</li></ol><p>An example:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/iot mqtt subscriptions print
+ 0 broker=broker topic=&quot;some/sort/of/topic&quot; qos=0 on-message=&quot;/system script run script1&quot; 
+
+ 1 broker=broker topic=&quot;some/#&quot; qos=0 on-message=&quot;/system script run script2&quot; 
+
+ 2 broker=broker topic=&quot;some/sort/of/+&quot; qos=0 on-message=&quot;/system script run script3&quot;  
+
+ 3 broker=broker topic=&quot;some/thing/#&quot; qos=0 on-message=&quot;/system script run script4&quot;   </pre>
+</div></div><p>When you publish the data to <code>some/sort/of/topic</code>, script1 will be initiated → because the topic is an exact match.</p><p>When you publish the data to <span class="codespan__pre-wrap"><code>some/sort/of/thing</code>, scrtip3 will be initiated → because it falls under the single 1v1 wildcard topic name.</span></p><p><span class="codespan__pre-wrap">When you publish the data to <code>some/name</code>, script2 will be initiated →  because it falls under the multi-level wildcard topic name.</span></p><p>When you publish the data to <code>some/thing/else</code>, script 4 will be initiated → because it falls under the multi-level wildcard topic name (even though it is also matched by <code>some/#</code> wildcard, it is a level closer to <code>some/thing/#</code> entry).</p><h2 id="MQTT-Unsubscribe">Unsubscribe</h2><div class="table-wrap"><table class="relative-table wrapped confluenceTable" style="width: 65.6229%;"><colgroup class=""><col class="" style="width: 25.58%;"/><col class="" style="width: 74.4287%;"/></colgroup><tbody class=""><tr class=""><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr class=""><td class="confluenceTd"><strong>broker </strong>(<em>string</em>; Default: )<strong><br/></strong></td><td class="confluenceTd">Select the broker to unsubscribe from.</td></tr><tr class=""><td class="confluenceTd"><p><strong>topic</strong> (<em>string</em>; Default: )</p></td><td class="confluenceTd">Select a topic, as defined by the broker, to unsubscribe from.</td></tr></tbody></table></div><p>An example of unsubscribing from the broker and the topic is shown below:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/iot mqtt unsubscribe broker=&quot;broker&quot; topic=&quot;my/test/topic&quot;</pre>
+</div></div><h1 id="MQTT-PublishingRouterOSstatisticsusingscripts">Publishing RouterOS statistics using scripts</h1><p>You can also use <a href="https://help.mikrotik.com/docs/display/ROS/Scripting" rel="nofollow">scripts</a> to structure MQTT messages that contain RouterOS statistics. Then, you can apply the <a href="https://help.mikrotik.com/docs/display/ROS/Scheduler" rel="nofollow">scheduler</a> to run the script whenever you like.</p><p>For example, you can run a script like <a href="attachments/46759978/200573055.rsc" data-linked-resource-id="200573055" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="mqttpublish.rsc" data-linked-resource-content-type="application/octet-stream" data-linked-resource-container-id="46759978" data-linked-resource-container-version="67">this</a> (copy the content of the RouterOS code shown below into a new terminal and press &quot;enter&quot;):</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/system script add dont-require-permissions=no name=mqttpublish owner=admin policy=\
+    ftp,reboot,read,write,policy,test,password,sniff,sensitive,romon source=&quot;#\
+    \_Required packages: iot\r\
+    \n\r\
+    \n################################ Configuration #########################\
+    #######\r\
+    \n# Name of an existing MQTT broker that should be used for publishing\r\
+    \n:local broker \&quot;broker\&quot;\r\
+    \n\r\
+    \n# MQTT topic where the message should be published\r\
+    \n:local topic \&quot;my/test/topic\&quot;\r\
+    \n\r\
+    \n#################################### System ############################\
+    #######\r\
+    \n:put (\&quot;[*] Gathering system info...\&quot;)\r\
+    \n:local cpuLoad [/system resource get cpu-load]\r\
+    \n:local freeMemory [/system resource get free-memory]\r\
+    \n:local usedMemory ([/system resource get total-memory] - \$freeMemory)\r\
+    \n:local rosVersion [/system package get value-name=version \\\r\
+    \n\A0 \A0 [/system package find where name ~ \&quot;^routeros\&quot;]]\r\
+    \n:local model [/system routerboard get value-name=model]\r\
+    \n:local serialNumber [/system routerboard get value-name=serial-number]\r\
+    \n:local upTime [/system resource get uptime]\r\
+    \n\r\
+    \n#################################### MQTT ##############################\
+    #######\r\
+    \n:local message \\\r\
+    \n\A0 \A0 \&quot;{\\\&quot;model\\\&quot;:\\\&quot;\$model\\\&quot;,\\\r\
+    \n\A0 \A0 \A0 \A0 \A0 \A0 \A0 \A0 \\\&quot;sn\\\&quot;:\\\&quot;\$serialNumber\\\&quot;,\\\r\
+    \n\A0 \A0 \A0 \A0 \A0 \A0 \A0 \A0 \\\&quot;ros\\\&quot;:\\\&quot;\$rosVersion\\\&quot;,\\\r\
+    \n\A0 \A0 \A0 \A0 \A0 \A0 \A0 \A0 \\\&quot;cpu\\\&quot;:\$cpuLoad,\\\r\
+    \n\A0 \A0 \A0 \A0 \A0 \A0 \A0 \A0 \\\&quot;umem\\\&quot;:\$usedMemory,\\\r\
+    \n\A0 \A0 \A0 \A0 \A0 \A0 \A0 \A0 \\\&quot;fmem\\\&quot;:\$freeMemory,\\\r\
+    \n\A0 \A0 \A0 \A0 \A0 \A0 \A0 \A0 \\\&quot;uptime\\\&quot;:\\\&quot;\$upTime\\\&quot;}\&quot;\r\
+    \n\r\
+    \n:log info \&quot;\$message\&quot;;\r\
+    \n:put (\&quot;[*] Total message size: \$[:len \$message] bytes\&quot;)\r\
+    \n:put (\&quot;[*] Sending message to MQTT broker...\&quot;)\r\
+    \n/iot mqtt publish broker=\$broker topic=\$topic message=\$message\r\
+    \n:put (\&quot;[*] Done\&quot;)&quot;</pre>
+</div></div><p>The script collects the data from the RouterOS (model name, serial number, RouterOS version, current CPU, used memory, free memory, and uptime) and publishes the message (the data) to the broker in the JSON format:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/system script run mqttpublish
+[*] Gathering system info...
+[*] Total message size: 125 bytes
+[*] Sending message to MQTT broker...
+
+[*] Done</pre>
+</div></div><p>You can subscribe to the topic to check the results:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/iot mqtt subscriptions recv  print
+ 0 broker=broker topic=&quot;my/test/topic&quot; data=&quot;{&quot;model&quot;:&quot;RB924i-2nD-BT5&amp;BG77&quot;,&quot;sn&quot;:&quot;E9C80EAEXXXX&quot;,&quot;ros&quot;:&quot;7.9&quot;,&quot;cpu&quot;:13,&quot;umem&quot;:47476736,
+     &quot;fmem&quot;:19632128,&quot;uptime&quot;:&quot;02:21:18&quot;}&quot; 
+   time=2023-05-22 17:03:52 </pre>
+</div></div><p>Do not forget to change the &quot;Configuration&quot; part of the script (topic and the broker) based on your settings.</p><p><br/></p>
+                    </div>
+
+                                                            <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/46759978/68943909.png">image2021-5-26_8-30-54.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/46759978/68943910.png">image2021-5-26_8-34-1.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/46759978/68943915.png">image2021-5-26_9-33-13.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/46759978/200573055.rsc">mqttpublish.rsc</a> (application/octet-stream)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:54</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

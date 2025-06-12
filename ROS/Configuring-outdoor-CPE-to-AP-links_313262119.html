@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : Configuring outdoor CPE to AP links</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Wireless_1409138.html">Wireless</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="WiFi_224559120.html">WiFi</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : Configuring outdoor CPE to AP links
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Deniss M.</span>, last updated on Apr 30, 2025
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742035574 {padding: 0px;}
+div.rbtoc1747742035574 ul {margin-left: 0px;}
+div.rbtoc1747742035574 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742035574'>
+<ul class='toc-indentation'>
+<li><a href='#ConfiguringoutdoorCPEtoAPlinks-Overview'>Overview</a></li>
+<li><a href='#ConfiguringoutdoorCPEtoAPlinks-APsetup'>AP setup</a>
+<ul class='toc-indentation'>
+<li><a href='#ConfiguringoutdoorCPEtoAPlinks-Frequencyselection'>Frequency selection</a></li>
+<li><a href='#ConfiguringoutdoorCPEtoAPlinks-WiFiinterfaceconfiguration'>WiFi interface configuration</a></li>
+<li><a href='#ConfiguringoutdoorCPEtoAPlinks-Othersettingstoconsider'>Other settings to consider</a>
+<ul class='toc-indentation'>
+<li><a href='#ConfiguringoutdoorCPEtoAPlinks-Scenario#1'>Scenario #1</a></li>
+<li><a href='#ConfiguringoutdoorCPEtoAPlinks-Scenario#2'>Scenario #2</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href='#ConfiguringoutdoorCPEtoAPlinks-Stationsetup'>Station setup</a>
+<ul class='toc-indentation'>
+<li><a href='#ConfiguringoutdoorCPEtoAPlinks-WiFiinterfaceconfiguration.1'>WiFi interface configuration</a></li>
+<li><a href='#ConfiguringoutdoorCPEtoAPlinks-Othersettingstoconsider.1'>Other settings to consider</a>
+<ul class='toc-indentation'>
+<li><a href='#ConfiguringoutdoorCPEtoAPlinks-Scenario#1.1'>Scenario #1</a></li>
+<li><a href='#ConfiguringoutdoorCPEtoAPlinks-Scenario#2.1'>Scenario #2</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href='#ConfiguringoutdoorCPEtoAPlinks-Verification'>Verification</a></li>
+</ul>
+</div></p><h1 id="ConfiguringoutdoorCPEtoAPlinks-Overview">Overview</h1><p><strong>Package:</strong> <code>wifi-qcom</code></p><p>It is no secret, that Wi-Fi range for indoor access points is limited. It is affected, mostly, by local regulations, which restrict device's output power (depending on which frequency channel is used). A typical indoor Wi-Fi connection is established between an AP (access point) and a client (station) device (smartphone, laptop...etc.).</p><p>Indoor APs are, usually, equipped with omnidirectional antennas (which allow broadcasting the signal in a &quot;donut&quot; shape around the AP), which have a relatively low antenna gain. For indoor and short distance outdoor installations, it is a perfect antenna to use. Using a simple home AP with omnidirection antennas, you can achieve a distance of up to ±100 meters in the &quot;ideal&quot; interference-free line of sight setup. Which is reduced much further inside buildings.</p><p>However! If you were to increase the antenna gain of the AP and &quot;direct&quot; the signal in a smaller angle towards a specific destination (instead of broadcasting the signal in 360°), you could achieve a much longer distance connection (if the station device is positioned within the directed angle). This is where outdoor long-range APs and CPEs come into play. They allow establishing Wi-Fi connections over multiple kilometer distances.</p><p>Long distance connections require you to have a device running in &quot;AP&quot; mode and a client-side device, running in &quot;station&quot; mode. Multiple stations can be connected to a single AP.</p><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>This guide is meant for 802.11 AX devices running <code><strong>wifi-qcom</strong></code> package/drivers.</p></div></div><h1 id="ConfiguringoutdoorCPEtoAPlinks-APsetup">AP setup</h1><h2 id="ConfiguringoutdoorCPEtoAPlinks-Frequencyselection">Frequency selection</h2><p>As mentioned in the introduction, local authorities regulate Wi-Fi device's output powers. Different frequency ranges in different countries can have different allowed powers. You can check which limitations apply to your country profile using the command:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface/wifi/radio/reg-info country=Latvia 0           
+  ranges: 2402-2482/20dBm/40MHz            
+          5170-5250/23dBm/160MHz/indoor    
+          5250-5330/23dBm/160MHz/indoor/dfs
+          5490-5730/30dBm/160MHz/dfs       
+          5735-5875/14dBm/80MHz </pre>
+</div></div><p>As per the table, we can see that the most power (using &quot;Latvia&quot; country profile) we can get is <code>30 dBm</code> on channels <code>5490-5730</code>.</p><p>&quot;dBm&quot; showed in this table represents &quot;allowed EIRP&quot; (EIRP=Tx power + antenna gain). Not to break any regulations and &quot;laws&quot;, the more antenna gain the device has, the lower Tx power is set (automatically), to match the allowed &quot;EIRP&quot; value.</p><p>Also note, that it could be that the highest &quot;EIRP&quot; channels are &quot;DFS&quot; channels (meaning that if a radar is detected on the channel, the broadcasting stops). This is something to keep in mind!</p><p>With this information, per the table, we can see that it would be wise to avoid using <code>5735-5875</code> range, as it only allows <code>14 dBm</code>.</p><p>The more &quot;EIRP&quot; is allowed on the channel = the more output power will be available = the stronger the signal will be = the bigger distance you can get.</p><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Please note that there is a country profile called &quot;Superchannel&quot;. In this profile, there are no software limitations applied to output powers. This mode should only be used in controlled environments, or if you have special permission to use it in your region. You can combine it with &quot;reducing&quot; Tx power value directly in the settings to get &quot;custom&quot; power output.</p></div></div><h2 id="ConfiguringoutdoorCPEtoAPlinks-WiFiinterfaceconfiguration">WiFi interface configuration</h2><p>To configure AP mode, run the command:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface wifi
+set [ find default-name=wifi1 ] channel.frequency=5490 configuration.country=Latvia .mode=ap .ssid=input_your_SSID_here security.authentication-types=wpa2-psk .passphrase=input_your_password_here</pre>
+</div></div><ul><li><code>channel.frequency</code> → selects a frequency channel on which to run the AP. You can skip this, if you want to use &quot;automatic&quot; channel selection.</li><li><code>configuration.country </code>→ applies the country profile, so that the device follows output power regulations.</li><li data-uuid="f0f17139-da9d-4308-81d2-39817611c4c5"><code>.mode=ap</code> → sets WiFi interface to operate in &quot;access point&quot; mode.</li><li data-uuid="51a92114-3e29-455b-87d1-33a0fbcd3f79"><code>.ssid=input_your_SSID_here</code> → configures the SSID name the AP is going to broadcast.</li><li data-uuid="04035928-9628-4ce2-b02e-542b1a93987d"><code>security.authentication-types=wpa2-psk</code> → specifies which authentication types to support.</li><li data-uuid="43370395-19dc-45a5-ab6c-50eba757c906"><code>.passphrase=input_your_password_here</code> → sets password for the SSID.</li></ul><div role="region" aria-label="Warning" class="confluence-information-macro  confluence-information-macro-warning" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-error confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>There is a &quot;distance&quot; parameter that you have to configure additionally if your link is longer than 2km. This parameter does not work for <code>wifi-qcom-ac</code> drivers.</p></div></div><ul><li data-uuid="2483d3ce-ec53-4ab2-bc5e-e26c5a22323c"><code>configuration.distance=distance_in_km</code> → sets maximum link distance in kilometers. The value should reflect the distance to the AP or station that is furthest from the device. Unconfigured value allows usage of 2 km links. </li></ul><h2 id="ConfiguringoutdoorCPEtoAPlinks-Othersettingstoconsider">Other settings to consider</h2><h3 id="ConfiguringoutdoorCPEtoAPlinks-Scenario#1">Scenario #1</h3><p>In case, you already have a DHCP-server in the topology that is responsible for providing IP addresses to the network, and you want to install the AP behind it:</p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/313262119/313262147.png" data-image-src="attachments/313262119/313262147.png" data-unresolved-comment-count="0" data-linked-resource-id="313262147" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2025-4-29_15-24-59.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="313262119" data-linked-resource-container-version="37" tabindex="0" alt=""></span></p><ol><li data-uuid="f6349788-a4c0-40e7-b876-7cae62966cdb">Ensure that the AP has a <a href="https://help.mikrotik.com/docs/spaces/ROS/pages/328068/Bridging+and+Switching#BridgingandSwitching-Example" rel="nofollow">bridge interface</a> added and that all Ethernet and WiFi ports <a href="https://help.mikrotik.com/docs/spaces/ROS/pages/328068/Bridging+and+Switching#BridgingandSwitching-Example.1" rel="nofollow">are a part of it</a>.</li><li data-uuid="424cd7fe-b206-47b4-b5f0-1c0800c8d955">Setup <a href="https://help.mikrotik.com/docs/spaces/ROS/pages/24805500/DHCP#DHCP-DHCPClient" rel="nofollow">DHCP-client</a> on that bridge or, statically, add an <a href="https://help.mikrotik.com/docs/spaces/ROS/pages/328247/IP+Addressing#IPAddressing-AddingIPAddress" rel="nofollow">IP address</a> and a <a href="https://help.mikrotik.com/docs/spaces/ROS/pages/328084/IP+Routing#IPRouting-DefaultRoute" rel="nofollow">default route</a>, instead.</li><li data-uuid="3b433377-ba64-4fca-9d98-26c1e2a0f48c">Change <a href="https://help.mikrotik.com/docs/spaces/ROS/pages/47579180/Interface+Lists" rel="nofollow">interface list members</a> roles if required.</li></ol><h3 id="ConfiguringoutdoorCPEtoAPlinks-Scenario#2">Scenario #2</h3><p>In case, you want to have the AP itself act as a DHCP-server for stations:</p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/313262119/313262148.png" data-image-src="attachments/313262119/313262148.png" data-unresolved-comment-count="0" data-linked-resource-id="313262148" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2025-4-29_15-25-32.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="313262119" data-linked-resource-container-version="37" tabindex="0" alt=""></span></p><ol><li data-uuid="0cbee4f1-b48f-45f3-91bd-6e1a5bc8288f">Configure ethernet port as an uplink/WAN port, i.e. setup <a href="https://help.mikrotik.com/docs/spaces/ROS/pages/24805500/DHCP#DHCP-DHCPClient" rel="nofollow">DHCP-client</a> or<a href="https://help.mikrotik.com/docs/spaces/ROS/pages/328247/IP+Addressing#IPAddressing-AddingIPAddress" rel="nofollow"> static IP </a>for the ethernet interface, set up a default <a href="https://help.mikrotik.com/docs/spaces/ROS/pages/328084/IP+Routing" rel="nofollow">route </a>and categorize the port as &quot;WAN&quot; port in the <a href="https://help.mikrotik.com/docs/spaces/ROS/pages/47579180/Interface+Lists" rel="nofollow">interface list</a> settings.</li><li data-uuid="865d0282-b720-4c78-b918-5cd1aae8da5f">Setup <a href="https://help.mikrotik.com/docs/spaces/ROS/pages/24805500/DHCP#DHCP-DHCPServer" rel="nofollow">DHCP-server</a> on top of the WiFi interface (or on top of the bridge, which WiFi port is a part of) and add a respective <a href="https://help.mikrotik.com/docs/spaces/ROS/pages/328247/IP+Addressing#IPAddressing-AddingIPAddress" rel="nofollow"> IP address </a>to that interface.</li></ol><h1 id="ConfiguringoutdoorCPEtoAPlinks-Stationsetup">Station setup</h1><h2 id="ConfiguringoutdoorCPEtoAPlinks-WiFiinterfaceconfiguration.1">WiFi interface configuration</h2><p>To configure station mode, run the command:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface wifi
+set [ find default-name=wifi1 ] channel.frequency=5490 configuration.country=Latvia .mode=station .ssid=input_your_SSID_here security.authentication-types=wpa2-psk .passphrase=input_your_password_here</pre>
+</div></div><ul><li data-uuid="3772edf0-8860-465f-ac46-bd7c97912a2e"><code>channel.frequency</code> → selects a frequency channel, which the AP uses. You can skip this, if you want to use &quot;automatic&quot; channel selection.</li><li data-uuid="9d7c9577-c124-4c60-98c2-bf8be051125b"><code>configuration.country </code>→ applies the country profile, so that the device follows output power regulations.</li><li data-uuid="e2d0170f-95f9-44da-8474-bb94bb550ce6"><code>.mode=station</code> → sets WiFi interface to operate in &quot;station&quot; mode.</li><li data-uuid="343da86e-8a88-429a-8c0a-6a8f9a3b06a3"><code>.ssid=input_your_SSID_here</code> → input the SSID name that the AP is broadcasting.</li><li data-uuid="c504eff3-b38f-4c04-8d52-d234a09fd311"><code>security.authentication-types=wpa2-psk</code> → specifies which authentication types to support.</li><li data-uuid="63891df2-f66f-40cb-aec8-3bc571ac6232"><code>.passphrase=input_your_password_here</code> → set the password which AP expects.</li></ul><div role="region" aria-label="Warning" class="confluence-information-macro  confluence-information-macro-warning" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-error confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>There is a &quot;distance&quot; parameter that you have to configure additionally if your link is longer than 2km. This parameter does not work for <code>wifi-qcom-ac</code> drivers.</p></div></div><ul><li data-uuid="6ab64270-3c6d-4b06-ad14-5bb6acadff47"><code>configuration.distance=distance_in_km</code> → sets maximum link distance in kilometers. The value should reflect the distance to the AP or station that is furthest from the device. Unconfigured value allows usage of 2 km links. </li></ul><h2 id="ConfiguringoutdoorCPEtoAPlinks-Othersettingstoconsider.1">Other settings to consider</h2><h3 id="ConfiguringoutdoorCPEtoAPlinks-Scenario#1.1">Scenario #1</h3><p>Scenario, where station's WiFi interface is categorized as a &quot;WAN&quot; interface, which allows station's clients to stay hidden behind <a href="https://help.mikrotik.com/docs/spaces/ROS/pages/3211299/NAT" rel="nofollow">NAT</a>. This is a factory configuration applied to most CPE devices.</p><p>An example of such topology:</p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/313262119/313262202.png" data-image-src="attachments/313262119/313262202.png" data-unresolved-comment-count="0" data-linked-resource-id="313262202" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2025-4-30_11-37-7.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="313262119" data-linked-resource-container-version="37" tabindex="0" alt=""></span></p><p>This type of setup, requires the CPE to have:</p><ol><li data-uuid="78c94f08-4de6-4edf-a62b-9c01ea9eb8d5">WiFi interface categorized as &quot;WAN&quot; port in the <a href="https://help.mikrotik.com/docs/spaces/ROS/pages/47579180/Interface+Lists" rel="nofollow">interface list members</a> menu.</li><li data-uuid="26793fc9-3928-4aff-9c20-929a2161024e">a <a href="https://help.mikrotik.com/docs/spaces/ROS/pages/24805500/DHCP#DHCP-DHCPServer" rel="nofollow">DHCP-server</a> running on the &quot;other/ethernet&quot; interfaces (it is suggested to ensure that AP's DHCP server and Station's DHCP server networks do not use the same subnet, as it can lead to layer3/routing issues).</li><li data-uuid="2dad51c8-0de7-4b62-97e1-8932807dd7b8">a <a href="https://help.mikrotik.com/docs/spaces/ROS/pages/24805500/DHCP#DHCP-DHCPClient" rel="nofollow">DHCP-client</a> or a<a href="https://help.mikrotik.com/docs/spaces/ROS/pages/328247/IP+Addressing#IPAddressing-AddingIPAddress" rel="nofollow"> static IP </a>applied to the WiFi interface and a <a href="https://help.mikrotik.com/docs/spaces/ROS/pages/328084/IP+Routing" rel="nofollow">default route</a> configured.</li><li data-uuid="8e320c5a-0407-4843-8798-d43c9d1b1566"><a href="https://help.mikrotik.com/docs/spaces/ROS/pages/122388518/Wireless+Station+Modes#WirelessStationModes-Modestation" rel="nofollow"><code>mode=station</code></a> configured in the WiFi settings.</li></ol><h3 id="ConfiguringoutdoorCPEtoAPlinks-Scenario#2.1">Scenario #2</h3><p>Scenario, where you can bridge station's ports, so that the CPE itself and all CPE's clients obtain DHCP addresses from the AP.</p><p>An example of such topology:</p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/313262119/313262204.png" data-image-src="attachments/313262119/313262204.png" data-unresolved-comment-count="0" data-linked-resource-id="313262204" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2025-4-30_11-37-45.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="313262119" data-linked-resource-container-version="37" tabindex="0" alt=""></span></p><p>This type of setup, requires the CPE to have:</p><ol><li data-uuid="2897a787-4aec-442d-9842-128cf40ae27f">all ports (WiFi and Ethernet) added into the same<a href="https://help.mikrotik.com/docs/spaces/ROS/pages/328068/Bridging+and+Switching#BridgingandSwitching-Example" rel="nofollow"> bridge interface</a>.</li><li data-uuid="66d10611-d2bd-42ab-b428-d47f3f8203d1">bridge categorized as &quot;LAN&quot; interface in the <a href="https://help.mikrotik.com/docs/spaces/ROS/pages/47579180/Interface+Lists" rel="nofollow">interface list members</a> menu.</li><li data-uuid="248f38e5-8e8d-487a-bdfa-75229da3c328">a <a href="https://help.mikrotik.com/docs/spaces/ROS/pages/24805500/DHCP#DHCP-DHCPServer" rel="nofollow">DHCP-server</a> disabled.</li><li data-uuid="c543b2ad-c3d4-4625-9d36-4be89c40155b">a <a href="https://help.mikrotik.com/docs/spaces/ROS/pages/24805500/DHCP#DHCP-DHCPClient" rel="nofollow">DHCP-client</a> or a<a href="https://help.mikrotik.com/docs/spaces/ROS/pages/328247/IP+Addressing#IPAddressing-AddingIPAddress" rel="nofollow"> static IP </a>applied to the bridge interface.</li><li data-uuid="67f2f597-ae57-4fc2-835a-7c5593b228ee"><a href="https://help.mikrotik.com/docs/spaces/ROS/pages/122388518/Wireless+Station+Modes#WirelessStationModes-Modestation-bridge" rel="nofollow"><code>mode=station-br</code><code>idge</code></a> configured in the WiFi settings:</li></ol><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface wifi
+set [ find default-name=wifi1 ] .mode=station-bridge</pre>
+</div></div><h1 id="ConfiguringoutdoorCPEtoAPlinks-Verification">Verification</h1><p>On a successful connection, both the AP and the Station should display a new entry in the &quot;Registration&quot; table:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface/wifi/registration-table/print
+Flags: A - AUTHORIZED
+Columns: INTERFACE, SSID, MAC-ADDRESS, UPTIME, LAST-ACTIVITY, SIGNAL, AUTH-TYPE, BAND
+#   INTERFACE  SSID        MAC-ADDRESS        UPTIME    LAST-ACTIVITY  SIGNAL  AUTH-TYPE  BAND   
+0 A wifi1      input_SSID  XX:YY:ZZ:AA:30:6E  6h24m21s  0ms            -72     wpa2-psk   5ghz-ax</pre>
+</div></div><p>You can also check, via the CPE, whether it properly sees/recognizes the AP using the &quot;scan&quot; command:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface/wifi scan [find where name=wifi1]
+Flags: A - ACTIVE
+Columns: ADDRESS, SSID, CHANNEL, SECURITY, SIGNAL, STA-COUNT
+  ADDRESS            SSID               CHANNEL           SECURITY                              SIGNAL  STA-COUNT
+A XX:YY:ZZ:AA:F4:28  SSID_Y             5620/ax           WPA2-PSK/WPA3-PSK                     -60             0
+A XX:YY:ZZ:BB:0B:DA  SSID_X             5745/ax/Ce        WPA3-PSK                              -68             0
+A XX:YY:ZZ:CC:0B:DA  input_SSID         5745/ax/Ce        WPA2-PSK                              -68             0
+A XX:YY:ZZ:DD:0B:DA                     5745/ax/Ce        WPA2-PSK                              -68             0</pre>
+</div></div><p><br/></p>
+                    </div>
+
+                                                            <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/313262119/313262147.png">image-2025-4-29_15-24-59.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/313262119/313262148.png">image-2025-4-29_15-25-32.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/313262119/313262202.png">image-2025-4-30_11-37-7.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/313262119/313262204.png">image-2025-4-30_11-37-45.png</a> (image/png)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : SOCKS</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Network-Management_119144613.html">Network Management</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : SOCKS
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Artūrs C.</span>, last updated on Jun 30, 2021
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742030766 {padding: 0px;}
+div.rbtoc1747742030766 ul {margin-left: 0px;}
+div.rbtoc1747742030766 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742030766'>
+<ul class='toc-indentation'>
+<li><a href='#SOCKS-Introduction'>Introduction</a>
+<ul class='toc-indentation'>
+<li><a href='#SOCKS-PropertyDescription'>Property Description</a></li>
+</ul>
+</li>
+<li><a href='#SOCKS-AccessList'>Access List</a></li>
+<li><a href='#SOCKS-ActiveConnections'>Active Connections</a>
+<ul class='toc-indentation'>
+<li><a href='#SOCKS-Example'>Example</a></li>
+</ul>
+</li>
+<li><a href='#SOCKS-ApplicationExamples'>Application Examples</a></li>
+</ul>
+</div></p><h1 id="SOCKS-Introduction">Introduction</h1><p>SOCKS (<span style="color:var(--ds-text,#172b4d);">Socket Secure)</span> is a proxy server that allows TCP-based application data to relay across the firewall, even if the firewall would block the packets. The SOCKS protocol is independent of application protocols, so it can be used for many services, e.g, WWW, FTP, TELNET, and others.</p><p>At first, an application client connects to the SOCKS proxy server, then the proxy server looks in its access list to see whether the client is permitted to access the remote application resource or not, if it is permitted, the proxy server relies on the packet to the application server and creates a connection between the application server and client.</p><p>Remember to configure your application client to use SOCKS!.</p><p>You should secure the SOCKS proxy using its access list and/or firewall to disallow access from outside. Failing to secure the proxy server may introduce security issues to your network, and may provide a way for spammers to send junk mail through the router.</p><h2 id="SOCKS-PropertyDescription"><span class="mw-headline">Property Description</span></h2><div class="table-wrap"><table class="relative-table confluenceTable" style="width: 99.5635%;"><colgroup><col style="width: 42.3002%;"/><col style="width: 57.6998%;"/></colgroup><tbody><tr><th style="text-align: center;" class="confluenceTh">Property</th><th style="text-align: center;" class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><p><strong>connection-idle-timeout</strong><span> </span>(time; default: 2m)</p></td><td class="confluenceTd">time after which idle connections are terminated</td></tr><tr><td class="confluenceTd"><strong>enabled</strong><span> </span>(yes | no; default: no)</td><td class="confluenceTd">whether to enable or no the SOCKS proxy</td></tr><tr><td class="confluenceTd"><strong>max-connections</strong><span> </span>(integer: 1..500; default: 200) </td><td class="confluenceTd">maxumum number of simultaneous connections</td></tr><tr><td class="confluenceTd"><strong>port</strong><span> </span>(integer: 1..65535; default: 1080)</td><td class="confluenceTd">TCP port on which the SOCKS server listens for connections</td></tr></tbody></table></div><h1 id="SOCKS-AccessList">Access List</h1><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip socks access</pre>
+</div></div><p><span style="color:var(--ds-text-accent-lime-bolder,#37471f);">In the SOCKS access list, you can add rules which will control access to the SOCKS server. This list is similar to firewall lists.</span></p><div class="table-wrap"><table class="relative-table confluenceTable" style="width: 100.0%;"><colgroup><col style="width: 42.2494%;"/><col style="width: 57.7506%;"/></colgroup><tbody><tr><th style="text-align: center;" class="confluenceTh">Property</th><th style="text-align: center;" class="confluenceTh">Description</th></tr><tr><td class="confluenceTd">action (allow | deny; default: allow)</td><td class="confluenceTd"><p>allow - allow packets, matching this rule, to be forwarded for further processing</p><p>deny - deny access for packets, matching this rule</p></td></tr><tr><td class="confluenceTd">dst-address (IP address/netmask)</td><td class="confluenceTd">destination (server's) address</td></tr><tr><td class="confluenceTd">dst-port (port)</td><td class="confluenceTd">destination TCP port</td></tr><tr><td class="confluenceTd">src-address (IP address/netmask)</td><td class="confluenceTd">source (client's) address for a packet</td></tr><tr><td class="confluenceTd">src-port (port) </td><td class="confluenceTd">source TCP port</td></tr></tbody></table></div><h1 style="" id="SOCKS-ActiveConnections"><span class="mw-headline">Active Connections</span></h1><p><span style="color:var(--ds-text-accent-lime-bolder,#37471f);">The Active Connection list shows all established TCP connections, which are maintained through the SOCKS proxy server.</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip socks connections</pre>
+</div></div><div class="table-wrap"><table class="relative-table confluenceTable" style="width: 100.0%;"><colgroup><col style="width: 42.324%;"/><col style="width: 57.676%;"/></colgroup><tbody><tr><th style="text-align: center;" class="confluenceTh">Property</th><th style="text-align: center;" class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>dst-address</strong><span> </span>(read-only: IP address) </td><td class="confluenceTd">destination (application server) IP address</td></tr><tr><td class="confluenceTd"><strong>rx</strong><span> </span>(read-only: integer)</td><td class="confluenceTd">bytes received</td></tr><tr><td class="confluenceTd"><strong>src-address</strong><span> </span>(read-only: IP address)</td><td class="confluenceTd">source (application client) IP address</td></tr><tr><td class="confluenceTd"><strong>tx</strong><span> </span>(read-only: integer)</td><td class="confluenceTd">bytes sent</td></tr><tr><td class="confluenceTd"><strong>type</strong><span> </span>(read-only: in | out | unknown) - connection type</td><td class="confluenceTd"><p>in - incoming connection</p><p>out - outgoing connection</p><p>unknown - connection has just been initiated</p></td></tr></tbody></table></div><h2 id="SOCKS-Example">Example</h2><p><span style="color:var(--ds-text-accent-lime-bolder,#37471f);">To see current TCP connections:</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] ip socks connections&gt; print
+ # SRC-ADDRESS                DST-ADDRESS                TX         RX
+ 0 192.168.0.2:3242           159.148.147.196:80         4847       2880
+ 1 192.168.0.2:3243           159.148.147.196:80         3408       2127
+ 2 192.168.0.2:3246           159.148.95.16:80           10172      25207
+ 3 192.168.0.2:3248           194.8.18.26:80             474        1629
+ 4 192.168.0.2:3249           159.148.95.16:80           6477       18695
+ 5 192.168.0.2:3250           159.148.95.16:80           4137       27568
+ 6 192.168.0.2:3251           159.148.95.16:80           1712       14296
+ 7 192.168.0.2:3258           80.91.34.241:80            314        208
+ 8 192.168.0.2:3259           80.91.34.241:80            934        524
+ 9 192.168.0.2:3260           80.91.34.241:80            930        524
+10 192.168.0.2:3261           80.91.34.241:80            312        158
+11 192.168.0.2:3262           80.91.34.241:80            312        158
+[admin@MikroTik] ip socks connections&gt;</pre>
+</div></div><h1 style="" id="SOCKS-ApplicationExamples"><span class="mw-headline">Application Examples</span></h1><p style=""><strong><span class="mw-headline">FTP service through SOCKS server</span></strong></p><p style="">Let us consider that we have a network 192.168.0.0/24 which is masqueraded, using a router with a public IP 10.1.0.104/24 and a private IP 192.168.0.1/24. Somewhere in the network is an FTP server with IP address 10.5.8.8. We want to allow access to this FTP server for a client in our local network with IP address 192.168.0.2/24.</p><p style="">We have already masqueraded our local network:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] ip firewall nat&gt; print
+Flags: X - disabled, I - invalid, D - dynamic
+ 0   chain=srcnat action=masquerade src-address=192.168.0.0/24
+[admin@MikroTik] ip firewall nat&gt;</pre>
+</div></div><p class="auto-cursor-target"><span style="color:var(--ds-text-accent-lime-bolder,#37471f);">And access to public FTP servers is denied in the firewall:</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] ip firewall filter&gt; print
+Flags: X - disabled, I - invalid, D - dynamic
+ 0   chain=forward action=drop src-address=192.168.0.0/24 dst-port=21 protocol=tcp
+[admin@MikroTik] ip firewall filter&gt;</pre>
+</div></div><p class="auto-cursor-target"><span style="color:var(--ds-text-accent-lime-bolder,#37471f);">We have to enable the SOCKS server:</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] ip socks&gt; set enabled=yes
+[admin@MikroTik] ip socks&gt; print
+                    enabled: yes
+                       port: 1080
+    connection-idle-timeout: 2m
+            max-connections: 200
+[admin@MikroTik] ip socks&gt;</pre>
+</div></div><p class="auto-cursor-target"><span style="color:var(--ds-text-accent-lime-bolder,#37471f);">Add access to a client with an IP address 192.168.0.2/32 to SOCKS access list, allow data transfer from FTP server to client (allow destination ports from 1024 to 65535 for any IP address), and drop everything else:</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] ip socks access&gt; add src-address=192.168.0.2 dst-port=21 \
+\... action=allow
+[admin@MikroTik] ip socks access&gt; add dst-port=1024-65535 action=allow
+[admin@MikroTik] ip socks access&gt; add action=deny
+[admin@MikroTik] ip socks access&gt; print
+Flags: X - disabled
+ 0   src-address=192.168.0.2 dst-port=21 action=allow
+ 1   dst-port=1024-65535 action=allow
+ 2   action=deny
+[admin@MikroTik] ip socks access&gt;</pre>
+</div></div><p class="auto-cursor-target"><span style="color:var(--ds-text-accent-lime-bolder,#37471f);">That's all - the SOCKS server is configured. To see active connections and data transmitted and received:</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] ip socks connections&gt; print
+ # SRC-ADDRESS                DST-ADDRESS                TX         RX
+ 0 192.168.0.2:1238           10.5.8.8:21                1163       4625
+ 1 192.168.0.2:1258           10.5.8.8:3423              0          3231744
+[admin@MikroTik] ip socks connections&gt;</pre>
+</div></div><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p><span style="color:var(--ds-text-accent-lime-bolder,#37471f);">In order to use the SOCKS proxy server, you have to specify its IP address and port in your FTP client. In this case, IP address would be 192.168.0.1 (local IP address of the router/SOCKS server) and TCP port 1080.</span></p></div></div>
+                    </div>
+
+                                        
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : CHR: Hetzner Cloud Installation</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Getting-started_328119.html">Getting started</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="18350234.html">Cloud Hosted Router, CHR</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : CHR: Hetzner Cloud Installation
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Serhii T.</span> on Aug 09, 2024
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><strong><a class="external-link" href="https://www.hetzner.com/cloud" rel="nofollow">Hetzner Cloud</a></strong> is a cloud computing platform that allows users to run virtual machines (VMs) in the cloud. It offers scalable infrastructure and a range of pre-configured Linux distributions. However, for those needing advanced networking features, Hetzner Cloud is also a great platform for deploying <strong>RouterOS CHR (Cloud Hosted Router)</strong>. <br/>CHR is a MikroTik product that provides a fully functional RouterOS installation in a virtual environment, ideal for cloud-based routing, VPN services, and other network management tasks. By running RouterOS CHR on Hetzner Cloud, users can leverage powerful networking tools with the flexibility and scalability of a cloud environment.</p><ol><li><p><strong>Create a Hetzner Cloud Server</strong><br/>Begin by creating a new server on Hetzner Cloud. Any of the available server options will work.</p></li><li><p><strong>Activate Rescue System</strong></p><ul><li>In the Hetzner Cloud admin interface, activate the <strong>Enable Rescue </strong>system by selecting <strong>&quot;ENABLE RESCUE &amp; POWER CYCLE</strong>&quot;</li><li>Choose 'linux64' as the Rescue OS.</li><li>The system will display a username and password. Use these credentials to log into the rescue system via SSH.</li></ul></li><li><p><strong>Install CHR (Cloud Hosted Router)</strong></p><ul><li>Once logged into the rescue system, download the CHR <strong>RAW</strong> disk image and write it over the system disk of the cloud server using the following command: </li><li>curl -L <a class="external-link" href="https://download.mikrotik.com/routeros/7.15.3/chr-7.15.3.img.zip" rel="nofollow">https://download.mikrotik.com/routeros/7.15.3/chr-7.15.3.img.zip</a> | funzip | dd of=/dev/sda bs=1M</li></ul></li></ol><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Note: Replace the URL with the link to the latest CHR version available on the MikroTik <a class="external-link" href="https://mikrotik.com/download" rel="nofollow">download page</a>.</p></div></div><p><em><strong style="font-style: normal;letter-spacing: 0.0px;">Reboot the Server</strong></em></p><p>After the installation is complete, reboot the server by issuing the <code>reboot</code> command.</p><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body">It is crucial to <a href="https://help.mikrotik.com/docs/display/ROS/Securing+your+router" rel="nofollow">secure your RouterOS</a> installation immediately!</div></div><hr/><p>Make sure to keep your RouterOS updated and follow best security practices to maintain the safety and performance of your server.</p>
+                    </div>
+
+                                                            <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/263749814/263749798.png">chr_video.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/263749814/263749799.png">image-2024-7-29_17-48-18.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/263749814/263749800.png">09.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/263749814/263749801.png">08.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/263749814/263749802.png">07.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/263749814/263749803.png">06.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/263749814/263749804.png">05.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/263749814/263749805.png">04.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/263749814/263749806.png">03.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/263749814/263749807.png">02.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/263749814/263749808.png">011.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/263749814/263749809.png">01.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/263749814/263749810.png">hetzner_01.png</a> (image/png)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

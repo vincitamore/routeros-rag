@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : Traffic Eng</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Multi-Protocol-Label-Switching---MPLS_328082.html">Multi Protocol Label Switching - MPLS</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : Traffic Eng
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Unknown User (olga)</span>, last updated on Oct 08, 2020
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <h2 style="" id="TrafficEng-Properties"><span class="mw-headline">Properties</span></h2><p style=""><strong>Sub-menu:</strong><span> </span><code>/interface traffic-eng</code></p><p style=""><br/></p><div class="table-wrap"><table style="margin-left: 14.4318px;" class="confluenceTable"><colgroup><col/><col/></colgroup><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>affinity-exclude</strong><span> </span>(<em>integer</em>; Default:<span> </span><strong>not set</strong>)</td><td class="confluenceTd">Do not use interface if<span> </span><a class="external-link" href="https://wiki.mikrotik.com/wiki/Manual:MPLS/Traffic-eng#Interface" rel="nofollow" style="text-decoration: none;" title="Manual:MPLS/Traffic-eng">resource-class</a><span> </span>matches any of specified bits.</td></tr><tr><td class="confluenceTd"><strong>affinity-include-all</strong><span> </span>(<em>integer</em>; Default:<span> </span><strong>not set</strong>)</td><td class="confluenceTd">Use interface only if<span> </span><a class="external-link" href="https://wiki.mikrotik.com/wiki/Manual:MPLS/Traffic-eng#Interface" rel="nofollow" style="text-decoration: none;" title="Manual:MPLS/Traffic-eng">resource-class</a><span> </span>matches all of specified bits.</td></tr><tr><td class="confluenceTd"><strong>affinity-include-any</strong><span> </span>(<em>integer</em>; Default:<span> </span><strong>not set</strong>)</td><td class="confluenceTd">Use interface if<span> </span><a class="external-link" href="https://wiki.mikrotik.com/wiki/Manual:MPLS/Traffic-eng#Interface" rel="nofollow" style="text-decoration: none;" title="Manual:MPLS/Traffic-eng">resource-class</a><span> </span>matches any of specified bits.</td></tr><tr><td class="confluenceTd"><strong>auto-bandwidth-avg-interval</strong><span> </span>(<em>time</em>; Default:<span> </span><strong>5m</strong>)</td><td class="confluenceTd">Interval in which actual amount of data is measured, from which average bandwidth is calculated.</td></tr><tr><td class="confluenceTd"><strong>auto-bandwidth-range</strong><span> </span>(<em>Disabled | Min[bps][-Max[bps]]</em>; Default:<span> </span><strong>0bps</strong>)</td><td class="confluenceTd">Auto bandwidth adjustment range.<span> </span><a class="external-link" href="https://wiki.mikrotik.com/wiki/Manual:TE_tunnel_auto_bandwidth" rel="nofollow" style="text-decoration: none;" title="Manual:TE tunnel auto bandwidth"><code>Read more &gt;&gt;</code></a></td></tr><tr><td class="confluenceTd"><strong>auto-bandwidth-reserve</strong><span> </span>(<em>integer[%]</em>; Default:<span> </span><strong>0%</strong>)</td><td class="confluenceTd">Specifies percentage of additional bandwidth to reserve.<span> </span><a class="external-link" href="https://wiki.mikrotik.com/wiki/Manual:TE_tunnel_auto_bandwidth" rel="nofollow" style="text-decoration: none;" title="Manual:TE tunnel auto bandwidth"><code>Read more &gt;&gt;</code></a></td></tr><tr><td class="confluenceTd"><strong>auto-bandwidth-update-interval</strong><span> </span>(<em>time</em>; Default:<span> </span><strong>1h</strong>)</td><td class="confluenceTd">Interval during which tunnel keeps track of highest average rate.</td></tr><tr><td class="confluenceTd"><strong>bandwidth</strong><span> </span>(<em>integer[bps]</em>; Default:<span> </span><strong>0bps</strong>)</td><td class="confluenceTd">How much bandwidth to reserve for TE tunnel. Value is in bits per second.<span> </span><a class="external-link" href="https://wiki.mikrotik.com/wiki/Manual:TE_tunnel_auto_bandwidth#Bandwidth_limitation" rel="nofollow" style="text-decoration: none;" title="Manual:TE tunnel auto bandwidth"><code>Read more &gt;&gt;</code></a></td></tr><tr><td class="confluenceTd"><strong>bandwidth-limit</strong><span> </span>(<em>disabled | integer[%]</em>; Default:<span> </span><strong>disabled</strong>)</td><td class="confluenceTd">Defines actual bandwidth limitation of TE tunnel. Limit is configured in percent of specified tunnel<span> </span><code>bandwidth</code>.<span> </span><a class="external-link" href="https://wiki.mikrotik.com/wiki/Manual:TE_tunnel_auto_bandwidth#Bandwidth_limitation" rel="nofollow" style="text-decoration: none;" title="Manual:TE tunnel auto bandwidth"><code>Read more &gt;&gt;</code></a></td></tr><tr><td class="confluenceTd"><strong>comment</strong><span> </span>(<em>string</em>; Default: )</td><td class="confluenceTd">Short description of the item</td></tr><tr><td class="confluenceTd"><strong>disable-running-check</strong><span> </span>(<em>yes | no</em>; Default:<span> </span><strong>no</strong>)</td><td class="confluenceTd">Specifies whether to detect if interface is running or not. If set to<span> </span><strong>no</strong><span> </span>interface will always have<span> </span><code>running</code><span> </span>flag.</td></tr><tr><td class="confluenceTd"><strong>disabled</strong><span> </span>(<em>yes | no</em>; Default:<span> </span><strong>yes</strong>)</td><td class="confluenceTd">Defines whether item is ignored or used.</td></tr><tr><td class="confluenceTd"><strong>from-address</strong><span> </span>(<em>auto | IP</em>; Default:<span> </span><strong>auto</strong>)</td><td class="confluenceTd">Ingress address of the tunnel. If set to<span> </span><strong>auto</strong><span> </span>least IP address is picked.</td></tr><tr><td class="confluenceTd"><strong>holding-priority</strong><span> </span>(<em>integer [0..7]</em>; Default:<span> </span><strong>not set</strong>)</td><td class="confluenceTd">Is used to decide whether this session can be preempted by another session. 0 sets the highest priority.</td></tr><tr><td class="confluenceTd"><strong>mtu</strong><span> </span>(<em>integer</em>; Default:<span> </span><strong>1500</strong>)</td><td class="confluenceTd">Layer3 Maximum Transmission Unit</td></tr><tr><td class="confluenceTd"><strong>name</strong><span> </span>(<em>string</em>; Default: )</td><td class="confluenceTd">Name of the interface</td></tr><tr><td class="confluenceTd"><strong>primary-path</strong><span> </span>(<em>string</em>; Default: )</td><td class="confluenceTd">Primary label switching paths defined in<span> </span><code><a class="external-link" href="https://wiki.mikrotik.com/wiki/Manual:MPLS/Traffic-eng#Tunnel_Path" rel="nofollow" style="text-decoration: none;" title="Manual:MPLS/Traffic-eng">/mpls traffic-eng tunnel-path</a></code><span> </span>menu.</td></tr><tr><td class="confluenceTd"><strong>primary-retry-interval</strong><span> </span>(<em>time</em>; Default:<span> </span><strong>1m</strong>)</td><td class="confluenceTd">Interval after which tunnel will try to use primary path.</td></tr><tr><td class="confluenceTd"><strong>record-route</strong><span> </span>(<em>yes | no</em>; Default:<span> </span><strong>not set</strong>)</td><td class="confluenceTd">If enabled, the sender node will receive information about the actual route that the LSP tunnel traverses. Record Route is analogous to a path vector, and hence can be used for loop detection.</td></tr><tr><td class="confluenceTd"><strong>reoptimize-interval</strong><span> </span>(<em>time</em>; Default:<span> </span><strong>not set</strong>)</td><td class="confluenceTd">Interval after which tunnel will re-optimize current path. If current path is not the best path then after optimization best path will be used.<span> </span><a class="external-link" href="https://wiki.mikrotik.com/wiki/Manual:Interface/Traffic_Engineering#Reoptimization" rel="nofollow" style="text-decoration: none;"><code>Read more &gt;&gt;</code></a></td></tr><tr><td class="confluenceTd"><strong>secondary-paths</strong><span> </span>(<em>string[,string]</em>; Default: )</td><td class="confluenceTd">List of label switching paths used by TE tunnel if primary path fails. Paths are defined in<span> </span><code><a class="external-link" href="https://wiki.mikrotik.com/wiki/Manual:MPLS/Traffic-eng#Tunnel_Path" rel="nofollow" style="text-decoration: none;" title="Manual:MPLS/Traffic-eng">/mpls traffic-eng tunnel-path</a></code><span> </span>menu.</td></tr><tr><td class="confluenceTd"><strong>setup-priority</strong><span> </span>(<em>integer[0..7]</em>; Default:<span> </span><strong>not set</strong>)</td><td class="confluenceTd">Parameter is used to decide whether this session can preempt another session. 0 sets the highest priority.</td></tr><tr><td class="confluenceTd"><strong>to-address</strong><span> </span>(<em>IP</em>; Default:<span> </span><strong>0.0.0.0</strong>)</td><td class="confluenceTd">Remote end of TE tunnel.</td></tr></tbody></table></div><h2 style="" id="TrafficEng-Monitoring"><span class="mw-headline">Monitoring</span></h2><p style="">To verify TE tunnel's status<span> </span><strong><code>monitor</code></strong><span> </span>command can be used.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface traffic-eng monitor 0 
+tunnel-id: 12 
+primary-path-state: on-hold 
+secondary-path-state: established 
+secondary-path: static 
+active-path: static 
+active-lspid: 3 
+active-label: 66 
+explicit-route: &quot;S:192.168.55.10/32,L:192.168.55.13/32,L:192.168.55.17/32&quot; 
+recorded-route: &quot;192.168.55.13[66],192.168.55.17[59],192.168.55.18[3]&quot; 
+reserved-bandwidth: 5.0Mbps</pre>
+</div></div><p style="margin-left: 20.0px;"><br/></p><h2 style="" id="TrafficEng-Reoptimization"><span class="mw-headline">Reoptimization</span></h2><p style="">Path can be re-optimized manually by entering the command<span> </span><code>/interface traffic-eng reoptimize [id]</code><span> </span>(where [id] is an item number or interface name). It allows network administrators to reoptimize the LSPs that have been established based on changes in bandwidth, traffic, management policy, or other factors.</p><p style="">Let's say TE tunnel chose another path after a link failure on best path. You can verify optimization by looking at<span> </span><strong><code>explicit-route</code></strong><span> </span>or<span> </span><strong><code>recorded-route</code></strong><span> </span>values if<span> </span><a class="external-link" href="https://wiki.mikrotik.com/wiki/Manual:MPLS/Traffic-eng#Tunnel_Path" rel="nofollow" style="text-decoration: none;" title="Manual:MPLS/Traffic-eng">record-route</a><span> </span>parameter is enabled.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface traffic-eng monitor 0 
+tunnel-id: 12 
+primary-path-state: established 
+primary-path: dyn 
+secondary-path-state: not-necessary 
+active-path: dyn active-lspid: 1 
+active-label: 67 
+explicit-route: &quot;S:192.168.55.10/32,S:192.168.55.13/32,S:192.168.55.14/32, 
+S:192.168.55.17/32,S:192.168.55.18/32&quot; 
+recorded-route: &quot;192.168.55.13[67],192.168.55.17[60],192.168.55.18[3]&quot; 
+reserved-bandwidth: 5.0Mbps</pre>
+</div></div><p style="margin-left: 20.0px;"><br/></p><p style="">Whenever the link comes back, TE tunnel will use the same path even it is not the best path (unless<span> </span><a class="external-link" href="https://wiki.mikrotik.com/wiki/Manual:MPLS/Traffic-eng#Tunnel_Path" rel="nofollow" style="text-decoration: none;" title="Manual:MPLS/Traffic-eng">reoptimize-interval</a><span> </span>is configured). To fix it we can manually reoptimize the tunnel path.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface traffic-eng reoptimize 0</pre>
+</div></div><p style="margin-left: 20.0px;"><br/></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface traffic-eng monitor 0 
+tunnel-id: 12 
+primary-path-state: established 
+primary-path: dyn 
+secondary-path-state: not-necessary 
+active-path: dyn 
+active-lspid: 2 active-label: 81 
+explicit-route: &quot;S:192.168.55.5/32,S:192.168.55.2/32,S:192.168.55.1/32&quot; 
+recorded-route: &quot;192.168.55.2[81],192.168.55.1[3]&quot; 
+reserved-bandwidth: 5.0Mbps</pre>
+</div></div><p style="margin-left: 20.0px;"><br/></p><p style="">Notice how explicit-route and recorded-route changed to a shorter path.</p>
+                    </div>
+
+                                        
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

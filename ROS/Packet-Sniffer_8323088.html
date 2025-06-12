@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : Packet Sniffer</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="119144606.html">Diagnostics, monitoring and troubleshooting</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : Packet Sniffer
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Artūrs C.</span>, last updated by <span class='editor'> Edgars P.</span> on Oct 04, 2024
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742046280 {padding: 0px;}
+div.rbtoc1747742046280 ul {margin-left: 0px;}
+div.rbtoc1747742046280 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742046280'>
+<ul class='toc-indentation'>
+<li><a href='#PacketSniffer-Introduction'>Introduction</a></li>
+<li><a href='#PacketSniffer-PacketSnifferconfiguration'>Packet Sniffer configuration</a>
+<ul class='toc-indentation'>
+<li><a href='#PacketSniffer-PacketSnifferQuickMode'>Packet Sniffer Quick Mode</a></li>
+<li><a href='#PacketSniffer-PacketSnifferProtocols'>Packet Sniffer Protocols</a></li>
+<li><a href='#PacketSniffer-PacketSnifferHost'>Packet Sniffer Host</a></li>
+<li><a href='#PacketSniffer-PacketSnifferConnections'>Packet Sniffer Connections</a></li>
+</ul>
+</li>
+</ul>
+</div></p><h1 id="PacketSniffer-Introduction">Introduction</h1><p>A packet sniffer is a tool that can capture and analyze packets that are going to, leaving, or going through the router. Packet sniffing is very useful when you diagnose networks or protect against security attacks over networks.</p><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Unicast traffic between Wireless clients with client-to-client forwarding enabled will not be visible to the sniffer tool.</p></div></div><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Packets that are processed with hardware offloading enabled bridge will not be visible (flooded packets like unknown unicast, broadcast, and multicast traffic might be visible).</p></div></div><div role="region" aria-label="Tip" class="confluence-information-macro  confluence-information-macro-tip" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-approve confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Sniffer catches packets before they go into the firewall (direction=rx) or after they leave it (direction=tx).</p></div></div><h1 id="PacketSniffer-PacketSnifferconfiguration">Packet Sniffer configuration</h1><p>RouterOS embedded sniffer allows you to capture packets based on various protocols.</p><p>In the following example, we will configure the sniffer to match packets going through the ether1 interface:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; /tool/sniffer/start interface=ether1           
+[admin@MikroTik] &gt; /tool/sniffer/stop                             
+[admin@MikroTik] &gt; /tool/sniffer/save file-name=/flash/test.pcap            
+MikroTik] &gt; file print where name~&quot;test&quot; 
+Columns: NAME, TYPE, SIZE, CREATION-TIME
+#  NAME        TYPE  SIZE  CREATION-TIME       
+9  flash/test.pcap  file  3696  dec/04/2019 10:48:16</pre>
+</div></div><p>You can download captured packets from a file section. Then you can use a <span class="js-about-item-abstr">packet analyzer such as <a class="external-link" href="https://www.wireshark.org/" rel="nofollow">Wireshark</a> to analyze a file:</span></p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/8323088/8323122.png" data-image-src="attachments/8323088/8323122.png" data-unresolved-comment-count="0" data-linked-resource-id="8323122" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="sniffer.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="8323088" data-linked-resource-container-version="15" tabindex="0" alt=""></span></p><p>If you are using packet streaming to PC and are using Wireshark, to ensure you are only viewing the streamed data, you will need to apply a filter that matches the port the sniffer is using, by default 37008 is used. In addition, we recommend using<span style="color:var(--ds-background-accent-green-bolder,#1f845A);"><code> filter-stream=yes</code></span>.</p><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image confluence-thumbnail" draggable="false" height="150" src="attachments/8323088/260243462.png" data-image-src="attachments/8323088/260243462.png" data-unresolved-comment-count="0" data-linked-resource-id="260243462" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="image-2024-7-15_13-42-2.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="8323088" data-linked-resource-container-version="15" tabindex="0" alt=""></span></p><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Please note that sniffed packets will be available for 10 minutes, if you need them permanently, set a &quot;file-name&quot; to save them directly or issue a &quot;save&quot; command as described previously.</p></div></div><p><br/></p><p><strong>Sub-menu:</strong> <code>/tool sniffer</code></p><div class="table-wrap"><table class="wrapped confluenceTable" style="margin-left: 16.2031px;"><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>file-limit </strong>(<em>integer 10..4294967295[KiB]</em>; Default:<span> </span><strong>1000KiB</strong>)</td><td class="confluenceTd">File size limit. Sniffer will stop when a limit is reached.</td></tr><tr><td class="confluenceTd"><span><strong>file-name</strong> </span>(<em>string</em>; Default:<span> </span>)</td><td class="confluenceTd">Name of the file where sniffed packets will be saved.</td></tr><tr><td class="confluenceTd"><strong>filter-cpu</strong><span> </span>(<em>integer</em>; Default:<span> </span>)</td><td class="confluenceTd">CPU core used as a filter.</td></tr><tr><td class="confluenceTd"><strong>filter-ip-address</strong><span> </span>(<em>ip/mask[,ip/mask] (max 16 items)</em>; Default:<span> </span>)</td><td class="confluenceTd">Up to 16 IP addresses used as a filter.</td></tr><tr><td class="confluenceTd"><strong>filter-dst-ip-address</strong><span> </span>(<em>ip/mask[,ip/mask] (max 16 items)</em>; Default:<span> </span>)</td><td class="confluenceTd"><p>Up to 16 IP destination addresses used as a filter.</p></td></tr><tr><td class="confluenceTd"><strong>filter-src-ip-address</strong><span> </span>(<em>ip/mask[,ip/mask] (max 16 items)</em>; Default:<span> </span>)</td><td class="confluenceTd"><p>Up to 16 IP source addresses used as a filter.</p></td></tr><tr><td class="confluenceTd"><strong>filter-ipv6-address</strong><span> </span>(<em>ipv6/mask[,ipv6/mask] (max 16 items)</em>; Default:<span> </span>)</td><td class="confluenceTd">Up to 16 IPv6 addresses used as a filter.</td></tr><tr><td class="confluenceTd"><strong>filter-dst-ipv6-address</strong><span> </span>(<em>ipv6/mask[,ipv6/mask] (max 16 items)</em>; Default:<span> </span>)</td><td class="confluenceTd">Up to 16 IPv6 destination addresses used as a filter.</td></tr><tr><td class="confluenceTd"><strong>filter-src-ipv6-address</strong><span> </span>(<em>ipv6/mask[,ipv6/mask] (max 16 items)</em>; Default:<span> </span>)</td><td class="confluenceTd">Up to 16 IPv6 source addresses used as a filter.</td></tr><tr><td class="confluenceTd"><strong>filter-mac-address</strong><span> </span>(<em>mac/mask[,mac/mask] (max 16 items)</em>; Default:<span> </span>)</td><td class="confluenceTd">Up to 16 MAC addresses and MAC address masks used as a filter.</td></tr><tr><td class="confluenceTd"><strong>filter-dst-mac-address</strong><span> </span>(<em>mac/mask[,mac/mask] (max 16 items)</em>; Default:<span> </span>)</td><td class="confluenceTd">Up to 16 MAC destination addresses and MAC address masks used as a filter.</td></tr><tr><td class="confluenceTd"><strong>filter-src-mac-address</strong><span> </span>(<em>mac/mask[,mac/mask] (max 16 items)</em>; Default:<span> </span>)</td><td class="confluenceTd">Up to 16 MAC source addresses and MAC address masks used as a filter.</td></tr><tr><td class="confluenceTd"><strong>filter-port</strong><span> </span>(<em>[!]port[,port] (max 16 items)</em>; Default:<span> </span>)</td><td class="confluenceTd">Up to 16 comma-separated ports used as a filter. A list of predefined port names is also available, like ssh and telnet.</td></tr><tr><td class="confluenceTd"><strong>filter-dst-port</strong><span> </span>(<em>[!]port[,port] (max 16 items)</em>; Default:<span> </span>)</td><td class="confluenceTd">Up to 16 comma-separated destination ports used as a filter. A list of predefined port names is also available, like ssh and telnet.</td></tr><tr><td class="confluenceTd"><strong>filter-src-port</strong><span> </span>(<em>[!]port[,port] (max 16 items)</em>; Default:<span> </span>)</td><td class="confluenceTd">Up to 16 comma-separated source ports used as a filter. A list of predefined port names is also available, like ssh and telnet.</td></tr><tr><td class="confluenceTd"><strong>filter-ip-protocol</strong><span> </span>(<em>[!]protocol[,protocol] (max 16 items)</em>; Default:<span> </span>)</td><td class="confluenceTd">Up to 16 comma-separated IP/IPv6 protocols used as a filter. IP protocols (instead of protocol names, protocol numbers can be used):<ul><li><strong>ipsec-ah</strong><span> </span>- IPsec AH protocol</li><li><strong>ipsec-esp</strong><span> </span>- IPsec ESP protocol</li><li><strong>ddp</strong><span> </span>- datagram delivery protocol</li><li><strong>egp</strong><span> </span>- exterior gateway protocol</li><li><strong>ggp</strong><span> </span>- gateway-gateway protocol</li><li><strong>gre</strong><span> </span>- general routing encapsulation</li><li><strong>hmp</strong><span> </span>- host monitoring protocol</li><li><strong>idpr-cmtp</strong><span> </span>- idpr control message transport</li><li><strong>icmp</strong><span> </span>- internet control message protocol</li><li><strong>icmpv6</strong><span> </span>- internet control message protocol v6</li><li><strong>igmp</strong><span> </span>- internet group management protocol</li><li><strong>ipencap</strong><span> </span>- ip encapsulated in ip</li><li><strong>ipip</strong><span> </span>- ip encapsulation</li><li><strong>encap</strong><span> </span>- ip encapsulation</li><li><strong>iso-tp4</strong><span> </span>- iso transport protocol class 4</li><li><strong>ospf</strong><span> </span>- open shortest path first</li><li><strong>pup</strong><span> </span>- parc universal packet protocol</li><li><strong>pim</strong><span> </span>- protocol independent multicast</li><li><strong>rspf</strong><span> </span>- radio shortest path first</li><li><strong>rdp</strong><span> </span>- reliable datagram protocol</li><li><strong>st</strong><span> </span>- st datagram mode</li><li><strong>tcp</strong><span> </span>- transmission control protocol</li><li><strong>udp</strong><span> </span>- user datagram protocol</li><li><strong>vmtp</strong><span> </span>- versatile message transport</li><li><strong>vrrp</strong><span> </span>- virtual router redundancy protocol</li><li><strong>xns-idp</strong><span> </span>- xerox xns idp</li><li><strong>xtp</strong><span> </span>- xpress transfer protocol</li></ul></td></tr><tr><td class="confluenceTd"><strong>filter-mac-protocol </strong>(<em>[!]protocol[,protocol] (max 16 items)</em>; Default:<span> </span>)</td><td class="confluenceTd">Up to 16 comma separated entries used as a filter. Mac protocols (instead of protocol names, protocol number can be used):<ul><li><strong>802.2</strong><span> </span>- 802.2 Frames (0x0004)</li><li><strong>arp</strong><span> </span>- Address Resolution Protocol (0x0806)</li><li><strong>capsman</strong> - CAPsMAN to CAP MAC layer connection (<span style="color:var(--ds-text,#172b4d);">0x88BB</span>)</li><li><strong>dot1x</strong> - EAPoL IEEE 802.1X (<span style="color:var(--ds-text,#172b4d);">0x888E</span>)</li><li><strong>homeplug-av</strong><span> </span>- HomePlug AV MME (0x88E1)</li><li><strong>ip</strong><span> </span>- Internet Protocol version 4 (0x0800)</li><li><strong>ipv6</strong><span> </span>- Internet Protocol Version 6 (0x86DD)</li><li><strong>ipx</strong><span> </span>- Internetwork Packet Exchange (0x8137)</li><li><strong>lacp</strong> - Link Aggregation Control Protocol (<span style="color:var(--ds-text,#172b4d);">0x8809</span>)</li><li><strong>lldp</strong><span> </span>- Link Layer Discovery Protocol (0x88CC)</li><li><strong>loop-protect</strong><span> </span>- Loop Protect Protocol (0x9003)</li><li><strong>macsec</strong> - MAC security IEEE 802.1AE (0x88E5)</li><li><strong>mpls-multicast</strong><span> </span>- MPLS multicast (0x8848)</li><li><strong>mpls-unicast</strong><span> </span>- MPLS unicast (0x8847)</li><li><strong>packing-compr</strong><span> </span>- Encapsulated packets with compressed<span> </span><a class="external-link" href="https://wiki.mikrotik.com/wiki/Manual:IP/Packing" rel="nofollow" style="text-decoration: none;" title="Manual:IP/Packing">IP packing</a><span> </span>(0x9001)</li><li><strong>packing-simple</strong><span> </span>- Encapsulated packets with simple<span> </span><a class="external-link" href="https://wiki.mikrotik.com/wiki/Manual:IP/Packing" rel="nofollow" style="text-decoration: none;" title="Manual:IP/Packing">IP packing</a><span> </span>(0x9000)</li><li><strong>pppoe</strong><span> </span>- PPPoE Session Stage (0x8864)</li><li><strong>pppoe-discovery</strong><span> </span>- PPPoE Discovery Stage (0x8863)</li><li><strong>rarp</strong><span> </span>- Reverse Address Resolution Protocol (0x8035)</li><li><strong>romon</strong> - Router Management Overlay Network RoMON (<span style="color:var(--ds-text,#172b4d);">0x88BF</span>)</li><li><strong>service-vlan</strong><span> </span>- Provider Bridging (IEEE 802.1ad) &amp; Shortest Path Bridging IEEE 802.1aq (0x88A8)</li><li><strong>vlan</strong><span> </span>- VLAN-tagged frame (IEEE 802.1Q) and Shortest Path Bridging IEEE 802.1aq with NNI compatibility (0x8100)</li></ul></td></tr><tr><td class="confluenceTd"><strong>filter-stream</strong><span> </span>(<em>yes | no</em>; Default:<span> </span><strong>yes</strong>)</td><td class="confluenceTd">Sniffed packets that are devised for the sniffer server are ignored.</td></tr><tr><td class="confluenceTd"><strong>filter-size</strong><span> <span style="color:var(--ds-text,#172b4d);">(</span><em style="text-align: left;">integer[-integer]:0..65535</em><span style="color:var(--ds-text,#172b4d);">; Default: )</span></span></td><td class="confluenceTd"><span style="color:var(--ds-text,#172b4d);">Filters packets of specified size or size range in bytes.</span></td></tr><tr><td class="confluenceTd"><strong>filter-direction </strong>(<em>any | rx | tx</em>; Default:<span> </span>)</td><td class="confluenceTd">Specifies which direction filtering will be applied.</td></tr><tr><td class="confluenceTd"><strong>filter-interface</strong><span> </span>(<em>all | name</em>; Default:<span> </span><strong>all</strong>)</td><td class="confluenceTd">Interface name on which sniffer will be running.<span> </span><strong>all</strong><span> </span>indicates that the sniffer will sniff packets on all interfaces.</td></tr><tr><td class="confluenceTd"><strong>filter-operator-between-entries</strong><span> </span>(<em>and | or</em>; Default:<span> <strong>or</strong></span>)</td><td class="confluenceTd">Changes the logic for filters with multiple entries.</td></tr><tr><td class="confluenceTd"><strong>filter-vlan</strong><span> </span>(<span><em style="text-align: left;">integer[,integer]:0..4095</em></span>; Default:<span> </span>)</td><td class="confluenceTd">Up to 16 VLAN IDs used as a filter.</td></tr><tr><td class="confluenceTd"><strong>memory-limit </strong>(<em>integer 10..4294967295[KiB]</em>; Default:<span> </span><strong>100KiB</strong>)</td><td class="confluenceTd">Memory amount used to store sniffed data.</td></tr><tr><td class="confluenceTd"><strong>memory-scroll</strong><span> </span>(<em>yes | no</em>; Default:<span> </span><strong>yes</strong>)</td><td class="confluenceTd">Whether to rewrite older sniffed data when the memory limit is reached.</td></tr><tr><td class="confluenceTd"><strong>only-headers </strong>(<em>yes | no</em>; Default:<span> </span><strong>no</strong>)</td><td class="confluenceTd">Save in the memory only the packet's headers, not the whole packet.</td></tr><tr><td class="confluenceTd"><strong>show-frame (<em>yes | no</em>; Default:<span> </span>no)</strong></td><td class="confluenceTd">Whether to see the content of the frame when running quick sniffer in command line.</td></tr><tr><td class="confluenceTd"><strong>streaming-enabled</strong><span> </span>(<em>yes | no</em>; Default:<span> </span><strong>no</strong>)</td><td class="confluenceTd">Defines whether to send sniffed packets to the streaming server.</td></tr><tr><td class="confluenceTd"><strong>streaming-server</strong><span> </span>(<em>IP</em>; Default:<span> </span><strong>0.0.0.0</strong>)</td><td class="confluenceTd">Tazmen Sniffer Protocol (TZSP) stream receiver.</td></tr></tbody></table></div><div role="region" aria-label="Warning" class="confluence-information-macro  confluence-information-macro-warning" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-error confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>The <span style="color:var(--ds-background-accent-green-bolder,#1f845a);"><code>file-size</code></span> limit should not be configured more than available free memory!</p></div></div><h2 id="PacketSniffer-PacketSnifferQuickMode">Packet Sniffer Quick Mode</h2><p>The quick mode will display results as they are filtered out with a limited-size buffer for packets. There are several attributes that can be set up for filtering. If no attributes are set current configuration will be used.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; /tool/sniffer/quick ip-protocol=icmp
+Columns: INTERFace, TIME, NUm, DIr, SRC-MAC, DST-MAC, SRC-ADDRESS, DST-ADDRESS, PROTOCOl, SIze, Cpu, FP
+INTERF  TIME    NU  DI  SRC-MAC            DST-MAC            SRC-ADDRESS     DST-ADDRESS     PROTOCO  SI  C  FP
+ether7  35.472  79  &lt;-  6C:3B:6B:ED:83:69  6C:3B:6B:ED:81:83  10.155.126.252  10.155.126.253  ip:icmp  70  7  no
+ether7  35.472  80  -&gt;  6C:3B:6B:ED:81:83  6C:3B:6B:ED:83:69  10.155.126.253  10.155.126.252  ip:icmp  70  7  no
+ether1  35.595  81  &lt;-  6C:3B:6B:ED:83:63  6C:3B:6B:ED:81:7D  172.24.24.2     172.24.24.1     ip:icmp  70  4  no
+ether1  35.595  82  -&gt;  6C:3B:6B:ED:81:7D  6C:3B:6B:ED:83:63  172.24.24.1     172.24.24.2     ip:icmp  70  4  no
+ether7  36.457  83  &lt;-  6C:3B:6B:ED:83:69  6C:3B:6B:ED:81:83  10.155.126.252  10.155.126.253  ip:icmp  70  7  no
+ether7  36.457  84  -&gt;  6C:3B:6B:ED:81:83  6C:3B:6B:ED:83:69  10.155.126.253  10.155.126.252  ip:icmp  70  7  no
+ether1  36.6    85  &lt;-  6C:3B:6B:ED:83:63  6C:3B:6B:ED:81:7D  172.24.24.2     172.24.24.1     ip:icmp  70  4  no
+ether1  36.6    86  -&gt;  6C:3B:6B:ED:81:7D  6C:3B:6B:ED:83:63  172.24.24.1     172.24.24.2     ip:icmp  70  4  no</pre>
+</div></div><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Traffic-Generator packets will not be visible using the packet sniffer on the same interface unless the<em> fast-path</em> parameter is set.</p></div></div><h2 id="PacketSniffer-PacketSnifferProtocols"><span class="mw-headline">Packet Sniffer Protocols</span></h2><p><span class="mw-headline">In this submenu, you can see all sniffed protocols and their share of the whole sniffed amount.<br/></span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] /tool sniffer protocol&gt; print 
+ # PROTOCOL IP-PROTOCOL PORT                                     PACKETS      BYTES        SHARE
+ 0 802.2                                                              1         60        0.05%
+ 1 ip                                                               215     100377       99.04%
+ 2 arp                                                                2        120        0.11%
+ 3 ipv6                                                               6        788        0.77%
+ 4 ip       tcp                                                     210      99981       98.65%
+ 5 ip       udp                                                       3        228        0.22%
+ 6 ip       ospf                                                      2        168        0.16%
+ 7 ip       tcp         8291 (winbox)                               210      99981       98.65%
+ 8 ip       tcp         36771                                       210      99981       98.65%
+ 9 ip       udp         646                                           3        228        0.22%</pre>
+</div></div><h2 id="PacketSniffer-PacketSnifferHost"><span class="mw-headline">Packet Sniffer Host</span></h2><p>The submenu shows the list of hosts that were participating in the data exchange you've sniffed.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] /tool sniffer host&gt; print 
+ # ADDRESS         RATE                PEEK-RATE           TOTAL            
+ 0 10.5.101.3      0bps/0bps           0bps/720bps         0/90             
+ 1 10.5.101.10     0bps/0bps           175.0kbps/19.7kbps  61231/7011       
+ 2 10.5.101.13     0bps/0bps           0bps/608bps         0/76             
+ 3 10.5.101.14     0bps/0bps           0bps/976bps         0/212            
+ 4 10.5.101.15     0bps/0bps           19.7kbps/175.0kbps  7011/61231       
+ 5 224.0.0.2       0bps/0bps           608bps/0bps         76/0             
+ 6 224.0.0.5       0bps/0bps           1440bps/0bps        302/0 </pre>
+</div></div><h2 id="PacketSniffer-PacketSnifferConnections"><span class="mw-headline">Packet Sniffer Connections</span></h2><p><span class="mw-headline">Here you can get a list of the connections that have been watched during the sniffing time. </span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] tool sniffer connection&gt; print
+Flags: A - active
+  #   SRC-ADDRESS       DST-ADDRESS             BYTES     RESENDS   MSS
+  0 A 10.0.0.241:1839   10.0.0.181:23 (telnet)  6/42      60/0      0/0
+  1 A 10.0.0.144:2265   10.0.0.181:22 (ssh)     504/252   504/0     0/0</pre>
+</div></div><p><br/></p><p><br/></p><p><br/></p><p><br/></p>
+                    </div>
+
+                                                            <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/8323088/8323122.png">sniffer.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/8323088/260243461.png">image-2024-7-15_13-40-11.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/8323088/260243462.png">image-2024-7-15_13-42-2.png</a> (image/png)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:54</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

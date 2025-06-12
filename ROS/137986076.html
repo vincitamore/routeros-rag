@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : HTB (Hierarchical Token Bucket)</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Firewall-and-Quality-of-Service_119144601.html">Firewall and Quality of Service</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Queues_328088.html">Queues</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : HTB (Hierarchical Token Bucket)
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Artūrs C.</span>, last updated by <span class='editor'> Druvis Timma</span> on May 20, 2025
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742027808 {padding: 0px;}
+div.rbtoc1747742027808 ul {margin-left: 0px;}
+div.rbtoc1747742027808 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742027808'>
+<ul class='toc-indentation'>
+<li><a href='#HTB(HierarchicalTokenBucket)-Introduction'>Introduction</a></li>
+<li><a href='#HTB(HierarchicalTokenBucket)-TokenBucketalgorithm(Redpartofthediagram)'>Token Bucket algorithm (Red part of the diagram)</a>
+<ul class='toc-indentation'>
+<li><a href='#HTB(HierarchicalTokenBucket)-Packetqueue(Bluepartofthediagram)'>Packet queue (Blue part of the diagram)</a></li>
+<li><a href='#HTB(HierarchicalTokenBucket)-Tokenrateselection(Blackpartofthediagram)'>Token rate selection (Black part of the diagram)</a></li>
+<li><a href='#HTB(HierarchicalTokenBucket)-TheDiagram'>The Diagram</a></li>
+<li><a href='#HTB(HierarchicalTokenBucket)-BucketSizeinaction'>Bucket Size in action</a>
+<ul class='toc-indentation'>
+<li><a href='#HTB(HierarchicalTokenBucket)-DefaultQueueBucket'>Default Queue Bucket</a></li>
+<li><a href='#HTB(HierarchicalTokenBucket)-LargeQueueBucket'>Large Queue Bucket</a></li>
+<li><a href='#HTB(HierarchicalTokenBucket)-LargeChildQueueBucket,SmallParentQueueBucket'>Large Child Queue Bucket, Small Parent Queue Bucket</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href='#HTB(HierarchicalTokenBucket)-Configuration'>Configuration</a>
+<ul class='toc-indentation'>
+<li><a href='#HTB(HierarchicalTokenBucket)-DualLimitation'>Dual Limitation</a>
+<ul class='toc-indentation'>
+<li><a href='#HTB(HierarchicalTokenBucket)-Priority'>Priority</a></li>
+</ul>
+</li>
+<li><a href='#HTB(HierarchicalTokenBucket)-Examples'>Examples</a>
+<ul class='toc-indentation'>
+<li><a href='#HTB(HierarchicalTokenBucket)-Structure'>Structure</a></li>
+<li><a href='#HTB(HierarchicalTokenBucket)-Example1:Usualcase'>Example 1: Usual case</a></li>
+<li><a href='#HTB(HierarchicalTokenBucket)-ResultofExample1'>Result of Example 1</a></li>
+<li><a href='#HTB(HierarchicalTokenBucket)-Example2:Usualcasewithmax-limit'>Example 2: Usual case with max-limit</a></li>
+<li><a href='#HTB(HierarchicalTokenBucket)-ResultofExample2'>Result of Example 2</a></li>
+<li><a href='#HTB(HierarchicalTokenBucket)-Example3:Innerqueuelimit-at'>Example 3: Inner queue limit-at</a></li>
+<li><a href='#HTB(HierarchicalTokenBucket)-ResultofExample3'>Result of Example 3</a></li>
+<li><a href='#HTB(HierarchicalTokenBucket)-Example4:Leafqueuelimit-at'>Example 4: Leaf queue limit-at</a></li>
+<li><a href='#HTB(HierarchicalTokenBucket)-ResultofExample4'>Result of Example 4</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div></p><h1 id="HTB(HierarchicalTokenBucket)-Introduction"><span class="mw-headline">Introduction</span></h1><p>HTB (Hierarchical Token Bucket) is a classful queuing discipline that is useful for rate limiting and burst handling. This article will focus on those HTB aspects exclusively in RouterOS, as we use a modified version to deliver features like Simple Queue and Queue Tree. </p><h1 id="HTB(HierarchicalTokenBucket)-TokenBucketalgorithm(Redpartofthediagram)"><span class="mw-headline">Token Bucket algorithm (Red part of the diagram)</span></h1><p>The Token Bucket algorithm is based on an analogy to a bucket where tokens, represented in bytes, are added at a specific rate. The bucket itself has a specified capacity.</p><p>If the bucket fills to capacity, newly arriving tokens are dropped.</p><p><strong>Bucket capacity = bucket-size * max-limit</strong></p><ul><li><strong>bucket size</strong><span> </span>(0..10, Default:0.1)</li></ul><p>Before allowing any packet to pass through the queue, the queue bucket is inspected to see if it already contains sufficient tokens at that moment.</p><p>If yes, the appropriate number of tokens are removed (&quot;cashed in&quot;) and the packet is permitted to pass through the queue.</p><p>If not, the packets stay at the start of the packet waiting queue until the appropriate amount of tokens is available.</p><p>In the case of a multi-level queue structure, tokens used in a child queue are also 'charged' to their parent queues. In other words - child queues 'borrow' tokens from their parent queues.</p><h2 id="HTB(HierarchicalTokenBucket)-Packetqueue(Bluepartofthediagram)"><span class="mw-headline">Packet queue (Blue part of the diagram)</span></h2><p>The size of this packet queue, the sequence, how packets are added to this queue, and when packets are discarded is determined by:</p><ul><li><strong>queue-type</strong><span> </span>-<span> <a href="Queues_328088.html">Queue</a></span></li><li><strong>queue-size</strong><span> </span>-<span> </span><a class="external-link" href="http://wiki.mikrotik.com/wiki/Manual:Queue_Size" rel="nofollow" style="text-decoration: none;">Q</a><a href="Queue-size_137986083.html">ueue Size</a></li></ul><h2 id="HTB(HierarchicalTokenBucket)-Tokenrateselection(Blackpartofthediagram)"><span class="mw-headline">Token rate selection (Black part of the diagram)</span></h2><p>The maximal token rate at any given time is equal to the highest activity of these values:</p><ul><li><strong>limit-at</strong><span> </span>(<em>NUMBER/NUMBER</em>): guaranteed upload/download data rate to a target</li><li><strong>max-limit</strong><span> </span>(<em>NUMBER/NUMBER</em>): maximal upload/download data rate that is allowed for a target</li><li><strong>burst-limit</strong><span> </span>(<em>NUMBER/NUMBER</em>): maximal upload/download data rate that is allowed for a target while the 'burst' is active</li></ul><p><strong>burst-limit</strong><span> </span>is active only when 'burst' is in the allowed state - more info here:<span> </span><a href="Queue-Burst_137986091.html">Queue Burst</a></p><p>In a case where<span> </span><strong>limit-at</strong><span> </span>is the highest value, extra tokens need to be issued to compensate for all missing tokens that were not borrowed from its parent queue.</p><h2 id="HTB(HierarchicalTokenBucket)-TheDiagram"><span class="mw-headline">The Diagram</span></h2><p><span class="confluence-embedded-file-wrapper image-center-wrapper"><img class="confluence-embedded-image image-center" draggable="false" src="attachments/137986076/139067399.png" data-image-src="attachments/137986076/139067399.png" data-unresolved-comment-count="0" data-linked-resource-id="139067399" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="Bucket_size.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="137986076" data-linked-resource-container-version="5" tabindex="0" alt=""></span></p><h2 id="HTB(HierarchicalTokenBucket)-BucketSizeinaction"><span class="mw-headline">Bucket Size in action</span></h2><p>Let's have a simple setup where all traffic from and to one IP address is marked with a packet-mark:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip firewall mangle
+add chain=forward action=mark-connection connection-mark=no-mark src-address=192.168.88.101 new-connection-mark=pc1_conn
+add chain=forward action=mark-connection connection-mark=no-mark dst-address=192.168.88.101 new-connection-mark=pc1_conn
+add chain=forward action=mark-packet connection-mark=pc1_conn new-packet-mark=pc1_traffic</pre>
+</div></div><h3 id="HTB(HierarchicalTokenBucket)-DefaultQueueBucket"><span class="mw-headline">Default Queue Bucket</span></h3><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/queue tree
+add name=download parent=Local packet-mark=PC1-traffic max-limit=10M
+add name=upload parent=Public packet-mark=PC1-traffic max-limit=10M</pre>
+</div></div><p style="margin-left: 20.0px;"><br/></p><p>In this case bucket-size=0.1, so bucket-capacity= 0.1 x 10M = 1M</p><p>If the bucket is full (that is, the client was not using the full capacity of the queue for some time), the next 1Mb of traffic can pass through the queue at an unrestricted speed.</p><h3 id="HTB(HierarchicalTokenBucket)-LargeQueueBucket"><span class="mw-headline">Large Queue Bucket</span></h3><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/queue tree
+add name=download parent=Local packet-mark=PC1-traffic max-limit=10M bucket-size=10
+add name=upload parent=Public packet-mark=PC1-traffic max-limit=10M bucket-size=10</pre>
+</div></div><p>Let's try to apply the same logic to a situation when bucket size is at its maximal value:</p><p style="margin-left: 20.0px;"><br/></p><p>In this case bucket-size=10, so bucket-capacity= 10 x 10M = 100M</p><p>If the bucket is full (that is, the client was not using the full capacity of the queue for some time), the next 100Mb of traffic can pass through the queue at an unrestricted speed.</p><p>So you can have:</p><ul><li>20Mbps transfer speed for 10s</li><li>60Mbps transfer burst for 2s</li><li>1Gbps transfer burst for approximately 100ms</li></ul><p>You can therefore see that the bucket permits a type of 'burstiness' of the traffic that passes through the queue. The behavior is similar to the normal burst feature but lacks the upper limit of the burst. This setback can be avoided if we utilize bucket size in the queue structure:</p><h3 id="HTB(HierarchicalTokenBucket)-LargeChildQueueBucket,SmallParentQueueBucket"><span class="mw-headline">Large Child Queue Bucket, Small Parent Queue Bucket</span></h3><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/queue tree
+add name=download_parent parent=Local max-limit=20M
+add name=download parent=download_parent packet-mark=PC1-traffic max-limit=10M bucket-size=10
+add name=upload_parent parent=Public max-limit=20M
+add name=upload parent=upload_parent packet-mark=PC1-traffic max-limit=10M bucket-size=10</pre>
+</div></div><p style="margin-left: 20.0px;"><br/></p><p>In this case:</p><ul><li>parent queue bucket-size=0.1, bucket-capacity= 0.1 x 20M = 2M</li><li>child queue bucket-size=10, bucket-capacity= 10 x 10M = 100M</li></ul><p>The parent will run out of tokens much faster than the child queue and as its child queue always borrows tokens from the parent queue the whole system is restricted to token-rate of the parent queue - in this case to max-limit=20M. This rate will be sustained until the child queue runs out of tokens and will be restricted to its token rate of 10Mbps.</p><p>In this way, we can have a burst at 20Mbps for up to 10 seconds.</p><h1 id="HTB(HierarchicalTokenBucket)-Configuration">Configuration</h1><p>We have to follow three basic steps to create HTB:</p><ul><li><strong>Match and mark traffic</strong><span> </span>– classify traffic for further use. Consists of one or more matching parameters to select packets for the specific class;</li><li><strong>Create rules (policy) to mark traffic</strong><span> </span>– put specific traffic classes into specific queues and define the actions that are taken for each class;</li><li><strong>Attach a policy for specific interface(-s)</strong><span> </span>– append policy for all interfaces (global-in, global-out, or global-total), for a specific interface, or for a specific parent queue;</li></ul><p>HTB allows to create of a hierarchical queue structure and determines relations between queues, like &quot;parent-child&quot; or &quot;child-child&quot;.</p><p>As soon as the queue has at least one child it becomes an<span> </span><strong>inner</strong><span> </span>queue, all queues without children -<span> are </span><strong>leaf</strong><span> </span>queues.<span> </span><strong>Leaf</strong><span> </span>queues make actual traffic consumption,<span> </span><strong>Inner</strong><span> </span>queues are responsible only for traffic distribution. All<span> </span><strong>leaf</strong><span> </span>queues are treated on an equal basis.</p><p>In RouterOS, it is necessary to specify<span> the </span><strong>parent</strong><span> </span>option to assign a queue as a child to another queue.</p><h2 id="HTB(HierarchicalTokenBucket)-DualLimitation"><span class="mw-headline">Dual Limitation</span></h2><p>Each queue in HTB has two rate limits:</p><ul><li><strong>CIR</strong><span> </span>(Committed Information Rate) – (<strong>limit-at</strong><span> </span>in RouterOS) worst case scenario, the flow will get this amount of traffic no matter what (assuming we can actually send so much data);</li><li><strong>MIR</strong><span> </span>(Maximal Information Rate) – (<strong>max-limit</strong><span> </span>in RouterOS) best case scenario, a rate that flow can get up to if their queue's parent has spare bandwidth;</li></ul><p>In other words, at first<span> </span><strong>limit-at</strong><span> </span>(<strong>CIR</strong>) of all queues will be satisfied, only then child queues will try to borrow the necessary data rate from their parents in order to reach their<span> </span><strong>max-limit</strong><span> </span>(<strong>MIR</strong>).</p><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p><strong>CIR</strong><span> </span>will be assigned to the corresponding queue no matter what. (even if max-limit of the parent is exceeded)</p></div></div><p>That is why, to ensure optimal (as designed) usage of the dual limitation feature, we suggest sticking to these rules:</p><ul><li>The Sum of committed rates of all children must be less or equal to the amount of traffic that is available to parents;</li></ul><p>CIR(parent)* ≥ CIR(child1) +...+ CIR(childN)*in case if parent is main parent CIR(parent)=MIR(parent)</p><ul><li>The maximal rate of any child must be less or equal to the maximal rate of the parent</li></ul><p>MIR (parent) ≥ MIR(child1) &amp; MIR (parent) ≥ MIR(child2) &amp; ... &amp; MIR (parent) ≥ MIR(childN)</p><p><br/>Queue colors in Winbox:</p><ul><li>0% - 50% available traffic used - green</li><li>51% - 75% available traffic used - yellow</li><li>76% - 100% available traffic used - red</li></ul><h3 id="HTB(HierarchicalTokenBucket)-Priority"><span class="mw-headline">Priority</span></h3><p>We already know that<span> </span><strong>limit-at</strong><span> </span>(<strong>CIR</strong>) to all queues will be given out no matter what.</p><p>Priority is responsible for the distribution of remaining parent queues traffic to child queues so that they are able to reach<span> </span><strong>max-limit</strong></p><p>The queue with higher priority will reach its<span> </span><strong>max-limit</strong><span> </span>before the queue with lower priority. 8 is the lowest priority, and 1 is the highest.</p><p>Make a note that priority only works:</p><ul><li>for<span> </span><strong>leaf</strong><span> </span>queues - priority in<span> the </span><strong>inner</strong><span> </span>queue has no meaning.</li><li>if<span> </span><strong>max-limit</strong><span> </span>is specified (not 0)</li></ul><h2 id="HTB(HierarchicalTokenBucket)-Examples"><span class="mw-headline">Examples</span></h2><p>In this section, we will analyze HTB in action. To do that we will take one HTB structure and will try to cover all the possible situations and features, by changing the amount of incoming traffic that HTB has to recycle. and changing some options.</p><h3 id="HTB(HierarchicalTokenBucket)-Structure"><span class="mw-headline">Structure</span></h3><p>Our HTB structure will consist of 5 queues:</p><ul><li><strong>Queue01</strong><span> </span>inner queue with two children -<span> </span><strong>Queue02</strong><span> </span>and<span> </span><strong>Queue03</strong></li><li><strong>Queue02</strong><span> </span>inner queue with two children -<span> </span><strong>Queue04</strong><span> </span>and<span> </span><strong>Queue05</strong></li><li><strong>Queue03</strong><span> </span>leaf queue</li><li><strong>Queue04</strong><span> </span>leaf queue</li><li><strong>Queue05</strong><span> </span>leaf queue</li></ul><p><strong>Queue03</strong>,<span> </span><strong>Queue04,</strong><span> </span>and<span> </span><strong>Queue05</strong><span> </span>are clients who require 10Mbps all the time Outgoing interface is able to handle 10Mbps of traffic.</p><h3 id="HTB(HierarchicalTokenBucket)-Example1:Usualcase"><span class="mw-headline">Example 1: Usual case</span></h3><p><span class="confluence-embedded-file-wrapper image-center-wrapper"><img class="confluence-embedded-image image-center" draggable="false" src="attachments/137986076/137986077.jpg" data-image-src="attachments/137986076/137986077.jpg" data-unresolved-comment-count="0" data-linked-resource-id="137986077" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="600px-HTB_Example1.jpg" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/jpeg" data-linked-resource-container-id="137986076" data-linked-resource-container-version="5" tabindex="0" alt=""></span></p><ul><li><strong>Queue01</strong><span> </span>limit-at=0Mbps max-limit=10Mbps</li><li><strong>Queue02</strong><span> </span>limit-at=4Mbps max-limit=10Mbps</li><li><strong>Queue03</strong><span> </span>limit-at=6Mbps max-limit=10Mbps priority=1</li><li><strong>Queue04</strong><span> </span>limit-at=2Mbps max-limit=10Mbps priority=3</li><li><strong>Queue05</strong><span> </span>limit-at=2Mbps max-limit=10Mbps priority=5</li></ul><h3 id="HTB(HierarchicalTokenBucket)-ResultofExample1"><span class="mw-headline">Result of Example 1</span></h3><ul><li><strong>Queue03</strong><span> </span>will receive 6Mbps</li><li><strong>Queue04</strong><span> </span>will receive 2Mbps</li><li><strong>Queue05</strong><span> </span>will receive 2Mbps</li><li><strong>Clarification:</strong><span> </span>HTB was built in a way, that, by satisfying all<span> </span><strong>limit-at</strong>s, the main queue no longer has throughput to distribute.</li></ul><h3 id="HTB(HierarchicalTokenBucket)-Example2:Usualcasewithmax-limit"><span class="mw-headline">Example 2: Usual case with max-limit</span></h3><p><span class="confluence-embedded-file-wrapper image-center-wrapper"><img class="confluence-embedded-image image-center" draggable="false" src="attachments/137986076/137986078.jpg" data-image-src="attachments/137986076/137986078.jpg" data-unresolved-comment-count="0" data-linked-resource-id="137986078" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="600px-HTB_Example2.jpg" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/jpeg" data-linked-resource-container-id="137986076" data-linked-resource-container-version="5" tabindex="0" alt=""></span></p><ul><li><strong>Queue01</strong><span> </span>limit-at=0Mbps max-limit=10Mbps</li><li><strong>Queue02</strong><span> </span>limit-at=4Mbps max-limit=10Mbps</li><li><strong>Queue03</strong><span> </span>limit-at=2Mbps max-limit=10Mbps priority=3</li><li><strong>Queue04</strong><span> </span>limit-at=2Mbps max-limit=10Mbps priority=1</li><li><strong>Queue05</strong><span> </span>limit-at=2Mbps max-limit=10Mbps priority=5</li></ul><h3 id="HTB(HierarchicalTokenBucket)-ResultofExample2"><span class="mw-headline">Result of Example 2</span></h3><ul><li><strong>Queue03</strong><span> </span>will receive 2Mbps</li><li><strong>Queue04</strong><span> </span>will receive 6Mbps</li><li><strong>Queue05</strong><span> </span>will receive 2Mbps</li><li><strong>Clarification:</strong><span> </span>After satisfying all<span> </span><strong>limit-at</strong>s HTB will give throughput to the queue with the highest priority.</li></ul><h3 id="HTB(HierarchicalTokenBucket)-Example3:Innerqueuelimit-at"><span class="mw-headline">Example 3: Inner queue limit-at</span></h3><p><span class="confluence-embedded-file-wrapper image-center-wrapper"><img class="confluence-embedded-image image-center" draggable="false" src="attachments/137986076/137986079.jpg" data-image-src="attachments/137986076/137986079.jpg" data-unresolved-comment-count="0" data-linked-resource-id="137986079" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="600px-HTB_Example3.jpg" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/jpeg" data-linked-resource-container-id="137986076" data-linked-resource-container-version="5" tabindex="0" alt=""></span></p><ul><li><strong>Queue01</strong><span> </span>limit-at=0Mbps max-limit=10Mbps</li><li><strong>Queue02</strong><span> </span>limit-at=8Mbps max-limit=10Mbps</li><li><strong>Queue03</strong><span> </span>limit-at=2Mbps max-limit=10Mbps priority=1</li><li><strong>Queue04</strong><span> </span>limit-at=2Mbps max-limit=10Mbps priority=3</li><li><strong>Queue05</strong><span> </span>limit-at=2Mbps max-limit=10Mbps priority=5</li></ul><h3 id="HTB(HierarchicalTokenBucket)-ResultofExample3"><span class="mw-headline">Result of Example 3</span></h3><ul><li><strong>Queue03</strong><span> </span>will receive 2Mbps</li><li><strong>Queue04</strong><span> </span>will receive 6Mbps</li><li><strong>Queue05</strong><span> </span>will receive 2Mbps</li><li><strong>Clarification:</strong><span> </span>After satisfying all<span> </span><strong>limit-at</strong>s HTB will give throughput to the queue with the highest priority. But in this case,<span> </span><strong>inner</strong><span> </span>queue<span> </span><strong>Queue02</strong><span> </span>had<span> </span><strong>limit-at</strong><span> </span>specified, by doing so, it reserved 8Mbps of throughput for queues<span> </span><strong>Queue04</strong><span> </span>and<span> </span><strong>Queue05</strong>. Of these two<span> </span><strong>Queue04</strong><span> </span>has the highest priority, which is why it gets additional throughput.</li></ul><h3 id="HTB(HierarchicalTokenBucket)-Example4:Leafqueuelimit-at"><span class="mw-headline">Example 4: Leaf queue limit-at</span></h3><p style="text-align: center;"><span class="confluence-embedded-file-wrapper image-center-wrapper"><img class="confluence-embedded-image image-center" draggable="false" src="attachments/137986076/137986080.jpg" data-image-src="attachments/137986076/137986080.jpg" data-unresolved-comment-count="0" data-linked-resource-id="137986080" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="600px-HTB_Example4.jpg" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/jpeg" data-linked-resource-container-id="137986076" data-linked-resource-container-version="5" tabindex="0" alt=""></span></p><ul><li><strong>Queue01</strong><span> </span>limit-at=0Mbps max-limit=10Mbps</li><li><strong>Queue02</strong><span> </span>limit-at=4Mbps max-limit=10Mbps</li><li><strong>Queue03</strong><span> </span>limit-at=6Mbps max-limit=10Mbps priority=1</li><li><strong>Queue04</strong><span> </span>limit-at=2Mbps max-limit=10Mbps priority=3</li><li><strong>Queue05</strong><span> </span>limit-at=12Mbps max-limit=15Mbps priority=5</li></ul><h3 id="HTB(HierarchicalTokenBucket)-ResultofExample4"><span class="mw-headline">Result of Example 4</span></h3><ul><li><strong>Queue03</strong><span> </span>will receive ~3Mbps</li><li><strong>Queue04</strong><span> </span>will receive ~1Mbps</li><li><strong>Queue05</strong><span> </span>will receive ~6Mbps</li><li><strong>Clarification:</strong><span> </span>Only by satisfying all<span> </span><strong>limit-at</strong>s HTB was forced to allocate 20Mbps - 6Mbps to<span> </span><strong>Queue03</strong>, 2Mbps to<span> </span><strong>Queue04</strong>, and 12Mbps to<span> </span><strong>Queue05</strong>, but our output interface is able to handle 10Mbps. As the output interface queue is usually FIFO throughput allocation will keep the ratio 6:2:12 or 3:1:6</li></ul>
+                    </div>
+
+                                                            <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/137986076/137986077.jpg">600px-HTB_Example1.jpg</a> (image/jpeg)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/137986076/137986078.jpg">600px-HTB_Example2.jpg</a> (image/jpeg)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/137986076/137986079.jpg">600px-HTB_Example3.jpg</a> (image/jpeg)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/137986076/137986080.jpg">600px-HTB_Example4.jpg</a> (image/jpeg)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/137986076/139067399.png">Bucket_size.png</a> (image/png)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : Load Balancing</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="High-Availability-Solutions_120324133.html">High Availability Solutions</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : Load Balancing
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Artūrs C.</span>, last updated by <span class='editor'> Māris B.</span> on Apr 03, 2024
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><ul class='childpages-macro'><li><a href="https://help.mikrotik.com/docs/spaces/ROS/pages/26476608/Failover+WAN+Backup">Failover (WAN Backup)</a></li><li><a href="https://help.mikrotik.com/docs/spaces/ROS/pages/63406090/OSPF+Load+Balancing+restricted">OSPF Load Balancing (restricted)</a></li><li><a href="https://help.mikrotik.com/docs/spaces/ROS/pages/152600617/Per+connection+classifier">Per connection classifier</a></li></ul></p><p><br/></p><h1 id="LoadBalancing-Introduction"><span class="js-about-item-abstr">Introduction</span></h1><p><span class="js-about-item-abstr">Network load balancing is the ability to balance traffic across two or more links without using dynamic routing protocols.</span></p><p>There are two type of balancing methods:</p><ul><li>per-packet - each packet of a single stream can be forwarded over different links. This method will work reliably especially on TCP and secure connections only when you are able to control both balancing endpoints.</li><li>per-connection - all packets of the same connection (stream) is always sent over one link. This method is mandatory in setups where only one end of the balancing is under our control, for example, home router with multiple WAN connections.</li></ul><p><br/></p><div class="table-wrap"><table class="relative-table wrapped confluenceTable" style="width: 99.7996%;"><colgroup><col style="width: 16.4239%;"/><col style="width: 16.3737%;"/><col style="width: 32.9483%;"/><col style="width: 34.2541%;"/></colgroup><tbody><tr><th colspan="2" style="text-align: center;" class="confluenceTh">Method</th><th style="text-align: center;" class="confluenceTh">Per-connection</th><th style="text-align: center;" class="confluenceTh">Per-packet</th></tr><tr><td rowspan="3" style="text-align: center;" class="confluenceTd"><p><br/></p><p>Firewall Mangle</p></td><td class="confluenceTd">Nth</td><td style="text-align: center;" class="confluenceTd"><strong>Yes</strong></td><td style="text-align: center;" class="confluenceTd"><strong>Yes</strong></td></tr><tr><td class="confluenceTd">PCC (Per Connection Classifier)</td><td style="text-align: center;" class="confluenceTd"><strong>Yes</strong></td><td style="text-align: center;" class="confluenceTd">No</td></tr><tr><td class="confluenceTd">Other matchers</td><td style="text-align: center;" class="confluenceTd"><strong>Yes</strong></td><td style="text-align: center;" class="confluenceTd"><strong>Yes</strong></td></tr><tr><td colspan="2" style="text-align: center;" class="confluenceTd">ECMP (Equal Cost Multi-Path)</td><td style="text-align: center;" class="confluenceTd"><strong>Yes</strong></td><td style="text-align: center;" class="confluenceTd"><strong>No</strong></td></tr><tr><td colspan="2" style="text-align: center;" class="confluenceTd">Bonding</td><td style="text-align: center;" class="confluenceTd">No</td><td style="text-align: center;" class="confluenceTd"><strong>Yes</strong></td></tr><tr><td colspan="2" style="text-align: center;" class="confluenceTd">OSPF</td><td style="text-align: center;" class="confluenceTd"><strong>Yes</strong></td><td style="text-align: center;" class="confluenceTd">No</td></tr><tr><td colspan="2" style="text-align: center;" class="confluenceTd">BGP</td><td style="text-align: center;" class="confluenceTd"><strong>Yes</strong></td><td style="text-align: center;" class="confluenceTd">No</td></tr></tbody></table></div><p><span class="js-about-item-abstr"> </span></p><h1 id="LoadBalancing-SimpleFailoverExample">Simple Failover Example</h1><p>Simplest failover setup would be to use multiple gateways when one gateway is active and another one takes over when the first one fails.</p><p>To make this work, configure larger <strong>distance</strong> value for the secondary one, and <strong>check-gateway</strong> for the first one:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip route add gateway=192.168.1.1 distance=1 check-gateway=ping
+/ip route add gateway=192.168.2.1 distance=2</pre>
+</div></div><p>The <em>check-gateway</em> will make sure the gateway is up only when actual traffic can reach the gateway. When the ping fails the first gateway will become inactive and the second one will take over,  and when the first gateway recovers  it will become active and make the second gateway to work again as a backup.</p>
+                    </div>
+
+                                                            <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/4390920/242909208.png">image.png</a> (image/png)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : CHR Vultr installation</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Getting-started_328119.html">Getting started</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="18350234.html">Cloud Hosted Router, CHR</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : CHR Vultr installation
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Oskars K.</span>, last updated by <span class='editor'> Serhii T.</span> on Sep 19, 2024
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><span style="color:var(--ds-text,#172b4d);">Vultr has more than</span> <a class="external-link" href="https://www.vultr.com/features/datacenter-locations/" rel="nofollow"><span style="color:var(--ds-icon-accent-teal,#2898bd);">two dozen data center locations</span></a> <span style="color:var(--ds-text,#172b4d);">where you can choose to deploy MikroTik CHR for the best</span> <a class="external-link" href="https://nj-us-ping.vultr.com/" rel="nofollow"><span style="color:var(--ds-icon-accent-teal,#2898bd);">throughput and latency</span></a><span style="color:var(--ds-text,#172b4d);">.</span><br/><span style="color:var(--ds-text,#172b4d);">Follow these steps to install MikroTik CHR at Vultr.</span></p><h1 id="CHRVultrinstallation-Step1:Deployaserverinrescuemode">Step 1: Deploy a server in rescue mode</h1><p><span style="color:var(--ds-text,#172b4d);">In this step, you'll deploy a new server at Vultr with SystemRescue, a bootable Linux ISO.</span></p><ol><li><a class="external-link" href="https://my.vultr.com/deploy/" rel="nofollow"><span style="color:var(--ds-icon-accent-teal,#2898bd);">Deploy</span></a> <span style="color:var(--ds-text,#172b4d);">a new</span> <a class="external-link" href="https://www.vultr.com/products/cloud-compute/" rel="nofollow"><span style="color:var(--ds-icon-accent-teal,#2898bd);">Cloud Compute</span></a> <span style="color:var(--ds-text,#172b4d);">instance.</span></li><li><span style="color:var(--ds-text,#172b4d);">Choose the location with the best performance for your needs. You can use Vultr's</span> <a class="external-link" href="https://nj-us-ping.vultr.com/" rel="nofollow"><span style="color:var(--ds-icon-accent-teal,#2898bd);">network-looking glass</span></a> <span style="color:var(--ds-text,#172b4d);">to test the throughput and latency of any location.</span></li><li><span style="color:var(--ds-text,#172b4d);">Select the <strong>ISO Library</strong> tab in the <strong>Server Image</strong> section.</span></li><li><span style="color:var(--ds-text,#172b4d);">Choose <strong>SystemRescue x64</strong>.</span></li><li><span style="color:var(--ds-text,#172b4d);">Choose a server size with</span> <a class="external-link" href="https://www.vultr.com/resources/faq/?query=bandwidth#bandwidthcalculation" rel="nofollow"><span style="color:var(--ds-icon-accent-teal,#2898bd);">enough bandwidth allowance</span></a> <span style="color:var(--ds-text,#172b4d);">for your requirements.</span></li><li><span style="color:var(--ds-text,#172b4d);">Give the server a hostname, and a label, and then click <strong>Deploy Now</strong>.</span></li></ol><p><span style="color:var(--ds-text,#172b4d);">When the server finishes deploying, proceed to the next step.</span></p><h1 id="CHRVultrinstallation-Step2:WritetheCHRimagetothedisk"><span style="color:var(--ds-text,#172b4d);">Step 2: Write the CHR image to the disk</span></h1><ol><li><span style="color:var(--ds-text,#172b4d);">In your web browser, navigate to the</span> <a class="external-link" href="https://mikrotik.com/download" rel="nofollow"><span style="color:var(--ds-icon-accent-teal,#2898bd);">MikroTik download page</span></a><span style="color:var(--ds-text,#172b4d);">.</span></li><li><span style="color:var(--ds-text,#172b4d);">Locate the latest Stable RAW CHR disk image. Vultr requires version <strong>7.2.3 Stable</strong> or later.</span></li><li><span style="color:var(--ds-text,#172b4d);">Right-click the floppy disk icon to copy the URL. Don't download the image now, you'll download it to the server in a later step.</span><br/><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" draggable="false" height="250" src="attachments/146997259/146997267.png" data-image-src="attachments/146997259/146997267.png" data-unresolved-comment-count="0" data-linked-resource-id="146997267" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="DownloadCHR.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="146997259" data-linked-resource-container-version="9" tabindex="0" alt=""></span></li><li>Navigate to the server's information page in the<span style="letter-spacing: 0.0px;"> </span><a class="external-link" href="https://my.vultr.com/" rel="nofollow" style="letter-spacing: 0.0px;"><span style="color:var(--ds-icon-accent-teal,#2898bd);">Vultr customer portal</span></a><span style="letter-spacing: 0.0px;color:var(--ds-text,#172b4d);">.</span></li><li>Connect to the<span style="letter-spacing: 0.0px;"> </span><a class="external-link" href="https://www.vultr.com/docs/vultr-web-console-faq/" rel="nofollow" style="letter-spacing: 0.0px;"><span style="color:var(--ds-icon-accent-teal,#2898bd);">web console</span></a><span style="letter-spacing: 0.0px;color:var(--ds-text,#172b4d);">.<br/><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" draggable="false" height="122" src="attachments/146997259/146997268.png" data-image-src="attachments/146997259/146997268.png" data-unresolved-comment-count="0" data-linked-resource-id="146997268" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="ViewConsole.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="146997259" data-linked-resource-container-version="9" tabindex="0" alt=""></span></span></li><li>In the web console, download the CHR image to the server with &quot;wget&quot;. If you copied the download URL to your clipboard, you can<span style="letter-spacing: 0.0px;"> </span><a class="external-link" href="https://www.vultr.com/docs/vultr-web-console-faq/" rel="nofollow" style="letter-spacing: 0.0px;"><span style="color:var(--ds-icon-accent-teal,#2898bd);">send it to the server</span></a><span style="letter-spacing: 0.0px;"> </span><span style="letter-spacing: 0.0px;color:var(--ds-text,#172b4d);"><span style="letter-spacing: 0.0px;color:var(--ds-text,#172b4d);">through the web console.</span></span><p><span style="color:var(--ds-background-accent-gray-bolder,#626f86);">Substitute your version for x.x.x in the examples that follow.</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false"># wget https://download.mikrotik.com/routeros/x.x.x/chr-x.x.x.img.zip</pre>
+</div></div></li><li><p class="auto-cursor-target">Unzip the downloaded file.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false"># unzip chr-x.x.x.img.zip</pre>
+</div></div></li><li><p class="auto-cursor-target">Write the MikroTik CHR image to the server's disk with dd.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false"># dd if=chr-x.x.x.img of=/dev/vda</pre>
+</div></div></li></ol><ul><li style="list-style-type: none;"><ul><li><span style="color:var(--ds-text,#172b4d);"> <strong>if</strong> is the image that you unzipped in the previous step.</span></li><li><span style="color:var(--ds-text,#172b4d);"> <strong>of</strong> is the server's disk:  /dev/vda.</span></li></ul></li></ul><p><span style="color:var(--ds-text,#172b4d);">This procedure takes a couple of minutes; proceed to the next step when complete.</span></p><h1 id="CHRVultrinstallation-Step3:ConnecttoMikroTikCHR"><span style="color:var(--ds-text,#172b4d);">Step 3: Connect to MikroTik CHR</span></h1><ol><li><span style="color:var(--ds-text,#172b4d);">Navigate to the server's</span> <a class="external-link" href="https://my.vultr.com/" rel="nofollow"><span style="color:var(--ds-icon-accent-teal,#2898bd);">settings page</span></a><span style="color:var(--ds-text,#172b4d);">.</span></li><li><span style="color:var(--ds-text,#172b4d);">Choose the <strong>Custom ISO</strong> menu, then click <strong>Remove ISO</strong>. The server will reboot.</span></li><li><span style="color:var(--ds-text,#172b4d);">Connect to the</span> <a class="external-link" href="https://www.vultr.com/docs/vultr-web-console-faq/" rel="nofollow"><span style="color:var(--ds-icon-accent-teal,#2898bd);">web console</span></a><span style="color:var(--ds-text,#172b4d);">.</span></li><li><span style="color:var(--ds-text,#172b4d);">Log in as admin. There is no password set, so press <strong>Enter</strong> at the prompt.</span></li><li><span style="color:var(--ds-text,#172b4d);">View the software license, then choose a new, strong password.</span></li><li><span style="color:var(--ds-text,#172b4d);">Close the web console, then open a terminal on your local computer.</span></li><li><p class="auto-cursor-target"><span style="color:var(--ds-text,#172b4d);"><span style="color:var(--ds-text,#172b4d);">SSH as admin to the server's IP address.</span></span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">$ ssh admin@192.0.2.2</pre>
+</div></div></li><li>Enter the strong password you set in the prior step.</li></ol><p><span style="color:var(--ds-text,#172b4d);">This completes the basic installation. Please</span> <a href="https://help.mikrotik.com/docs/display/ROS/Securing+your+router" rel="nofollow">secure your MikroTik CHR router</a> <span style="color:var(--ds-text,#172b4d);">and consult the</span> <a href="https://help.mikrotik.com/docs/display/ROS/Getting+started" rel="nofollow"><span style="color:var(--ds-icon-accent-teal,#2898bd);">documentation</span></a> <span style="color:var(--ds-text,#172b4d);">to configure the server for production use. Visit Vultr site for <a class="external-link" href="https://docs.vultr.com/configure-a-mikrotik-chr-router-with-a-virtual-private-cloud-vpc" rel="nofollow">configuration manual</a> and for their <a class="external-link" href="https://docs.vultr.com/vultr-firewall" rel="nofollow">firewall</a> features.</span></p>
+                    </div>
+
+                                                            <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/146997259/146997264.png">worddavaaa54a52fedabc61e13859a5e97a091d.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/146997259/146997267.png">DownloadCHR.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/146997259/146997268.png">ViewConsole.png</a> (image/png)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : IKEv2 EAP between NordVPN and RouterOS</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Virtual-Private-Networks_119144597.html">Virtual Private Networks</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="IPsec_11993097.html">IPsec</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : IKEv2 EAP between NordVPN and RouterOS
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Normunds R.</span>, last updated by <span class='editor'> Unknown User (emils)</span> on Nov 28, 2022
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742033629 {padding: 0px;}
+div.rbtoc1747742033629 ul {margin-left: 0px;}
+div.rbtoc1747742033629 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742033629'>
+<ul class='toc-indentation'>
+<li><a href='#IKEv2EAPbetweenNordVPNandRouterOS-InstallingtherootCA'>Installing the root CA</a></li>
+<li><a href='#IKEv2EAPbetweenNordVPNandRouterOS-Findingouttheserver&#39;shostname'>Finding out the server&#39;s hostname</a></li>
+<li><a href='#IKEv2EAPbetweenNordVPNandRouterOS-SettinguptheIPsectunnel'>Setting up the IPsec tunnel</a></li>
+<li><a href='#IKEv2EAPbetweenNordVPNandRouterOS-Choosingwhattosendoverthetunnel'>Choosing what to send over the tunnel</a>
+<ul class='toc-indentation'>
+<li><a href='#IKEv2EAPbetweenNordVPNandRouterOS-Option1:Sendingalltrafficoverthetunnel'>Option 1: Sending all traffic over the tunnel</a></li>
+<li><a href='#IKEv2EAPbetweenNordVPNandRouterOS-Option2:Accessingcertainaddressesoverthetunnel'>Option 2: Accessing certain addresses over the tunnel</a></li>
+</ul>
+</li>
+</ul>
+</div></p><p>Starting from RouterOS v6.45, it is possible to establish IKEv2 secured tunnel to NordVPN servers using EAP authentication. This manual page explains how to configure it.</p><p><br/></p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/125992982/126877697.png" data-image-src="attachments/125992982/126877697.png" data-unresolved-comment-count="0" data-linked-resource-id="126877697" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="IPsec.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="125992982" data-linked-resource-container-version="6" tabindex="0" alt=""></span></p><h2 id="IKEv2EAPbetweenNordVPNandRouterOS-InstallingtherootCA"><span class="mw-headline">Installing the root CA</span></h2><p>Start off by downloading and importing the NordVPN root CA certificate.</p><pre>/tool fetch url=&quot;https://downloads.nordvpn.com/certificates/root.der&quot;
+/certificate import file-name=root.der
+</pre><p>There should now be the trusted NordVPN Root CA certificate in System/Certificates menu.</p><pre>[admin@MikroTik] &gt; /certificate print where name~&quot;root.der&quot;
+Flags: K - private-key, L - crl, C - smart-card-key, A - authority, I - issued, R - revoked, E - expired, T - trusted 
+ #         NAME            COMMON-NAME            SUBJECT-ALT-NAME                                         FINGERPRINT           
+ 0       T root.der_0      NordVPN Root CA                                                                 8b5a495db498a6c2c8c...
+</pre><h2 id="IKEv2EAPbetweenNordVPNandRouterOS-Findingouttheserver&#39;shostname"><span class="mw-headline">Finding out the server's hostname</span></h2><p>Navigate to <a class="external-link" href="https://nordvpn.com/servers/tools/" rel="nofollow">https://nordvpn.com/servers/tools/</a> and find out the recommended server's hostname. In this case, it is <a class="external-link" href="http://lv20.nordvpn.com" rel="nofollow">lv20.nordvpn.com</a>.</p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/125992982/125992985.png" data-image-src="attachments/125992982/125992985.png" data-unresolved-comment-count="0" data-linked-resource-id="125992985" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="Nordvpn_hostname.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="125992982" data-linked-resource-container-version="6" tabindex="0" alt=""></span></p><h2 id="IKEv2EAPbetweenNordVPNandRouterOS-SettinguptheIPsectunnel"><span class="mw-headline">Setting up the IPsec tunnel</span></h2><p>It is advised to create a separate Phase 1 profile and Phase 2 proposal configurations to not interfere with any existing or future IPsec configuration.</p><pre>/ip ipsec profile
+add name=NordVPN
+/ip ipsec proposal
+add name=NordVPN pfs-group=none
+</pre><p>While it is possible to use the default policy template for policy generation, it is better to create a new policy group and template to separate this configuration from any other IPsec configuration.</p><pre>/ip ipsec policy group
+add name=NordVPN
+/ip ipsec policy
+add dst-address=0.0.0.0/0 group=NordVPN proposal=NordVPN src-address=0.0.0.0/0 template=yes
+</pre><p>Create a new mode config entry with responder=no that will request configuration parameters from the server.</p><pre>/ip ipsec mode-config
+add name=NordVPN responder=no
+</pre><p>Lastly, create peer and identity configurations. Specify your NordVPN credentials in username and password parameters.</p><pre>/ip ipsec peer
+add address=lv20.nordvpn.com exchange-mode=ike2 name=NordVPN profile=NordVPN
+/ip ipsec identity
+add auth-method=eap certificate=&quot;&quot; eap-methods=eap-mschapv2 generate-policy=port-strict mode-config=NordVPN peer=NordVPN policy-template-group=NordVPN username=support@mikrotik.com password=secret
+</pre><p>Verify that the connection is successfully established.</p><pre>/ip ipsec
+active-peers print
+installed-sa print
+</pre><h2 id="IKEv2EAPbetweenNordVPNandRouterOS-Choosingwhattosendoverthetunnel"><span class="mw-headline">Choosing what to send over the tunnel</span></h2><p>If we look at the generated dynamic policies, we see that only traffic with a specific (received by mode config) source address will be sent through the tunnel. But a router in most cases will need to route a specific device or network through the tunnel. In such a case, we can use source NAT to change the source address of packets to match the mode config address. Since the mode config address is dynamic, it is impossible to create a static source NAT rule. In RouterOS it is possible to generate dynamic source NAT rules for mode config clients.</p><h3 id="IKEv2EAPbetweenNordVPNandRouterOS-Option1:Sendingalltrafficoverthetunnel"><span class="mw-headline">Option 1: Sending all traffic over the tunnel</span></h3><p>In this example, we have a local network 10.5.8.0/24 behind the router and we want all traffic from this network to be sent over the tunnel. First of all, we have to make a new IP/Firewall/Address list which consists of our local network.</p><pre>/ip firewall address-list
+add address=10.5.8.0/24 list=local
+</pre><p>It is also possible to specify only single hosts from which all traffic will be sent over the tunnel. Example:</p><pre>/ip firewall address-list
+add address=10.5.8.120 list=local
+add address=10.5.8.23 list=local
+</pre><p>When it is done, we can assign newly created IP/Firewall/Address list to mode config configuration.</p><pre>/ip ipsec mode-config
+set [ find name=NordVPN ] src-address-list=local
+</pre><p>Verify correct source NAT rule is dynamically generated when the tunnel is established.</p><pre>[admin@MikroTik] &gt; /ip firewall nat print 
+Flags: X - disabled, I - invalid, D - dynamic 
+ 0  D ;;; ipsec mode-config
+      chain=srcnat action=src-nat to-addresses=192.168.77.254 src-address-list=local dst-address-list=!local
+</pre><p><br/></p><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><p class="title conf-macro-render">Warning</p><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body">Make sure the dynamic mode config address is not a part of the local network.</div></div><p><br/></p><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body">It is also possible to combine both options (1 and 2) to allow access to specific addresses only for specific local addresses/networks</div></div><p><br/></p><h3 id="IKEv2EAPbetweenNordVPNandRouterOS-Option2:Accessingcertainaddressesoverthetunnel"><span class="mw-headline">Option 2: Accessing certain addresses over the tunnel</span></h3><p>It is also possible to send only specific traffic over the tunnel by using the connection-mark parameter in the Mangle firewall. It works similarly as Option 1 - a dynamic NAT rule is generated based on configured connection-mark parameter under mode config.</p><p>First of all, set the connection-mark under your mode config configuration.</p><pre>/ip ipsec mode-config
+set [ find name=NordVPN ] connection-mark=NordVPN
+</pre><p>When it is done, a NAT rule is generated with the dynamic address provided by the server:</p><pre>[admin@MikroTik] &gt; /ip firewall nat print 
+Flags: X - disabled, I - invalid, D - dynamic 
+ 0  D ;;; ipsec mode-config
+      chain=srcnat action=src-nat to-addresses=192.168.77.254 connection-mark=NordVPN 
+</pre><p>After that, it is possible to apply this connection-mark to any traffic using Mangle firewall. In this example, access to <a class="external-link" href="http://mikrotik.com" rel="nofollow">mikrotik.com</a> and 8.8.8.8 is granted over the tunnel.</p><p>Create a new address list:</p><pre>/ip firewall address-list
+add address=mikrotik.com list=VPN
+add address=8.8.8.8 list=VPN
+</pre><p>Apply connection-mark to traffic matching the created address list:</p><pre>/ip firewall mangle
+add action=mark-connection chain=prerouting dst-address-list=VPN new-connection-mark=NordVPN passthrough=yes
+</pre><div role="region" aria-label="Info" class="confluence-information-macro  confluence-information-macro-information" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-info-filled confluence-information-macro-icon" ></span><div class="confluence-information-macro-body">It is also possible to combine both options (1 and 2) to allow access to specific addresses only for specific local addresses/networks</div></div>
+                    </div>
+
+                                                            <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/125992982/125992983.png">image2022-5-13_13-56-26.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/125992982/125992984.png">image2022-5-13_13-56-47.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/125992982/125992985.png">Nordvpn_hostname.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/125992982/126877697.png">IPsec.png</a> (image/png)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

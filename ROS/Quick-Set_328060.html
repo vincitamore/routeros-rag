@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : Quick Set</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Management-tools_328121.html">Management tools</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : Quick Set
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Normunds R.</span>, last updated by <span class='editor'> Guntis G.</span> on Mar 06, 2024
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <h1 id="QuickSet-/*&lt;![CDATA[*/div.rbtoc1747742021445{padding:0px;}div.rbtoc1747742021445ul{margin-left:0px;}div.rbtoc1747742021445li{margin-left:0px;padding-left:0px;}/*]]&gt;*/#QuickSet-Summary#QuickSet-SummaryModes#QuickSet-ModesHomeAP#QuickSet-HomeAPWireless#Quic"><span class="mw-headline"><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742021445 {padding: 0px;}
+div.rbtoc1747742021445 ul {margin-left: 0px;}
+div.rbtoc1747742021445 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742021445'>
+<ul class='toc-indentation'>
+<li><a href='#QuickSet-'></a>
+<ul class='toc-indentation'>
+<li><a href='#QuickSet-Summary'>Summary</a></li>
+<li><a href='#QuickSet-Modes'>Modes</a></li>
+<li><a href='#QuickSet-HomeAP'>HomeAP</a>
+<ul class='toc-indentation'>
+<li><a href='#QuickSet-Wireless'>Wireless</a></li>
+<li><a href='#QuickSet-Internet'>Internet</a></li>
+<li><a href='#QuickSet-LocalNetwork'>Local Network</a></li>
+<li><a href='#QuickSet-VPN'>VPN</a></li>
+<li><a href='#QuickSet-System'>System</a></li>
+</ul>
+</li>
+<li><a href='#QuickSet-FAQ'>FAQ</a></li>
+<li><a href='#QuickSet-.1'></a></li>
+</ul>
+</li>
+</ul>
+</div></span></h1><h2 id="QuickSet-Summary"><span class="mw-headline">Summary</span></h2><p><strong>Quickset</strong> is a simple configuration wizard page that prepares your router in a few clicks. It is the first screen a user sees, when opening the default IP address 192.168.88.1 in a web browser.</p><p>Quickset is available for all devices that have some sort of default configuration from factory. Devices that do not have configuration must be configured by hand. The most popular and recommended mode is the HomeAP (or HomeAP dual, depending on the device). This Quickset mode provides the simplest of terminology and the most common options for the home user.</p><h2 id="QuickSet-Modes"><span class="mw-headline">Modes</span></h2><p>Depending on the router model, different Quickset modes might be available from the Quickset dropdown menu:</p><ul><li><strong>CAP</strong>: Controlled Access Point, an AP device, that will be managed by a centralized CAPsMAN server. Only use if you have already set up a CAPsMAN server.</li><li><strong>CPE</strong>: Client device, which will connect to an Access Point (AP) device. Provides option to scan for AP devices in your area.</li><li><strong>HomeAP</strong>: The default Access Point config page for most home users. Provides fewer options and simplified terminology.</li><li><strong>HomeAP dual</strong>: Dual band devices (2GHz/5GHz). The default Access Point config page for most home users. Provides fewer options and simplified terminology.</li><li><strong>Home Mesh</strong>: Made for making bigger WiFi networks. Enables the CAPsMAN server in the router, and places the local WiFi interfaces under CAPsMAN control. Just boot other MikroTik WiFi APs with the reset button pressed, and they will join this HomeMesh network (see their Quick guide for details)</li><li><strong>PTP Bridge AP</strong>: When you need to transparently interconnect two remote locations together in the same network, set one device to this mode, and the other device to the next (PTP Bridge CPE) mode.</li><li><strong>PTP Bridge CPE</strong>: When you need to transparently interconnect two remote locations together in the same network, set one device to this mode, and the other device to the previous (PTP Bridge AP) mode.</li><li><strong>WISP AP</strong>: Similar to the HomeAP mode, but provides more advanced options and uses industry standard terminology, like SSID and WPA.</li></ul><h2 id="QuickSet-HomeAP"><span class="mw-headline">HomeAP</span></h2><p>This is the mode you should use if you would like to quickly configure a home access point.</p><h3 id="QuickSet-Wireless"><span class="mw-headline">Wireless</span></h3><p><span class="mw-headline">Set up your wireless network in this section: </span></p><ul><li><strong>Network Name</strong>: How will your smartphone see your network? Set any name you like here. In HomeAP dual, you can set the 2GHz (legacy) and 5GHz (modern) networks to same, or different names (see FAQ). Use any name you like, in any format.</li><li><strong>Frequency</strong>: Normally you can leave &quot;Auto&quot;, in this way, the router will scan the environment, and select the least occupied frequency channel (it will do this once). Use a custom selection if you need to experiment.</li><li><strong>Band</strong>: Normally leave this to defaults (2GHz b/g/n and 5GHz A/N/AC).</li><li><strong>Use Access List (ACL)</strong>: Enable this if you would like to restrict who can connect to your AP, based on the user's MAC (hardware) address. To use this option, first you need to allow these clients to connect, and then use the below button &quot;Copy to ACL&quot;. This will copy the selected client to the access list. After you have built an Access list (ACL), you can enable this option to forbid anyone else to attempt connections to your device. Normally you can leave this alone, as the Wireless password already provides the needed restrictions.</li><li><strong>WiFi Password</strong>: The most important option here. Sets a secure password that also encrypts your wireless communications, which will be needed to connect to wireless network.</li><li><strong>WPS accept</strong>: Use this button to grant access to a specific device that supports the WPS connection mode. Useful for printers and other peripherals where typing a password is difficult. First start WPS mode in your client device, then once click the WPS button here to allow said device. Button works for a few seconds and operates on a per-client basis.</li><li><strong>Guest network</strong>: Useful for house guests who don't need to know your main WiFi password. Set a separate password for them in this option. Important! Guest users will not be able to access other devices in your LAN and other guest devices. This mode enabled Bridge filters to prevent this.</li><li><strong>Wireless clients</strong>: This table shows the currently connected client devices (their MAC address, if they are in your Access List, their last used IP address, how long are they connected, their signal level in dBm and in a bar graph).</li></ul><h3 id="QuickSet-Internet"><span class="mw-headline">Internet</span></h3><ul><li><strong>Port</strong>: Select which port is connected to the ISP (internet) modem. Usually Eth1.</li><li><strong>Address Acquisition</strong>: Select how the ISP is giving you the IP address. Ask your service provider about this and the other options (IP address, Netmask, Gateway).</li><li><strong>MAC address</strong>: Normally should not be changed, unless your ISP has locked you to a specific MAC address, and you have changed the router to a new one.</li><li><strong>Firewall router</strong>: This enables a secure firewall for your router and your network. Always make sure this box is selected, so that no access is possible to your devices from the internet port.</li><li><strong>MAC server / MAC Winbox</strong>: Allows connection with the [Winbox utility <a class="external-link" href="https://mt.lv/winbox" rel="nofollow">https://mt.lv/winbox</a>] from the LAN port side in MAC address mode. Useful for debugging and recovery, when IP mode is not available. Advanced use only.</li><li><strong>Discovery</strong>: Allows the device to be identified by model name from other RouterOS devices.</li></ul><h3 id="QuickSet-LocalNetwork"><span class="mw-headline">Local Network</span></h3><ul><li><strong>IP address</strong>: Mostly can stay at the default 192.168.88.1 unless your router is behind another router. To avoid IP conflict, change to 192.168.89.1 or similar</li><li><strong>Netmask</strong>: In most situations can leave 255.255.255.0</li><li><strong>Bridge all LAN ports</strong>: Allows your devices to communicate to each other, even if, say, your TV is connected via Ethernet LAN cable, but your PC is connected via WiFi.</li><li><strong>DHCP server</strong>: Normally, you would want automatic IP address configuration in your home network, so leave the DHCP settings ON and on their defaults.</li><li><strong>NAT</strong>: Turn this off ONLY if your ISP has provided a public IP address for both the router and also the local network. If not, leave NAT on.</li><li><strong>UPnP</strong>: This option enables automatic port forwarding (&quot;opening ports to the local network&quot; as some call it) for supported programs and devices, like your NAS disks and peer-to-peer utilities. Use with care, as this option can sometimes expose internal devices to the internet without your knowledge. Enable only if specifically needed.</li></ul><h3 id="QuickSet-VPN"><span class="mw-headline">VPN</span></h3><p>If you want to access your local network (and your router) from the internet, use a secure VPN tunnel. This option gives you a domain name where to connect to, and enables PPTP and L2TP/IPsec (the second one is recommended). The username is 'vpn' and you can specify your own password. All you need to do is enable it here, and then provide the address, username and password in your laptop or phone, and when connected to the VPN, you will have a securely encrypted connection to your home network. Also, useful when travelling - you will be able to browse the internet through a secure line, as if connecting from your home. This also helps to avoid geographical restrictions that are set up in some countries.</p><h3 id="QuickSet-System"><span class="mw-headline">System</span></h3><ul><li><strong>Check for updates</strong>: Always make sure your device is up-to-date with this button. Checks if an updated RouterOS release is available, and installs it.</li><li><strong>Password</strong>: Sets the password for the device config page itself. Make sure nobody can access your router config page and change the settings.</li></ul><h2 class="auto-cursor-target" id="QuickSet-FAQ"><span>FAQ</span></h2><p><strong>Q: How is Quickset different from the Webfig tab, where a bunch of new menus appear?</strong></p><p>A: QuickSet is for new users who only need their device up and running in no time. It provides the most commonly used options in one place. If you need more options, do not use any Quickset settings at all, click on &quot;Webfig&quot; to open the advanced configuration interface. The full functionality is unlocked.</p><p><strong>Q: Can I use Quickset and Webfig together? While settings that are not conflicting can be configured this way, it is not recommended to mix up these menus.</strong></p><p>A: If you are going to use Quickset, use only Quickset and vice versa. What is difference between Router and Bridge mode? Bridge mode adds all interfaces to the bridge, allowing to forward Layer2 packets (acts as a hub/switch). In Router mode, packets are forwarded in Layer3 by using IP addresses and IP routes (acts as a router).</p><p><strong>Q: In HomeAP mode, should the 2GHz and 5GHz network names be the same, or different?</strong></p><p>A: If you prefer that all your client devices, like TV, phones, game consoles, would automatically select the best preferred network, set the names identically. If you would like to force a client device to use the faster 5GHz 802.11ac connection, set the names unique.</p><p><strong>Q: Can I create an AP without security settings - no password or connect to such AP while using QuickSet?</strong></p><p>A: QuickSet uses WPA2 pre-shared key by default. It means that the minimal password length is 8 symbols and the device can only connect to WPA2 secured AP or serve as AP itself. For configurations with no security settings, you need to configure them manually using WinBox, Webfig, or console.</p><p>QuickSet interface:</p><h2 id="QuickSet-"><span class="mw-headline"><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/328060/328110.png" data-image-src="attachments/328060/328110.png" data-unresolved-comment-count="0" data-linked-resource-id="328110" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="Quickset639.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="328060" data-linked-resource-container-version="18" tabindex="0" alt=""></span></span></h2>
+                    </div>
+
+                                                            <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328060/328110.png">Quickset639.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/328060/173277191.png">image-2023-2-20_13-34-17.png</a> (image/png)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

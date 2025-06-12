@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : Packages</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Getting-started_328119.html">Getting started</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Upgrading-and-installation_328142.html">Upgrading and installation</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : Packages
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Unknown User (olga)</span>, last updated by <span class='editor'> Normunds R.</span> on Apr 02, 2025
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><span class="mw-headline"><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742018542 {padding: 0px;}
+div.rbtoc1747742018542 ul {margin-left: 0px;}
+div.rbtoc1747742018542 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742018542'>
+<ul class='toc-indentation'>
+<li><a href='#Packages-Summary'>Summary</a></li>
+<li><a href='#Packages-Minimumrequirements'>Minimum requirements</a></li>
+<li><a href='#Packages-Installingpackages'>Installing packages</a>
+<ul class='toc-indentation'>
+
+<ul class='toc-indentation'>
+<li><a href='#Packages-Manualdownload'>Manual download</a></li>
+<li><a href='#Packages-Downloaddirectlyfromtherouter'>Download directly from the router</a></li>
+</ul>
+<li><a href='#Packages-Verificationofinstall'>Verification of install</a></li>
+<li><a href='#Packages-Systempackages'>System packages</a></li>
+<li><a href='#Packages-Extrapackages'>Extra packages</a></li>
+</ul>
+</li>
+<li><a href='#Packages-Workingwithpackages'>Working with packages</a></li>
+<li><a href='#Packages-Autoinstall'>Auto install</a></li>
+<li><a href='#Packages-Examples'>Examples</a>
+<ul class='toc-indentation'>
+<li><a href='#Packages-Listingpackages'>Listing packages</a></li>
+</ul>
+</li>
+</ul>
+</div></span></p><h2 id="Packages-Summary"><span class="mw-headline">Summary</span></h2><p>RouterOS features are separated in &quot;packages&quot;, which are files with .npk extension. Most of the features are combined in one <strong><em>routeros </em></strong>package, but some features are separate. Installing the corresponding NPK package can enable specific features (like container, dude). Packages are provided only by MikroTik, and no 3rd parties are allowed to make them. You can download extra packages separately from our download page, or, since v7.18, it is possible to add extra packages directly from your router.</p><h2 id="Packages-Minimumrequirements"><span class="mw-headline">Minimum requirements</span></h2><p><span class="mw-headline">RouterOS requires only the system package to operate at bare minimum, but for most devices normal operation and features are available when you install the &quot;routeros&quot; bundle package. <br/></span></p><p><span class="mw-headline">In case of wireless devices, several wireless packages are available, depending on the hardware you are using:</span></p><ul><li data-uuid="20bf3ece-1705-4761-8431-14d798e35ff6">Starting from RouterOS 7.13, the <strong><em>routeros </em></strong>(system) package and one of the following wireless packages are needed for the basic operation of a simple home router.<ol><li data-uuid="918218bd-96fa-4265-9611-dbc202a8f031">802.11ax WiFi APs require radio drivers, which are provided by the <em><strong>wifi-qcom</strong> </em>package (for RouterOS version before 7.13 it was called the <em>wifiwave2</em> package).</li><li data-uuid="4321c204-06a9-48f4-9c69-11cc1ca8a2ae">Previous generation WiFi APs require a <em><strong>wireless</strong> </em>package.</li></ol></li></ul><p>More information about which wireless package to use is available in the <a href="Wireless_1409138.html">Wireless manual</a>.</p><p>Other packages are optional and not required for a home router. Install them only if you are sure of their purpose. </p><h2 id="Packages-Installingpackages">Installing packages</h2><h4 id="Packages-Manualdownload"><span style="color:var(--ds-text,#333333);">Manual download</span></h4><p><span style="color:var(--ds-text,#333333);">To manually download and install extra packages, download the necessary package from the <a class="external-link" href="https://mikrotik.com/download" rel="nofollow">MikroTik download</a> page, selecting the RouterOS section based on your device's architecture found in the System/Resources menu. Extract the archive and upload the required package to your router using any convenient method, and proceed to reboot the router.</span></p><h4 id="Packages-Downloaddirectlyfromtherouter">Download directly from the router</h4><p>Since 7.18 it is possible to download/install extra packages directly from the router, using the <em>System Packages </em>section.</p><ol><li data-uuid="6619fa0f-3ddf-41b7-9cbc-bd251792778b">After executing the <strong><em>Check For Updates</em></strong> command, available packages will be listed in the <em>Packages </em>list, but they will show up as disabled. The available package list comes from the MikroTik download server. Those packages are available, but not yet in your router (as indicated by the flags X (Disabled) and A (available). </li><li data-uuid="8992cfda-5c16-4706-a88d-44ac974b8a95">To download an extra package, first, select package and click <strong><em>Enable</em></strong></li><li data-uuid="54ee5dda-e91d-4207-8652-16d21fbd5afc">To make the router download the package, click <em><strong>Apply Changes</strong> </em>and the device will ask for a reboot</li></ol><p>This feature is also shown in our <a class="external-link" href="https://youtu.be/wJw50I7STck?si=nJUGdR8z3qjNv69H&amp;t=22" rel="nofollow">v7.18 announcement video</a>.</p><div class="table-wrap"><table class="wrapped confluenceTable"><colgroup><col/><col/><col/><col/></colgroup><tbody><tr><th scope="col" class="confluenceTh">Package list</th><th scope="col" class="confluenceTh">After loading the list with &quot;Check for updates&quot;</th><th scope="col" class="confluenceTh">Enabling a package</th><th scope="col" class="confluenceTh">Clicking &quot;Apply Changes&quot;</th></tr><tr><td class="confluenceTd"><div class="content-wrapper"><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image confluence-thumbnail" draggable="false" height="150" src="attachments/40992872/308248610.png" data-image-src="attachments/40992872/308248610.png" data-unresolved-comment-count="0" data-linked-resource-id="308248610" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="packages1.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="40992872" data-linked-resource-container-version="45" tabindex="0" alt=""></span></p></div></td><td class="confluenceTd"><div class="content-wrapper"><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image confluence-thumbnail" draggable="false" height="150" src="attachments/40992872/308248609.png" data-image-src="attachments/40992872/308248609.png" data-unresolved-comment-count="0" data-linked-resource-id="308248609" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="packages2.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="40992872" data-linked-resource-container-version="45" tabindex="0" alt=""></span></p></div></td><td class="confluenceTd"><div class="content-wrapper"><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image confluence-thumbnail" draggable="false" height="150" src="attachments/40992872/308248608.png" data-image-src="attachments/40992872/308248608.png" data-unresolved-comment-count="0" data-linked-resource-id="308248608" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="packages3.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="40992872" data-linked-resource-container-version="45" tabindex="0" alt=""></span></p></div></td><td class="confluenceTd"><div class="content-wrapper"><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image confluence-thumbnail" draggable="false" height="150" src="attachments/40992872/308248607.png" data-image-src="attachments/40992872/308248607.png" data-unresolved-comment-count="0" data-linked-resource-id="308248607" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="packages4.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="40992872" data-linked-resource-container-version="45" tabindex="0" alt=""></span></p></div></td></tr></tbody></table></div><h3 id="Packages-Verificationofinstall">Verification of install</h3><p>To make sure package is installed successfully, check the &quot;Log&quot; section after the device is rebooted. If the package is installed successfully, you will see a message about it. If there have been conflicts or some requirement is not met, this will be explained, so you can take further steps to rectify that.</p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/40992872/308248611.png" data-image-src="attachments/40992872/308248611.png" data-unresolved-comment-count="0" data-linked-resource-id="308248611" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="packages5.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="40992872" data-linked-resource-container-version="45" tabindex="0" alt="" aria-label="Success in the log entries"><span class='confluence-embedded-image-title' aria-hidden='true'>Success in the log entries</span></span><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/40992872/308248612.png" data-image-src="attachments/40992872/308248612.png" data-unresolved-comment-count="0" data-linked-resource-id="308248612" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="error.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="40992872" data-linked-resource-container-version="45" tabindex="0" alt="" aria-label="Failure in the log entries"><span class='confluence-embedded-image-title' aria-hidden='true'>Failure in the log entries</span></span></p><h3 id="Packages-Systempackages">System packages</h3><div class="table-wrap"><table class="wrapped confluenceTable"><colgroup><col/><col/></colgroup><tbody><tr><th scope="col" class="confluenceTh"><strong>Package</strong></th><th scope="col" class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>routeros-arm<span> </span></strong>(<em>arm</em>)</td><td class="confluenceTd">system package for arm devices</td></tr><tr><td class="confluenceTd"><strong>routeros-arm<span> </span></strong><em>(arm64)</em></td><td class="confluenceTd">system package for arm64 devices</td></tr><tr><td class="confluenceTd"><strong>routeros-mipsbe<span> </span></strong>(<em>mipsbe</em>)</td><td class="confluenceTd">system package for mipsbe devices</td></tr><tr><td class="confluenceTd"><strong>routeros-mmips<span> </span></strong>(<em>mmips</em>)</td><td class="confluenceTd">system package for mmips devices</td></tr><tr><td class="confluenceTd"><strong>routeros-smips</strong><span> </span>(<em>smips</em>)</td><td class="confluenceTd">system package for smips devices</td></tr><tr><td class="confluenceTd"><strong>routeros-tile </strong>(<em>tile</em>)</td><td class="confluenceTd">system package for tile devices</td></tr><tr><td class="confluenceTd"><strong>routeros-ppc </strong>(<em>ppc</em>)</td><td class="confluenceTd">system package for ppc devices</td></tr><tr><td class="confluenceTd"><strong>routeros</strong><span> </span>(<em>x86, CHR</em>)</td><td class="confluenceTd">system package for x86 installations and CHR environment</td></tr></tbody></table></div><h3 id="Packages-Extrapackages">Extra packages</h3><div class="table-wrap"><table class="wrapped confluenceTable"><colgroup><col/><col/></colgroup><tbody><tr><th class="confluenceTh">Package (supported architecture)</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>calea</strong><span> </span>(<em>arm, arm64, mipsbe, mmips, tile, ppc, x86, CHR</em>)</td><td class="confluenceTd">Data gathering tool for specific use due to &quot;Communications Assistance for Law Enforcement Act&quot; in the USA</td></tr><tr><td class="confluenceTd"><strong>container </strong><em>(arm, arm64, x86, CHR)</em></td><td class="confluenceTd"><a href="https://help.mikrotik.com/docs/display/ROS/Container" rel="nofollow">Container</a> <span style="color:var(--ds-text,#172b4d);">implementation of Linux containers,<span> </span>allows users to run containerized environments within RouterOS</span></td></tr><tr><td class="confluenceTd"><strong>dude </strong>(<em>arm, arm64, mmips, tile, x86, CHR</em>)</td><td class="confluenceTd"><a class="external-link" href="https://wiki.mikrotik.com/wiki/Manual:The_Dude" rel="nofollow">Dude </a>tool that allows monitoring of network <span style="color:var(--ds-text,#333333);">environment</span></td></tr><tr><td class="confluenceTd"><strong>extra-nic </strong>(arm64)</td><td class="confluenceTd">arm64 CPU architecture, Network Interface Card(NIC) support, recommended for UEFI installation on non MikroTik boards </td></tr><tr><td class="confluenceTd"><strong>gps</strong><span> </span>(<em>arm, arm64, mipsbe, mmips, tile, ppc, x86, CHR</em>)</td><td class="confluenceTd"><a href="https://help.mikrotik.com/docs/display/ROS/GPS" rel="nofollow">Global Positioning System</a> devices support</td></tr><tr><td class="confluenceTd"><strong>iot </strong>(<em>arm, arm64, mipsbe, mmips, tile, ppc, x86, CHR</em>)</td><td class="confluenceTd"><p>Enables:</p><ul><li><a href="https://help.mikrotik.com/docs/display/ROS/MQTT" rel="nofollow">MQTT</a></li><li><a href="https://help.mikrotik.com/docs/display/ROS/General+Properties" rel="nofollow">LoRa</a> (for devices with LR8/9/2 miniPCie cards)</li><li><a href="https://help.mikrotik.com/docs/display/ROS/Bluetooth" rel="nofollow">Bluetooth</a> (for devices with Bluetooth chip)</li><li><a href="https://help.mikrotik.com/docs/display/ROS/GPIO" rel="nofollow">GPIO</a> (for devices with GPIO pins)</li><li><a href="https://help.mikrotik.com/docs/pages/viewpage.action?pageId=61046813" rel="nofollow">Modbus</a> (for devices with RS485 port)</li></ul></td></tr><tr><td class="confluenceTd"><strong>iot-bt-extra </strong>(arm, arm64)<strong><br/></strong></td><td class="confluenceTd"><p>A package for ARM, ARM64 devices which enables the use of USB Bluetooth adapters (must support LE 4.0+).</p><p><em><strong>note</strong>:</em> Not all adapters were tested. We can not guarantee beforehand that a specific adapter will work.</p></td></tr><tr><td class="confluenceTd"><strong>lora </strong><em>(arm, arm64, mipsbe, mmips, tile, ppc, x86, CHR)</em></td><td class="confluenceTd">Dummy package for <a href="https://help.mikrotik.com/docs/display/ROS/General+Properties" rel="nofollow">Lora </a>support. <span style="color:var(--ds-text,#333333);">LoRa package is not obligatory anymore and is left only for compatibility reasons. LoRa functionality is moved into iot package.</span></td></tr><tr><td class="confluenceTd"><strong>lte</strong><em> (mipsbe)</em></td><td class="confluenceTd">Required package only for SXT LTE (RBSXTLTE3-7), which contains drivers for the built-in LTE interface.</td></tr><tr><td class="confluenceTd"><strong>rose-storage </strong>(<em>arm, arm64, tile, x86, CHR</em>)</td><td class="confluenceTd"><span style="color:var(--ds-text,#172b4d);">Additional <a href="https://help.mikrotik.com/docs/display/ROS/ROSE-storage" rel="nofollow"> enterprise data center functionality </a>in RouterOS, support disk monitoring, improved formatting, RAIDs, rsync, iSCSI , NVMe over TCP, NFS, and improved SMB</span></td></tr><tr><td class="confluenceTd"><strong>tr069-client</strong> (<em>arm, arm64, mipsbe, mmips, smips, tile, ppc, x86, CHR</em>)</td><td class="confluenceTd"><a href="https://help.mikrotik.com/docs/display/ROS/TR-069" rel="nofollow">TR069 Client</a><span> </span>package</td></tr><tr><td class="confluenceTd"><strong>ups </strong>(<em>arm, arm64, mipsbe, mmips, tile, ppc, x86, CHR</em>)</td><td class="confluenceTd"><a href="https://help.mikrotik.com/docs/display/ROS/UPS" rel="nofollow">APC ups management</a> interface</td></tr><tr><td class="confluenceTd"><strong>user-manager<span> </span></strong>(<em>arm, arm64, mipsbe, mmips, tile, ppc, x86, CHR</em>)</td><td class="confluenceTd"><a href="https://help.mikrotik.com/docs/display/ROS/User+Manager" rel="nofollow">MikroTik User Manager</a><span> </span>server for controlling Hotspot and other service users.</td></tr><tr><td class="confluenceTd"><strong>wifi-qcom</strong> (<em>arm, arm64</em>)</td><td class="confluenceTd"><span style="color:var(--ds-text,#172b4d);">Mandatory driver package for 802.11ax interfaces. Introduced in 7.13.  <a href="https://help.mikrotik.com/docs/display/ROS/WiFi#WiFi-WiFiCAPsMAN" rel="nofollow">Wifi CAPsMAN</a> support comes with the system package.</span></td></tr><tr><td class="confluenceTd"><strong>wifi-qcom-ac</strong> (<em>arm</em>) </td><td class="confluenceTd"><span style="color:var(--ds-text,#172b4d);">Optional <a href="https://help.mikrotik.com/docs/display/ROS/WiFi" rel="nofollow">Wifi</a> driver package for compatible 802.11ac interfaces. Introduced in 7.13.</span></td></tr><tr><td class="confluenceTd"><strong>wireless </strong>(<em>arm, arm64, mipsbe, mmips, tile, ppc, x86, CHR</em>)<strong><br/></strong></td><td class="confluenceTd"><p><span style="color:var(--ds-text,#172b4d);">Utilities and drivers for managing WiFi (up to 802.11ac) and 60GHz wireless interfaces.<br/>This package is bundled into RouterOS for versions up to 7.12. Starting with 7.13, it is a separate package.<br/></span></p><p><span style="color:var(--ds-text,#172b4d);">The <strong>wireless</strong> package conflicts with <strong>wifi-qcom</strong> and <strong>wifi-qcom-ac</strong> packages - they cannot be active at the same time.</span></p></td></tr><tr><td class="confluenceTd"><strong>zerotier </strong><em>(arm, arm64)</em></td><td class="confluenceTd">Enables <a href="https://help.mikrotik.com/docs/display/ROS/ZeroTier" rel="nofollow"> ZeroTier </a>functionality</td></tr></tbody></table></div><h2 id="Packages-Workingwithpackages"><span class="mw-headline">Working with packages</span></h2><p><strong>Menu:</strong><span> </span><em>/system package</em></p><p>Commands executed in this menu will take place only on restart of the router. Until then, the user can freely schedule or revert set actions.</p><div class="table-wrap"><table class="wrapped confluenceTable"><colgroup><col/><col/></colgroup><tbody><tr><th class="confluenceTh">Command</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>disable</strong></td><td class="confluenceTd">schedule the package to be disabled after the next reboot. No features provided by the package will be accessible</td></tr><tr><td class="confluenceTd"><strong>downgrade</strong></td><td class="confluenceTd">will prompt for the reboot. During the reboot process will try to downgrade the RouterOS to the oldest version possible by checking the packages that are uploaded to the router.</td></tr><tr><td class="confluenceTd"><strong>enable</strong></td><td class="confluenceTd">schedule package to be enabled after the next reboot</td></tr><tr><td class="confluenceTd"><strong>uninstall</strong></td><td class="confluenceTd">schedule package to be removed from the router. That will take place during the reboot.</td></tr><tr><td class="confluenceTd"><strong>unschedule</strong></td><td class="confluenceTd">remove scheduled task for the package.</td></tr><tr><td class="confluenceTd"><strong>print</strong></td><td class="confluenceTd">outputs information about the packages, like: version, package state, planned state changes, etc.</td></tr><tr><td class="confluenceTd"><strong>update</strong></td><td class="confluenceTd">manages the <em>&quot;check-for-updates&quot;</em> channel and performs RouterOS upgrades</td></tr><tr><td class="confluenceTd"><strong>apply-changes</strong></td><td class="confluenceTd">apply scheduled changes and reboot device</td></tr></tbody></table></div><p><strong>Menu:</strong><span> </span><em>/system/check-installation </em></p><p>The &quot;Check installation&quot; function ensures the integrity of the RouterOS system by verifying the readability and correct placement of files. Its primary purpose is to confirm the health and status of your NAND/Flash storage.</p><p><strong>Menu:</strong><span> </span><em>/system/package/update install ignore-missing</em> command allows upgrading only the RouterOS main package, while omitting packages that are either missing or not uploaded during a manual upgrade process.</p><h2 style="text-decoration: none;text-align: left;" id="Packages-Autoinstall">Auto install</h2><p style="text-align: left;">It is also possible to <strong>automatically </strong>install packages after uploading them to the router with FTP or SFTP. The package file must be named with the extension *.auto.npk. Once the file will be uploaded, router will automatically go into reboot in order to install the package.</p><p>&quot;.auto.npk&quot; in the filename is mandatory for a package to be automatically installed.</p><h2 id="Packages-Examples"><span class="mw-headline">Examples</span></h2><h3 id="Packages-Listingpackages"><span class="mw-headline">Listing packages<br/></span></h3><p><span class="mw-headline"><em>zerotier</em> package is disabled, but installed; <em>iot</em> package is available on the server, but has not been downloaded to the router and enabled; <em>dude</em> package is scheduled for uninstall.</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/system package print 
+Flags: X - DISABLED
+Columns: NAME, VERSION, SCHEDULED
+#    NAME      VERSION  SCHEDULED              
+0    dude      7.9      scheduled for uninstall
+1 X  zerotier  7.9                             
+2    routeros  7.9 
+3 XA iot       7.9</pre>
+</div></div><p><span class="mw-headline">Uninstall package</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/system package uninstall dude; /system reboot; 
+Reboot, yes? [y/N]:
+</pre>
+</div></div><p>Disable package</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/system package disable zerotier; /system reboot;
+Reboot, yes? [y/N]:
+</pre>
+</div></div><p>Downgrade</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/system package downgrade; /system reboot;
+Reboot, yes? [y/N]: 
+</pre>
+</div></div><p><span style="letter-spacing: -0.003em;">Cancel uninstall or disable action</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/system package unschedule zerotier;
+/system package unschedule dude;</pre>
+</div></div>
+                    </div>
+
+                                                            <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/40992872/308248607.png">packages4.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/40992872/308248608.png">packages3.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/40992872/308248609.png">packages2.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/40992872/308248610.png">packages1.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/40992872/308248611.png">packages5.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/40992872/308248612.png">error.png</a> (image/png)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

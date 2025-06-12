@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : 6to4</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Virtual-Private-Networks_119144597.html">Virtual Private Networks</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : 6to4
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Unknown User (emils)</span>, last updated by <span class='editor'> Serhii T.</span> on Apr 25, 2024
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742032967 {padding: 0px;}
+div.rbtoc1747742032967 ul {margin-left: 0px;}
+div.rbtoc1747742032967 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742032967'>
+<ul class='toc-indentation'>
+<li><a href='#id-6to4-Summary'>Summary</a></li>
+<li><a href='#id-6to4-PropertyDescription'>Property Description</a></li>
+<li><a href='#id-6to4-ConfigurationExamples'>Configuration Examples</a>
+<ul class='toc-indentation'>
+<li><a href='#id-6to4-Simple6to4tunnelencapsulation(Currentlynotworking)'>Simple 6to4 tunnel encapsulation (Currently not working)</a></li>
+<li><a href='#id-6to4-HurricaneElectricTunnelBrokerExample'>Hurricane Electric Tunnel Broker Example</a></li>
+</ul>
+</li>
+</ul>
+</div></p><h1 id="id-6to4-Summary">Summary</h1><p><strong>Sub-menu:</strong> <code>/interface 6to4</code></p><p>6to4 is a special mechanism that allows IPv6 packets to be transmitted over IPv4 networks without the need of explicitly configured tunnel interfaces. It is especially useful for connecting two or more IPv6 networks over a network that does not have IPv6 support. There are two different ways of 6to4 mechanism. If <em>remote-address </em>is not configured, the router will encapsulate and send an IPv6 packet directly over IPv4 if the first 16 bits are <em><span class="ipaddr"><span>2002</span></span></em>, using the next 32 bits as the destination (IPv4 address converted to hex). In other case, the IPv6 packet will be sent directly to the IPv4 <em>remote-address</em>.</p><h1 id="id-6to4-PropertyDescription"><span class="mw-headline">Property Description</span></h1><div class="table-wrap"><table class="wrapped confluenceTable"><colgroup><col/><col/></colgroup><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>clamp-tcp-mss</strong> (<em>yes | no</em>; Default: <strong>yes</strong>)</td><td class="confluenceTd">Controls whether to change MSS size for received TCP SYN packets. When enabled, a router will change the MSS size for received TCP SYN packets if the current MSS size exceeds the tunnel interface MTU (taking into account the TCP/IP overhead). The received encapsulated packet will still contain the original MSS, and only after decapsulation the MSS is changed.</td></tr><tr><td class="confluenceTd"><strong>comment</strong> (<em>string</em>; Default: )</td><td class="confluenceTd">Short description of the interface.</td></tr><tr><td class="confluenceTd"><strong>disabled</strong> (<em>yes | no</em>; Default: <strong>no</strong>)</td><td class="confluenceTd">Whether an item is disabled.</td></tr><tr><td class="confluenceTd"><strong>dont-fragment</strong> (<em>inherit | no</em>; Default: <strong>no</strong>)</td><td class="confluenceTd"><p style="text-align: left;">Whether to include DF bit in related packets:</p><p style="text-align: left;"><em>no</em><span> </span>- fragment if needed,<span> </span><em>inherit</em><span> </span>- use Dont Fragment flag of original packet.</p><p style="text-align: left;">(Without Dont Fragment: inherit - packet may be fragmented).</p></td></tr><tr><td class="confluenceTd"><strong>dscp</strong> (<em>integer: 0-63</em>; Default: <strong>inherited</strong>)</td><td class="confluenceTd">DSCP value of packet. Inherited option means that DSCP value will be inherited from packet which is going to be encapsulated.</td></tr><tr><td class="confluenceTd"><strong>ipsec-secret</strong> (<em>string</em>; Default: )</td><td class="confluenceTd">When secret is specified, router adds dynamic IPsec peer to remote-address with pre-shared key and policy (by default phase2 uses sha1/aes128cbc).</td></tr><tr><td class="confluenceTd"><strong>keepalive</strong> (<em>integer[/time],integer 0..4294967295</em>; Default: <strong>0,0</strong>)</td><td class="confluenceTd">Tunnel keepalive parameter sets the time interval in which the tunnel running flag will remain even if the remote end of tunnel goes down. If configured time,retries fail, interface running flag is removed. Parameters are written in following format: <code>KeepaliveInterval,KeepaliveRetries</code> where <code>KeepaliveInterval</code> is time interval and <code>KeepaliveRetries</code> - number of retry attempts. By default keepalive is set to 10 seconds and 10 retries.</td></tr><tr><td class="confluenceTd"><strong>local-address</strong> (<em>IP</em>; Default: )</td><td class="confluenceTd">Source address of the packets, local on the router.</td></tr><tr><td class="confluenceTd"><strong>mtu</strong> (<em>integer</em>; Default: <strong>auto</strong>)</td><td class="confluenceTd">Layer3 maximum transmission unit.</td></tr><tr><td class="confluenceTd"><strong>name</strong> (<em>string</em>; Default: )</td><td class="confluenceTd">Interface name.</td></tr><tr><td class="confluenceTd"><strong>remote-address</strong> (<em>IP</em>; Default: )</td><td class="confluenceTd">IP address of remote end of 6to4 tunnel. If left unspecified, IPv4 address from 2002::/16 gateway address will be <span><span class="kqEaA z8gr9e">derived</span></span>.</td></tr></tbody></table></div><h1 id="id-6to4-ConfigurationExamples">Configuration Examples</h1><h2 id="id-6to4-Simple6to4tunnelencapsulation(Currentlynotworking)">Simple 6to4 tunnel encapsulation (Currently not working)</h2><p><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" draggable="false" height="250" src="attachments/135004174/135004186.jpg" data-image-src="attachments/135004174/135004186.jpg" data-unresolved-comment-count="0" data-linked-resource-id="135004186" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="6to4-tunnel.jpg" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/jpeg" data-linked-resource-container-id="135004174" data-linked-resource-container-version="8" tabindex="0" alt=""></span></p><p>It is possible to simply route IPv6 packets over IPv4 network by utilizing the 2002::/16 allocated address space. All 6to4 nodes has to have reachable IPv4 addresses - if you are running this setup over the Internet, all IPv4's must be public addresses.</p><p><strong>R1 configuration:</strong></p><p>Create the 6to4 tunnel interface:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface 6to4
+add name=6to4-tunnel1</pre>
+</div></div><p>Assign an IPv6 address with '2002' as the first 16 bits and IPv4 in hex format as the next 32 bits. For example, if the router's IP address is 10.0.1.1, the IPv6 address is 2002:A00:101::</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ipv6 address
+add address=2002:a00:101::/128 advertise=no interface=6to4-tunnel1</pre>
+</div></div><p>Add a route to specially allocated 6to4 tunnel range over the 6to4-tunnel interface.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ipv6 route
+add dst-address=2002::/16 gateway=6to4-tunnel1</pre>
+</div></div><p class="auto-cursor-target"><strong>R2 configuration:</strong></p><p>Create the 6to4 tunnel interface:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface 6to4
+add name=6to4-tunnel1</pre>
+</div></div><p class="auto-cursor-target">Assign an IPv6 address that is generated by the same principles as R1. In this case, 10.0.2.1 translates to 2002:A00:201::</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ipv6 address
+add address=2002:a00:201::/128 advertise=no interface=6to4-tunnel1</pre>
+</div></div><p class="auto-cursor-target">The 6to4 route is necessary on this side as well.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ipv6 route
+add dst-address=2002::/16 gateway=6to4-tunnel1</pre>
+</div></div><p class="auto-cursor-target"><strong>Testing:</strong></p><p class="auto-cursor-target">After configuring both devices, it should be possible to ping the IPv6 addresses if they were generated correctly.</p><p class="auto-cursor-target">From R1:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ping 2002:a00:201::</pre>
+</div></div><h2 class="firstHeading" id="id-6to4-HurricaneElectricTunnelBrokerExample">Hurricane Electric Tunnel Broker Example</h2><p>Following example will show how to get IPv6 connectivity on a RouterOS device through IPv4 network using 6to4 tunnel.</p><p>To be able to create the tunnel, you have to have a public IPv4 address and enable ping from Tunnel Broker IPv4 server.</p><p>When you create a tunnel using <a class="external-link" href="https://tunnelbroker.net" rel="nofollow">Hurricane Electric Tunnel Broker</a>, you will be given a routed /64 IPv6 prefix and additional information necessary for setting up the tunnel.</p><p><em><span class="confluence-embedded-file-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image" draggable="false" height="219" src="attachments/135004174/135004182.png" data-image-src="attachments/135004174/135004182.png" data-unresolved-comment-count="0" data-linked-resource-id="135004182" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="TunnelBrokerIPv6.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="135004174" data-linked-resource-container-version="8" tabindex="0" alt=""></span></em></p><p><em>This example presumes that your public IPv4 address is 194.105.56.170</em></p><p>Hurricane Electric provides ready to use commands for RouterOS in the 'Example Configurations' section:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface 6to4
+add comment=&quot;Hurricane Electric IPv6 Tunnel Broker&quot; disabled=no local-address=194.105.56.170 mtu=1280 name=sit1 remote-address=216.66.80.90
+/ipv6 route
+add comment=&quot;&quot; disabled=no distance=1 dst-address=2000::/3 gateway=2001:470:27:37e::1 scope=30 target-scope=10
+/ipv6 address
+add address=2001:470:27:37e::2/64 advertise=no disabled=no eui-64=no interface=sit1</pre>
+</div></div><p>These commands will setup the tunnel itself - the router will be able to connect to IPv6 hosts, but end-user devices (computers, tablets, phones) will not yet have IPv6 connectivity.</p><p>To be able to assign IPv6 addresses to your clients you have to add the Routed IPv6 Prefix to your internal interface (by default bridge-local).</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ipv6 address add address=2001:470:28:37e:: interface=bridge-local advertise=yes</pre>
+</div></div><p>Enable DNS server advertising through network discovery</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ipv6 nd set [ find default=yes ] advertise-dns=yes</pre>
+</div></div><p>And finally add IPv6 DNS servers (these are Google public DNS servers, you can also use the one which is provided by Hurricane Electric - 2001:470:20::2).</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip dns set allow-remote-requests=yes servers=2001:4860:4860::8888,2001:4860:4860::8844</pre>
+</div></div><p>Afterwards enable IPv6 on your device and you should have IPv6 connectivity. <a class="external-link" href="http://ipv6-test.com" rel="nofollow">http://ipv6-test.com</a> can be used to test IPv6 connectivity.</p>
+                    </div>
+
+                                                            <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/135004174/135004182.png">TunnelBrokerIPv6.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/135004174/135004186.jpg">6to4-tunnel.jpg</a> (image/jpeg)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

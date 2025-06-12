@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : CRS1xx/2xx series switches examples</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Bridging-and-Switching_328068.html">Bridging and Switching</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Bridging-and-Switching-Case-Studies_119144611.html">Bridging and Switching Case Studies</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : CRS1xx/2xx series switches examples
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Edgars P.</span>, last updated by <span class='editor'> Guntis G.</span> on Apr 16, 2024
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742025235 {padding: 0px;}
+div.rbtoc1747742025235 ul {margin-left: 0px;}
+div.rbtoc1747742025235 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742025235'>
+<ul class='toc-indentation'>
+<li><a href='#CRS1xx/2xxseriesswitchesexamples-Summary'>Summary</a></li>
+<li><a href='#CRS1xx/2xxseriesswitchesexamples-Portswitching'>Port switching</a></li>
+<li><a href='#CRS1xx/2xxseriesswitchesexamples-Managementaccessconfiguration'>Management access configuration</a>
+<ul class='toc-indentation'>
+<li><a href='#CRS1xx/2xxseriesswitchesexamples-Untagged'>Untagged</a></li>
+<li><a href='#CRS1xx/2xxseriesswitchesexamples-Tagged'>Tagged</a></li>
+</ul>
+</li>
+<li><a href='#CRS1xx/2xxseriesswitchesexamples-VLAN'>VLAN</a>
+<ul class='toc-indentation'>
+<li><a href='#CRS1xx/2xxseriesswitchesexamples-PortBasedVLAN'>Port Based VLAN</a>
+<ul class='toc-indentation'>
+<li><a href='#CRS1xx/2xxseriesswitchesexamples-Example1(TrunkandAccessports)'>Example 1 (Trunk and Access ports)</a></li>
+<li><a href='#CRS1xx/2xxseriesswitchesexamples-Example2(TrunkandHybridPorts)'>Example 2 (Trunk and Hybrid Ports)</a></li>
+</ul>
+</li>
+<li><a href='#CRS1xx/2xxseriesswitchesexamples-ProtocolBasedVLAN'>Protocol Based VLAN</a></li>
+<li><a href='#CRS1xx/2xxseriesswitchesexamples-MACBasedVLAN'>MAC Based VLAN</a></li>
+<li><a href='#CRS1xx/2xxseriesswitchesexamples-InterVLANRouting'>InterVLAN Routing</a></li>
+<li><a href='#CRS1xx/2xxseriesswitchesexamples-Unknown/InvalidVLANfiltering'>Unknown/Invalid VLAN filtering</a></li>
+<li><a href='#CRS1xx/2xxseriesswitchesexamples-VLANTunneling(Q-in-Q)'>VLAN Tunneling (Q-in-Q)</a></li>
+<li><a href='#CRS1xx/2xxseriesswitchesexamples-CVIDStacking'>CVID Stacking</a></li>
+</ul>
+</li>
+<li><a href='#CRS1xx/2xxseriesswitchesexamples-Mirroring'>Mirroring</a>
+<ul class='toc-indentation'>
+<li><a href='#CRS1xx/2xxseriesswitchesexamples-Port-BasedMirroring'>Port-Based Mirroring</a></li>
+<li><a href='#CRS1xx/2xxseriesswitchesexamples-VLANBasedMirroring'>VLAN Based Mirroring</a></li>
+<li><a href='#CRS1xx/2xxseriesswitchesexamples-MACBasedMirroring'>MAC Based Mirroring</a></li>
+</ul>
+</li>
+<li><a href='#CRS1xx/2xxseriesswitchesexamples-Trunking'>Trunking</a></li>
+<li><a href='#CRS1xx/2xxseriesswitchesexamples-LimitedMACAccessperPort'>Limited MAC Access per Port</a></li>
+<li><a href='#CRS1xx/2xxseriesswitchesexamples-Isolation'>Isolation</a>
+<ul class='toc-indentation'>
+<li><a href='#CRS1xx/2xxseriesswitchesexamples-PortLevelIsolation'>Port Level Isolation</a></li>
+<li><a href='#CRS1xx/2xxseriesswitchesexamples-ProtocolLevelIsolation'>Protocol Level Isolation</a></li>
+</ul>
+</li>
+<li><a href='#CRS1xx/2xxseriesswitchesexamples-QualityofService(QoS)'>Quality of Service (QoS)</a>
+<ul class='toc-indentation'>
+<li><a href='#CRS1xx/2xxseriesswitchesexamples-MAC-basedtrafficschedulingusinginternalPriority'>MAC-based traffic scheduling using internal Priority</a></li>
+<li><a href='#CRS1xx/2xxseriesswitchesexamples-MAC-basedtrafficshapingusinginternalPriority'>MAC-based traffic shaping using internal Priority</a></li>
+<li><a href='#CRS1xx/2xxseriesswitchesexamples-VLAN-basedtrafficscheduling+shapingusinginternalPriorities'>VLAN-based traffic scheduling + shaping using internal Priorities</a></li>
+<li><a href='#CRS1xx/2xxseriesswitchesexamples-PCP-basedtrafficscheduling'>PCP-based traffic scheduling</a></li>
+</ul>
+</li>
+<li><a href='#CRS1xx/2xxseriesswitchesexamples-BandwidthLimiting'>Bandwidth Limiting</a></li>
+<li><a href='#CRS1xx/2xxseriesswitchesexamples-TrafficStormControl'>Traffic Storm Control</a></li>
+<li><a href='#CRS1xx/2xxseriesswitchesexamples-Seealso'>See also</a></li>
+</ul>
+</div></p><h1 id="CRS1xx/2xxseriesswitchesexamples-Summary"><span class="mw-headline">Summary</span></h1><hr/><p>Basic use cases and configuration examples for Cloud Router Switch features.</p><div role="region" aria-label="Warning" class="confluence-information-macro  confluence-information-macro-warning" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-error confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>This article applies to CRS1xx and CRS2xx series switches and not to CRS3xx series switches. For CRS3xx series devices read the<span> </span><a href="https://help.mikrotik.com/docs/display/ROS/CRS3xx%2C+CRS5xx%2C+CCR2116%2C+CCR2216+switch+chip+features" rel="nofollow">CRS3xx, CRS5xx series switches and CCR2116, CCR2216</a><span> </span>manual.</p></div></div><h1 id="CRS1xx/2xxseriesswitchesexamples-Portswitching"><span class="mw-headline">Port switching</span></h1><hr/><p>To set up port switching on CRS1xx/2xx series switches, check the<span> </span><a href="https://help.mikrotik.com/docs/display/ROS/Bridging+and+Switching#BridgingandSwitching-BridgeHardwareOffloading" rel="nofollow">Bridge Hardware Offloading</a><span> </span>page.</p><div role="region" aria-label="Warning" class="confluence-information-macro  confluence-information-macro-warning" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-error confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>It is possible to create multiple isolated switch groups by using multiple bridges with enabled hardware offloading, this is possible only on CRS1xx/2xx series switches. For more complex setups (for example, VLAN filtering) you should use the port isolation feature instead.</p></div></div><h1 id="CRS1xx/2xxseriesswitchesexamples-Managementaccessconfiguration"><span class="mw-headline">Management access configuration</span></h1><hr/><p>In general, switches are only supposed to forward packets by using the built-in switch chip, but not allow access to the device itself for security reasons. It is possible to use the device's serial port for management access, but in most cases, such an access method is not desired and access using an IP address is more suitable. In such cases, you will need to configure management access.</p><p>In all types of management access it is assumed that ports must be switched together, use the following commands to switch together the required ports:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface bridge
+add name=bridge1
+/interface bridge port
+add bridge=bridge1 interface=ether2 hw=yes
+add bridge=bridge1 interface=ether3 hw=yes
+add bridge=bridge1 interface=ether4 hw=yes
+add bridge=bridge1 interface=ether5 hw=yes</pre>
+</div></div><p>You should also assign an IP address to the bridge interface so the device is reachable using an IP address (the device is also reachable using a MAC address):</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip address
+add address=192.168.88.1/24 interface=bridge1</pre>
+</div></div><h2 id="CRS1xx/2xxseriesswitchesexamples-Untagged"><span class="mw-headline">Untagged</span></h2><p>If invalid VLAN filtering is not enabled, management access to the device using tagged or untagged (<strong>VLAN 0</strong>) traffic is already allowed from any port, though this is not a good practice, this can cause security issues and can cause the device's CPU to be overloaded in certain situations (most commonly with a broadcast type of traffic).</p><p>If you intend to use invalid VLAN filtering (which you should), then ports, from which you are going to access the switch, must be added to the VLAN table for untagged (<strong>VLAN 0</strong>) traffic, for example, in case you want to access the switch from<span> </span><strong>ether2</strong>:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface ethernet switch vlan
+add vlan-id=0 ports=ether2,switch1-cpu  </pre>
+</div></div><h2 id="CRS1xx/2xxseriesswitchesexamples-Tagged"><span class="mw-headline">Tagged</span></h2><p>Allowing only tagged traffic to have management access to the device through a specific port is a much better practice. For example, to allow only<span> </span><strong>VLAN99</strong><span> </span>to access the device through<span> </span><strong>ether2</strong><span> </span>you should first add an entry to the VLAN table, which will allow the selected port and the CPU port (<strong>switch1-cpu</strong>) to forward the selected VLAN ID, therefore allowing management access:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface ethernet switch vlan
+add ports=ether2,switch1-cpu vlan-id=99</pre>
+</div></div><p>Packets that will be sent out from the CPU, for example, ping replies will not have a VLAN tag, to solve this you need to specify which ports should always send out packets with a VLAN tag for a specific VLAN ID:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface ethernet switch egress-vlan-tag
+add tagged-ports=ether2,switch1-cpu vlan-id=99</pre>
+</div></div><p>After a valid VLAN99 configuration has been set up, you can enable unknown/invalid VLAN filtering, which will not allow the management access through different ports than specified in the VLAN table:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface ethernet switch
+set drop-if-invalid-or-src-port-not-member-of-vlan-on-ports=ether2,ether3,ether4,ether5</pre>
+</div></div><p>In this example VLAN99 will be used to access the device, a VLAN interface on the bridge must be created and an IP address must be assigned to it.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface vlan
+add interface=bridge1 name=MGMT vlan-id=99
+/ip address
+add address=192.168.99.1/24 interface=MGMT</pre>
+</div></div><h1 id="CRS1xx/2xxseriesswitchesexamples-VLAN"><span class="mw-headline">VLAN</span></h1><hr/><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>It is recommended to get a Serial Console cable and testing it before configuring VLANs because you may lose access to the CPU and/or the port you are connected to.</p></div></div><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Some changes may take some time to take effect due to already-learned MAC addresses. In such cases flushing the Unicast Forwarding Database can help:<span> </span><span style="color:var(--ds-background-accent-green-bolder,#1f845a);"><code>/interface ethernet switch unicast-fdb flush</code></span></p></div></div><div role="region" aria-label="Warning" class="confluence-information-macro  confluence-information-macro-warning" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-error confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Multiple hardware offloaded bridge configuration is designed as a fast and simple port isolation solution, but it limits part of the VLAN functionality supported by the CRS switch-chip. For advanced configurations use one bridge within the CRS switch chip for all ports, configure VLANs, and isolate port groups with port isolation profile configuration.</p></div></div><h2 id="CRS1xx/2xxseriesswitchesexamples-PortBasedVLAN"><span class="mw-headline">Port Based VLAN</span></h2><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>For CRS3xx series devices, you must use bridge VLAN filtering, you can read more about it in the <a href="https://help.mikrotik.com/docs/display/ROS/Bridging+and+Switching#BridgingandSwitching-BridgeVLANFiltering" rel="nofollow">Bridge VLAN Filtering</a> section.</p></div></div><h3 id="CRS1xx/2xxseriesswitchesexamples-Example1(TrunkandAccessports)"><span class="mw-headline">Example 1 (Trunk and Access ports)</span></h3><p style="margin-left: auto;text-align: left;"><span class="confluence-embedded-file-wrapper image-center-wrapper"><img class="confluence-embedded-image image-center" draggable="false" src="attachments/103841836/103841840.png" data-image-src="attachments/103841836/103841840.png" data-unresolved-comment-count="0" data-linked-resource-id="103841840" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="access_ports.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="103841836" data-linked-resource-container-version="11" tabindex="0" alt=""></span></p><p>Switch together the required ports:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface bridge
+add name=bridge1
+/interface bridge port
+add bridge=bridge1 interface=ether2 hw=yes
+add bridge=bridge1 interface=ether6 hw=yes
+add bridge=bridge1 interface=ether7 hw=yes
+add bridge=bridge1 interface=ether8 hw=yes</pre>
+</div></div><p>Specify the VLAN ID that the switch must set on untagged (VLAN0) traffic for each access port:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface ethernet switch ingress-vlan-translation
+add ports=ether6 customer-vid=0 new-customer-vid=200
+add ports=ether7 customer-vid=0 new-customer-vid=300
+add ports=ether8 customer-vid=0 new-customer-vid=400</pre>
+</div></div><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>When an entry is created under<span> </span><span style="color:var(--ds-background-accent-green-bolder,#1f845a);"><code>/interface ethernet switch ingress-vlan-translation</code></span>, then the switch chip will add a VLAN tag on ingress frames on the specified port. To remove the VLAN tag on the same port for egress frames, an<span> </span><code>/<span style="color:var(--ds-background-accent-green-bolder,#1f845a);">interface ethernet switch egress-vlan-tag</span></code><span> </span>entry should be created for the same VLAN ID where only tagged ports are specified. If a specific VLAN is forwarded only between access ports, the<span> </span><span style="color:var(--ds-background-accent-green-bolder,#1f845a);"><code>/interface ethernet switch egress-vlan-tag</code></span><span> </span>entry should still be created without any tagged ports. Another option is to create extra entries under<span> </span><span style="color:var(--ds-background-accent-green-bolder,#1f845a);"><code>/interface ethernet switch egress-vlan-translation</code></span><span> </span>menu to set untagged (VLAN0) traffic.</p></div></div><p>You must also specify which VLANs should be sent out to the trunk port with a VLAN tag. Use the<span> </span>tagged-ports<span> </span>property to set up a trunk port:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface ethernet switch egress-vlan-tag
+add tagged-ports=ether2 vlan-id=200
+add tagged-ports=ether2 vlan-id=300
+add tagged-ports=ether2 vlan-id=400</pre>
+</div></div><p>Add entries to the VLAN table to specify VLAN memberships for each port and each VLAN ID:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface ethernet switch vlan
+add ports=ether2,ether6 vlan-id=200
+add ports=ether2,ether7 vlan-id=300
+add ports=ether2,ether8 vlan-id=400</pre>
+</div></div><p>After a valid VLAN configuration has been set up, you can enable unknown/invalid VLAN filtering:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface ethernet switch
+set drop-if-invalid-or-src-port-not-member-of-vlan-on-ports=ether2,ether6,ether7,ether8</pre>
+</div></div><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>It is possible to use the built-in switch chip and the CPU at the same time to create a Switch-Router setup, where a device acts as a switch and as a router simultaneously. You can find a configuration example in the<span> </span><a class="external-link" href="https://wiki.mikrotik.com/wiki/Manual:CRS_Router" rel="nofollow" style="text-decoration: none;" title="Manual:CRS Router">CRS-Router</a><span> </span>guide.</p></div></div><h3 id="CRS1xx/2xxseriesswitchesexamples-Example2(TrunkandHybridPorts)"><span class="mw-headline">Example 2 (Trunk and Hybrid Ports)</span></h3><p style="margin-left: auto;text-align: left;"><span class="confluence-embedded-file-wrapper image-center-wrapper"><img class="confluence-embedded-image image-center" draggable="false" src="attachments/103841836/103841841.png" data-image-src="attachments/103841836/103841841.png" data-unresolved-comment-count="0" data-linked-resource-id="103841841" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="hybrid_ports.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="103841836" data-linked-resource-container-version="11" tabindex="0" alt=""></span></p><p>Switch together the required ports:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface bridge
+add name=bridge1
+/interface bridge port
+add bridge=bridge1 interface=ether2 hw=yes
+add bridge=bridge1 interface=ether6 hw=yes
+add bridge=bridge1 interface=ether7 hw=yes
+add bridge=bridge1 interface=ether8 hw=yes</pre>
+</div></div><p>Specify the VLAN ID that the switch must set on untagged (VLAN0) traffic for each access port:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface ethernet switch ingress-vlan-translation
+add ports=ether6 customer-vid=0 new-customer-vid=200
+add ports=ether7 customer-vid=0 new-customer-vid=300
+add ports=ether8 customer-vid=0 new-customer-vid=400</pre>
+</div></div><p>By specifying ports as<span> </span>tagged-ports, the switch will always send out packets as tagged packets with the corresponding VLAN ID. Add appropriate entries according to the diagram above:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface ethernet switch egress-vlan-tag
+add tagged-ports=ether2,ether7,ether8 vlan-id=200
+add tagged-ports=ether2,ether6,ether8 vlan-id=300
+add tagged-ports=ether2,ether6,ether7 vlan-id=400</pre>
+</div></div><p>Add entries to the VLAN table to specify VLAN memberships for each port and each VLAN ID:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface ethernet switch vlan
+add ports=ether2,ether6,ether7,ether8 vlan-id=200 learn=yes
+add ports=ether2,ether6,ether7,ether8 vlan-id=300 learn=yes
+add ports=ether2,ether6,ether7,ether8 vlan-id=400 learn=yes</pre>
+</div></div><p>After a valid VLAN configuration has been set up, you can enable unknown/invalid VLAN filtering:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface ethernet switch
+set drop-if-invalid-or-src-port-not-member-of-vlan-on-ports=ether2,ether6,ether7,ether8</pre>
+</div></div><h2 id="CRS1xx/2xxseriesswitchesexamples-ProtocolBasedVLAN"><span class="mw-headline">Protocol Based VLAN</span></h2><p><span class="confluence-embedded-file-wrapper image-center-wrapper"><img class="confluence-embedded-image image-center" draggable="false" src="attachments/103841836/130220077.jpg" data-image-src="attachments/103841836/130220077.jpg" data-unresolved-comment-count="0" data-linked-resource-id="130220077" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="Protocol-Based.jpg" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/jpeg" data-linked-resource-container-id="103841836" data-linked-resource-container-version="11" tabindex="0" alt=""></span></p><p>Switch together the required ports:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface bridge
+add name=bridge1
+/interface bridge port
+add bridge=bridge1 interface=ether2 hw=yes
+add bridge=bridge1 interface=ether6 hw=yes
+add bridge=bridge1 interface=ether7 hw=yes
+add bridge=bridge1 interface=ether8 hw=yes</pre>
+</div></div><p>Set VLAN for IP and ARP protocols:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface ethernet switch protocol-based-vlan
+add port=ether2 protocol=arp set-customer-vid-for=all new-customer-vid=0
+add port=ether6 protocol=arp set-customer-vid-for=all new-customer-vid=200
+add port=ether2 protocol=ip set-customer-vid-for=all new-customer-vid=0
+add port=ether6 protocol=ip set-customer-vid-for=all new-customer-vid=200</pre>
+</div></div><p>Set VLAN for IPX protocol:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface ethernet switch protocol-based-vlan
+add port=ether2 protocol=ipx set-customer-vid-for=all new-customer-vid=0
+add port=ether7 protocol=ipx set-customer-vid-for=all new-customer-vid=300</pre>
+</div></div><p>Set VLAN for AppleTalk AARP and AppleTalk DDP protocols:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface ethernet switch protocol-based-vlan
+add port=ether2 protocol=0x80F3 set-customer-vid-for=all new-customer-vid=0
+add port=ether8 protocol=0x80F3 set-customer-vid-for=all new-customer-vid=400
+add port=ether2 protocol=0x809B set-customer-vid-for=all new-customer-vid=0
+add port=ether8 protocol=0x809B set-customer-vid-for=all new-customer-vid=400</pre>
+</div></div><h2 id="CRS1xx/2xxseriesswitchesexamples-MACBasedVLAN"><span class="mw-headline">MAC Based VLAN</span></h2><div role="region" aria-label="Warning" class="confluence-information-macro  confluence-information-macro-warning" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-error confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Internally all MAC addresses in MAC-based VLANs are hashed, certain MAC addresses can have the same hash, which will prevent a MAC address from being loaded into the switch chip if the hash matches with a hash from a MAC address that has been already loaded, for this reason, it is recommended to use Port bases VLANs in combination with MAC-based VLANs. This is a hardware limitation.</p></div></div><p><span class="confluence-embedded-file-wrapper image-center-wrapper"><img class="confluence-embedded-image image-center" draggable="false" src="attachments/103841836/130220078.jpg" data-image-src="attachments/103841836/130220078.jpg" data-unresolved-comment-count="0" data-linked-resource-id="130220078" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="MAC-Based.jpg" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/jpeg" data-linked-resource-container-id="103841836" data-linked-resource-container-version="11" tabindex="0" alt=""></span></p><p>Switch together the required ports:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface bridge
+add name=bridge1
+/interface bridge port
+add bridge=bridge1 interface=ether2 hw=yes
+add bridge=bridge1 interface=ether7 hw=yes</pre>
+</div></div><p>Enable MAC-based VLAN translation on access port:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface ethernet switch port
+set ether7 allow-fdb-based-vlan-translate=yes</pre>
+</div></div><p>Add MAC-to-VLAN mapping entries in the MAC-based VLAN table:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface ethernet switch mac-based-vlan
+add src-mac=A4:12:6D:77:94:43 new-customer-vid=200
+add src-mac=84:37:62:DF:04:20 new-customer-vid=300
+add src-mac=E7:16:34:A1:CD:18 new-customer-vid=400</pre>
+</div></div><p>Add VLAN200, VLAN300, and VLAN400 tagging on the ether2 port to create it as a VLAN trunk port:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface ethernet switch egress-vlan-tag
+add tagged-ports=ether2 vlan-id=200
+add tagged-ports=ether2 vlan-id=300
+add tagged-ports=ether2 vlan-id=400</pre>
+</div></div><p>Additionally, add entries to the VLAN table, specify VLAN membership for each port, and enable unknown/invalid VLAN filtering, see an example below -<span> </span>Unknown/Invalid VLAN filtering. This is required for network setups where more interfaces are added to the bridge, as it allows to define VLAN boundaries.</p><h2 id="CRS1xx/2xxseriesswitchesexamples-InterVLANRouting"><span class="mw-headline">InterVLAN Routing</span></h2><p><span class="confluence-embedded-file-wrapper image-center-wrapper"><img class="confluence-embedded-image image-center" draggable="false" src="attachments/103841836/103841844.png" data-image-src="attachments/103841836/103841844.png" data-unresolved-comment-count="0" data-linked-resource-id="103841844" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="vlan_routing.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="103841836" data-linked-resource-container-version="11" tabindex="0" alt=""></span></p><p>InterVLAN routing configuration consists of two main parts – VLAN tagging in switch-chip and routing in RouterOS. This configuration can be used in many applications by combining it with a DHCP server, Hotspot, PPP, and other features for each VLAN.</p><p>Switch together the required ports:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface bridge
+add name=bridge1
+/interface bridge port
+add bridge=bridge1 interface=ether6 hw=yes
+add bridge=bridge1 interface=ether7 hw=yes
+add bridge=bridge1 interface=ether8 hw=yes</pre>
+</div></div><p>Set VLAN tagging on the CPU port for all VLANs to make packets tagged before they are routed:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface ethernet switch egress-vlan-tag
+add tagged-ports=switch1-cpu vlan-id=200
+add tagged-ports=switch1-cpu vlan-id=300
+add tagged-ports=switch1-cpu vlan-id=400</pre>
+</div></div><p>add ingress VLAN translation rules to ensure that the correct VLAN ID assignment is done on access ports:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface ethernet switch ingress-vlan-translation
+add ports=ether6 customer-vid=0 new-customer-vid=200
+add ports=ether7 customer-vid=0 new-customer-vid=300
+add ports=ether8 customer-vid=0 new-customer-vid=400</pre>
+</div></div><p>Create the VLAN interfaces on top of the bridge interface:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface vlan
+add name=VLAN200 interface=bridge1 vlan-id=200
+add name=VLAN300 interface=bridge1 vlan-id=300
+add name=VLAN400 interface=bridge1 vlan-id=400</pre>
+</div></div><div role="region" aria-label="Warning" class="confluence-information-macro  confluence-information-macro-warning" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-error confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Make sure the VLAN interfaces are created on top of the bridge interface instead of any of the physical interfaces. If the VLAN interfaces are created on a slave interface, then the packet might not be received correctly, and therefore routing might fail. More detailed information can be found in the <a href="https://help.mikrotik.com/docs/display/ROS/Layer2+misconfiguration#Layer2misconfiguration-VLANinterfaceonaslaveinterface" rel="nofollow">VLAN interface on a slave interface</a> manual page.</p></div></div><p>Add IP addresses on created VLAN interfaces. In this example, three 192.168.x.1 addresses are added to VLAN200, VLAN300, and VLAN400 interfaces:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip address
+add address=192.168.20.1/24 interface=VLAN200
+add address=192.168.30.1/24 interface=VLAN300
+add address=192.168.40.1/24 interface=VLAN400</pre>
+</div></div><h2 id="CRS1xx/2xxseriesswitchesexamples-Unknown/InvalidVLANfiltering"><span class="mw-headline">Unknown/Invalid VLAN filtering</span></h2><p>VLAN membership is defined in the VLAN table. Adding entries with VLAN ID and ports makes that VLAN traffic valid on those ports. After a valid VLAN configuration has been set up, unknown/invalid VLAN filtering can be enabled. This VLAN filtering configuration example applies to<span> the </span>InterVLAN Routing<span> </span>setup.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface ethernet switch vlan
+add ports=switch1-cpu,ether6 vlan-id=200
+add ports=switch1-cpu,ether7 vlan-id=300
+add ports=switch1-cpu,ether8 vlan-id=400</pre>
+</div></div><ul><li>Option 1: disable invalid VLAN forwarding on specific ports (more common):</li></ul><p><br/></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface ethernet switch
+set drop-if-invalid-or-src-port-not-member-of-vlan-on-ports=ether2,ether6,ether7,ether8</pre>
+</div></div><ul><li>Option 2: disable invalid VLAN forwarding on all ports:</li></ul><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface ethernet switch
+set forward-unknown-vlan=no</pre>
+</div></div><div role="region" aria-label="Warning" class="confluence-information-macro  confluence-information-macro-warning" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-error confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Using multiple bridges on a single switch chip with enabled unknown/invalid VLAN filtering can cause unexpected behavior. You should always use a single bridge configuration whenever using VLAN filtering. If port isolation is required, then the port isolation feature should be used instead of using multiple bridges.</p></div></div><h2 id="CRS1xx/2xxseriesswitchesexamples-VLANTunneling(Q-in-Q)"><span class="mw-headline">VLAN Tunneling (Q-in-Q)</span></h2><p>This example covers a typical VLAN tunneling use case where service provider devices add another VLAN tag for independent forwarding in the meantime allowing customers to use their own VLANs.</p><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>This example contains only the Service VLAN tagging part. It is recommended to additionally set<span> </span>Unknown/Invalid VLAN filtering<span> </span>configuration on ports.</p></div></div><p style="text-align: left;margin-left: auto;"><span class="confluence-embedded-file-wrapper image-center-wrapper"><img class="confluence-embedded-image image-center" draggable="false" src="attachments/103841836/130220079.jpg" data-image-src="attachments/103841836/130220079.jpg" data-unresolved-comment-count="0" data-linked-resource-id="130220079" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="Qinq.jpg" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/jpeg" data-linked-resource-container-id="103841836" data-linked-resource-container-version="11" tabindex="0" alt=""></span></p><p><strong>CRS-1</strong>: The first switch on the edge of the service provider network has to properly identify traffic from the customer VLAN ID on port and assign a new service VLAN ID with ingress VLAN translation rules. VLAN trunk port configuration for service provider VLAN tags is in the same<span> </span><code><span style="color:var(--ds-background-accent-green-bolder,#1f845a);">egress-vlan-tag </span></code>table. The main difference from basic<span> </span>Port-Based VLAN<span> </span>configuration is that the CRS switch-chip has to be set to do forwarding according to service (<em>outer</em>) VLAN ID instead of customer (<em>inner</em>) VLAN ID.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface bridge
+add name=bridge1
+/interface bridge port
+add bridge=bridge1 interface=ether1 hw=yes
+add bridge=bridge1 interface=ether2 hw=yes
+add bridge=bridge1 interface=ether9 hw=yes
+
+/interface ethernet switch ingress-vlan-translation
+add customer-vid=200 new-service-vid=400 ports=ether1
+add customer-vid=300 new-service-vid=500 ports=ether2
+
+/interface ethernet switch egress-vlan-tag
+add tagged-ports=ether9 vlan-id=400
+add tagged-ports=ether9 vlan-id=500
+
+/interface ethernet switch
+set bridge-type=service-vid-used-as-lookup-vid</pre>
+</div></div><p><strong>CRS-2</strong>: The second switch in the service provider network requires only switched ports to do forwarding according to service (<em>outer</em>) VLAN ID instead of customer (<em>inner</em>) VLAN ID.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface bridge
+add name=bridge1
+/interface bridge port
+add bridge=bridge1 interface=ether9 hw=yes
+add bridge=bridge1 interface=ether10 hw=yes
+
+/interface ethernet switch
+set bridge-type=service-vid-used-as-lookup-vid</pre>
+</div></div><p><strong>CRS-3</strong>: The third switch has a similar configuration to CRS-1:</p><ul><li>Ports in a switch group using a bridge;</li><li>Ingress VLAN translation rules to define new service VLAN assignments on ports;</li><li>tagged-ports<span> </span>for service provider VLAN trunks;</li><li>CRS switch-chip set to use service VLAN ID in switching lookup.</li></ul><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface bridge
+add name=bridge1
+/interface bridge port
+add bridge=bridge1 interface=ether3 hw=yes
+add bridge=bridge1 interface=ether4 hw=yes
+add bridge=bridge1 interface=ether10 hw=yes
+
+/interface ethernet switch ingress-vlan-translation
+add customer-vid=200 new-service-vid=400 ports=ether3
+add customer-vid=300 new-service-vid=500 ports=ether4
+
+/interface ethernet switch egress-vlan-tag
+add tagged-ports=ether10 vlan-id=400
+add tagged-ports=ether10 vlan-id=500
+
+/interface ethernet switch
+set bridge-type=service-vid-used-as-lookup-vid</pre>
+</div></div><h2 id="CRS1xx/2xxseriesswitchesexamples-CVIDStacking"><span class="mw-headline">CVID Stacking</span></h2><p>It is possible to use CRS1xx/CRS2xx series switches for CVID Stacking setups. CRS1xx/CRS2xx series switches are capable of VLAN filtering based on the outer tag of tagged packets that have two CVID tags (double CVID tag), these switches are also capable of adding another CVID tag on top of an existing CVID tag (CVID Stacking). For example, in a setup where<span> </span><strong>ether1</strong><span> </span>is receiving tagged packets with CVID 10, but it is required that<span> </span><strong>ether2</strong><span> </span>sends out these packets with another tag CVID 20 (VLAN10 inside VLAN20) while filtering out any other VLANs, the following must be configured:</p><p>Switch together<span> </span><strong>ether1</strong><span> </span>and<span> </span><strong>ether2</strong>:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface bridge
+add name=bridge1
+/interface bridge port
+add bridge=bridge1 interface=ether1 hw=yes
+add bridge=bridge1 interface=ether2 hw=yes</pre>
+</div></div><p>Set the switch to filter VLANs based on the service tag (0x88a8):</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface ethernet switch
+set bridge-type=service-vid-used-as-lookup-vid</pre>
+</div></div><p>Add a service tag SVID 20 to packets that have a CVID 10 tag on<span> </span><strong>ether1</strong>:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface ethernet switch ingress-vlan-translation
+add customer-vid=10 new-service-vid=20 ports=ether1</pre>
+</div></div><p>Specify<span> </span><strong>ether2</strong><span> </span>as the tagged/trunk port for SVID 20:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface ethernet switch egress-vlan-tag
+add tagged-ports=ether2 vlan-id=20</pre>
+</div></div><p>Allow<span> </span><strong>ether1</strong><span> </span>and<span> </span><strong>ether2</strong><span> </span>to forward SVID 20:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface ethernet switch vlan
+add ports=ether1,ether2 vlan-id=20</pre>
+</div></div><p>Override the SVID EtherType (0x88a8) to CVID EtherType (0x8100) on<span> </span><strong>ether2</strong>:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface ethernet switch port
+set ether2 egress-service-tpid-override=0x8100 ingress-service-tpid-override=0x8100</pre>
+</div></div><p>Enable unknown/invalid VLAN filtering:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface ethernet switch
+set drop-if-invalid-or-src-port-not-member-of-vlan-on-ports=ether1,ether2</pre>
+</div></div><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Since the switch is set to look up VLAN ID based on the service tag, which is overridden with a different EtherType, then VLAN filtering is only done on the outer tag of a packet, the inner tag is not checked.</p></div></div><h1 id="CRS1xx/2xxseriesswitchesexamples-Mirroring"><span class="mw-headline">Mirroring</span></h1><hr/><p style="margin-left: auto;text-align: left;"><span class="confluence-embedded-file-wrapper image-center-wrapper"><img class="confluence-embedded-image image-center" draggable="false" src="attachments/103841836/130220080.jpg" data-image-src="attachments/103841836/130220080.jpg" data-unresolved-comment-count="0" data-linked-resource-id="130220080" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="Mirroring.jpg" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/jpeg" data-linked-resource-container-id="103841836" data-linked-resource-container-version="11" tabindex="0" alt=""></span></p><p>The Cloud Router Switches support three types of mirroring. Port-based mirroring can be applied to any switch-chip ports, VLAN-based mirroring works for all specified VLANs regardless of switch-chip ports, and MAC-based mirroring copies traffic sent or received from specific device reachable from the port configured in Unicast Forwarding Database.</p><h2 id="CRS1xx/2xxseriesswitchesexamples-Port-BasedMirroring"><span class="mw-headline">Port-Based Mirroring</span></h2><p>The first configuration sets the ether5 port as a mirror0 analyzer port for both ingress and egress mirroring, mirrored traffic will be sent to this port. Port-based ingress and egress mirroring are enabled from the ether6 port.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface ethernet switch
+set ingress-mirror0=ether5 egress-mirror0=ether5
+
+/interface ethernet switch port
+set ether6 ingress-mirror-to=mirror0 egress-mirror-to=mirror0</pre>
+</div></div><h2 id="CRS1xx/2xxseriesswitchesexamples-VLANBasedMirroring"><span class="mw-headline">VLAN Based Mirroring</span></h2><p>The second example requires ports to be switched in a group. Mirroring configuration sets the ether5 port as a mirror0 analyzer port and sets the mirror0 port to be used when mirroring from VLAN occurs. VLAN table entry enables mirroring only for VLAN 300 traffic between ether2 and ether7 ports.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface bridge
+add name=bridge1
+/interface bridge port
+add bridge=bridge1 interface=ether2 hw=yes
+add bridge=bridge1 interface=ether7 hw=yes
+
+/interface ethernet switch
+set ingress-mirror0=ether5 vlan-uses=mirror0
+
+/interface ethernet switch vlan
+add ports=ether2,ether7 vlan-id=300 learn=yes ingress-mirror=yes</pre>
+</div></div><h2 id="CRS1xx/2xxseriesswitchesexamples-MACBasedMirroring"><span class="mw-headline">MAC Based Mirroring</span></h2><p>The third configuration also requires ports to be switched in a group. Mirroring configuration sets the ether5 port as a mirror0 analyzer port and sets the mirror0 port to be used when mirroring from the Unicast Forwarding database occurs. The entry from the Unicast Forwarding database enables mirroring for packets with source or destination MAC address E7:16:34:A1:CD:18 from ether8 port.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface bridge
+add name=bridge1
+/interface bridge port
+add bridge=bridge1 interface=ether2 hw=yes
+add bridge=bridge1 interface=ether8 hw=yes
+
+/interface ethernet switch
+set ingress-mirror0=ether5 fdb-uses=mirror0
+
+/interface ethernet switch unicast-fdb
+add port=ether8 mirror=yes svl=yes mac-address=E7:16:34:A1:CD:18</pre>
+</div></div><h1 id="CRS1xx/2xxseriesswitchesexamples-Trunking"><span class="mw-headline">Trunking</span></h1><hr/><p><span class="confluence-embedded-file-wrapper image-center-wrapper confluence-embedded-manual-size"><img class="confluence-embedded-image image-center" draggable="false" height="216" src="attachments/103841836/130220081.jpg" data-image-src="attachments/103841836/130220081.jpg" data-unresolved-comment-count="0" data-linked-resource-id="130220081" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="Trunking3.jpg" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/jpeg" data-linked-resource-container-id="103841836" data-linked-resource-container-version="11" tabindex="0" alt=""></span></p><p>The Trunking in the Cloud Router Switches provides static link aggregation groups with hardware automatic failover and load balancing. IEEE802.3ad and IEEE802.1ax compatible Link Aggregation Control Protocol is not supported yet. Up to 8 Trunk groups are supported with up to 8 Trunk member ports per Trunk group.</p><p>Configuration requires a group of switched ports and an entry in the Trunk table:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface bridge
+add name=bridge1 protocol-mode=none
+/interface bridge port
+add bridge=bridge1 interface=ether2 hw=yes
+add bridge=bridge1 interface=ether6 hw=yes
+add bridge=bridge1 interface=ether7 hw=yes
+add bridge=bridge1 interface=ether8 hw=yes
+
+/interface ethernet switch trunk
+add name=trunk1 member-ports=ether6,ether7,ether8</pre>
+</div></div><p>This example also shows proper bonding configuration in RouterOS on the other end:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface bonding
+add name=bonding1 slaves=ether2,ether3,ether4 mode=balance-xor transmit-hash-policy=layer-2-and-3</pre>
+</div></div><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>You can find a working example for trunking and port-based VLANs on<span> </span><a class="external-link" href="https://wiki.mikrotik.com/wiki/Manual:CRS_VLANs_with_Trunks" rel="nofollow" style="text-decoration: none;" title="Manual:CRS VLANs with Trunks">CRS VLANs with Trunks</a><span> </span>page.</p></div></div><div role="region" aria-label="Warning" class="confluence-information-macro  confluence-information-macro-warning" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-error confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Bridge (R)STP is not aware of the underlying switch trunking configuration and some trunk ports can move to a discarding or blocking state. When trunking member ports are connected to other bridges, you should either disable the (R)STP or filter out any BPDU between trunked devices (e.g. with<span> </span>ACL rules).</p></div></div><h1 id="CRS1xx/2xxseriesswitchesexamples-LimitedMACAccessperPort"><span class="mw-headline">Limited MAC Access per Port</span></h1><hr/><p>Disabling MAC learning and configuring static MAC addresses gives the ability to control what exact devices can communicate to CRS1xx/2xx switches and through them.</p><p>Configuration requires a group of switched ports, disabled MAC learning on those ports, and static UFDB entries:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface bridge
+add name=bridge1
+/interface bridge port
+add bridge=bridge1 interface=ether2 hw=yes
+add bridge=bridge1 interface=ether6 hw=yes learn=no unknown-unicast-flood=no
+add bridge=bridge1 interface=ether7 hw=yes learn=no unknown-unicast-flood=no
+
+/interface ethernet switch unicast-fdb
+add mac-address=4C:5E:0C:00:00:01 port=ether6 svl=yes
+add mac-address=D4:CA:6D:00:00:02 port=ether7 svl=yes
+
+/interface ethernet switch acl
+add action=drop src-mac-addr-state=sa-not-found src-ports=ether6,ether7 table=egress
+add action=drop src-mac-addr-state=static-station-move src-ports=ether6,ether7 table=egress</pre>
+</div></div><p>CRS1xx/2xx switches also allow to learn one dynamic MAC per port to ensure only one end-user device is connected no matter its MAC address:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface ethernet switch port
+set ether6 learn-limit=1
+set ether7 learn-limit=1</pre>
+</div></div><h1 id="CRS1xx/2xxseriesswitchesexamples-Isolation"><span class="mw-headline">Isolation</span></h1><hr/><h2 id="CRS1xx/2xxseriesswitchesexamples-PortLevelIsolation"><span class="mw-headline">Port Level Isolation</span></h2><p style="margin-left: auto;text-align: left;"><span class="confluence-embedded-file-wrapper image-center-wrapper"><img class="confluence-embedded-image image-center" draggable="false" src="attachments/103841836/130220082.jpg" data-image-src="attachments/103841836/130220082.jpg" data-unresolved-comment-count="0" data-linked-resource-id="130220082" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="Port-level-Isolation.jpg" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/jpeg" data-linked-resource-container-id="103841836" data-linked-resource-container-version="11" tabindex="0" alt=""></span></p><p>Port-level isolation is often used for Private VLAN, where:</p><ul><li>One or multiple uplink ports are shared among all users for accessing the gateway or router.</li><li>Port group Isolated Ports is for guest users. Communication is through the uplink ports only.</li><li>Port group Community 0 is for department A. Communication is allowed between the group members and through uplink ports.</li><li>Port group Community X is for department X. Communication is allowed between the group members and through uplink ports.</li></ul><p>The Cloud Router Switches use port-level isolation profiles for Private VLAN implementation:</p><ul><li>Uplink ports – port-level isolation profile 0</li><li>Isolated ports – port-level isolation profile 1</li><li>Community 0 ports - port-level isolation profile 2</li><li>Community X (X &lt;= 30) ports - port-level isolation profile X</li></ul><p><strong>This example requires a group of switched ports. Assume that all ports used in this example are in one switch group.</strong></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface bridge
+add name=bridge1
+/interface bridge port
+add bridge=bridge1 interface=ether2 hw=yes
+add bridge=bridge1 interface=ether6 hw=yes
+add bridge=bridge1 interface=ether7 hw=yes
+add bridge=bridge1 interface=ether8 hw=yes
+add bridge=bridge1 interface=ether9 hw=yes
+add bridge=bridge1 interface=ether10 hw=yes</pre>
+</div></div><p class="auto-cursor-target"><span style="font-weight: 400;letter-spacing: 0.0px;">The first part of port isolation configuration is setting the Uplink port – set a port profile to 0 for ether2:</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface ethernet switch port
+set ether2 isolation-leakage-profile-override=0</pre>
+</div></div><p class="auto-cursor-target"><span style="font-weight: 400;letter-spacing: 0.0px;">Then continue with setting isolation profile 1 to all isolated ports and adding the communication port for port isolation profile 1:</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface ethernet switch port
+set ether5 isolation-leakage-profile-override=1
+set ether6 isolation-leakage-profile-override=1
+
+/interface ethernet switch port-isolation
+add port-profile=1 ports=ether2 type=dst</pre>
+</div></div><p class="auto-cursor-target"><span style="font-weight: 400;letter-spacing: 0.0px;">Configuration to set Community 2 and Community 3 ports is similar:</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface ethernet switch port
+set ether7 isolation-leakage-profile-override=2
+set ether8 isolation-leakage-profile-override=2
+
+/interface ethernet switch port-isolation
+add port-profile=2 ports=ether2,ether7,ether8 type=dst
+
+/interface ethernet switch port
+set ether9 isolation-leakage-profile-override=3
+set ether10 isolation-leakage-profile-override=3
+
+/interface ethernet switch port-isolation
+add port-profile=3 ports=ether2,ether9,ether10 type=dst</pre>
+</div></div><h2 class="auto-cursor-target" id="CRS1xx/2xxseriesswitchesexamples-ProtocolLevelIsolation"><span style="letter-spacing: 0.0px;">Protocol Level Isolation</span></h2><p><span style="letter-spacing: 0.0px;"><span class="confluence-embedded-file-wrapper image-center-wrapper"><img class="confluence-embedded-image image-center" draggable="false" src="attachments/103841836/130220083.jpg" data-image-src="attachments/103841836/130220083.jpg" data-unresolved-comment-count="0" data-linked-resource-id="130220083" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="Protocol-level-Isolation.jpg" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/jpeg" data-linked-resource-container-id="103841836" data-linked-resource-container-version="11" tabindex="0" alt=""></span><br/></span></p><p class="auto-cursor-target"><span style="letter-spacing: 0.0px;font-weight: 400;">Protocol level isolation on CRS switches can be used to enhance network security. For example, restricting DHCP traffic between the users and allowing it only to trusted DHCP server ports can prevent security risks like DHCP spoofing attacks. The following example shows how to configure it on CRS.</span></p><p>Switch together the required ports:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface bridge
+add name=bridge1
+/interface bridge port
+add bridge=bridge1 interface=ether1 hw=yes
+add bridge=bridge1 interface=ether2 hw=yes
+add bridge=bridge1 interface=ether3 hw=yes
+add bridge=bridge1 interface=ether4 hw=yes
+add bridge=bridge1 interface=ether5 hw=yes</pre>
+</div></div><p>Set the same Community port profile for all DHCP client ports. Community port profile numbers are from 2 to 30.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface ethernet switch port
+set ether2 isolation-leakage-profile-override=2
+set ether3 isolation-leakage-profile-override=2
+set ether4 isolation-leakage-profile-override=2
+set ether5 isolation-leakage-profile-override=2</pre>
+</div></div><p>And configure port isolation/leakage profile for selected Community (2) to allow DHCP traffic destined only to the port where the trusted DHCP server is located.<span> registration status</span><span> </span>and<span> </span>traffic-type<span> </span>properties have to be set empty to apply restrictions only for DHCP protocol.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface ethernet switch port-isolation
+add port-profile=2 protocol-type=dhcpv4 type=dst forwarding-type=bridged ports=ether1 registration-status=&quot;&quot; traffic-type=&quot;&quot;</pre>
+</div></div><h1 id="CRS1xx/2xxseriesswitchesexamples-QualityofService(QoS)"><span class="mw-headline">Quality of Service (QoS)</span></h1><hr/><p><strong>QoS configuration schemes</strong></p><p>MAC based traffic scheduling and shaping: [MAC address in UFDB] -&gt; [QoS Group] -&gt; [Priority] -&gt; [Queue] -&gt; [Shaper]</p><p>VLAN based traffic scheduling and shaping: [VLAN id in VLAN table] -&gt; [QoS Group] -&gt; [Priority] -&gt; [Queue] -&gt; [Shaper]</p><p>Protocol based traffic scheduling and shaping: [Protocol in Protocol VLAN table] -&gt; [QoS Group] -&gt; [Priority] -&gt; [Queue] -&gt; [Shaper]</p><p>PCP/DEI based traffic scheduling and shaping: [Switch port PCP/DEI mapping] -&gt; [Priority] -&gt; [Queue] -&gt; [Shaper]</p><p>DSCP based traffic scheduling and shaping: [QoS DSCP mapping] -&gt; [Priority] -&gt; [Queue] -&gt; [Shaper]</p><h2 id="CRS1xx/2xxseriesswitchesexamples-MAC-basedtrafficschedulingusinginternalPriority"><span class="mw-headline">MAC-based traffic scheduling using internal Priority</span></h2><p>In Strict Priority scheduling mode, the highest priority queue is served first. The queue number represents the priority and the queue with the highest queue number has the highest priority. Traffic is transmitted from the highest priority queue until the queue is empty, and then moves to the next highest priority queue, and so on. If no congestion is present at the egress port, a packet is transmitted as soon as it is received. If congestion occurs in the port where high-priority traffic keeps coming, the lower-priority queues starve.</p><p>On all CRS switches the scheme where MAC-based egress traffic scheduling is done according to internal Priority would be the following: [MAC address] -&gt; [QoS Group] -&gt; [Priority] -&gt; [Queue];<br/>In this example, host1 (E7:16:34:00:00:01) and host2 (E7:16:34:00:00:02) will have higher priority 1 and the rest of the hosts will have lower priority 0 for transmitted traffic on port ether7. Note that CRS has a maximum of 8 queues per port.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface bridge
+add name=bridge1
+/interface bridge port
+add bridge=bridge1 interface=ether6 hw=yes
+add bridge=bridge1 interface=ether7 hw=yes
+add bridge=bridge1 interface=ether8 hw=yes</pre>
+</div></div><p>Create a QoS group for use in UFDB:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface ethernet switch qos-group
+add name=group1 priority=1</pre>
+</div></div><p>Add UFDB entries to match specific MACs on ether7 and apply the QoS group1:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface ethernet switch unicast-fdb
+add mac-address=E7:16:34:00:00:01 port=ether7 qos-group=group1 svl=yes
+add mac-address=E7:16:34:00:00:02 port=ether7 qos-group=group1 svl=yes</pre>
+</div></div><p>Configure ether7 port queues to work according to Strict Priority and QoS scheme only for destination address:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface ethernet switch port
+set ether7 per-queue-scheduling=&quot;strict-priority:0,strict-priority:0,strict-priority:0,strict-priority:0,strict-priority:0,strict-priority:0,strict-priority:0,strict-priority:0&quot; priority-to-queue=0:0,1:1 qos-scheme-precedence=da-based</pre>
+</div></div><h2 id="CRS1xx/2xxseriesswitchesexamples-MAC-basedtrafficshapingusinginternalPriority"><span class="mw-headline">MAC-based traffic shaping using internal Priority</span></h2><p>The scheme where MAC-based traffic shaping is done according to internal Priority would be following: [MAC address] -&gt; [QoS Group] -&gt; [Priority] -&gt; [Queue] -&gt; [Shaper];<br/>In this example, unlimited traffic will have priority 0 and limited traffic will have priority 1 with a bandwidth limit of 10Mbit. Note that CRS has a maximum of 8 queues per port.</p><p>Create a group of ports for switching:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface bridge
+add name=bridge1
+/interface bridge port
+add bridge=bridge1 interface=ether6 hw=yes
+add bridge=bridge1 interface=ether7 hw=yes
+add bridge=bridge1 interface=ether8 hw=yes</pre>
+</div></div><p>Create a QoS group for use in UFDB:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface ethernet switch qos-group
+add name=group1 priority=1</pre>
+</div></div><p>Add UFDB entry to match specific MAC on ether8 and apply QoS group1:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface ethernet switch unicast-fdb
+add mac-address=E7:16:34:A1:CD:18 port=ether8 qos-group=group1 svl=yes</pre>
+</div></div><p>Configure ether8 port queues to work according to Strict Priority and QoS scheme only for destination address:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface ethernet switch port
+set ether8 per-queue-scheduling=&quot;strict-priority:0,strict-priority:0,strict-priority:0,strict-priority:0,strict-priority:0,strict-priority:0,strict-priority:0,strict-priority:0&quot; priority-to-queue=0:0,1:1 qos-scheme-precedence=da-based</pre>
+</div></div><p>Apply bandwidth limit for queue1 on ether8:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface ethernet switch shaper
+add port=ether8 rate=10M target=queue1</pre>
+</div></div><p>If the CRS switch supports Access Control List, this configuration is simpler:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface ethernet switch acl policer
+add name=policer1 yellow-burst=100k yellow-rate=10M
+
+/interface ethernet switch acl
+add mac-dst-address=E7:16:34:A1:CD:18 policer=policer1</pre>
+</div></div><h2 id="CRS1xx/2xxseriesswitchesexamples-VLAN-basedtrafficscheduling+shapingusinginternalPriorities"><span class="mw-headline">VLAN-based traffic scheduling + shaping using internal Priorities</span></h2><p>The best practice is to assign lower internal QoS Priority for traffic limited by shaper to make it also less important in the Strict Priority scheduler. (higher priority should be more important and unlimited)</p><p>In this example:<br/>Switch port ether6 is using a shaper to limit the traffic that comes from ether7 and ether8.<br/>When the link has reached its capacity, the traffic with the highest priority will be sent out first.<br/>VLAN10 -&gt; QoS group0 = lowest priority<br/>VLAN20 -&gt; QoS group1 = normal priority<br/>VLAN30 -&gt; QoS group2 = highest priority</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface bridge
+add name=bridge1
+/interface bridge port
+add bridge=bridge1 interface=ether6 hw=yes
+add bridge=bridge1 interface=ether7 hw=yes
+add bridge=bridge1 interface=ether8 hw=yes</pre>
+</div></div><p>Create QoS groups for use in the VLAN table.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface ethernet switch qos-group
+add name=group0 priority=0
+add name=group1 priority=1
+add name=group2 priority=2</pre>
+</div></div><p>Add VLAN entries to apply QoS groups for certain VLANs.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface ethernet switch vlan
+add ports=ether6,ether7,ether8 qos-group=group0 vlan-id=10
+add ports=ether6,ether7,ether8 qos-group=group1 vlan-id=20
+add ports=ether6,ether7,ether8 qos-group=group2 vlan-id=30</pre>
+</div></div><p>Configure ether6, ether7, and ether8 port queues to work according to Strict Priority and QoS schemes only for VLAN-based QoS.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface ethernet switch port
+set ether6 per-queue-scheduling=&quot;strict-priority:0,strict-priority:0,strict-priority:0,strict-priority:0,strict-priority:0,strict-priority:0,strict-priority:0,strict-priority:0&quot; priority-to-queue=0:0,1:1,2:2 qos-scheme-precedence=vlan-based
+set ether7 per-queue-scheduling=&quot;strict-priority:0,strict-priority:0,strict-priority:0,strict-priority:0,strict-priority:0,strict-priority:0,strict-priority:0,strict-priority:0&quot; priority-to-queue=0:0,1:1,2:2 qos-scheme-precedence=vlan-based
+set ether8 per-queue-scheduling=&quot;strict-priority:0,strict-priority:0,strict-priority:0,strict-priority:0,strict-priority:0,strict-priority:0,strict-priority:0,strict-priority:0&quot; priority-to-queue=0:0,1:1,2:2 qos-scheme-precedence=vlan-based</pre>
+</div></div><p>Apply bandwidth limit on ether6.</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface ethernet switch shaper
+add port=ether6 rate=10M</pre>
+</div></div><h2 id="CRS1xx/2xxseriesswitchesexamples-PCP-basedtrafficscheduling"><span class="mw-headline">PCP-based traffic scheduling</span></h2><p>By default, CRS1xx/CRS2xx series devices will ignore the PCP/CoS/802.1p value and forward packets based on FIFO (First-In-First-Out) manner. When the device's internal queue is not full, then packets are sent in a FIFO manner, but as soon as a queue is filled, then higher-priority traffic can be sent out first. Let us consider a scenario when<span> </span><strong>ether1</strong><span> </span>and<span> </span><strong>ether2</strong><span> </span>are forwarding data to<span> </span><strong>ether3</strong>, but when<span> </span><strong>ether3</strong><span> </span>is congested, then packets are going to be scheduled, we can configure the switch to hold the lowest priority packets until all higher priority packets are sent out, this is a very common scenario for VoIP type setups, where some traffic needs to be prioritized.</p><p>To achieve such a behavior, switch together<span> </span><strong>ether1</strong>,<span> </span><strong>ether2,</strong><span> </span>and<span> </span><strong>ether3</strong><span> </span>ports:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface bridge
+add name=bridge1
+/interface bridge port
+add bridge=bridge1 interface=ether1 hw=yes
+add bridge=bridge1 interface=ether2 hw=yes
+add bridge=bridge1 interface=ether3 hw=yes</pre>
+</div></div><p>Enable<span> </span><strong>Strict Policy</strong><span> </span>for each internal queue on each port:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface ethernet switch port
+set ether1,ether2,ether3 per-queue-scheduling=&quot;strict-priority:0,strict-priority:0,strict-priority:0,strict-priority:0,strict-priority:0,strict-priority:0,strict-priority:0,strict-priority:0&quot;</pre>
+</div></div><p>Map each PCP value to an internal priority value, for convenience reasons simply map PCP to an internal priority 1-to-1:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface ethernet switch port
+set ether1,ether2,ether3 pcp-based-qos-priority-mapping=0:0,1:1,2:2,3:3,4:4,5:5,6:6,7:7</pre>
+</div></div><p>Since the switch will empty the largest queue first and you need the highest priority to be served first, then you can assign this internal priority to a queue 1-to-1:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface ethernet switch port
+set ether1,ether2,ether3 priority-to-queue=0:0,1:1,2:2,3:3,4:4,5:5,6:6,7:7</pre>
+</div></div><p>Finally, set each switch port to schedule packets based on the PCP value:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface ethernet switch port
+set ether1,ether2,ether3 qos-scheme-precedence=pcp-based</pre>
+</div></div><h1 id="CRS1xx/2xxseriesswitchesexamples-BandwidthLimiting"><span class="mw-headline">Bandwidth Limiting</span></h1><hr/><p>Both Ingress Port policer and Shaper provide bandwidth-limiting features for CRS switches.</p><ul><li>Ingress Port Policer sets RX limit on port:</li></ul><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface ethernet switch ingress-port-policer
+add port=ether5 meter-unit=bit rate=10M</pre>
+</div></div><ul><li>Shaper sets TX limit on port:</li></ul><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface ethernet switch shaper
+add port=ether5 meter-unit=bit rate=10M</pre>
+</div></div><h1 id="CRS1xx/2xxseriesswitchesexamples-TrafficStormControl"><span class="mw-headline">Traffic Storm Control</span></h1><hr/><p>The same Ingress Port policer also can be used for traffic storm control to prevent disruptions on Layer 2 ports caused by broadcast, multicast, or unicast traffic storms.</p><ul><li>Broadcast storm control example on ether5 port with 500 packet limit per second:</li></ul><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface ethernet switch ingress-port-policer
+add port=ether5 rate=500 meter-unit=packet packet-types=broadcast  </pre>
+</div></div><ul><li>Example with multiple packet types which includes ARP and ND protocols and unregistered multicast traffic. Unregistered multicast is traffic that is not defined in the Multicast Forwarding Database.</li></ul><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface ethernet switch ingress-port-policer
+add port=ether5 rate=5k meter-unit=packet packet-types=broadcast,arp-or-nd,unregistered-multicast</pre>
+</div></div><h1 id="CRS1xx/2xxseriesswitchesexamples-Seealso"><span class="mw-headline">See also</span></h1><hr/><ul><li><a href="https://help.mikrotik.com/docs/pages/viewpage.action?pageId=103841836" rel="nofollow">CRS1xx/2xx series switches examples</a></li><li><a class="external-link" href="https://wiki.mikrotik.com/wiki/Manual:CRS_Router" rel="nofollow" style="text-decoration: none;" title="Manual:CRS Router">CRS Router</a></li><li><a class="external-link" href="https://wiki.mikrotik.com/wiki/Manual:CRS1xx/2xx_VLANs_with_Trunks" rel="nofollow" style="text-decoration: none;" title="Manual:CRS1xx/2xx VLANs with Trunks">CRS1xx/2xx VLANs with Trunks</a></li><li><a href="https://help.mikrotik.com/docs/display/ROS/Basic+VLAN+switching" rel="nofollow">Basic VLAN switching</a></li><li><a href="https://help.mikrotik.com/docs/display/ROS/Bridging+and+Switching#BridgingandSwitching-BridgeHardwareOffloading" rel="nofollow">Bridge Hardware Offloading</a></li><li><a href="https://help.mikrotik.com/docs/display/ROS/Spanning+Tree+Protocol" rel="nofollow">Spanning Tree Protocol</a></li><li><a href="https://help.mikrotik.com/docs/pages/viewpage.action?pageId=59277403" rel="nofollow">IGMP Snooping</a></li><li><a href="https://help.mikrotik.com/docs/display/ROS/Bridging+and+Switching#BridgingandSwitching-DHCPSnoopingandDHCPOption82" rel="nofollow">DHCP Snooping and Option 82</a></li><li><a href="https://help.mikrotik.com/docs/display/ROS/MTU+in+RouterOS" rel="nofollow">MTU on RouterBOARD</a></li><li><a href="https://help.mikrotik.com/docs/display/ROS/Layer2+misconfiguration" rel="nofollow">Layer2 misconfiguration</a></li></ul>
+                    </div>
+
+                                                            <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/103841836/103841840.png">access_ports.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/103841836/103841841.png">hybrid_ports.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/103841836/103841842.png">Protocol-Based.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/103841836/103841843.png">MAC-Based.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/103841836/103841844.png">vlan_routing.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/103841836/103841845.png">Qinq.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/103841836/103841846.png">Mirroring.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/103841836/103841847.png">Trunking3.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/103841836/103841848.png">Port-level-Isolation.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/103841836/103841851.png">Protocol-level-Isolation.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/103841836/130220077.jpg">Protocol-Based.jpg</a> (image/jpeg)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/103841836/130220078.jpg">MAC-Based.jpg</a> (image/jpeg)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/103841836/130220079.jpg">Qinq.jpg</a> (image/jpeg)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/103841836/130220080.jpg">Mirroring.jpg</a> (image/jpeg)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/103841836/130220081.jpg">Trunking3.jpg</a> (image/jpeg)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/103841836/130220082.jpg">Port-level-Isolation.jpg</a> (image/jpeg)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/103841836/130220083.jpg">Protocol-level-Isolation.jpg</a> (image/jpeg)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

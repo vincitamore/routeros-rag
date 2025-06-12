@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : PtP GUI example</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Wireless_1409138.html">Wireless</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="W60G_39059501.html">W60G</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : PtP GUI example
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Krists Dūčis</span>, last updated by <span class='editor'> Unknown User (0testing)</span> on May 08, 2023
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <h2 id="PtPGUIexample-Summary"><span class="mw-headline">Summary</span></h2><hr/><p>This example shows how to configure transparent wireless bridge in GUI from one W60G device to another.</p><p>Example is done from empty configuration state with [<a class="external-link" href="https://mikrotik.com/download" rel="nofollow">WinBox</a>] utility</p><h2 id="PtPGUIexample-Connecttothedevice"><span class="mw-headline">Connect to the device</span></h2><hr/><p>After configuration reset - only mac-telnet is possible. In main WinBox screen press on Neighbours, choose your devices MAC address and press Connect:</p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/39682067/39682070.png" data-image-src="attachments/39682067/39682070.png" data-unresolved-comment-count="0" data-linked-resource-id="39682070" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="Winbox_main_screen.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="39682067" data-linked-resource-container-version="5" tabindex="0" alt=""></span></p><h2 id="PtPGUIexample-Configurebridge"><span class="mw-headline">Configure bridge</span></h2><hr/><p>Add new bridge and assign bridge members to it. This will allow to pass traffic from from Ethernet to W60G interface without routing.</p><ol><li>Open Bridge sub-menu;</li><li>Press on &quot;+&quot; to add new bridge;</li><li>Apply your changes.</li></ol><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/39682067/39682071.png" data-image-src="attachments/39682067/39682071.png" data-unresolved-comment-count="0" data-linked-resource-id="39682071" data-linked-resource-version="2" data-linked-resource-type="attachment" data-linked-resource-default-alias="winbox_bridge_screen.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="39682067" data-linked-resource-container-version="5" tabindex="0" alt=""></span></p><p>Add interface members (ether1 and wlan60-1) to newly created bridge.</p><ol><li>Press on Ports sub-menu;</li><li>Add new member with &quot;+&quot;;</li><li>Select correct interfaces;</li><li>Apply the settings.</li></ol><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/39682067/39682074.png" data-image-src="attachments/39682067/39682074.png" data-unresolved-comment-count="0" data-linked-resource-id="39682074" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="winbox_bridge_ports_settings.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="39682067" data-linked-resource-container-version="5" tabindex="0" alt=""></span></p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/39682067/39682075.png" data-image-src="attachments/39682067/39682075.png" data-unresolved-comment-count="0" data-linked-resource-id="39682075" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="winbox_ports_settings.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="39682067" data-linked-resource-container-version="5" tabindex="0" alt=""></span></p><h2 id="PtPGUIexample-Setupwirelessconnection"><span class="mw-headline">Set up wireless connection</span></h2><hr/><p>All previously explained steps are identical to <strong>bridge</strong> and <strong>station</strong> devices. Different modes needs to be used when configuring wireless interfaces.</p><p>Configure <strong>bridge</strong> device as follows:</p><ol><li>Open Interface menu;</li><li>Double click on wlan60-1 interface;</li><li>Press on Wireless sub-menu and set mode to <strong>bridge;</strong></li><li>Set SSID and password and region;</li><li>Select previously created bridge under &quot;Put Stations In Bridge&quot;;</li><li>Apply your changes;</li><li>Press enable to start transmitting.</li></ol><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/39682067/39682077.png" data-image-src="attachments/39682067/39682077.png" data-unresolved-comment-count="0" data-linked-resource-id="39682077" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="winbox_w60g_bridge.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="39682067" data-linked-resource-container-version="5" tabindex="0" alt=""></span></p><p>Configure <strong>station</strong> device as follows:</p><ol><li>Open Interface menu;</li><li>Double click on wlan60-1 interface;</li><li>Press on Wireless sub-menu and set mode to <strong>station bridge;</strong></li><li>Set SSID and password;</li><li>Apply your changes;</li><li>Press enable to start transmitting.</li></ol><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/39682067/39682078.png" data-image-src="attachments/39682067/39682078.png" data-unresolved-comment-count="0" data-linked-resource-id="39682078" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="winbox_w60g_station.png" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/png" data-linked-resource-container-id="39682067" data-linked-resource-container-version="5" tabindex="0" alt=""></span></p><h2 id="PtPGUIexample-Additionalconfiguration"><span class="mw-headline">Additional configuration</span></h2><hr/><p><span class="mw-headline">Interfaces when enabled from greyed out will become active.</span></p><p><span class="mw-headline">Link should be established after all previously explained steps are done. It's recommended to set up administrator password on both devices. </span></p><p><span class="mw-headline">To create point to multi-point setup: On bridge device ap-bridge must be set and station-bridge for stations.<br/></span></p>
+                    </div>
+
+                                                            <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/39682067/39682070.png">Winbox_main_screen.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/39682067/39682072.png">winbox_bridge_screen.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/39682067/39682071.png">winbox_bridge_screen.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/39682067/39682074.png">winbox_bridge_ports_settings.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/39682067/39682075.png">winbox_ports_settings.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/39682067/39682077.png">winbox_w60g_bridge.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/39682067/39682078.png">winbox_w60g_station.png</a> (image/png)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

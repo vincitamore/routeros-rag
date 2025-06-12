@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : EoIP</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Virtual-Private-Networks_119144597.html">Virtual Private Networks</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : EoIP
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Artūrs C.</span>, last updated by <span class='editor'> Oskars K.</span> on Jan 22, 2024
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742033048 {padding: 0px;}
+div.rbtoc1747742033048 ul {margin-left: 0px;}
+div.rbtoc1747742033048 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742033048'>
+<ul class='toc-indentation'>
+<li><a href='#EoIP-Introduction'>Introduction</a></li>
+<li><a href='#EoIP-PropertyDescription'>Property Description</a></li>
+<li><a href='#EoIP-ConfigurationExamples'>Configuration Examples</a>
+<ul class='toc-indentation'>
+<li><a href='#EoIP-Example'>Example</a></li>
+</ul>
+</li>
+</ul>
+</div></p><h1 id="EoIP-Introduction">Introduction</h1><p><strong>Sub-menu:</strong> <code>/interface eoip</code></p><p><span style="color:var(--ds-text-accent-lime-bolder,#37471f);">Ethernet over IP (EoIP) Tunneling is a MikroTik RouterOS protocol based on <strong><span style="color:var(--ds-text,#172b4d);"><a class="external-link" href="https://tools.ietf.org/html/rfc1701" rel="nofollow">GRE RFC 1701</a></span></strong> that creates an Ethernet tunnel between two routers on top of an IP connection. The EoIP tunnel may run over<span> </span></span>IPIP<span style="color:var(--ds-text-accent-lime-bolder,#37471f);"><span> </span>tunnel,<span> </span></span>PPTP<span style="color:var(--ds-text-accent-lime-bolder,#37471f);"><span> </span>tunnel, or any other connection capable of transporting IP.</span><br/><span style="color:var(--ds-text-accent-lime-bolder,#37471f);">When the bridging function of the router is enabled, all Ethernet traffic (all Ethernet protocols) will be bridged just as if there where a physical Ethernet interface and cable between the two routers (with bridging enabled). This protocol makes multiple network schemes possible.</span></p><p>Network setups with EoIP interfaces:</p><ul class="bullets"><li>Possibility to bridge LANs over the Internet</li><li>Possibility to bridge LANs over encrypted tunnels</li><li>Possibility to bridge LANs over 802.11b 'ad-hoc' wireless networks</li></ul><p>The EoIP protocol encapsulates Ethernet frames in GRE (IP protocol number 47) packets (just like PPTP) and sends them to the remote side of the EoIP tunnel.</p><h1 id="EoIP-PropertyDescription"><span class="mw-headline">Property Description</span></h1><div class="table-wrap"><table class="wrapped confluenceTable"><colgroup><col/><col/></colgroup><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>allow-fast-path </strong>(<em>yes | no</em>; Default: <strong>yes</strong>)</td><td class="confluenceTd">Whether to allow FastPath processing. Must be disabled if IPsec tunneling is used.</td></tr><tr><td class="confluenceTd"><strong>arp (</strong><em>disabled | enabled | proxy-arp | reply-only</em>; Default: <strong>enabled)</strong></td><td class="confluenceTd">Address Resolution Protocol mode.<ul class="bullets"><li>disabled - the interface will not use ARP</li><li>enabled - the interface will use ARP</li><li>proxy-arp - the interface will use the ARP proxy feature</li><li>reply-only - the interface will only reply to requests originated from matching IP address/MAC address combinations which are entered as static entries in the &quot;/ip arp&quot; table. No dynamic entries will be automatically stored in the &quot;/ip arp&quot; table. Therefore for communications to be successful, a valid static entry must already exist.</li></ul></td></tr><tr><td class="confluenceTd"><strong>arp-timeout </strong>(<em>integer[/time]</em>; Default: <strong>auto</strong>)</td><td class="confluenceTd">Time interval in which ARP entries should time out.</td></tr><tr><td class="confluenceTd"><strong>clamp-tcp-mss</strong> (<em>yes | no</em>; Default: <strong>yes</strong>)</td><td class="confluenceTd">Controls whether to change MSS size for received TCP SYN packets. When enabled, a router will change the MSS size for received TCP SYN packets if the current MSS size exceeds the tunnel interface MTU (taking into account the TCP/IP overhead).The received encapsulated packet will still contain the original MSS, and only after decapsulation the MSS is changed.</td></tr><tr><td class="confluenceTd"><strong>comment</strong> (<em>string</em>; Default: )</td><td class="confluenceTd">Short description of the interface.</td></tr><tr><td class="confluenceTd"><strong>disabled</strong> (<em>yes | no</em>; Default: <strong>no</strong>)</td><td class="confluenceTd">Whether an item is disabled.</td></tr><tr><td class="confluenceTd"><strong>dont-fragment</strong> (<em>inherit | no</em>; Default: <strong>no</strong>)</td><td class="confluenceTd"><p style="text-align: left;">Whether to include DF bit in related packets:</p><p style="text-align: left;"><em>no</em><span> </span>- fragment if needed,<span> </span><em>inherit</em><span> </span>- use Dont Fragment flag of original packet.</p><p style="text-align: left;">(Without Dont Fragment: inherit - packet may be fragmented).</p></td></tr><tr><td class="confluenceTd"><strong>dscp</strong> (<em>integer: 0-63</em>; Default: <strong>inherited</strong>)</td><td class="confluenceTd">DSCP value of packet. Inherited option means that dscp value will be inherited from packet which is going to be encapsulated.</td></tr><tr><td class="confluenceTd"><strong>ipsec-secret</strong> (<em>string</em>; Default: )</td><td class="confluenceTd">When secret is specified, router adds dynamic IPsec peer to remote-address with pre-shared key and policy (by default phase2 uses sha1/aes128cbc).</td></tr><tr><td class="confluenceTd"><strong>keepalive</strong> (<em>integer[/time],integer 0..4294967295</em>; Default: <strong>10s,10</strong>)</td><td class="confluenceTd">Tunnel keepalive parameter sets the time interval in which the tunnel running flag will remain even if the remote end of tunnel goes down. If configured time,retries fail, interface running flag is removed. Parameters are written in following format: <code>KeepaliveInterval,KeepaliveRetries</code> where <code>KeepaliveInterval</code> is time interval and <code>KeepaliveRetries</code> - number of retry attempts. By default keepalive is set to 10 seconds and 10 retries.</td></tr><tr><td class="confluenceTd"><strong>l2mtu</strong> (<em>integer; read-only</em>)</td><td class="confluenceTd">Layer2 Maximum transmission unit. Not configurable for EoIP. <a href="MTU-in-RouterOS_21725296.html">MTU in RouterOS</a></td></tr><tr><td class="confluenceTd"><strong>local-address</strong> (<em>IP</em>; Default: )</td><td class="confluenceTd">Source address of the tunnel packets, local on the router.</td></tr><tr><td class="confluenceTd"><strong>loop-protect</strong></td><td class="confluenceTd"><br/></td></tr><tr><td class="confluenceTd"><strong>loop-protect-disable-time</strong></td><td class="confluenceTd"><br/></td></tr><tr><td class="confluenceTd"><strong>loop-protect-send-interval</strong></td><td class="confluenceTd"><br/></td></tr><tr><td class="confluenceTd"><strong>mac-address</strong> (<em>MAC</em>; Default: )</td><td class="confluenceTd">Media Access Control number of an interface. The address numeration authority IANA allows the use of MAC addresses in the range from <strong>00:00:5E:80:00:00 - 00:00:5E:FF:FF:FF</strong> freely</td></tr><tr><td class="confluenceTd"><strong>mtu</strong> (<em>integer</em>; Default: <strong>auto</strong>)</td><td class="confluenceTd">Layer3 Maximum transmission unit</td></tr><tr><td class="confluenceTd"><strong>name</strong> (<em>string</em>; Default: )</td><td class="confluenceTd">Interface name</td></tr><tr><td class="confluenceTd"><strong>remote-address</strong> (<em>IP</em>; Default: )</td><td class="confluenceTd">IP address of remote end of EoIP tunnel</td></tr><tr><td class="confluenceTd"><strong>tunnel-id</strong> (<em>integer: 65536</em>; Default: )</td><td class="confluenceTd">Unique tunnel identifier, which must match other side of the tunnel</td></tr></tbody></table></div><h1 id="EoIP-ConfigurationExamples">Configuration Examples</h1><p>Parameter tunnel-id<span style="color:var(--ds-text-accent-lime-bolder,#37471f);"><span> </span>is a method of identifying a tunnel. It must be unique for each EoIP tunnel.</span></p><div role="region" aria-label="Tip" class="confluence-information-macro  confluence-information-macro-tip" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-approve confluence-information-macro-icon" ></span><div class="confluence-information-macro-body">EoIP tunnel adds at least 42 byte overhead (8byte GRE + 14 byte Ethernet + 20 byte IP). MTU should be set to 1500 to eliminate packet fragmentation inside the tunnel (that allows transparent bridging of Ethernet-like networks so that it would be possible to transport full-sized Ethernet frame over the tunnel).</div></div><p><span style="color:var(--ds-text-accent-lime-bolder,#37471f);">When bridging EoIP tunnels, it is highly recommended to set unique MAC addresses for each tunnel for the bridge algorithms to work correctly. For EoIP interfaces you can use MAC addresses that are in the range from<span> </span></span><strong>00:00:5E:80:00:00 - 00:00:5E:FF:FF:FF<span> </span></strong><span style="color:var(--ds-text-accent-lime-bolder,#37471f);">, which IANA has reserved for such cases. Alternatively, you can set the second bit of the first byte to modify the auto-assigned address into a 'locally administered address', assigned by the network administrator, and thus use any MAC address, you just need to ensure they are unique between the hosts connected to one bridge.</span></p><h2 id="EoIP-Example"><span style="color:var(--ds-text-accent-lime-bolder,#37471f);">Example</span></h2><p>Let us assume we want to bridge two networks: 'Station' and 'AP'. By using EoIP setup can be made so that Station and AP LANs are in the same Layer2 broadcast domain.</p><p>Consider the following setup:</p><p><span class="confluence-embedded-file-wrapper"><img class="confluence-embedded-image" draggable="false" src="attachments/24805521/54853760.jpg" data-image-src="attachments/24805521/54853760.jpg" data-unresolved-comment-count="0" data-linked-resource-id="54853760" data-linked-resource-version="1" data-linked-resource-type="attachment" data-linked-resource-default-alias="Eoip-example.jpg" data-base-url="https://help.mikrotik.com/docs" data-linked-resource-content-type="image/jpeg" data-linked-resource-container-id="24805521" data-linked-resource-container-version="12" tabindex="0" alt=""></span></p><p>As you know wireless stations cannot be bridged, to overcome this limitation (not involving WDS) we will create an EoIP tunnel over the wireless link and bridge it with interfaces connected to local networks.</p><p>We will not cover wireless configuration in this example, let's assume that the wireless link is already established.</p><p>At first, we create an EoIP tunnel on our AP:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface eoip add name=&quot;eoip-remote&quot; tunnel-id=0 remote-address=10.0.0.2 disabled=no</pre>
+</div></div><p class="auto-cursor-target"><span style="color:var(--ds-text-accent-lime-bolder,#37471f);">Verify the interface is created:</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@AP] &gt; /interface eoip print
+Flags: X - disabled; R - running 
+ 0  R name=&quot;eoip-remote&quot; mtu=auto actual-mtu=1458 l2mtu=65535 mac-address=FE:A5:6C:3F:26:C5 arp=enabled 
+      arp-timeout=auto loop-protect=default loop-protect-status=off loop-protect-send-interval=5s 
+      loop-protect-disable-time=5m local-address=0.0.0.0 remote-address=10.0.0.2 tunnel-id=0 
+      keepalive=10s,10 dscp=inherit clamp-tcp-mss=yes dont-fragment=no allow-fast-path=yes </pre>
+</div></div><p class="auto-cursor-target"><span style="color:var(--ds-text-accent-lime-bolder,#37471f);">Station router:</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface eoip add name=&quot;eoip-main&quot; tunnel-id=0 remote-address=10.0.0.1 disabled=no</pre>
+</div></div><p class="auto-cursor-target"><span style="color:var(--ds-text-accent-lime-bolder,#37471f);">Verify the interface is created:</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@Station] &gt;  /interface eoip print
+Flags: X - disabled; R - running 
+ 0  R name=&quot;eoip-main&quot; mtu=auto actual-mtu=1458 l2mtu=65535 mac-address=FE:4B:71:05:EA:8B arp=enabled 
+      arp-timeout=auto loop-protect=default loop-protect-status=off loop-protect-send-interval=5s 
+      loop-protect-disable-time=5m local-address=0.0.0.0 remote-address=10.0.0.1 tunnel-id=0 
+      keepalive=10s,10 dscp=inherit clamp-tcp-mss=yes dont-fragment=no allow-fast-path=yes  </pre>
+</div></div><p class="auto-cursor-target"><span style="color:var(--ds-text-accent-lime-bolder,#37471f);">Next, we will bridge local interfaces with EoIP tunnel on our AP. If you already have a local bridge interface, simply add EoIP interface to it:<br/></span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface bridge port add bridge=bridge1 interface=eoip-remote</pre>
+</div></div><p class="auto-cursor-target"><span style="color:var(--ds-text-accent-lime-bolder,#37471f);">The bridge port list should list all local LAN interfaces and the EoIP interface:</span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@AP] &gt; /interface bridge port print 
+Flags: I - INACTIVE; H - HW-OFFLOAD
+Columns: INTERFACE, BRIDGE, HW, PVID, PRIORITY, PATH-COST, INTERNAL-PATH-COST, HORIZON
+#    INTERFACE       BRIDGE   HW   PVID  PRIORITY  PATH-COST  INTERNAL-PATH-COST  HORIZON
+0  H ether2          bridge1  yes     1  0x80             10                  10  none   
+1  H ether3          bridge1  yes     1  0x80             10                  10  none    
+2    eoip-remote     bridge1  yes     1  0x80             10                  10  none    </pre>
+</div></div><p class="auto-cursor-target"><span style="color:var(--ds-text-accent-lime-bolder,#37471f);">On Station router, if you do not have a local bridge interface, create a new bridge and add both EoIP and local LAN interfaces to it:<br/></span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface bridge add name=bridge1
+/interface bridge port add bridge=bridge1 interface=ether2
+/interface bridge port add bridge=bridge1 interface=eoip-main</pre>
+</div></div><p class="auto-cursor-target"><span class="auto-cursor-target" style="color:var(--ds-text-accent-lime-bolder,#37471f);"><span style="color:var(--ds-text-accent-lime-bolder,#37471f);">Verify the bridge port section:</span></span></p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@Station] &gt; /interface bridge port print 
+Flags: I - INACTIVE; H - HW-OFFLOAD
+Columns: INTERFACE, BRIDGE, HW, PVID, PRIORITY, PATH-COST, INTERNAL-PATH-COST, HORIZON
+#    INTERFACE     BRIDGE   HW   PVID  PRIORITY  PATH-COST  INTERNAL-PATH-COST  HORIZON
+0  H ether2        bridge1  yes     1  0x80             10                  10  none    
+2    eoip-main     bridge1  yes     1  0x80             10                  10  none    </pre>
+</div></div><p class="auto-cursor-target"><span class="auto-cursor-target" style="color:var(--ds-text-accent-lime-bolder,#37471f);"><span style="color:var(--ds-text-accent-lime-bolder,#37471f);">Now both sites are in the same Layer2 broadcast domain. You can set up IP addresses from the same network on both sites.</span></span></p>
+                    </div>
+
+                                                            <div class="pageSection group">
+                        <div class="pageSectionHeader">
+                            <h2 id="attachments" class="pageSectionTitle">Attachments:</h2>
+                        </div>
+
+                        <div class="greybox" align="left">
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/24805521/24805523.png">Eoip-example.png</a> (image/png)
+                                <br/>
+                                                            <img src="images/icons/bullet_blue.gif" height="8" width="8" alt=""/>
+                                <a href="attachments/24805521/54853760.jpg">Eoip-example.jpg</a> (image/jpeg)
+                                <br/>
+                                                    </div>
+                    </div>
+                    
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

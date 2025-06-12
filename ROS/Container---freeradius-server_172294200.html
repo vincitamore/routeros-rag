@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : Container - freeradius server</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Extended-features_120324125.html">Extended features</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="Container_84901929.html">Container</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : Container - freeradius server
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Deniss M.</span>, last updated by <span class='editor'> Antons B.</span> on Feb 21, 2023
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <p><style type='text/css'>/*<![CDATA[*/
+div.rbtoc1747742047132 {padding: 0px;}
+div.rbtoc1747742047132 ul {margin-left: 0px;}
+div.rbtoc1747742047132 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='toc-macro rbtoc1747742047132'>
+<ul class='toc-indentation'>
+<li><a href='#Containerfreeradiusserver-Introduction'>Introduction</a></li>
+<li><a href='#Containerfreeradiusserver-Summary'>Summary</a></li>
+<li><a href='#Containerfreeradiusserver-Configuration'>Configuration</a>
+<ul class='toc-indentation'>
+<li><a href='#Containerfreeradiusserver-Containermode'>Container mode</a></li>
+<li><a href='#Containerfreeradiusserver-Networking'>Networking</a></li>
+<li><a href='#Containerfreeradiusserver-Gettingimage'>Getting image</a></li>
+<li><a href='#Containerfreeradiusserver-Startingthecontainer'>Starting the container</a></li>
+<li><a href='#Containerfreeradiusserver-Alteringtheserver&#39;sconfigurationfiles'>Altering the server&#39;s configuration files</a></li>
+</ul>
+</li>
+<li><a href='#Containerfreeradiusserver-Resultverification'>Result verification</a></li>
+</ul>
+</div></p><h1 id="Containerfreeradiusserver-Introduction">Introduction</h1><p>The introduction of the container feature into the RouterOS made it possible to run all kinds of servers for all sorts of tasks inside the router. This is especially relevant for people, who want to reduce the number of devices in their network. Instead of running a server on a separate device/machine, why not run it inside the router?</p><p><a href="https://help.mikrotik.com/docs/display/ROS/RADIUS" rel="nofollow">Radius</a> is short for Remote Authentication Dial-In User Service. RouterOS has a RADIUS client feature supported that can authenticate for HotSpot, <a href="https://help.mikrotik.com/docs/display/ROS/PPP" rel="nofollow">PPP</a>, <a href="https://help.mikrotik.com/docs/display/ROS/PPPoE" rel="nofollow">PPPoE</a>, <a href="https://help.mikrotik.com/docs/display/ROS/PPTP" rel="nofollow">PPTP</a>, <a href="https://help.mikrotik.com/docs/display/ROS/L2TP" rel="nofollow">L2TP</a>, and ISDN connections. Basically, this feature allows you to connect RouterOS to a Radius Server, and then, utilize the user database from the server for client authentication.</p><p>In our example, we will showcase <strong><a class="external-link" href="https://hub.docker.com/r/freeradius/freeradius-server/tags" rel="nofollow">freeradius/freeradius-server</a></strong> image installation.</p><h1 id="Containerfreeradiusserver-Summary">Summary</h1><p><strong>Sub-menu:</strong><span> </span><code>/container</code></p><p><em><strong>note</strong>: </em><strong>container</strong> package is required.</p><p>Make sure to study our <a href="https://help.mikrotik.com/docs/display/ROS/Container" rel="nofollow">container</a> guide before proceeding with the configuration. Make sure to check the <a href="https://help.mikrotik.com/docs/display/ROS/Container#Container-Disclaimer" rel="nofollow">disclaimer</a> and <a href="https://help.mikrotik.com/docs/display/ROS/Container#Container-Requirements" rel="nofollow">requirements</a> sections to understand all the risks and necessary steps you might be required to do.</p><p>At the time, when the guide was published, the image was available for linux/<strong>amd64</strong> OS/architecture <strong>only</strong>. Meaning, you are not able to run this scenario on our arm32-bit and arm64-bit architecture RouterOS devices. For arm64, arm you will need to make your own container from <a class="external-link" href="https://github.com/FreeRADIUS/freeradius-server" rel="nofollow">FreeRADIUS source</a>.</p><p><strong>You can only run it on </strong><a href="18350234.html">Cloud Hosted Router, CHR</a>, or x86 installation.</p><p>To help you set up a CHR in a <a class="external-link" href="https://www.virtualbox.org/" rel="nofollow">Virtual Box</a>, please check our <a class="external-link" href="https://www.youtube.com/watch?v=oHXkaHkSVVo" rel="nofollow">youtube tutorial</a>, or <a class="external-link" href="https://www.youtube.com/watch?v=JpccW9tYOkQ" rel="nofollow">Make your own x86 router</a>.</p><div role="region" aria-label="Warning" class="confluence-information-macro  confluence-information-macro-warning" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-error confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>This guide demonstrates a basic example! The tests were performed in a local environment! This guide is meant for basic RADIUS &quot;testing&quot; purposes! Not all &quot;freeradius&quot; features were tested!</p></div></div><h1 id="Containerfreeradiusserver-Configuration">Configuration</h1><h2 id="Containerfreeradiusserver-Containermode">Container mode</h2><p>Enable container mode:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/system/device-mode/update container=yes</pre>
+</div></div><p>You will need to confirm the device-mode with a cold reboot if using the container on X86.</p><h2 class="auto-cursor-target" id="Containerfreeradiusserver-Networking">Networking</h2><p>Add veth interface for the container:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface/veth/add name=veth3 address=172.17.0.2/24 gateway=172.17.0.1</pre>
+</div></div><p>Create a bridge for the container, assign an IP network to it, and add veth to the bridge:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/interface/bridge/add name=dockerfreeradius
+/ip/address/add address=172.17.0.1/24 interface=dockerfreeradius
+/interface/bridge/port add bridge=dockerfreeradius interface=veth3</pre>
+</div></div><p>Setup NAT for outgoing traffic if required:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ip/firewall/nat/add chain=srcnat action=masquerade src-address=172.17.0.0/24</pre>
+</div></div><h2 class="auto-cursor-target" id="Containerfreeradiusserver-Gettingimage">Getting image</h2><p>To simplify the configuration, we will get the image from an external library but you can also import it via the <a href="https://help.mikrotik.com/docs/display/ROS/Container#Container-b)importimagefromPC" rel="nofollow">.tar</a> file.</p><p>Make sure that you have &quot;Registry URL&quot; set accordingly, limit RAM usage (if necessary), and set up a directory for the image:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/container/config/set registry-url=https://registry-1.docker.io tmpdir=pull</pre>
+</div></div><p class="auto-cursor-target">Pull image with the help of the command:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/container/add remote-image=freeradius/freeradius-server:latest interface=veth3 root-dir=freeradius logging=yes cmd=&quot;-X&quot;</pre>
+</div></div><p class="auto-cursor-target">where <code>cmd=&quot;-X&quot;</code> enables debug logging (per the &quot;freeradius&quot; documentation).</p><p class="auto-cursor-target">After running the command, RouterOS should start &quot;extracting&quot; the package. Check &quot;File System&quot; for newly created folders and monitor container status with the command <code>/container/print</code>.</p><h2 class="auto-cursor-target" id="Containerfreeradiusserver-Startingthecontainer">Starting the container</h2><p>After you make sure that the container has been added and the status changed to <code>status=stopped</code> after using <code>/container/print</code> → you can initiate it:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/container/start 0</pre>
+</div></div><h2 class="auto-cursor-target" id="Containerfreeradiusserver-Alteringtheserver&#39;sconfigurationfiles">Altering the server's configuration files</h2><p>To access the server's configuration files (<strong>clients.conf</strong> and <strong>authorize</strong>), we will need to use SFTP (file transfer over SSH) protocol, so make sure that SSH <a href="https://help.mikrotik.com/docs/display/ROS/Services" rel="nofollow">service</a> is enabled.</p><p>Open your command terminal (&quot;CMD&quot;, as Administrator, for Windows users, or &quot;Linux Shell or Command Terminal&quot; for Linux users) and navigate it to the directory where you want to download the configuration files. For example, to &quot;radius&quot; folder on your &quot;Desktop&quot;:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: powershell; gutter: false">C:\WINDOWS\system32&gt;cd C:\Users\Administrator\Desktop\radius
+ 
+C:\Users\Administrator\Desktop\radius&gt;</pre>
+</div></div><p>Initiate SFTP to the device's IP address:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: powershell; gutter: false">C:\Users\DenissPC\Desktop\radius&gt;sftp admin@10.55.8.53
+admin@10.55.8.53&#39;s password:
+Connected to 10.55.8.53.
+sftp&gt;</pre>
+</div></div><p class="auto-cursor-target">Go to the server's configuration file folder (use <code>dir</code> or <code>ls</code> command to see the content of the folder you are in and <code>cd</code> command to go to the folder of our choice).</p><p><br/></p><p class="auto-cursor-target">The first file, &quot;clients.conf&quot; allows you to define RADIUS clients. Per the &quot;freeradius&quot; documentation, it should be under the &quot;/etc/freeradius&quot; directory...so, navigate there and use <code>get</code> command to download it:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: powershell; gutter: false">sftp&gt; dir
+freeradius          pub                     pull                    skins                   
+sftp&gt; cd freeradius/etc/freeradius
+sftp&gt; dir
+README.rst          certs               clients.conf        dictionary          experimental.conf   hints               
+huntgroups          mods-available      mods-config         mods-enabled        panic.gdb           policy.d            
+proxy.conf          radiusd.conf        sites-available     sites-enabled       templates.conf      trigger.conf        
+users
+sftp&gt; get clients.conf
+Fetching /freeradius/etc/freeradius/clients.conf to clients.conf
+/freeradius/etc/freeradius/clients.conf                                               100% 8323     1.2MB/s   00:00</pre>
+</div></div><p>Open &quot;<strong>clients.conf</strong>&quot; via your preferred text editor (notepad or any other). You can study the file to see all the options that you have (additionally, check <a class="external-link" href="https://wiki.freeradius.org/config/Configuration-files" rel="nofollow">freeradius.org</a>). This example shows a basic setup, so, we will just overwrite the whole file with the lines shown below:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: text; gutter: false">client new {
+    ipaddr = 0.0.0.0/0
+    secret = client_password
+}</pre>
+</div></div><p>where we indicate, that our radius client can connect using any possible IP address (<strong>ipaddr=0.0.0.0/0</strong> ensures that, but you also can change it to the actual ip address/mask of your radius client if you require to do so) and that our secret is &quot;client_password&quot; (you can change it to any other secret).</p><p>Save the file/overwrite it.</p><p><br/></p><p>The second file, &quot;authorize&quot; allows you to set up users. Per the &quot;freeradius&quot; documentation, it should be under &quot;/etc/freeradius/mods-config/files&quot;. Go there and <code>get</code> the file:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: powershell; gutter: false">sftp&gt; dir
+freeradius          pub                     pull                    skins                    
+sftp&gt; cd freeradius/etc/freeradius/mods-config/files
+sftp&gt; dir
+accounting  authorize   dhcp        pre-proxy
+sftp&gt; get authorize
+Fetching /freeradius/etc/freeradius/mods-config/files/authorize to authorize
+/freeradius/etc/freeradius/mods-config/files/authorize                                100% 6594     1.1MB/s   00:00</pre>
+</div></div><p>Open &quot;<strong>authorize</strong>&quot; via your preferred text editor (notepad or any other). This example shows a basic setup, so, we will just uncomment (remove the &quot;#&quot; symbol from) the line shown below (leave the rest of the configuration/lines as they are):</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: text; gutter: false">bob	Cleartext-Password := &quot;hello&quot;</pre>
+</div></div><p>which creates a username &quot;bob&quot; and sets the password to &quot;hello&quot; (you can change the username and password).</p><p>Save the file/overwrite it.</p><p><br/></p><p>Upload both files back/overwrite the default files with the help of the <code>put</code> command:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: powershell; gutter: false">sftp&gt; dir
+freeradius          pub                     pull                    skins      
+sftp&gt; cd freeradius/etc/freeradius
+sftp&gt; dir
+README.rst          certs               clients.conf        dictionary          experimental.conf   hints               
+huntgroups          mods-available      mods-config         mods-enabled        panic.gdb           policy.d            
+proxy.conf          radiusd.conf        sites-available     sites-enabled       templates.conf      trigger.conf        
+users
+sftp&gt; put clients.conf
+Uploading clients.conf to /freeradius/etc/freeradius/clients.conf
+clients.conf                                                                          100%   67    22.3KB/s   00:00
+sftp&gt; cd mods-config/files
+sftp&gt; dir
+accounting  authorize   dhcp        pre-proxy
+sftp&gt; put authorize
+Uploading authorize to /freeradius/etc/freeradius/mods-config/files/authorize
+authorize                                                                             100% 6626     1.6MB/s   00:00</pre>
+</div></div><p>Restart the container:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/container/stop 0
+/container/start 0</pre>
+</div></div><p>Make sure to wait for the container to stop (<code>status=stopped</code> should be shown after using <code>/container/print</code> command) before initiating it again.</p><h1 id="Containerfreeradiusserver-Resultverification">Result verification</h1><p>In RouterOS, add a new RADIUS client configuration:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/radius/add service=login address=172.17.0.2 secret=&quot;client_password&quot;
+</pre>
+</div></div><p>,where the <code>address</code> is the IP address of the veth3 interface, <code>secret</code> is the secret that we configured in the <strong>clients.conf</strong> file and <code>service</code> is the allowed service that you wish to use.</p><p>Allow &quot;login&quot; with RADIUS users via the command:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/user/aaa/set use-radius=yes</pre>
+</div></div><p>We have allowed the &quot;login&quot; service for the RADIUS and we can test it using ssh/winbox/webfig connection. For SSH test, issue the command (where you need to indicate the device's management IP and input bob's password &quot;hello&quot; after):</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/system/ssh 10.55.8.53 user=bob
+</pre>
+</div></div><p>You should be able to verify, that the terminal user changed from &quot;admin@MikroTik&quot; to &quot;bob@MikroTik&quot;:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; /system/ssh 10.55.8.53 user=bob
+password:hello                                                                                                                                                                 
+ 
+
+
+
+
+
+
+
+  MMM      MMM       KKK                          TTTTTTTTTTT      KKK
+  MMMM    MMMM       KKK                          TTTTTTTTTTT      KKK
+  MMM MMMM MMM  III  KKK  KKK  RRRRRR     OOOOOO      TTT     III  KKK  KKK
+  MMM  MM  MMM  III  KKKKK     RRR  RRR  OOO  OOO     TTT     III  KKKKK
+  MMM      MMM  III  KKK KKK   RRRRRR    OOO  OOO     TTT     III  KKK KKK
+  MMM      MMM  III  KKK  KKK  RRR  RRR   OOOOOO      TTT     III  KKK  KKK
+
+  MikroTik RouterOS 7.8alpha173 (c) 1999-2023       https://www.mikrotik.com/
+
+Press F1 for help
+  
+[bob@MikroTik] &gt; 
+</pre>
+</div></div><p>If you issue the command <code>/user/active/print</code>:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/user/active/print
+Flags: R - RADIUS
+Columns: WHEN, NAME, ADDRESS, VIA
+#   WHEN                  NAME   ADDRESS     VIA    
+0   feb/16/2023 16:31:21  admin  xx.xx.xx.xx  winbox 
+1   feb/16/2023 16:38:46  admin  xx.xx.xx.xx  console
+2 R feb/16/2023 16:38:53  bob    10.55.8.53  ssh  </pre>
+</div></div><p>you will be able to verify, that a new user &quot;bob&quot; is &quot;active&quot; and has a flag &quot;R&quot; assigned, which indicates it is a RADIUS user.</p>
+                    </div>
+
+                                        
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:54</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>

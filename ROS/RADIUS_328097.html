@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RouterOS : RADIUS</title>
+        <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body class="theme-default aui-theme-default">
+        <div id="page">
+            <div id="main" class="aui-page-panel">
+                <div id="main-header">
+                    <div id="breadcrumb-section">
+                        <ol id="breadcrumbs">
+                            <li class="first">
+                                <span><a href="index.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="RouterOS_328059.html">RouterOS</a></span>
+                            </li>
+                                                    <li>
+                                <span><a href="119144604.html">Authentication, Authorization, Accounting</a></span>
+                            </li>
+                                                </ol>
+                    </div>
+                    <h1 id="title-heading" class="pagetitle">
+                                                <span id="title-text">
+                            RouterOS : RADIUS
+                        </span>
+                    </h1>
+                </div>
+
+                <div id="content" class="view">
+                    <div class="page-metadata">
+                        
+        
+    
+    
+        
+    
+        
+        
+            Created by <span class='author'> Normunds R.</span>, last updated by <span class='editor'> Guntis G.</span> on Aug 26, 2024
+    
+                        </div>
+                    <div id="main-content" class="wiki-content group">
+                    <h1 id="RADIUS-Summary"><span class="mw-headline">Summary</span></h1><p>RADIUS, short for Remote Authentication Dial-In User Service, is a remote server that provides authentication and accounting facilities to various network appliances. RADIUS authentication and accounting allows the ISP or network administrator to manage PPP user access and accounting from one server throughout a large network. The MikroTik RouterOS has a RADIUS client that can authenticate <a href="https://help.mikrotik.com/docs/display/ROS/User" rel="nofollow">router's local </a><a href="https://help.mikrotik.com/docs/display/ROS/User" rel="nofollow">users</a>, <a href="https://help.mikrotik.com/docs/pages/viewpage.action?pageId=56459266" rel="nofollow">HotSpot</a>, <a href="PPP_328072.html">PPP</a>, <a href="PPPoE_2031625.html">PPPoE</a>, <a href="PPTP_2031638.html">PPTP</a>, <a href="L2TP_2031631.html">L2TP</a>, <a href="https://help.mikrotik.com/docs/display/ROS/OpenVPN" rel="nofollow">OVPN</a>, <a href="https://help.mikrotik.com/docs/display/ROS/SSTP" rel="nofollow">SSTP</a>, <a href="https://help.mikrotik.com/docs/display/ROS/IPsec" rel="nofollow">IPsec </a>and ISDN connections. The attributes received from the RADIUS server override the ones set in the default profile, but if some parameters are not received they are taken from the respective default profile.</p><p>The RADIUS server database is consulted only if no matching user access record is found in the router's local database.</p><p>If RADIUS accounting is enabled, accounting information is also sent to the RADIUS server default for that service.</p><h1 id="RADIUS-RADIUSClient"><span class="mw-headline">RADIUS Client</span></h1><div class="table-wrap"><table class="wrapped confluenceTable"><tbody><tr><th class="confluenceTh"><strong>Sub-menu:</strong> <code>/radius</code></th></tr></tbody></table></div><p><span class="mw-headline">This sub-menu allows adding and removing RADIUS clients. </span></p><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p> The order of added items in this list is significant.</p></div></div><h2 id="RADIUS-Properties"><span class="mw-headline">Properties</span></h2><div class="table-wrap"><table class="wrapped relative-table confluenceTable" style="width: 93.18%;"><colgroup><col style="width: 37.2438%;"/><col style="width: 62.7562%;"/></colgroup><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>accounting-backup</strong> (<em>yes | no</em>; Default: <strong>no</strong>)</td><td class="confluenceTd">Whether the configuration is for the backup RADIUS server</td></tr><tr><td class="confluenceTd"><strong>accounting-port</strong> (<em>integer [1..65535]</em>; Default: <strong>1813</strong>)</td><td class="confluenceTd">RADIUS server port used for accounting</td></tr><tr><td class="confluenceTd"><strong>address</strong> (<em>IPv4/IPv6 address</em>; Default: <strong>0.0.0.0</strong>)</td><td class="confluenceTd"><p>IPv4 or IPv6 address of RADIUS server.</p><p style="text-align: left;">The following formats are accepted:</p><p style="text-align: left;"><span style="color:var(--ds-text,#172b4d);">-<span> </span></span><em style="text-align: left;">ipv4</em><br style="text-align: left;"/><span style="color:var(--ds-text,#172b4d);">-<span> </span></span><em style="text-align: left;">ipv4</em><code style="text-align: left;">@</code><em style="text-align: left;">vrf</em><br style="text-align: left;"/><span style="color:var(--ds-text,#172b4d);">-<span> </span></span><em style="text-align: left;">ipv6</em><br style="text-align: left;"/><span style="color:var(--ds-text,#172b4d);">-<span> </span></span><em style="text-align: left;">ipv6</em><code style="text-align: left;">@</code><em style="text-align: left;">vrf</em></p></td></tr><tr><td class="confluenceTd"><strong>authentication-port</strong> (<em>integer [1..65535]</em>; Default: <strong>1812</strong>)</td><td class="confluenceTd">RADIUS server port used for authentication.</td></tr><tr><td class="confluenceTd"><strong>called-id</strong> (<em>string</em>; Default: )</td><td class="confluenceTd">Value depends on Point-to-Point protocol: PPPoE - service name, PPTP - server's IP address, L2TP - server's IP address.</td></tr><tr><td class="confluenceTd"><strong>certificate</strong> (<em>string</em>; Default: )</td><td class="confluenceTd">Certificate file to use for communicating with RADIUS Server with RadSec enabled.</td></tr><tr><td class="confluenceTd"><strong>comment</strong> (<em>string</em>; Default: )</td><td class="confluenceTd"><br/></td></tr><tr><td class="confluenceTd"><strong>disabled</strong> (<em>yes | no</em>; Default: <strong>no</strong>)</td><td class="confluenceTd"><br/></td></tr><tr><td class="confluenceTd"><strong>domain</strong> (<em>string</em>; Default: )</td><td class="confluenceTd">Microsoft Windows domain of client passed to RADIUS servers that require domain validation.</td></tr><tr><td class="confluenceTd"><strong>protocol</strong> (<em>radsec | udp</em>; Default: <strong>udp</strong>)</td><td class="confluenceTd">Specifies the protocol to use when communicating with the RADIUS Server.</td></tr><tr><td class="confluenceTd"><strong>require-message-auth </strong>(<em>no | yes-for-request-resp</em> Default: <strong>yes-for-request-resp</strong>)</td><td class="confluenceTd">Specifies if Message-Authenticator attributes are required.</td></tr><tr><td class="confluenceTd"><strong>realm</strong> (<em>string</em>; Default: )</td><td class="confluenceTd">Explicitly stated realm (user domain), so the users do not have to provide proper ISP domain name in the user name.</td></tr><tr><td class="confluenceTd"><strong>secret</strong> (<em>string</em>; Default: )</td><td class="confluenceTd">The shared secret used to access the RADIUS server.</td></tr><tr><td class="confluenceTd"><strong>service</strong> (<em>ppp|login|hotspot|wireless|dhcp|ipsec|dot1x</em>; Default: )</td><td class="confluenceTd">Router services that will use this RADIUS server:<ul><li>hotspot - HotSpot authentication service</li><li>login - router's local user authentication</li><li>ppp - Point-to-Point clients authentication</li><li>wireless - wireless client authentication</li><li>dhcp - DHCP protocol client authentication (client's MAC address is sent as User-Name)</li><li>ipsec - ipsec client authentification</li><li>dot1x - dot1x authentification</li></ul></td></tr><tr><td class="confluenceTd"><strong>src-address</strong> (<em>ipv4/ipv6 address</em>; Default: <strong>0.0.0.0</strong>)</td><td class="confluenceTd">Source IP/IPv6 address of the packets sent to the RADIUS server</td></tr><tr><td class="confluenceTd"><strong>timeout</strong> (<em>time</em>; Default: <strong>100ms</strong>)</td><td class="confluenceTd">Timeout after which the request should be resent, for example, &quot;<em>/</em><span style="color:var(--ds-text,#172b4d);"><em>radius set timeout=300ms numbers=0</em>&quot;</span></td></tr></tbody></table></div><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>When the RADIUS server is authenticating the user with CHAP, MS-CHAPv1, MS-CHAPv2, it is not using a shared secret, the secret is used only in the authentication reply, and the router (RADIUS client) verifies it. So if you have the wrong shared secret, the RADIUS server will accept a request, but the router won't accept the reply. You can see that with &quot;<em>/radius monitor</em>&quot; command, the &quot;bad-replies&quot; number should increase whenever somebody tries to connect.</p></div></div><div role="region" aria-label="Warning" class="confluence-information-macro  confluence-information-macro-warning" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-error confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>If RadSec is enabled, make sure your RADIUS Server is using &quot;<strong>radsec</strong>&quot; as the shared secret, otherwise, the RADIUS Server will not be able to decrypt data correctly (unprintable characters). With RadSec RouterOS forces the shared secret to &quot;radsec&quot; regardless of what has been set manually. For more details see - RFC6614.</p></div></div><h2 id="RADIUS-Example"><span class="mw-headline">Example</span></h2><p>To set up a RADIUS Client for HotSpot and PPP services that will authenticate against a RADIUS Server (10.0.0.3), you need to do the following:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; /radius add service=hotspot,ppp address=10.0.0.3 secret=ex
+[admin@MikroTik] &gt; /radius print
+Flags: X - disabled
+# SERVICE CALLED-ID DOMAIN ADDRESS SECRET
+0 ppp,hotspot </pre>
+</div></div><p>To set up a RADIUS Client with RadSec, you need to do the following:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; /radius add service=hotspot,ppp address=10.0.0.3 secret=radsec protocol=radsec certificate=client.crt
+[admin@MikroTik] &gt; /radius print
+Flags: X - disabled
+# SERVICE CALLED-ID DOMAIN ADDRESS SECRET
+0 ppp,hotspot 10.0.0.3 radsec</pre>
+</div></div><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>Make sure the specified certificate is trusted. </p></div></div><p>To view RADIUS Client statistics, you need to do the following:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">[admin@MikroTik] &gt; /radius monitor 0
+pending: 0
+requests: 10
+accepts: 4
+rejects: 1
+resends: 15
+timeouts: 5
+bad-replies: 0
+last-request-rtt: 0s</pre>
+</div></div><p>Make sure you enable RADIUS authentication for the desired services:</p><div class="code panel pdl" style="border-width: 1px;"><div class="codeContent panelContent pdl">
+<pre class="syntaxhighlighter-pre" data-syntaxhighlighter-params="brush: ros; gutter: false">/ppp aaa set use-radius=yes
+/ip hotspot profile set default use-radius=yes</pre>
+</div></div><h1 id="RADIUS-ConnectionTerminatingfromRADIUS"><span class="mw-headline">Connection Terminating from RADIUS</span></h1><div class="table-wrap"><table class="wrapped confluenceTable"><colgroup><col/></colgroup><tbody><tr><th class="confluenceTh"><p><strong>Sub-menu:</strong> <code>/radius incoming</code></p></th></tr></tbody></table></div><p><span class="mw-headline">This facility supports unsolicited messages sent from the RADIUS server. Unsolicited messages extend RADIUS protocol commands, that allow terminating a session that has already been connected from the RADIUS server. For this purpose, DM (Disconnect-Messages) is used. Disconnect messages cause a user session to be terminated immediately. </span></p><div role="region" aria-label="Note" class="confluence-information-macro  confluence-information-macro-note" ><span role="presentation" class="aui-icon aui-icon-small aui-iconfont-warning confluence-information-macro-icon" ></span><div class="confluence-information-macro-body"><p>RouterOS doesn't support POD (Packet of Disconnect) the other RADIUS access request packet that performs a similar function as Disconnect Messages</p></div></div><h2 id="RADIUS-Properties.1"><span class="mw-headline">Properties</span></h2><div class="table-wrap"><table class="wrapped confluenceTable"><colgroup><col/><col/></colgroup><tbody><tr><th class="confluenceTh">Property</th><th class="confluenceTh">Description</th></tr><tr><td class="confluenceTd"><strong>accept</strong> (<em>yes | no</em>; Default: <strong>no</strong>)</td><td class="confluenceTd">Whether to accept unsolicited messages</td></tr><tr><td class="confluenceTd"><strong>port</strong> (<em>integer</em>; Default: <strong>1700</strong>)</td><td class="confluenceTd">The port number to listen for the requests on</td></tr><tr><td style="text-align: left;" class="confluenceTd"><p><strong>vrf</strong> (<em>VRF name</em>; default value:<span> </span><strong>main</strong>)</p></td><td style="text-align: left;" class="confluenceTd">Set VRF on which service is listening for incoming connections</td></tr></tbody></table></div>
+                    </div>
+
+                                        
+                                                      
+                </div>             </div> 
+            <div id="footer" role="contentinfo">
+                <section class="footer-body">
+                    <p>Document generated by Confluence on May 20, 2025 14:53</p>
+                    <div id="footer-logo"><a href="https://www.atlassian.com/">Atlassian</a></div>
+                </section>
+            </div>
+        </div>     </body>
+</html>
