@@ -250,9 +250,9 @@ pnpm build
 }
 ```
 
-3. **Use in conversations**: Ask RouterOS questions and Cursor will automatically access the documentation context:
+3. **Use in conversations**: Ask questions and include the tool name "queryRouterOSDocs" then Cursor will automatically access the documentation context:
 ```
-How do I configure VLANs on RouterOS?
+How do I configure VLANs on RouterOS? queryRouterOSDocs
 ```
 
 **Key Difference**: The MCP server provides documentation context to Cursor's AI, while the web interface generates complete responses using Grok 3.
