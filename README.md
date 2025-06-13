@@ -72,14 +72,14 @@ pnpm --filter api dev
 pnpm --filter web dev
 ```
 
-## ✨ Pre-Built Embeddings Included
+## Pre-Built Embeddings Included
 
 This repository includes **pre-built vector embeddings** for the entire RouterOS documentation (326 document chunks, ~2KB compressed). This means:
 
-- **🚀 No waiting for ingestion** - Ready to use immediately
-- **💾 Minimal storage overhead** - Only ~2KB additional repository size  
-- **🔄 Easy setup** - One script restores all embeddings
-- **⚡ Instant functionality** - Start querying right away
+- **No waiting for ingestion** - Ready to use immediately
+- **Minimal storage overhead** - Only ~2KB additional repository size  
+- **Easy setup** - One script restores all embeddings
+- **Instant functionality** - Start querying right away
 
 ### Manual Ingestion (Optional)
 
@@ -275,7 +275,35 @@ Based on the development plan, the following phases are complete:
 
 ## License
 
-[Add your license here]
+This project is licensed under the MIT License - see below for details.
+
+### MIT License
+
+Copyright (c) 2024 RouterOS RAG Knowledge Base
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+### RouterOS Documentation
+
+The RouterOS documentation content used in this project is the property of MikroTik and is used for educational and reference purposes. MikroTik provides their documentation freely accessible at https://help.mikrotik.com/. This project does not claim ownership of the RouterOS documentation content and all rights to the documentation remain with MikroTik.
+
+This project is not affiliated with or endorsed by MikroTik.
 
 ## Links
 
