@@ -128,6 +128,93 @@ const mapKeyToUrl = (originalKey: string, processedContent: any, metadata: any =
     return null;
 };
 
+// Define a context retrieval route for MCP (returns raw documentation context)
+fastify.post('/api/context', { schema: querySchema }, async (request, reply) => {
+    try {
+        const { query } = request.body as { query: string };
+        fastify.log.info(`Received context query: "${query}"`);
+
+        // Load processed content for URL mapping
+        const fs = await import('fs/promises');
+        const path = await import('path');
+        const processedContentPath = path.resolve(__dirname, '../../../processed_content.json');
+        const processedContentRaw = await fs.readFile(processedContentPath, 'utf-8');
+        const processedContent = JSON.parse(processedContentRaw);
+
+        // 1. Get the collection ID first
+        const collectionsResponse = await fetch(`${CHROMA_URL}/api/v1/collections`, { agent });
+        if (!collectionsResponse.ok) {
+            throw new Error('Failed to list collections from ChromaDB');
+        }
+        const collections = await collectionsResponse.json();
+        const collection = collections.find((c: any) => c.name === COLLECTION_NAME);
+        if (!collection) {
+            throw new Error(`Collection '${COLLECTION_NAME}' not found.`);
+        }
+        const collectionId = collection.id;
+        fastify.log.info(`Found collection '${COLLECTION_NAME}' with ID: ${collectionId}`);
+
+        // 2. Generate embedding for the user's query
+        const queryEmbedding = await generateEmbedding(query);
+
+        // 3. Query ChromaDB for relevant documents via REST API
+        fastify.log.info(`Querying database for relevant documents...`);
+        const queryDbResponse = await fetch(`${CHROMA_URL}/api/v1/collections/${collectionId}/query`, {
+            agent,
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                query_embeddings: [queryEmbedding],
+                n_results: 8, // Slightly fewer results for context retrieval
+                include: ["metadatas", "documents"]
+            }),
+        });
+
+        if (!queryDbResponse.ok) {
+            const errorText = await queryDbResponse.text();
+            throw new Error(`ChromaDB query failed: ${errorText}`);
+        }
+        
+        const queryResult = await queryDbResponse.json();
+        fastify.log.info(`Retrieved ${queryResult.documents[0].length} documents from ChromaDB`);
+
+        // Build context sections and collect source information
+        const sources: Array<{title: string, url: string | null, originalKey: string, contentType: string}> = [];
+        const contextSections = queryResult.documents[0].map((doc: string, i: number) => {
+            const metadata = queryResult.metadatas[0][i] || {};
+            const title = metadata.title || 'Unknown Section';
+            const originalKey = metadata.original_key || '';
+            const contentType = metadata.content_type || 'markdown';
+            
+            // Generate URL for this source, passing metadata for HTML awareness
+            const url = mapKeyToUrl(originalKey, processedContent, metadata);
+            
+            // Add to sources if we haven't seen this original_key before
+            if (!sources.find(s => s.originalKey === originalKey)) {
+                sources.push({ title, url, originalKey, contentType });
+            }
+            
+            return {
+                title,
+                content: doc,
+                url,
+                contentType
+            };
+        });
+
+        // Return raw context for MCP clients
+        reply.send({
+            query,
+            contexts: contextSections,
+            sources: sources.filter(s => s.url !== null)
+        });
+
+    } catch (error) {
+        fastify.log.error(error);
+        reply.status(500).send({ error: 'An internal error occurred' });
+    }
+});
+
 // Define the main RAG query route
 fastify.post('/api/query', { schema: querySchema }, async (request, reply) => {
     try {

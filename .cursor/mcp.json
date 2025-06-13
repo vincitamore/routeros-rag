@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "routeros-docs": {
+      "command": "node",
+      "args": ["C:\\Users\\AlexMoyer\\Documents\\routeros-rag\\packages\\mcp-server\\dist\\index.js"],
+      "cwd": "C:\\Users\\AlexMoyer\\Documents\\routeros-rag",
+      "env": {
+        "API_BASE_URL": "http://localhost:3001"
+      }
+    }
+  }
+} 

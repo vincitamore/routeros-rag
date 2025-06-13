@@ -8,7 +8,7 @@ This project is a monorepo containing three main packages:
 
 - **`packages/api`** - Backend API server with RAG functionality
 - **`packages/web`** - Next.js frontend for browsing docs and chat interface  
-- **`packages/mcp-server`** - MCP server for Cursor IDE integration (not yet implemented)
+- **`packages/mcp-server`** - MCP server for Cursor IDE integration
 - **`packages/api/src/scripts/`** - Data ingestion and utility scripts
 
 ## Quick Start
@@ -41,12 +41,7 @@ cd routeros-rag
 pnpm install
 ```
 
-3. Start ChromaDB (vector database):
-```bash
-docker-compose up -d
-```
-
-4. Set up environment variables:
+3. Set up environment variables:
 ```bash
 # Copy the example environment file and edit with your API keys
 cp env.example.txt .env
@@ -56,6 +51,18 @@ cp env.example.txt .env
 # - XAI_API_KEY: Get from https://console.x.ai/
 ```
 
+4. Start ChromaDB and set up embeddings:
+```bash
+# Start ChromaDB
+docker-compose up -d
+
+# Set up pre-built embeddings (Linux/Mac)
+./setup-embeddings.sh
+
+# Or on Windows
+setup-embeddings.bat
+```
+
 5. Start the development servers:
 ```bash
 # Start the API server
@@ -63,6 +70,24 @@ pnpm --filter api dev
 
 # In another terminal, start the web interface
 pnpm --filter web dev
+```
+
+## ✨ Pre-Built Embeddings Included
+
+This repository includes **pre-built vector embeddings** for the entire RouterOS documentation (326 document chunks, ~2KB compressed). This means:
+
+- **🚀 No waiting for ingestion** - Ready to use immediately
+- **💾 Minimal storage overhead** - Only ~2KB additional repository size  
+- **🔄 Easy setup** - One script restores all embeddings
+- **⚡ Instant functionality** - Start querying right away
+
+### Manual Ingestion (Optional)
+
+If you prefer to generate fresh embeddings or the pre-built ones don't work:
+
+```bash
+# Delete existing embeddings and regenerate
+pnpm --filter api run ingest
 ```
 
 ## Package Details
@@ -78,6 +103,7 @@ The backend server provides:
 
 **Key endpoints:**
 - `POST /api/query` - Submit questions and get AI-powered answers with source references
+- `POST /api/context` - Retrieve raw documentation context for MCP integration
 
 **Key dependencies:**
 - Gemini API for generating document embeddings
@@ -94,9 +120,11 @@ A modern Next.js application featuring:
 
 ### MCP Server (`packages/mcp-server`)
 
-Model Context Protocol server for Cursor IDE integration (planned):
-- `queryRouterOSDocs` tool for querying documentation
-- Seamless integration with Cursor's AI assistant
+Model Context Protocol server for Cursor IDE integration:
+- **Context Retrieval**: Provides RouterOS documentation context to Cursor's AI (not LLM responses)
+- **Semantic Search**: Uses ChromaDB embeddings to find relevant documentation sections
+- **`queryRouterOSDocs` tool**: Formats and returns documentation context for Cursor's built-in LLM
+- **Important**: Unlike the web interface, the MCP server provides raw context, letting Cursor's AI generate the final response
 
 ## Data
 
@@ -104,16 +132,25 @@ The project includes:
 - **`processed_content.json`** - Pre-processed RouterOS documentation (154MB)
   - Contains both markdown and HTML content for 1000+ documentation sections
   - Includes metadata like titles, hierarchy, tags, and file paths
-- **ChromaDB collections** - Vector embeddings for semantic search
-  - Embeddings generated using Gemini Embedding Model (gemini-embedding-exp-03-07)
+- **`chroma-data.tar.gz`** - Pre-built vector embeddings (~2KB compressed)
+  - 326 document chunks with vector embeddings
+  - Generated using Gemini Embedding Model (gemini-embedding-exp-03-07)
   - Chunked content optimized for retrieval (30,000 chars per chunk with 1,500 char overlap)
 - **Document outline** - Hierarchical navigation structure for the web interface
 
 ## Development
 
-### Running the ingestion script
+### First-Time Setup with Pre-Built Embeddings
 
-The ingestion script processes the `processed_content.json` file and loads it into ChromaDB with embeddings:
+The setup scripts automatically:
+1. Start ChromaDB if not running
+2. Extract pre-built embeddings from `chroma-data.tar.gz`
+3. Restore embeddings to ChromaDB
+4. Verify the setup
+
+### Manual Embedding Generation
+
+If you need to regenerate embeddings (e.g., after updating documentation):
 
 ```bash
 # Run the ingestion script (requires GEMINI_API_KEY in .env)
@@ -121,7 +158,7 @@ pnpm --filter api run ingest
 ```
 
 **What the ingestion script does:**
-- Reads `processed_content.json` (154MB of RouterOS documentation)
+- Reads `processed_content.json` (154MB of RouterOS documentation htmls processed and organized with metadata)
 - Splits content into 30,000 character chunks with 1,500 character overlap
 - Generates embeddings using Gemini API (gemini-embedding-exp-03-07 model)
 - Stores documents, metadata, and embeddings in ChromaDB
@@ -145,6 +182,10 @@ pnpm test
 
 # Lint code
 pnpm lint
+
+# Set up embeddings (if needed)
+./setup-embeddings.sh        # Linux/Mac
+setup-embeddings.bat         # Windows
 ```
 
 ## Docker
@@ -163,11 +204,12 @@ docker-compose down
 
 ### Web Interface
 
-1. Start the API server: `pnpm --filter api dev` (runs on port 3001)
-2. Start the web interface: `pnpm --filter web dev` (runs on port 3000)
-3. Navigate to `http://localhost:3000`
-4. Browse documentation using the sidebar navigation
-5. Use the chat interface to ask questions about RouterOS
+1. Start ChromaDB and set up embeddings: `./setup-embeddings.sh`
+2. Start the API server: `pnpm --filter api dev` (runs on port 3001)
+3. Start the web interface: `pnpm --filter web dev` (runs on port 3000)
+4. Navigate to `http://localhost:3000`
+5. Browse documentation using the sidebar navigation
+6. Use the chat interface to ask questions about RouterOS
    - Powered by RAG system with semantic search
    - Returns answers with source references
 
@@ -182,21 +224,47 @@ curl -X POST http://localhost:3001/api/query \
   -d '{"query": "How do I configure VLAN on RouterOS?"}'
 ```
 
-### Cursor Integration (Planned)
+### Cursor Integration
 
-The MCP server package is planned for future development to enable:
-1. Configure the MCP server in your Cursor settings
-2. Use the `queryRouterOSDocs` tool in your conversations  
-3. Get context-aware answers about RouterOS features
+The MCP server enables Cursor IDE integration:
+
+1. **Install and build the MCP server**:
+```bash
+cd packages/mcp-server
+pnpm install
+pnpm build
+```
+
+2. **Configure in Cursor**: Create `.cursor/mcp.json` in your project:
+```json
+{
+  "mcpServers": {
+    "routeros-docs": {
+      "command": "node",
+      "args": ["./packages/mcp-server/dist/index.js"],
+      "env": {
+        "API_BASE_URL": "http://localhost:3001"
+      }
+    }
+  }
+}
+```
+
+3. **Use in conversations**: Ask RouterOS questions and Cursor will automatically access the documentation context:
+```
+How do I configure VLANs on RouterOS?
+```
+
+**Key Difference**: The MCP server provides documentation context to Cursor's AI, while the web interface generates complete responses using Grok 3.
 
 ## Current Status
 
 Based on the development plan, the following phases are complete:
 
 - **Phase 1**: Data ingestion and vector store setup ✓
-- **Phase 2**: RAG API implementation ✓
-- **Phase 3**: Web frontend development (in progress)
-- **Phase 4**: Final integration and deployment (pending)
+- **Phase 2**: RAG API and MCP server implementation ✓
+- **Phase 3**: Web frontend development ✓
+- **Phase 4**: Final integration and deployment ✓
 
 ## Contributing
 
