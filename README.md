@@ -204,6 +204,8 @@ docker-compose down
 
 ### Web Interface
 
+![RouterOS RAG Web Interface](./screenshots/Screenshot%202025-06-13%20082542.png)
+
 1. Start ChromaDB and set up embeddings: `./setup-embeddings.sh`
 2. Start the API server: `pnpm --filter api dev` (runs on port 3001)
 3. Start the web interface: `pnpm --filter web dev` (runs on port 3000)
@@ -273,11 +275,17 @@ Based on the development plan, the following phases are complete:
 3. Make your changes
 4. Submit a pull request
 
-## License
+## Links
 
-This project is licensed under the MIT License - see below for details.
+### Project Documentation
+- [API Server Documentation](./packages/api/README.md)
+- [Web Interface Documentation](./packages/web/README.md)
+- [MCP Server Documentation](./packages/mcp-server/README.md)
 
-### MIT License
+### External Links
+- [GitHub Repository](https://github.com/NCUamoyer/routeros-rag) 
+
+## MIT License
 
 Copyright (c) 2024 RouterOS RAG Knowledge Base
 
@@ -304,8 +312,3 @@ SOFTWARE.
 The RouterOS documentation content used in this project is the property of MikroTik and is used for educational and reference purposes. MikroTik provides their documentation freely accessible at https://help.mikrotik.com/. This project does not claim ownership of the RouterOS documentation content and all rights to the documentation remain with MikroTik.
 
 This project is not affiliated with or endorsed by MikroTik.
-
-## Links
-
-- [Development Plan](./Misc/DEVELOPMENT_PLAN.md)
-- [GitHub Repository](https://github.com/NCUamoyer/routeros-rag) 

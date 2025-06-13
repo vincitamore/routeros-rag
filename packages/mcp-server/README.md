@@ -173,5 +173,4 @@ DEBUG=1 node dist/index.js
 ## Related Documentation
 
 - [Main Project README](../../README.md)
-- [Development Plan](../../Misc/DEVELOPMENT_PLAN.md)
 - [MCP Protocol Documentation](https://modelcontextprotocol.io/) 

@@ -398,7 +398,6 @@ The system supports custom embedding endpoints via `EMBEDDING_MODEL_ENDPOINT`. E
 - [Main Project README](../../README.md)
 - [Web Interface Documentation](../web/README.md)
 - [MCP Server Documentation](../mcp-server/README.md)
-- [Development Plan](../../Misc/DEVELOPMENT_PLAN.md)
 
 ## Contributing
 
