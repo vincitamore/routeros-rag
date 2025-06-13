@@ -158,7 +158,7 @@ pnpm --filter api run ingest
 ```
 
 **What the ingestion script does:**
-- Reads `processed_content.json` (154MB of RouterOS documentation htmls processed and organized with metadata)
+- Reads `processed_content.json` (RouterOS documentation htmls processed and organized with metadata)
 - Splits content into 30,000 character chunks with 1,500 character overlap
 - Generates embeddings using Gemini API (gemini-embedding-exp-03-07 model)
 - Stores documents, metadata, and embeddings in ChromaDB
