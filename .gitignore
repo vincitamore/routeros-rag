@@ -64,6 +64,7 @@ next-env.d.ts
 
 # Development and miscellaneous files
 Misc/
+routeros-configs/
 
 # Chrome extension builds
 chrome-extension/

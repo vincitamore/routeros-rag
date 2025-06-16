@@ -72,6 +72,17 @@ pnpm --filter api dev
 pnpm --filter web dev
 ```
 
+## New Chat History Features
+
+The system now includes **full conversational AI** with advanced context management:
+
+- **Follow-up Questions**: Ask related questions with full conversation context
+- **Intelligent Token Management**: Automatic summarization at 120k tokens (89% of 135k limit)
+- **Persistent Chat History**: Conversations survive browser restarts via localStorage
+- **Enhanced Save/Load**: Export/import conversations with full metadata and session statistics
+- **Technical Preservation**: Summarization preserves all RouterOS commands and configuration details
+- **Session Management**: Unique session IDs with conversation statistics and cleanup
+
 ## Pre-Built Embeddings Included
 
 This repository includes **pre-built vector embeddings** for the entire RouterOS documentation (326 document chunks, ~2KB compressed). This means:
@@ -102,8 +113,11 @@ The backend server provides:
 - RESTful API endpoints
 
 **Key endpoints:**
-- `POST /api/query` - Submit questions and get AI-powered answers with source references
+- `POST /api/chat` - Conversational interface with chat history and context management
+- `POST /api/query` - Single-query interface for simple questions (legacy)
 - `POST /api/context` - Retrieve raw documentation context for MCP integration
+- `POST /api/summarize-context` - Intelligent context compression for token management
+- `GET/DELETE /api/session/:sessionId` - Session management and statistics
 
 **Key dependencies:**
 - Gemini API for generating document embeddings
@@ -113,10 +127,12 @@ The backend server provides:
 ### Web Interface (`packages/web`)
 
 A modern Next.js application featuring:
-- Dark-mode first design
-- Recursive documentation navigation
-- Real-time chat interface with streaming responses
-- Responsive design for mobile and desktop
+- **Conversational AI Chat**: Full conversation history with follow-up question support
+- **Smart Context Management**: Automatic token management with intelligent summarization at 135k context limit
+- **Persistent Sessions**: Chat history survives page navigation and browser restarts via localStorage
+- **Enhanced Save/Load**: Export conversations with metadata + one-click JSON file loading
+- Dark-mode first design with responsive layout
+- Recursive documentation navigation with real-time chat interface
 
 ### MCP Server (`packages/mcp-server`)
 
