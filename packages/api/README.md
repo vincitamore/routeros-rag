@@ -6,6 +6,9 @@ The backend API server that powers the RouterOS RAG Knowledge Base system. Built
 
 This API server serves as the core backend for the RouterOS RAG system, providing:
 
+- **Conversational AI**: Full chat history with follow-up question support and intelligent context management
+- **Smart Token Management**: Automatic summarization at 135k context limit with technical detail preservation
+- **Session Management**: Persistent conversation sessions with statistics and cleanup capabilities
 - **RAG-Powered Queries**: Semantic search through RouterOS documentation with AI-generated responses
 - **Context Retrieval**: Raw documentation context for MCP server integration
 - **Data Ingestion Pipeline**: Complete workflow for processing and embedding RouterOS documentation
@@ -17,8 +20,15 @@ This API server serves as the core backend for the RouterOS RAG system, providin
 ```
 API Server (Fastify + TypeScript)
 ├── Core Server (index.ts)
-│   ├── /api/query - AI-powered responses for web interface
-│   └── /api/context - Raw context for MCP server
+│   ├── /api/chat - Conversational AI with history & context management
+│   ├── /api/query - Single-query interface (legacy)
+│   ├── /api/context - Raw context for MCP server
+│   ├── /api/summarize-context - Intelligent context compression
+│   └── /api/session/:id - Session management & statistics
+├── Chat History System
+│   ├── Token Counter (tiktoken-based precise counting)
+│   ├── Chat History Manager (context + summarization)
+│   └── Session Storage (in-memory persistence)
 ├── Data Processing Pipeline
 │   ├── HTML Analysis & Mapping
 │   ├── Content Extraction & Chunking
@@ -105,17 +115,44 @@ pnpm test-query
 
 ## API Endpoints
 
+### `POST /api/chat` 
+**Purpose**: Conversational AI with full chat history and context management
+**Input**: `{ "sessionId": "uuid", "messages": ChatMessage[], "query": "Follow-up question" }`
+**Output**: AI-generated response with conversation context and source references
+**Features**: 
+- Full conversation history context
+- Automatic token management (135k limit)
+- Intelligent summarization at 120k tokens
+- Technical detail preservation
+**Use**: Web interface conversational chat
+
 ### `POST /api/query`
-**Purpose**: Full RAG pipeline for web interface
+**Purpose**: Single-query RAG pipeline (legacy endpoint)
 **Input**: `{ "query": "How do I configure VLANs?" }`
 **Output**: AI-generated response with source references
-**Use**: Web interface chat functionality
+**Use**: Simple questions without conversation context
 
 ### `POST /api/context`  
 **Purpose**: Raw documentation context for MCP integration
 **Input**: `{ "query": "VLAN configuration" }`
 **Output**: Relevant documentation sections without AI processing
 **Use**: Cursor MCP server integration
+
+### `POST /api/summarize-context` 
+**Purpose**: Intelligent context compression for token management
+**Input**: `{ "messages": ChatMessage[], "ragContexts": string[] }`
+**Output**: Compressed context preserving technical details
+**Features**: Preserves all RouterOS commands, configs, and technical details
+**Use**: Automatic context management when approaching token limits
+
+### `GET /api/session/:sessionId` 
+**Purpose**: Retrieve session statistics and metadata
+**Output**: Token counts, message counts, summarization status
+**Use**: Session monitoring and debugging
+
+### `DELETE /api/session/:sessionId` 
+**Purpose**: Clear session data and reset conversation
+**Use**: Session cleanup and memory management
 
 ## Scripts & Data Pipeline
 

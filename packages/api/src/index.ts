@@ -7,6 +7,8 @@ import * as path from 'path';
 import fetch, { RequestInit } from 'node-fetch';
 import { Agent as HttpAgent } from 'http';
 import { Agent as HttpsAgent } from 'https';
+import { ChatHistoryManager, ContextManagementResult } from './services/chat-history-manager';
+import { ChatMessage } from './utils/token-counter';
 
 dotenv.config({ path: path.resolve(__dirname, '../../../.env') });
 
@@ -334,6 +336,268 @@ Do not mention that you are an AI or that you were given context. Just answer th
             throw e; // Re-throw to be caught by the outer try-catch
         }
 
+    } catch (error) {
+        fastify.log.error(error);
+        reply.status(500).send({ error: 'An internal error occurred' });
+    }
+});
+
+// --- New Chat History Endpoint ---
+
+// Initialize the chat history manager
+const chatHistoryManager = new ChatHistoryManager();
+
+// Define schema for chat requests
+const chatSchema = {
+    body: {
+        type: 'object',
+        required: ['sessionId', 'messages', 'query'],
+        properties: {
+            sessionId: { type: 'string' },
+            messages: {
+                type: 'array',
+                items: {
+                    type: 'object',
+                    required: ['id', 'role', 'content', 'timestamp'],
+                    properties: {
+                        id: { type: 'string' },
+                        role: { type: 'string', enum: ['user', 'assistant'] },
+                        content: { type: 'string' },
+                        timestamp: { type: 'string' },
+                        ragContext: { type: 'string' }
+                    }
+                }
+            },
+            query: { type: 'string' }
+        }
+    }
+};
+
+// Helper function to get RAG context (extracted from existing query endpoint)
+async function getRagContext(query: string): Promise<{
+    contextSections: string[];
+    sources: Array<{title: string, url: string | null, originalKey: string, contentType: string}>
+}> {
+    // Load processed content for URL mapping
+    const fs = await import('fs/promises');
+    const path = await import('path');
+    const processedContentPath = path.resolve(__dirname, '../../../processed_content.json');
+    const processedContentRaw = await fs.readFile(processedContentPath, 'utf-8');
+    const processedContent = JSON.parse(processedContentRaw);
+
+    // 1. Get the collection ID
+    const collectionsResponse = await fetch(`${CHROMA_URL}/api/v1/collections`, { agent });
+    if (!collectionsResponse.ok) {
+        throw new Error('Failed to list collections from ChromaDB');
+    }
+    const collections = await collectionsResponse.json();
+    const collection = collections.find((c: any) => c.name === COLLECTION_NAME);
+    if (!collection) {
+        throw new Error(`Collection '${COLLECTION_NAME}' not found.`);
+    }
+    const collectionId = collection.id;
+
+    // 2. Generate embedding for the query
+    const queryEmbedding = await generateEmbedding(query);
+
+    // 3. Query ChromaDB for relevant documents
+    const queryDbResponse = await fetch(`${CHROMA_URL}/api/v1/collections/${collectionId}/query`, {
+        agent,
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            query_embeddings: [queryEmbedding],
+            n_results: 10,
+            include: ["metadatas", "documents"]
+        }),
+    });
+
+    if (!queryDbResponse.ok) {
+        const errorText = await queryDbResponse.text();
+        throw new Error(`ChromaDB query failed: ${errorText}`);
+    }
+    
+    const queryResult = await queryDbResponse.json();
+
+    // Build context sections and collect source information
+    const sources: Array<{title: string, url: string | null, originalKey: string, contentType: string}> = [];
+    const contextSections = queryResult.documents[0].map((doc: string, i: number) => {
+        const metadata = queryResult.metadatas[0][i] || {};
+        const title = metadata.title || 'Unknown Section';
+        const originalKey = metadata.original_key || '';
+        const contentType = metadata.content_type || 'markdown';
+        
+        // Generate URL for this source
+        const url = mapKeyToUrl(originalKey, processedContent, metadata);
+        
+        // Add to sources if we haven't seen this original_key before
+        if (!sources.find(s => s.originalKey === originalKey)) {
+            sources.push({ title, url, originalKey, contentType });
+        }
+        
+        return `---
+From section: "${title}"
+
+${doc}
+---`;
+    });
+
+    return { contextSections, sources };
+}
+
+// New chat endpoint with history support
+fastify.post('/api/chat', { schema: chatSchema }, async (request, reply) => {
+    try {
+        const { sessionId, messages, query } = request.body as {
+            sessionId: string;
+            messages: ChatMessage[];
+            query: string;
+        };
+        
+        fastify.log.info(`Received chat request for session: ${sessionId}, query: "${query}"`);
+
+        // 1. Get RAG context for current query
+        const { contextSections, sources } = await getRagContext(query);
+        
+        // 2. Construct enhanced system prompt that includes conversation context
+        const systemPrompt = `You are an expert on MikroTik RouterOS. You will be given:
+1. A conversation history with the user (if any)
+2. Relevant documentation excerpts for the current question
+
+Answer the user's question using the provided information and conversation context.
+Be concise and clear. Reference previous conversation when relevant to provide better continuity.
+If the provided information does not contain the answer, state that you could not find an answer in the provided documentation.
+Do not mention that you are an AI or that you were given context. Just answer the question directly.`;
+
+        // 3. Manage chat history and context
+        const managementResult: ContextManagementResult = await chatHistoryManager.manageChatHistory(
+            sessionId,
+            messages,
+            contextSections,
+            systemPrompt,
+            query
+        );
+
+        fastify.log.info({
+            sessionId,
+            tokenBreakdown: managementResult.tokenBreakdown,
+            needsSummarization: managementResult.needsSummarization
+        }, "Token breakdown and summarization status");
+
+        // 4. Construct comprehensive prompt
+        const conversationContext = managementResult.contextToSend ? 
+            `Conversation History:\n${managementResult.contextToSend}\n\n` : '';
+        
+        const finalPrompt = `${conversationContext}Current Question: ${query}
+
+Relevant Documentation:
+${contextSections.join('\n\n')}`;
+
+        fastify.log.info({ 
+            totalTokens: managementResult.tokenBreakdown.totalTokens,
+            promptPreview: finalPrompt.length > 2000 ? finalPrompt.substring(0, 2000) + '...' : finalPrompt 
+        }, "Constructed final prompt for LLM");
+
+        // 5. Generate response
+        const { text } = await generateText({
+            model: xai("grok-3-mini-fast"),
+            system: systemPrompt,
+            prompt: finalPrompt,
+        });
+
+        fastify.log.info({ llmResponse: text }, "Received response from LLM");
+
+        // 6. Store the complete interaction
+        await chatHistoryManager.storeInteraction(
+            sessionId, 
+            query, 
+            text, 
+            contextSections.join('\n\n')
+        );
+
+        // 7. Send response with sources
+        reply.send({
+            response: text,
+            sources: sources.filter(s => s.url !== null),
+            sessionStats: chatHistoryManager.getSessionStats(sessionId)
+        });
+
+    } catch (error) {
+        fastify.log.error(error);
+        reply.status(500).send({ error: 'An internal error occurred during chat processing' });
+    }
+});
+
+// Summarization endpoint for manual context compression
+fastify.post('/api/summarize-context', async (request, reply) => {
+    try {
+        const { messages, ragContexts } = request.body as {
+            messages: ChatMessage[];
+            ragContexts: string[];
+        };
+        
+        fastify.log.info(`Received summarization request for ${messages.length} messages`);
+
+        const systemPrompt = `You are tasked with summarizing a chat conversation and documentation context for a RouterOS technical assistant.
+
+CRITICAL REQUIREMENTS:
+1. PRESERVE ALL user questions and assistant answers in a condensed but complete form
+2. PRESERVE ALL technical details, configuration examples, and specific RouterOS commands exactly
+3. HEAVILY SUMMARIZE the documentation sections - extract only the key technical facts referenced in the conversation
+4. Maintain chronological order of the conversation
+5. Keep all product names, version numbers, command syntax, and specific technical terms exact
+6. Focus on preserving the technical solutions and configurations discussed
+
+The goal is to reduce token count while preserving all conversational context and technical accuracy.
+Format as a flowing summary, not bullet points.`;
+
+        const contextToSummarize = `Chat Messages:
+${messages.map(m => `${m.role}: ${m.content}`).join('\n\n')}
+
+Referenced Documentation Context:
+${ragContexts.join('\n---\n')}`;
+
+        const { text } = await generateText({
+            model: xai("grok-3-mini-fast"),
+            system: systemPrompt,
+            prompt: `Please summarize the following technical conversation and documentation context:\n\n${contextToSummarize}`,
+        });
+
+        reply.send({ 
+            summary: text,
+            originalTokenCount: contextToSummarize.length,
+            summaryTokenCount: text.length
+        });
+
+    } catch (error) {
+        fastify.log.error(error);
+        reply.status(500).send({ error: 'An internal error occurred during summarization' });
+    }
+});
+
+// Session management endpoints
+fastify.get('/api/session/:sessionId/stats', async (request, reply) => {
+    try {
+        const { sessionId } = request.params as { sessionId: string };
+        const stats = chatHistoryManager.getSessionStats(sessionId);
+        
+        if (!stats) {
+            reply.status(404).send({ error: 'Session not found' });
+            return;
+        }
+
+        reply.send(stats);
+    } catch (error) {
+        fastify.log.error(error);
+        reply.status(500).send({ error: 'An internal error occurred' });
+    }
+});
+
+fastify.delete('/api/session/:sessionId', async (request, reply) => {
+    try {
+        const { sessionId } = request.params as { sessionId: string };
+        chatHistoryManager.clearSession(sessionId);
+        reply.send({ message: 'Session cleared successfully' });
     } catch (error) {
         fastify.log.error(error);
         reply.status(500).send({ error: 'An internal error occurred' });
