@@ -395,4 +395,34 @@
   color: rgba(226, 232, 240, 0.5);
   cursor: not-allowed;
   border-color: rgba(74, 85, 104, 0.3);
+}
+
+/* Markdown code block styles */
+.messageBubble :global(pre) {
+  background: rgba(26, 29, 41, 0.8);
+  border: 1px solid rgba(74, 85, 104, 0.4);
+  border-radius: 8px;
+  padding: 1rem;
+  margin: 0.5rem 0;
+  overflow-x: auto;
+  font-family: 'Fira Code', 'Courier New', monospace;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  color: #e2e8f0;
+}
+
+.messageBubble :global(code) {
+  font-family: 'Fira Code', 'Courier New', monospace;
+  font-size: 0.9em;
+  background: rgba(74, 85, 104, 0.3);
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  color: #cbd5e0;
+}
+
+.messageBubble :global(pre code) {
+  background: none;
+  padding: 0;
+  border-radius: 0;
+  color: inherit;
 } 

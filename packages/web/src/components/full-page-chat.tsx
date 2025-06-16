@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useChat } from 'ai/react';
+import { useChatWithHistory, ChatMessage } from '@/hooks/use-chat-with-history';
 import styles from './FullPageChat.module.css';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -11,24 +11,46 @@ import {
   SaveIcon, 
   TrashIcon, 
   CopyIcon, 
-  RefreshIcon 
+  FolderOpenIcon 
 } from './icons';
 
 export default function FullPageChat() {
-  const { messages, input, handleInputChange, handleSubmit, setMessages, setInput, isLoading } = useChat({
-    streamProtocol: 'text',
-  });
+  const { messages, sendMessage, isLoading, clearMessages, saveConversation, loadConversation } = useChatWithHistory();
+  const [input, setInput] = useState('');
 
-  const clearChat = () => setMessages([]);
+  const clearChat = () => clearMessages();
   
-  const newChat = () => {
-    setMessages([]);
-    setInput(''); // Also clear the input field
+  const handleLoadConversation = async () => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.json';
+    input.onchange = async (e) => {
+      const file = (e.target as HTMLInputElement).files?.[0];
+      if (file) {
+        const success = await loadConversation(file);
+        if (success) {
+          setInput(''); // Clear input field after successful load
+        }
+      }
+    };
+    input.click();
   };
   
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (input.trim()) {
+      sendMessage(input.trim());
+      setInput('');
+    }
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInput(e.target.value);
+  };
+
   const copyConversation = async () => {
     const conversationText = messages
-      .map(m => `${m.role.charAt(0).toUpperCase() + m.role.slice(1)}: ${m.content}`)
+      .map((m: ChatMessage) => `${m.role.charAt(0).toUpperCase() + m.role.slice(1)}: ${m.content}`)
       .join('\n\n');
     
     try {
@@ -39,16 +61,7 @@ export default function FullPageChat() {
   };
 
   const saveChat = () => {
-    const chatHistory = JSON.stringify(messages, null, 2);
-    const blob = new Blob([chatHistory], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `routeros-chat-history-${new Date().toISOString()}.json`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    saveConversation();
   };
 
   return (
@@ -56,12 +69,12 @@ export default function FullPageChat() {
       <div className={styles.header}>
         <div className={styles.actions}>
           <button 
-            onClick={newChat} 
+            onClick={handleLoadConversation} 
             className={styles.actionButton}
-            title="New Conversation"
+            title="Load Conversation"
           >
-            <RefreshIcon size={18} />
-            <span>New</span>
+            <FolderOpenIcon size={18} />
+            <span>Load</span>
           </button>
           <button 
             onClick={copyConversation} 
@@ -95,7 +108,7 @@ export default function FullPageChat() {
       
       <div className={styles.messageArea}>
         {messages.length > 0 ? (
-          messages.map(m => {
+          messages.map((m: ChatMessage) => {
             let messageContent = m.content;
             let sourcesContent = null;
             const separator = '\n\n**📖 Related Documentation:**\n';
@@ -136,9 +149,9 @@ export default function FullPageChat() {
             <div className={styles.exampleQuestions}>
               <p><strong>Try asking:</strong></p>
               <ul>
-                <li>"How do I configure a basic firewall?"</li>
-                <li>"What's the difference between bridge and switch?"</li>
-                <li>"How to set up VLAN tagging?"</li>
+                <li>&quot;How do I configure a basic firewall?&quot;</li>
+                <li>&quot;What&apos;s the difference between bridge and switch?&quot;</li>
+                <li>&quot;How to set up VLAN tagging?&quot;</li>
               </ul>
             </div>
           </div>

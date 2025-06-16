@@ -4,24 +4,27 @@ A modern, responsive web interface for the RouterOS RAG Knowledge Base system. B
 
 ## Features
 
-### 🔍 Smart Documentation Search
+### Smart Documentation Search
 - **AI-Powered Chat**: Ask questions in natural language and get precise answers from RouterOS documentation
 - **Streaming Responses**: Real-time response streaming with source references
 - **Context-Aware**: Leverages RAG (Retrieval-Augmented Generation) for accurate, sourced answers
 
-### 📚 Interactive Documentation Browser
+### Interactive Documentation Browser
 - **Hierarchical Navigation**: Browse the complete RouterOS documentation with collapsible sections
 - **Dynamic Content Rendering**: Supports both HTML and Markdown content with proper formatting
 - **Enhanced HTML Display**: Preserves original formatting, images, and attachments from RouterOS docs
 - **Responsive Design**: Optimized for both desktop and mobile viewing
 
-### 💬 Advanced Chat Interface
-- **Persistent Chat History**: Save and export conversation history
-- **Chat Management**: New conversation, copy, clear, and minimize functionality
-- **Expandable Interface**: Toggle between compact and full-screen chat modes
-- **Source References**: Automatic linking to relevant documentation sections
+### **Conversational AI Chat System** 
+- **Follow-up Questions**: Full conversation context for related questions
+- **Intelligent Token Management**: Automatic summarization at 135k context limit with technical detail preservation
+- **Persistent Sessions**: Chat history survives page navigation and browser restarts via localStorage
+- **Enhanced Save/Load**: Export conversations with metadata + one-click JSON file loading (replaces "New" button)
+- **Session Statistics**: Real-time token counting and conversation metrics
+- **Chat Management**: Copy, clear, minimize, expand, and conversation persistence
+- **Source References**: Automatic linking to relevant documentation sections with conversation context
 
-### 🎨 Modern UI/UX
+### Modern UI/UX
 - **Dark-First Design**: Sleek dark theme optimized for developers
 - **Mobile-Responsive**: Adaptive layout that works on all devices
 - **Smooth Animations**: Polished transitions and interactions
@@ -33,11 +36,16 @@ A modern, responsive web interface for the RouterOS RAG Knowledge Base system. B
 Web Interface (Next.js 15)
 ├── Frontend Components
 │   ├── Navigation (Hierarchical docs browser)
-│   ├── Chat Interface (AI-powered Q&A)
+│   ├── Conversational Chat Interface (Full history + context)
 │   ├── Documentation Viewer (HTML/Markdown renderer)
 │   └── Layout Components (Headers, responsive design)
+├── Chat History System
+│   ├── useChatWithHistory Hook (Session management)
+│   ├── LocalStorage Persistence (Survives restarts)
+│   ├── Enhanced Save/Load (JSON export/import)
+│   └── Token Management (Context compression)
 ├── API Routes
-│   ├── /api/chat (Streaming chat responses)
+│   ├── /api/chat (Conversational streaming with history)
 │   ├── /api/docs/[...slug] (Dynamic doc content)
 │   ├── /api/outline (Navigation structure)
 │   └── /api/assets (Static assets proxy)
@@ -122,6 +130,7 @@ src/
 │   ├── chat-status.tsx    # Loading states for chat
 │   └── icons.tsx          # SVG icon components
 ├── hooks/                 # Custom React hooks
+│   └── use-chat-with-history.ts # Conversational chat with session management
 ├── utils/                 # Utility functions
 │   └── html-processor.ts  # HTML sanitization and processing
 └── styles/               # CSS Modules (co-located with components)
@@ -135,11 +144,16 @@ src/
 - Generates URL-friendly slugs for documentation pages
 - Supports mobile-responsive sidebar
 
-### Chat Interface
-- Integrates with AI chat using the `ai` library
-- Streams responses from the RAG API server
-- Separates main responses from source references
-- Includes chat management (save, copy, clear, new conversation)
+### Conversational Chat Interface 
+- **Full Conversation History**: Follow-up questions with complete context
+- **Smart Context Management**: Automatic token management with 135k limit
+- **Session Persistence**: Chat history survives page navigation and browser restarts
+- **Enhanced Save/Load**: Export conversations with metadata + one-click JSON loading
+- **Token Awareness**: Real-time token counting and automatic summarization
+- Integrates with conversational RAG API using custom `useChatWithHistory` hook
+- Streams responses with conversation context from the RAG API server
+- Separates main responses from source references with conversation awareness
+- Includes advanced chat management (save/load, copy, clear, minimize, expand)
 
 ### Documentation Viewer
 - Dynamic routing for documentation pages (`/docs/[...slug]`)
@@ -157,10 +171,13 @@ src/
 
 The web interface communicates with the RouterOS RAG API server:
 
-- **Chat Endpoint**: `POST /api/query` - Streams AI responses with source references
+- **Conversational Chat**: `POST /api/chat` - Full conversation history with intelligent context management 
+- **Token Management**: `POST /api/summarize-context` - Automatic context compression at token limits  
+- **Session Management**: `GET/DELETE /api/session/:id` - Session statistics and cleanup 
+- **Legacy Chat**: `POST /api/query` - Single-query responses (still supported)
 - **Documentation Endpoint**: Fetches processed content by document slug
 - **Assets Endpoint**: Proxies static assets (images, attachments)
-- **Search Integration**: Uses semantic search via the backend RAG system
+- **Search Integration**: Uses semantic search via the backend RAG system with conversation context
 
 ## Development Notes
 

@@ -25,7 +25,7 @@ interface ProcessedContent {
 
 export async function GET(
     request: Request,
-    { params }: { params: { slug: string[] } }
+    { params }: { params: Promise<{ slug: string[] }> }
 ) {
     try {
         const awaitedParams = await params;

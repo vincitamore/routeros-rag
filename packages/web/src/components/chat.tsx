@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useChat } from 'ai/react';
+import { useChatWithHistory, ChatMessage } from '@/hooks/use-chat-with-history';
 import styles from './Chat.module.css';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -13,33 +13,54 @@ import {
   ExpandIcon, 
   ShrinkIcon, 
   CopyIcon, 
-  RefreshIcon,
+  FolderOpenIcon,
   MinusIcon 
 } from './icons';
 
 export default function Chat() {
   const [isOpen, setIsOpen] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [input, setInput] = useState('');
 
-  const { messages, input, handleInputChange, handleSubmit, setMessages, setInput, isLoading } = useChat({
-    streamProtocol: 'text',
-  });
+  const { messages, sendMessage, isLoading, clearMessages, saveConversation, loadConversation } = useChatWithHistory();
 
   const handleToggle = () => setIsOpen(!isOpen);
   const handleExpand = () => setIsExpanded(!isExpanded);
   const handleMinimize = () => setIsOpen(false);
   
-  const clearChat = () => setMessages([]);
+  const clearChat = () => clearMessages();
   
-  const newChat = () => {
-    setMessages([]);
-    setInput(''); // Also clear the input field
-    // Reset to fresh state
+  const handleLoadConversation = async () => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.json';
+    input.onchange = async (e) => {
+      const file = (e.target as HTMLInputElement).files?.[0];
+      if (file) {
+        const success = await loadConversation(file);
+        if (success) {
+          setInput(''); // Clear input field after successful load
+        }
+      }
+    };
+    input.click();
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (input.trim()) {
+      sendMessage(input.trim());
+      setInput('');
+    }
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInput(e.target.value);
   };
   
   const copyConversation = async () => {
     const conversationText = messages
-      .map(m => `${m.role.charAt(0).toUpperCase() + m.role.slice(1)}: ${m.content}`)
+      .map((m: ChatMessage) => `${m.role.charAt(0).toUpperCase() + m.role.slice(1)}: ${m.content}`)
       .join('\n\n');
     
     try {
@@ -51,16 +72,7 @@ export default function Chat() {
   };
   
   const saveChat = () => {
-    const chatHistory = JSON.stringify(messages, null, 2);
-    const blob = new Blob([chatHistory], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `routeros-chat-history-${new Date().toISOString()}.json`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    saveConversation();
   };
 
   return (
@@ -70,11 +82,11 @@ export default function Chat() {
           <div className={styles.headerActions}>
             <div className={styles.leftActions}>
               <button 
-                onClick={newChat} 
+                onClick={handleLoadConversation} 
                 className={styles.actionButton}
-                title="New Conversation"
+                title="Load Conversation"
               >
-                <RefreshIcon size={16} />
+                <FolderOpenIcon size={16} />
               </button>
               <button 
                 onClick={copyConversation} 
@@ -125,7 +137,7 @@ export default function Chat() {
         </div>
         <div className={styles.messageList}>
           {messages.length > 0 ? (
-            messages.map(m => {
+            messages.map((m: ChatMessage) => {
                 let messageContent = m.content;
                 let sourcesContent = null;
                 const separator = '\n\n**📖 Related Documentation:**\n';
