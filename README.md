@@ -275,6 +275,76 @@ How do I configure VLANs on RouterOS? queryRouterOSDocs
 
 **Key Difference**: The MCP server provides documentation context to Cursor's AI, while the web interface generates complete responses using Grok 3.
 
+## Remote Access with Tailscale
+
+Access your RouterOS RAG interface from anywhere using [Tailscale](https://tailscale.com/) - a zero-config VPN that makes your local development server securely accessible from your mobile device or any other device on your Tailscale network.
+
+### Why Tailscale?
+
+- **Secure Access**: Encrypted connections without exposing ports to the public internet
+- **Mobile-Friendly**: Access the responsive web interface from your phone or tablet
+- **Zero Configuration**: No complex networking setup or port forwarding
+- **Cross-Platform**: Works on Windows, macOS, Linux, iOS, and Android
+
+### Quick Setup
+
+1. **Create a Tailscale Account**:
+   - Visit [https://tailscale.com/](https://tailscale.com/) and sign up for free
+   - Free tier includes up to 20 devices
+
+2. **Install Tailscale on Your Server**:
+   ```bash
+   # On your development machine (where RouterOS RAG is running)
+   
+   # Windows (PowerShell as Administrator)
+   winget install tailscale.tailscale
+   
+   # macOS
+   brew install --cask tailscale
+   
+   # Ubuntu/Debian
+   curl -fsSL https://tailscale.com/install.sh | sh
+   ```
+
+3. **Start Tailscale and Authenticate**:
+   ```bash
+   # Start Tailscale (will open browser for authentication)
+   tailscale up
+   ```
+
+4. **Install Tailscale on Your Mobile Device**:
+   - Download from [App Store](https://apps.apple.com/app/tailscale/id1470499037) (iOS) or [Google Play](https://play.google.com/store/apps/details?id=com.tailscale.ipn) (Android)
+   - Sign in with the same account
+   - Enable the VPN connection
+
+5. **Access Remotely**:
+   ```bash
+   # Find your Tailscale IP address
+   tailscale ip -4
+   ```
+   - Copy the IP address (e.g., `100.64.0.1`)
+   - On your mobile device, navigate to: `http://YOUR_TAILSCALE_IP:3000`
+   - Example: `http://100.64.0.1:3000`
+
+### Usage Tips
+
+- **Bookmark the URL**: Save `http://YOUR_TAILSCALE_IP:3000` in your mobile browser for quick access
+- **Responsive Design**: The web interface is optimized for mobile viewing with collapsible navigation
+- **Persistent Sessions**: Your chat history will persist across devices thanks to localStorage
+- **Offline Access**: Once loaded, you can browse documentation offline (chat requires connection)
+
+### Security Considerations
+
+- **Private Network**: Tailscale creates a private mesh network - your services are only accessible to your authenticated devices
+- **Device Management**: Review connected devices regularly in the [Tailscale admin console](https://login.tailscale.com/admin/machines)
+- **Access Controls**: Use Tailscale's [ACL system](https://tailscale.com/kb/1018/acls/) for advanced access management if needed
+
+### Troubleshooting
+
+- **Connection Issues**: Ensure both devices show "Connected" in Tailscale
+- **Port Blocked**: Make sure your development server is bound to `0.0.0.0:3000` not `127.0.0.1:3000`
+- **Firewall**: Check that Windows Firewall or your system firewall allows the connection
+
 ## Current Status
 
 Based on the development plan, the following phases are complete:
