@@ -20,6 +20,11 @@
 # production
 /build
 
+#Database
+/server/database/network-portal.db
+/server/database/network-portal.db-shm
+/server/database/network-portal.db-wal
+
 # misc
 .DS_Store
 *.pem
