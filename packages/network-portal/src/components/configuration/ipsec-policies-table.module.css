@@ -1,0 +1,200 @@
+/* IPsec Policies Table Styles */
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(var(--primary-rgb), 0.2);
+  border-top: 2px solid rgb(var(--primary-rgb));
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Table hover effects */
+.policyRow {
+  transition: background-color 0.2s ease-in-out;
+}
+
+.policyRow:hover {
+  background-color: rgba(var(--primary-rgb), 0.05);
+}
+
+/* Search input focus effects */
+.searchInput {
+  transition: all 0.2s ease-in-out;
+}
+
+.searchInput:focus {
+  border-color: rgba(var(--primary-rgb), 0.5);
+  background-color: rgba(var(--border-rgb), 0.4);
+  outline: none;
+}
+
+/* Action buttons */
+.actionButton {
+  padding: var(--space-1);
+  border-radius: var(--space-1);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease-in-out;
+  border: 1px solid;
+}
+
+.actionButton:hover {
+  opacity: 0.8;
+  transform: translateY(-1px);
+}
+
+.actionButton.enabled {
+  background-color: rgba(var(--success-rgb), 0.2);
+  border-color: rgba(var(--success-rgb), 0.3);
+  color: var(--success);
+}
+
+.actionButton.disabled {
+  background-color: rgba(var(--warning-rgb), 0.2);
+  border-color: rgba(var(--warning-rgb), 0.3);
+  color: var(--warning);
+}
+
+.actionButton.edit {
+  background-color: rgba(var(--primary-rgb), 0.2);
+  border-color: rgba(var(--primary-rgb), 0.3);
+  color: var(--primary);
+}
+
+.actionButton.delete {
+  background-color: rgba(var(--error-rgb), 0.2);
+  border-color: rgba(var(--error-rgb), 0.3);
+  color: var(--error);
+}
+
+/* Table header sorting */
+.sortableHeader {
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+  user-select: none;
+}
+
+.sortableHeader:hover {
+  background-color: rgba(var(--primary-rgb), 0.1);
+}
+
+.sortIcon {
+  transition: transform 0.2s ease-in-out;
+}
+
+.sortIcon.desc {
+  transform: rotate(0deg);
+}
+
+.sortIcon.asc {
+  transform: rotate(180deg);
+}
+
+/* Empty state */
+.emptyState {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  color: var(--text-secondary);
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.emptyStateIcon {
+  opacity: 0.5;
+}
+
+.emptyStateText {
+  text-align: center;
+}
+
+.emptyStateTitle {
+  font-weight: 500;
+  margin-bottom: var(--space-1);
+}
+
+.emptyStateDescription {
+  font-size: 0.875rem;
+}
+
+/* Status indicators */
+.statusEnabled {
+  color: var(--success);
+}
+
+.statusDisabled {
+  color: var(--warning);
+  opacity: 0.6;
+}
+
+/* Technical data styling */
+.technicalData {
+  font-family: monospace;
+  font-size: 0.875rem;
+}
+
+/* Action color coding */
+.actionEncrypt {
+  color: var(--success);
+}
+
+.actionDecrypt {
+  color: var(--primary);
+}
+
+.actionDiscard {
+  color: var(--error);
+}
+
+/* Pagination */
+.pagination {
+  padding: var(--space-3) var(--space-4);
+  border-top: 1px solid rgba(var(--border-rgb), 0.3);
+  background-color: rgba(var(--border-rgb), 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.paginationButton {
+  padding: var(--space-1) var(--space-2);
+  background-color: rgba(var(--border-rgb), 0.3);
+  border: 1px solid rgba(var(--border-rgb), 0.5);
+  border-radius: var(--space-1);
+  color: var(--text-primary);
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: all 0.2s ease-in-out;
+}
+
+.paginationButton:hover:not(:disabled) {
+  background-color: rgba(var(--primary-rgb), 0.2);
+  border-color: rgba(var(--primary-rgb), 0.3);
+}
+
+.paginationButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .pagination {
+    flex-direction: column;
+    gap: var(--space-2);
+    text-align: center;
+  }
+  
+  .paginationButton {
+    min-width: 80px;
+  }
+} 

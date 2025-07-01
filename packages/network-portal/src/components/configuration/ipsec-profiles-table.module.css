@@ -1,0 +1,47 @@
+/* Spinner animation */
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(var(--border-rgb), 0.3);
+  border-top: 3px solid var(--primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Card styling */
+.card {
+  background: rgba(17, 24, 39, 0.95);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(var(--border-rgb), 0.3);
+  border-radius: var(--space-3);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  /* Hide less important columns on mobile */
+  .card :global(table th:nth-child(4)),
+  .card :global(table td:nth-child(4)),
+  .card :global(table th:nth-child(5)),
+  .card :global(table td:nth-child(5)),
+  .card :global(table th:nth-child(6)),
+  .card :global(table td:nth-child(6)),
+  .card :global(table th:nth-child(7)),
+  .card :global(table td:nth-child(7)),
+  .card :global(table th:nth-child(8)),
+  .card :global(table td:nth-child(8)) {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Hide even more columns on very small screens */
+  .card :global(table th:nth-child(3)),
+  .card :global(table td:nth-child(3)) {
+    display: none;
+  }
+} 

@@ -1,0 +1,471 @@
+/**
+ * Monitoring Component Styles
+ * 
+ * CSS styles for real-time monitoring dashboard components
+ * including system metrics charts, status indicators, and controls.
+ */
+
+/* ==================== MONITORING LAYOUT ==================== */
+
+.monitoring-dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  padding: var(--space-6);
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.monitoring-layout {
+  display: flex;
+  gap: var(--space-6);
+  align-items: flex-start;
+}
+
+.device-section {
+  flex: 1;
+  min-width: 300px;
+  max-width: 400px;
+}
+
+.metrics-section {
+  flex: 3;
+  display: flex;
+  flex-direction: column;
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--border-radius-lg, 1rem);
+  padding: var(--space-6);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="dark"] .card {
+    background: rgba(23, 23, 23, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.no-device-selected {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    min-height: 400px;
+    color: var(--text-secondary);
+}
+
+.monitoring-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--space-6);
+}
+
+/* ==================== METRICS CHART CONTAINER ==================== */
+
+.metrics-chart-container {
+  background: transparent;
+  border: none;
+  border-radius: var(--border-radius);
+  padding: 0;
+  box-shadow: none;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.metrics-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-4);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.metrics-header h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* ==================== TIME RANGE SELECTOR ==================== */
+
+.time-range-selector {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+/* Remove unused time-range-select class - using global select styles instead */
+
+/* ==================== CURRENT METRICS DISPLAY ==================== */
+
+.current-metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+}
+
+.metric-card {
+  background: var(--surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  padding: var(--space-4);
+  text-align: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.metric-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.metric-label {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin-bottom: var(--space-2);
+}
+
+.metric-value {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: var(--space-1);
+}
+
+.metric-value.cpu {
+  color: var(--cpu-color, #ef4444);
+}
+
+.metric-value.memory {
+  color: var(--memory-color, #3b82f6);
+}
+
+.metric-value.storage {
+  color: var(--storage-color, #059669);
+}
+
+.metric-value.uptime {
+  color: var(--text-primary);
+  font-size: 1.5rem;
+}
+
+.metric-detail {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+/* ==================== CHART CONTROLS ==================== */
+
+.chart-controls {
+  margin-bottom: var(--space-4);
+  padding: var(--space-3);
+  background: var(--surface);
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border-color);
+}
+
+.metric-toggles {
+  display: flex;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.metric-toggle {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  cursor: pointer;
+  font-size: 0.875rem;
+}
+
+.metric-toggle input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--primary);
+}
+
+.toggle-label {
+  font-weight: 500;
+}
+
+.toggle-label.cpu {
+  color: var(--cpu-color, #ef4444);
+}
+
+.toggle-label.memory {
+  color: var(--memory-color, #3b82f6);
+}
+
+.toggle-label.storage {
+  color: var(--storage-color, #059669);
+}
+
+/* ==================== CHART CONTAINER ==================== */
+
+.chart-container {
+  position: relative;
+}
+
+.chart-tooltip {
+  background: var(--background);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  padding: var(--space-3);
+  box-shadow: var(--shadow);
+}
+
+.tooltip-label {
+  font-weight: 600;
+  margin-bottom: var(--space-1);
+  color: var(--text-primary);
+}
+
+.tooltip-label + p {
+  margin: var(--space-1) 0 0 0;
+  font-size: 0.875rem;
+}
+
+/* ==================== STATE INDICATORS ==================== */
+
+.loading-state,
+.empty-state,
+.error-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 250px;
+  text-align: center;
+  color: var(--text-secondary);
+}
+
+.error-state {
+  color: var(--danger);
+}
+
+.loading-state::before {
+  content: "";
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--border-color);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-right: var(--space-2);
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ==================== WEBSOCKET STATUS ==================== */
+
+.websocket-status {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: 0.875rem;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border-color);
+  background: var(--surface);
+}
+
+.status-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--border-color);
+}
+
+.status-indicator.connected {
+  background: var(--success);
+  box-shadow: 0 0 4px var(--success-light);
+}
+
+.status-indicator.connecting {
+  background: var(--warning);
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.status-indicator.disconnected {
+  background: var(--danger);
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* ==================== DEVICE MONITORING CARD ==================== */
+
+.device-monitoring-card {
+  background: var(--background);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  padding: var(--space-6);
+  box-shadow: var(--shadow);
+}
+
+.device-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-4);
+}
+
+.device-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.device-status {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: 0.875rem;
+}
+
+.device-actions {
+  display: flex;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+}
+
+/* ==================== MONITORING CONTROLS ==================== */
+
+.monitoring-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+}
+
+.control-group {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.control-label {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.overview-stats {
+  display: flex;
+  gap: var(--space-6);
+  align-items: center;
+}
+
+.stat-item {
+  font-size: 0.875rem;
+}
+
+.stat-item strong {
+  color: var(--text-secondary);
+}
+
+/* ==================== RESPONSIVE DESIGN ==================== */
+
+@media (max-width: 768px) {
+  .monitoring-dashboard {
+    padding: var(--space-4);
+    gap: var(--space-4);
+  }
+
+  .monitoring-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+
+  .current-metrics {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-3);
+  }
+
+  .metric-card {
+    padding: var(--space-3);
+  }
+
+  .metric-value {
+    font-size: 1.5rem;
+  }
+
+  .metrics-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-3);
+  }
+
+  .metric-toggles {
+    gap: var(--space-3);
+  }
+
+  .chart-container {
+    min-height: 300px;
+  }
+
+  .device-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-2);
+  }
+
+  .device-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .monitoring-controls {
+    flex-direction: column;
+    gap: var(--space-3);
+    align-items: stretch;
+  }
+}
+
+@media (max-width: 480px) {
+  .current-metrics {
+    grid-template-columns: 1fr;
+  }
+
+  .metric-toggles {
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+}
+
+/* ==================== COLOR VARIABLES ==================== */
+
+:root {
+  --cpu-color: #ef4444;
+  --memory-color: #3b82f6;
+  --storage-color: #059669;
+  --success: #10b981;
+  --success-light: rgba(16, 185, 129, 0.2);
+  --warning: #f59e0b;
+  --warning-light: rgba(245, 158, 11, 0.2);
+  --danger: #ef4444;
+  --danger-light: rgba(239, 68, 68, 0.2);
+}
+
+/* Dark mode adjustments */
+[data-theme="dark"] {
+  --cpu-color: #fca5a5;
+  --memory-color: #93c5fd;
+  --storage-color: #6ee7b7;
+} 

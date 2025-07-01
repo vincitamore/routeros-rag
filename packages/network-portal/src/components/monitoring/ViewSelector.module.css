@@ -1,0 +1,46 @@
+.card {
+  margin-bottom: 0;
+  padding: var(--space-4);
+  flex: 2;
+  min-width: 320px;
+}
+
+.title {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: var(--space-3);
+}
+
+.buttonGroup {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.button {
+  flex: 1;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--space-2);
+  background-color: rgba(var(--border-rgb), 0.2);
+  border: 1px solid transparent;
+  color: var(--text-secondary);
+  font-weight: 500;
+  font-size: 0.8rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  white-space: nowrap;
+}
+
+.button:hover {
+  background-color: rgba(var(--primary-rgb), 0.1);
+  border-color: rgba(var(--primary-rgb), 0.3);
+}
+
+.button.active {
+  background-color: rgba(var(--primary-rgb), 0.2);
+  color: var(--primary);
+  border-color: rgba(var(--primary-rgb), 0.5);
+  box-shadow: 0 2px 8px rgba(var(--primary-rgb), 0.2);
+} 
